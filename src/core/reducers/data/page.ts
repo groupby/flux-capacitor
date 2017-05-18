@@ -34,12 +34,10 @@ export default function updatePage(state: State = DEFAULTS, action): State {
 
 // conditional reducer here only because reset page is a side effect of other actions
 export function resetPage(state: State) {
-  console.log('------- first ------', state);
   return state.current === 1 ? state : { ...state, current: 1 };
 }
 
 export function updateCurrent(state: State, { page: current }: Action.UpdateCurrent) {
-  console.log('----------', state, current);
    return { ...state, current };
  }
 
