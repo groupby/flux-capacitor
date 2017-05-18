@@ -4,12 +4,17 @@ import Action = Actions.Page;
 
 export type State = Store.Page;
 
+export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULTS: State = {
   current: 1,
   first: 1,
+  from: 1,
   limit: 5,
   range: [],
-  size: 10,
+  sizes: {
+    items: [DEFAULT_PAGE_SIZE],
+    selected: 0
+  },
 };
 
 export default function updatePage(state: State = DEFAULTS, action): State {
