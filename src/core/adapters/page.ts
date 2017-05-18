@@ -5,7 +5,7 @@ const MAX_RECORDS = 10000;
 namespace Page {
 
   export function previousPage(currentPage: number) {
-    return currentPage > 1 ? currentPage - 1 : null;
+    return currentPage >= 1 ? currentPage - 1 : null;
   }
 
   export function nextPage(currentPage: number, finalPage: number) {
@@ -17,7 +17,8 @@ namespace Page {
   }
 
   export function fromResult(currentPage: number, pageSize: number) {
-    return currentPage * pageSize + 1;
+    return (currentPage - 1) * pageSize + 1;
+    // TODO move the default value into reducer setup
     // return this.flux.query.build().skip + 1 || 1;
   }
 
