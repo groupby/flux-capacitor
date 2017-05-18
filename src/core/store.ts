@@ -9,7 +9,6 @@ import * as PageReducer from './reducers/data/page';
 
 export { ReduxStore };
 
-export const DEFAULT_SORT = { field: '_relevance' };
 export const DEFAULT_COLLECTION = 'default';
 
 export const RECALL_CHANGE_ACTIONS = [
@@ -72,11 +71,11 @@ namespace Store {
     }
   }
 
-  export function extractSortState(config: FluxCapacitor.Configuration, defaultValue: Sort): SelectableList<Sort> {
-    const state = config.search.sort || defaultValue;
+  export function extractSortState(config: FluxCapacitor.Configuration): SelectableList<Sort> {
+    const state = config.search.sort;
     if (typeof state === 'object' && ('options' in state || 'default' in state)) {
       const selected: Sort = (<{ default: Sort }>state).default || <any>{};
-      const items = ((<{ options: Sort[] }>state).options || [defaultValue]);
+      const items = ((<{ options: Sort[] }>state).options || []);
       const selectedIndex = items
         .findIndex((sort) => sort.field === selected.field && !sort.descending === !selected.descending);
 
@@ -90,7 +89,7 @@ namespace Store {
     return {
       data: <any>{
         collections: Store.extractCollectionsState(config, DEFAULT_COLLECTION),
-        sorts: Store.extractSortState(config, DEFAULT_SORT),
+        sorts: Store.extractSortState(config),
         page: {
           ...PageReducer.DEFAULTS,
           sizes: Store.extractPageSizeState(config, PageReducer.DEFAULT_PAGE_SIZE)
