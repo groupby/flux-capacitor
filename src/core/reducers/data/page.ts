@@ -39,8 +39,10 @@ export const resetPage = (state: State) =>
 export const updateCurrent = (state: State, { page: current }: Action.UpdateCurrent) =>
   ({ ...state, current });
 
-export const updateSize = (state: State, { size }: Action.UpdateSize) =>
-  ({ ...state, current: 1, size });
+export const updateSize = (state: State, { size }: Action.UpdateSize) => {
+  const selected = state.sizes.items.findIndex((pageSize) => pageSize === size);
+  return selected === -1 ? state : { ...state, current: 1, sizes: { ...state.sizes, selected } };
+};
 
 export const receivePage = (state: State, { from, to, last, next, previous, range }: Action.ReceivePage) =>
   ({ ...state, from, to, last, next, previous, range });

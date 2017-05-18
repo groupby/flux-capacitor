@@ -9,7 +9,7 @@ namespace Selectors {
     collection: Selectors.collection(state),
     refinements: Selectors.selectedRefinements(state),
     pageSize: Selectors.pageSize(state),
-    sort: Selectors.sort(state)
+    sort: Selectors.requestSort(Selectors.sort(state))
   });
 
   export const query = (state: Store.State) =>
@@ -20,6 +20,9 @@ namespace Selectors {
 
   export const pageSize = (state: Store.State) =>
     state.data.page.sizes.items[state.data.page.sizes.selected];
+
+  export const requestSort = ({ field, descending }: Store.Sort) =>
+    ({ field, order: descending && 'Descending' });
 
   export const sort = (state: Store.State) =>
     state.data.sorts.items[state.data.sorts.selected];

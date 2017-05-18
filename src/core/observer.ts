@@ -103,9 +103,7 @@ namespace Observer {
 
         page: Object.assign(emit(Events.PAGE_UPDATED), {
           current: emit(Events.CURRENT_PAGE_UPDATED),
-          sizes: {
-            selected: emit(Events.PAGE_SIZE_UPDATED)
-          },
+          sizes: emit(Events.PAGE_SIZE_UPDATED)
         }),
 
         products: emit(Events.PRODUCTS_UPDATED),
