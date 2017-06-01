@@ -46,7 +46,7 @@ export default class Creator {
   fetchMoreProducts = (amount: number) =>
     (dispatch: Dispatch<any>, getStore: () => Store.State) => {
       const state = getStore();
-      if (!state.isFetching.search) {
+      if (!state.isFetching.moreProducts) {
         dispatch(this.soFetching('moreProducts'));
         return this.flux.clients.bridge.search({
           ...Selectors.searchRequest(state),
