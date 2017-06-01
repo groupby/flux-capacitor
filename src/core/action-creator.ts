@@ -52,7 +52,10 @@ export default class Creator {
           ...Selectors.searchRequest(state),
           pageSize: amount,
           skip: Selectors.products(state).length
-        }).then((res) => dispatch(this.receiveMoreProducts(res)));
+        }).then((res) => {
+          const products = Adapters.Search.extractProducts(res);
+          dispatch(this.receiveMoreProducts(products));
+        });
       }
     }
 
