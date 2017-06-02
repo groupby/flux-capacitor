@@ -120,13 +120,10 @@ namespace Observer {
         }),
 
         products: ((emitMoreProductsAdded, emitProductsUpdated) => (oldState: Store.Product[], newState: Store.Product[], path) => {
-          console.log('doin stuff');
           const oldLength = oldState.length;
           if (oldLength < newState.length && oldState[0] === newState[0]) {
-            console.log('its this');
             emitMoreProductsAdded(oldState, newState.slice(oldLength), path);
           } else {
-            console.log('its that');
             emitProductsUpdated(oldState, newState, path);
           }
         })(emit(Events.MORE_PRODUCTS_ADDED), emit(Events.PRODUCTS_UPDATED)),
