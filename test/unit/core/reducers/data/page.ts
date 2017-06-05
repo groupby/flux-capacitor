@@ -1,6 +1,6 @@
-import { ActionCreator, Actions, Store } from '../../../src/core';
-import page from '../../../src/core/reducers/data/page';
-import suite from '../_suite';
+import { Actions, ActionCreator, Store } from '../../../../../src/core';
+import page from '../../../../../src/core/reducers/data/page';
+import suite from '../../../_suite';
 
 suite('page', ({ expect }) => {
   let actions: ActionCreator;
@@ -69,14 +69,14 @@ suite('page', ({ expect }) => {
     });
 
     it('should update sizes and reset current on UPDATE_PAGE_SIZE', () => {
-      const pageSizes = {
-        items,
-
-      };
+      const pageSize = 20;
       const newState = {
         ...state,
         current: 1,
-        size: pageSizes,
+        sizes: {
+          ...sizes,
+          selected: 1
+        }
       };
 
       const reducer = page(state, { type: Actions.UPDATE_PAGE_SIZE, size: pageSize });
@@ -90,7 +90,6 @@ suite('page', ({ expect }) => {
         last: 49,
         next: 5,
         previous: 3,
-        range: [2, 3, 4, 5, 6],
         to: 40,
       };
       const pageSize = 25;

@@ -1,16 +1,16 @@
-import { ActionCreator, Actions, Store } from '../../../src/core';
-import collections from '../../../src/core/reducers/data/collections';
-import suite from '../_suite';
+import { Actions, ActionCreator, Store } from '../../../../../src/core';
+import collections from '../../../../../src/core/reducers/data/collections';
+import suite from '../../../_suite';
 
 suite('collections', ({ expect }) => {
   let actions: ActionCreator;
   const allIds = ['Department', 'Main'];
-  const Department = {
+  const Department = { // tslint:disable-line variable-name
     label: 'All content',
     name: 'contents',
     total: 750,
   };
-  const Main = {
+  const Main = { // tslint:disable-line variable-name
     label: 'Main content',
     name: 'mains',
     total: 600,

@@ -1,6 +1,6 @@
-import { ActionCreator, Actions, Store } from '../../../src/core';
-import details from '../../../src/core/reducers/data/details';
-import suite from '../_suite';
+import { Actions, ActionCreator, Store } from '../../../../../src/core';
+import details from '../../../../../src/core/reducers/data/details';
+import suite from '../../../_suite';
 
 suite('details', ({ expect }) => {
   let actions: ActionCreator;

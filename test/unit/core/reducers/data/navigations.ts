@@ -1,11 +1,11 @@
-import { ActionCreator, Actions, Store } from '../../../src/core';
-import navigations from '../../../src/core/reducers/data/navigations';
-import suite from '../_suite';
+import { Actions, ActionCreator, Store } from '../../../../../src/core';
+import navigations from '../../../../../src/core/reducers/data/navigations';
+import suite from '../../../_suite';
 
 suite('navigations', ({ expect }) => {
   let actions: ActionCreator;
   const allIds = ['Format', 'Section'];
-  const Format = {
+  const Format = { // tslint:disable-line variable-name
     field: 'format',
     label: 'Format',
     more: true,
@@ -17,7 +17,7 @@ suite('navigations', ({ expect }) => {
       { value: 'Audio Book', total: 293 },
     ],
   };
-  const Section = {
+  const Section = { // tslint:disable-line variable-name
     field: 'section',
     label: 'Section',
     more: true,
