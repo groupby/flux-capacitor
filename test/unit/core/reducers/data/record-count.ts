@@ -1,6 +1,6 @@
-import { ActionCreator, Actions, Store } from '../../../../src/flux/core';
-import recordCount from '../../../../src/flux/core/reducers/record-count';
-import suite from '../../_suite';
+import { Actions, ActionCreator, Store } from '../../../../../src/core';
+import recordCount from '../../../../../src/core/reducers/data/record-count';
+import suite from '../../../_suite';
 
 suite('record-count', ({ expect }) => {
   let actions: ActionCreator;
@@ -11,7 +11,7 @@ suite('record-count', ({ expect }) => {
     it('should update record count on RECEIVE_PRODUCTS', () => {
       const newCount = 2039;
 
-      const reducer = recordCount(state, { type: Actions.RECEIVE_PRODUCTS, recordCount: newCount });
+      const reducer = recordCount(state, { type: Actions.RECEIVE_RECORD_COUNT, recordCount: newCount });
 
       expect(reducer).to.eql(newCount);
     });

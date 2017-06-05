@@ -1,6 +1,6 @@
-import { ActionCreator, Actions, Store } from '../../../../src/flux/core';
-import products from '../../../../src/flux/core/reducers/products';
-import suite from '../../_suite';
+import { Actions, ActionCreator, Store } from '../../../../../src/core';
+import products from '../../../../../src/core/reducers/data/products';
+import suite from '../../../_suite';
 
 suite('products', ({ expect }) => {
   let actions: ActionCreator;

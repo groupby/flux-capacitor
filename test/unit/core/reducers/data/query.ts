@@ -1,6 +1,6 @@
-import { ActionCreator, Actions, Store } from '../../../../src/flux/core';
-import query from '../../../../src/flux/core/reducers/query';
-import suite from '../../_suite';
+import { Actions, ActionCreator, Store } from '../../../../../src/core';
+import query from '../../../../../src/core/reducers/data/query';
+import suite from '../../../_suite';
 
 suite('query', ({ expect }) => {
   let actions: ActionCreator;

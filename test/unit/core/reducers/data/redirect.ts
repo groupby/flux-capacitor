@@ -1,6 +1,6 @@
-import { ActionCreator, Actions, Store } from '../../../../src/flux/core';
-import redirect from '../../../../src/flux/core/reducers/redirect';
-import suite from '../../_suite';
+import { Actions, ActionCreator, Store } from '../../../../../src/core';
+import redirect from '../../../../../src/core/reducers/data/redirect';
+import suite from '../../../_suite';
 
 suite('redirect', ({ expect }) => {
   let actions: ActionCreator;

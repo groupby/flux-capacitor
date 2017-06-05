@@ -1,6 +1,6 @@
-import { ActionCreator, Actions, Store } from '../../../src/core';
-import autocomplete from '../../../src/core/reducers/data/autocomplete';
-import suite from '../_suite';
+import { Actions, ActionCreator, Store } from '../../../../../src/core';
+import autocomplete from '../../../../../src/core/reducers/data/autocomplete';
+import suite from '../../../_suite';
 
 suite('autocomplete', ({ expect }) => {
   let actions: ActionCreator;
@@ -17,7 +17,7 @@ suite('autocomplete', ({ expect }) => {
   };
   beforeEach(() => actions = new ActionCreator(<any>{}, <any>{}));
 
-  describe.only('updateAutocomplete()', () => {
+  describe('updateAutocomplete()', () => {
     it('should update query state on UPDATE_AUTOCOMPLETE_QUERY', () => {
       const newQuery = 'red shoes';
       const newState = {
@@ -53,17 +53,17 @@ suite('autocomplete', ({ expect }) => {
     });
 
     it('should update state on RECEIVE_AUTOCOMPLETE_PRODUCTS', () => {
-      const products = [1, 2, 3];
+      const newProducts = [1, 2, 3];
       const newState = {
         category,
-        products,
+        products: newProducts,
         navigations,
         suggestions,
       };
 
       const reducer = autocomplete(state, {
         type: Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS,
-        products,
+        products: newProducts,
       });
 
       expect(reducer).to.eql(newState);
