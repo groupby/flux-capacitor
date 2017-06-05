@@ -46,6 +46,7 @@ namespace Selectors {
     Selectors.navigations(state)
       .reduce((allRefinements, navigation) =>
         allRefinements.concat(navigation.selected
+          // .filter((refinementIndex) => refinementIndex < navigation.refinements.length)
           .map<any>((refinementIndex) => navigation.refinements[refinementIndex])
           .reduce((refs, { low, high, value }) =>
             refs.concat(navigation.range

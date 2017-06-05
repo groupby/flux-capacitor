@@ -104,7 +104,8 @@ export const receiveMoreRefinements = (state: State, { navigationId, refinements
         ...state.byId,
         [navigationId]: {
           ...state.byId[navigationId],
-          refinements: state.byId[navigationId].refinements.concat(refinements),
+          refinements,
+          more: false,
         },
       },
     };

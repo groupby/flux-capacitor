@@ -65,7 +65,7 @@ namespace Observer {
   export function create(flux: FluxCapacitor) {
     const emit = (event: string) => (_, newValue, path) => {
       flux.emit(event, newValue);
-      flux.emit(Events.OBSERVER_NODE_CHANGED, `${path} : ${event} ${JSON.stringify(newValue)}`);
+      flux.emit(Events.OBSERVER_NODE_CHANGED, { event, path, value: newValue });
     };
 
     return {
@@ -106,7 +106,8 @@ namespace Observer {
               newState.allIds.forEach((id) => {
                 const oldNavigation = oldState.byId[id];
                 const newNavigation = newState.byId[id];
-                if (oldNavigation.selected !== newNavigation.selected) {
+                if (oldNavigation.selected !== newNavigation.selected
+                  || oldNavigation.refinements !== newNavigation.refinements) {
                   // tslint:disable-next-line max-line-length
                   emit(`${Events.SELECTED_REFINEMENTS_UPDATED}:${id}`)(oldNavigation, newNavigation, `${path}.byId.${id}`);
                 }
@@ -119,14 +120,15 @@ namespace Observer {
           sizes: emit(Events.PAGE_SIZE_UPDATED)
         }),
 
-        products: ((emitMoreProductsAdded, emitProductsUpdated) => (oldState: Store.Product[], newState: Store.Product[], path) => {
-          const oldLength = oldState.length;
-          if (oldLength < newState.length && oldState[0] === newState[0]) {
-            emitMoreProductsAdded(oldState, newState.slice(oldLength), path);
-          } else {
-            emitProductsUpdated(oldState, newState, path);
-          }
-        })(emit(Events.MORE_PRODUCTS_ADDED), emit(Events.PRODUCTS_UPDATED)),
+        products: ((emitMoreProductsAdded, emitProductsUpdated) =>
+          (oldState: Store.Product[], newState: Store.Product[], path) => {
+            const oldLength = oldState.length;
+            if (oldLength < newState.length && oldState[0] === newState[0]) {
+              emitMoreProductsAdded(oldState, newState.slice(oldLength), path);
+            } else {
+              emitProductsUpdated(oldState, newState, path);
+            }
+          })(emit(Events.MORE_PRODUCTS_ADDED), emit(Events.PRODUCTS_UPDATED)),
 
         query: Object.assign(emit(Events.QUERY_UPDATED), {
           corrected: emit(Events.CORRECTED_QUERY_UPDATED),

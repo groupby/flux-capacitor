@@ -50,6 +50,8 @@ namespace Adapter {
 
   // tslint:disable-next-line max-line-length
   export const refinementsMatch = (lhs: Store.RangeRefinement & Store.ValueRefinement, rhs: RangeRefinement & ValueRefinement) => {
+    console.log('lhs', lhs);
+    console.log('rhs', rhs);
     if (rhs.type === 'Value') {
       return lhs.value === rhs.value;
     } else {
@@ -58,20 +60,31 @@ namespace Adapter {
   };
 
   export const appendSelectedRefinements = (available: Store.Navigation, selected: Navigation) => {
-    available.selected = selected.refinements.reduce((indices, refinement) => {
-      // tslint:disable-next-line max-line-length
-      const index = (<any>available.refinements.findIndex)((availableRef) =>
-        Adapter.refinementsMatch(availableRef, <any>refinement));
+    console.log('selected!', available.selected);
+    available.selected = [];
+
+    console.log('doin it!', available.field);
+    selected.refinements.forEach((refinement) => {
+      const index = available.refinements.findIndex((availableRef) =>
+        Adapter.refinementsMatch(<any>availableRef, <any>refinement));
       if (index !== -1) {
-        indices.push(index);
+        available.selected.push(index);
+      } else {
+        const { value, low, high, total } = <any>refinement;
+        const newIndex = available.refinements.push(available.range
+          ? { low, high, total }
+          : { value, total }) - 1;
+        available.selected.push(newIndex);
       }
-      return indices;
-    }, []);
+    });
   };
 
-  export const combineNavigations = (available: Navigation[], selected: Navigation[]): Store.Navigation[] => {
+  // tslint:disable-next-line max-line-length
+  export const combineNavigations = ({ availableNavigation: available, selectedNavigation: selected }: Results): Store.Navigation[] => {
     const navigations = available.reduce((map, navigation) =>
       Object.assign(map, { [navigation.name]: Adapter.extractNavigation(navigation) }), {});
+
+    console.log('SELECTED', selected);
 
     selected.forEach((selectedNav) => {
       const availableNav = navigations[selectedNav.name];
@@ -80,7 +93,7 @@ namespace Adapter {
         Adapter.appendSelectedRefinements(availableNav, selectedNav);
       } else {
         const navigation = Adapter.extractNavigation(selectedNav);
-        navigation.selected = <any[]>Object.keys(Array(selectedNav.refinements.length));
+        navigation.selected = <any[]>Object.keys(Array(navigation.refinements.length));
         navigations[selectedNav.name] = navigation;
       }
     });
