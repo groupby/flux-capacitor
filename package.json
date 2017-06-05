@@ -39,7 +39,10 @@
     "restart": {
       "releaseOpts": {
         "public": true
-      }
+      },
+      "testFiles": [
+        "test/unit/reducers/page.ts"
+      ]
     }
   },
   "devDependencies": {
