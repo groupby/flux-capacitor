@@ -53,7 +53,7 @@ export default class Creator {
           pageSize: amount,
           skip: Selectors.products(state).length
         }).then((res) => {
-          const products = Adapters.Search.extractProducts(res);
+          const products = Adapters.Autocomplete.extractProducts(res);
           dispatch(this.receiveMoreProducts(products));
         });
       }
