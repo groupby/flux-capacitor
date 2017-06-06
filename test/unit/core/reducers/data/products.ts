@@ -24,6 +24,18 @@ suite('products', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
+    it('should update state on RECEIVE_MORE_PRODUCTS', () => {
+      const selectedCollection = 'Department';
+      const newState = [
+        { id: '29384', allMeta: { price: 12, title: 'a new book!' } },
+        { id: '34392', allMeta: { price: 30, title: 'a really interesting another book' } },
+      ];
+
+      const reducer = products(state, { type: Actions.RECEIVE_MORE_PRODUCTS, products: newState });
+
+      expect(reducer).to.eql([ ...state, ...newState ]);
+    });
+
     it('should return state on default', () => {
       const reducer = products(state, {});
 

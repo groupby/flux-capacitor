@@ -54,6 +54,13 @@ suite('page', ({ expect }) => {
 
         expect(reducer).to.eql(newState);
       });
+
+      it('should return state if current is already 1', () => {
+        state.current = 1;
+        const reducer = page(state, { type: Actions.UPDATE_SEARCH });
+
+        expect(reducer).to.eql(state);
+      });
     });
 
     it('should update current state on UPDATE_CURRENT_PAGE', () => {
@@ -82,6 +89,14 @@ suite('page', ({ expect }) => {
       const reducer = page(state, { type: Actions.UPDATE_PAGE_SIZE, size: pageSize });
 
       expect(reducer).to.eql(newState);
+    });
+
+    it('should return state on UPDATE_PAGE_SIZE if selected not among pageSizes', () => {
+      const pageSize = 50;
+
+      const reducer = page(state, { type: Actions.UPDATE_PAGE_SIZE, size: pageSize });
+
+      expect(reducer).to.eql(state);
     });
 
     it('should update state on RECEIVE_PAGE', () => {

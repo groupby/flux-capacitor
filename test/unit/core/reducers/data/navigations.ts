@@ -158,6 +158,14 @@ suite('navigations', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
+    it('should return state on SELECT_REFINEMENT if no navigationId and refinementIndex', () => {
+      const reducer = navigations(state, {
+        type: Actions.SELECT_REFINEMENT,
+      });
+
+      expect(reducer).to.eql(state);
+    });
+
     it('should remove selected refinement state on DESELECT_REFINEMENT', () => {
       const newState = {
         allIds,
@@ -177,6 +185,14 @@ suite('navigations', ({ expect }) => {
       });
 
       expect(reducer).to.eql(newState);
+    });
+
+    it('should return state on DESELECT_REFINEMENT if no navigationId and refinementIndex', () => {
+      const reducer = navigations(state, {
+        type: Actions.DESELECT_REFINEMENT,
+      });
+
+      expect(reducer).to.eql(state);
     });
 
     it('should update refinements state on RECEIVE_MORE_REFINEMENTS', () => {
@@ -202,6 +218,14 @@ suite('navigations', ({ expect }) => {
       });
 
       expect(reducer).to.eql(newState);
+    });
+
+    it('should return state on RECEIVE_MORE_REFINEMENTS if no navigationId and refinements', () => {
+      const reducer = navigations(state, {
+        type: Actions.RECEIVE_MORE_REFINEMENTS,
+      });
+
+      expect(reducer).to.eql(state);
     });
 
     it('should return state on default', () => {
