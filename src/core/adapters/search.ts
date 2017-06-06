@@ -50,8 +50,6 @@ namespace Adapter {
 
   // tslint:disable-next-line max-line-length
   export const refinementsMatch = (lhs: Store.RangeRefinement & Store.ValueRefinement, rhs: RangeRefinement & ValueRefinement) => {
-    console.log('lhs', lhs);
-    console.log('rhs', rhs);
     if (rhs.type === 'Value') {
       return lhs.value === rhs.value;
     } else {
@@ -59,14 +57,13 @@ namespace Adapter {
     }
   };
 
-  export const appendSelectedRefinements = (available: Store.Navigation, selected: Navigation) => {
-    console.log('selected!', available.selected);
+  export const mergeSelectedRefinements = (available: Store.Navigation, selected: Navigation) => {
     available.selected = [];
 
-    console.log('doin it!', available.field);
     selected.refinements.forEach((refinement) => {
       const index = available.refinements.findIndex((availableRef) =>
         Adapter.refinementsMatch(<any>availableRef, <any>refinement));
+
       if (index !== -1) {
         available.selected.push(index);
       } else {
@@ -84,13 +81,11 @@ namespace Adapter {
     const navigations = available.reduce((map, navigation) =>
       Object.assign(map, { [navigation.name]: Adapter.extractNavigation(navigation) }), {});
 
-    console.log('SELECTED', selected);
-
     selected.forEach((selectedNav) => {
       const availableNav = navigations[selectedNav.name];
 
       if (availableNav) {
-        Adapter.appendSelectedRefinements(availableNav, selectedNav);
+        Adapter.mergeSelectedRefinements(availableNav, selectedNav);
       } else {
         const navigation = Adapter.extractNavigation(selectedNav);
         navigation.selected = <any[]>Object.keys(Array(navigation.refinements.length));
