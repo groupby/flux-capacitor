@@ -1,8 +1,22 @@
+import * as sinon from 'sinon';
 import * as Events from '../../../src/core/events';
 import Observer, { DETAIL_QUERY_INDICATOR } from '../../../src/core/observer';
 import suite from '../_suite';
 
 suite('Observer', ({ expect, spy, stub }) => {
+  describe('listener()', () => {
+    it('should return a function that calls listen', () => {
+      const store: any = { c: 'd' };
+      const flux: any = { x: 'y' };
+      const response = { a: 'b' };
+      const listener = Observer.listener(flux);
+      const listen = stub(Observer, 'listen').returns(response);
+
+      expect(listener(store)).to.eql(response);
+      expect(listen).to.be.calledWith(flux, store);
+    });
+  });
+
   describe('listen()', () => {
     it('should return a function', () => {
       const store: any = { getState: () => null };
@@ -46,11 +60,11 @@ suite('Observer', ({ expect, spy, stub }) => {
       expect(observer).to.not.be.called;
     });
 
-    it.skip('should not call the observer if not a function', () => {
+    it('should not call the observer if not a function', () => {
       expect(() => Observer.resolve(1, 2, {}, '')).to.not.throw();
     });
 
-    it.skip('should call the observer with the updated node', () => {
+    it('should call the observer with the updated node', () => {
       const observer = spy();
       const path = 'my.node.path';
 
@@ -59,7 +73,7 @@ suite('Observer', ({ expect, spy, stub }) => {
       expect(observer).to.be.calledWith(1, 2, path);
     });
 
-    it.skip('should call resolve() on subtrees', () => {
+    it('should call resolve() on subtrees', () => {
       const observer1 = spy();
       const observer2 = spy();
       const observer3 = spy();
@@ -81,7 +95,19 @@ suite('Observer', ({ expect, spy, stub }) => {
       expect(observer4).to.be.calledWith(undefined, 2);
     });
 
-    it.skip('should not call resolve() on equal subtrees', () => {
+    it('should call resolve() when oldState is not defined', () => {
+      const observer1 = spy();
+      const observers = Object.assign((...args) => observer1(...args), {
+        b: (...args) => observer1(...args),
+      });
+      const newState = { b: 2 };
+
+      Observer.resolve(undefined, newState, observers, '');
+
+      expect(observer1).to.be.calledWith(undefined, newState);
+    });
+
+    it('should not call resolve() on equal subtrees', () => {
       const observer1 = spy();
       const observer2 = spy();
       const observer3 = spy();
@@ -97,6 +123,45 @@ suite('Observer', ({ expect, spy, stub }) => {
       expect(observer1).to.be.calledWith(oldState, newState);
       expect(observer2).to.not.be.called;
       expect(observer3).to.not.be.called;
+    });
+  });
+
+  describe('terminal()', () => {
+    it('should call observer', () => {
+      const oldState = { a: 'b' };
+      const newState = { c: 'd' };
+      const observer = spy();
+      const path = '/stuffsidk';
+
+      Observer.terminal(oldState, newState, observer, path);
+
+      expect(observer).to.be.calledWith(oldState, newState, path);
+    });
+
+    it('should not call observer when states are equal', () => {
+      const state = { a: 'b' };
+      const observer = spy();
+      const path = '/stuffsidk';
+
+      Observer.terminal(state, state, observer, path);
+
+      expect(observer).to.be.not.be.called;
+    });
+  });
+
+  describe('indexed()', () => {
+    it('should return an observer for each key in newState', () => {
+      const oldState = { a: 'b', c: 'f' };
+      const newState = { c: 'd', e: 'f' };
+      const emit = spy();
+      const path = '/stuffsidk';
+      const terminal = stub(Observer, 'terminal');
+      const indexed = Observer.indexed(emit);
+
+      indexed(oldState, newState, path);
+
+      expect(terminal).to.be.calledWith(oldState['c'], newState['c'], emit, '/stuffsidk.c');
+      expect(terminal).to.be.calledWith(oldState['e'], newState['e'], emit, '/stuffsidk.e');
     });
   });
 
@@ -131,57 +196,94 @@ suite('Observer', ({ expect, spy, stub }) => {
     });
 
     describe('data', () => {
-      const OBJ = { a: 'b' };
       let emit;
       let observers;
+      const path = '.search.whatever.stuff';
 
       beforeEach(() => {
         emit = spy();
         observers = Observer.create(<any>{ emit });
       });
 
-      describe.skip('autocomplete', () => {
-        it('should emit AUTOCOMPLETE_PRODUCTS_UPDATED event', () => {
-          observers.data.autocomplete.products(undefined, OBJ);
+      describe('autocomplete()', () => {
+        it('should emit AUTOCOMPLETE_SUGGESTIONS_UPDATED event when suggestions differ', () => {
+          const oldState = { suggestions: 'idk' };
+          const newState = { suggestions: 'im different o wow' };
 
-          expect(emit).to.be.calledWith(Events.AUTOCOMPLETE_PRODUCTS_UPDATED, OBJ);
+          observers.data.autocomplete(oldState, newState, path);
+
+          expect(emit).to.be.calledWith(Events.AUTOCOMPLETE_SUGGESTIONS_UPDATED);
         });
 
-        it('should emit AUTOCOMPLETE_QUERY_UPDATED event', () => {
-          observers.data.autocomplete.query(undefined, OBJ);
+        it('should emit AUTOCOMPLETE_SUGGESTIONS_UPDATED event when categories differ', () => {
+          const oldState = { category: 'idk' };
+          const newState = { category: 'im different o wow' };
 
-          expect(emit).to.be.calledWith(Events.AUTOCOMPLETE_QUERY_UPDATED, OBJ);
+          observers.data.autocomplete(oldState, newState, path);
+
+          expect(emit).to.be.calledWith(Events.AUTOCOMPLETE_SUGGESTIONS_UPDATED);
+        });
+
+        it('should emit AUTOCOMPLETE_SUGGESTIONS_UPDATED event when navigations differ', () => {
+          const oldState = { navigations: 'idk' };
+          const newState = { navigations: 'im different o wow' };
+
+          observers.data.autocomplete(oldState, newState, path);
+
+          expect(emit).to.be.calledWith(Events.AUTOCOMPLETE_SUGGESTIONS_UPDATED);
+        });
+
+        it('should emit AUTOCOMPLETE_QUERY_UPDATED event when queries differ', () => {
+          const oldState = { query: 'idk' };
+          const newState = { query: 'im different o wow' };
+
+          observers.data.autocomplete(oldState, newState, path);
+
+          expect(emit).to.be.calledWith(Events.AUTOCOMPLETE_QUERY_UPDATED);
+        });
+
+        it('should emit AUTOCOMPLETE_PRODUCTS_UPDATED event when queries differ', () => {
+          const oldState = { products: 'idk' };
+          const newState = { products: 'im different o wow' };
+
+          observers.data.autocomplete(oldState, newState, path);
+
+          expect(emit).to.be.calledWith(Events.AUTOCOMPLETE_PRODUCTS_UPDATED);
         });
       });
 
       describe('collections', () => {
-        it.skip('should emit COLLECTION_UPDATED event', () => {
-          observers.data.collections.bydId.brand(undefined, OBJ);
+        it('should emit COLLECTION_UPDATED event', () => {
+          const indexed = stub(Observer, 'indexed').returns('eyy');
+          observers = Observer.create(<any>{ emit });
+          const byId = observers.data.collections.byId;
 
-          expect(emit).to.be.calledWith(`${Events.COLLECTION_UPDATED}:brand`, OBJ);
+          expect(byId).to.eq('eyy');
+          expect(indexed).to.be.calledWith(sinon.match.func);
         });
 
         it('should emit SELECTED_COLLECTION_UPDATED event', () => {
-          observers.data.collections.selected(undefined, OBJ);
+          observers.data.collections.selected();
 
-          expect(emit).to.be.calledWith(Events.SELECTED_COLLECTION_UPDATED, OBJ);
+          expect(emit).to.be.calledWith(Events.SELECTED_COLLECTION_UPDATED);
         });
       });
 
       describe('details', () => {
         it('should emit DETAILS_ID_UPDATED event', () => {
-          observers.data.details.id(undefined, OBJ);
+          observers.data.details.id();
 
-          expect(emit).to.be.calledWith(Events.DETAILS_ID_UPDATED, OBJ);
+          expect(emit).to.be.calledWith(Events.DETAILS_ID_UPDATED);
         });
 
         it('should emit DETAILS_PRODUCT_UPDATED event', () => {
-          observers.data.details.product(undefined, OBJ);
+          observers.data.details.product();
 
-          expect(emit).to.be.calledWith(Events.DETAILS_PRODUCT_UPDATED, OBJ);
+          expect(emit).to.be.calledWith(Events.DETAILS_PRODUCT_UPDATED);
         });
       });
 
+      // TODO: fix these
       describe('navigations', () => {
         it.skip('should emit SELECTED_REFINEMENTS_UPDATED event', () => {
           observers.data.navigations.bydId.brand.selected(undefined, OBJ);
