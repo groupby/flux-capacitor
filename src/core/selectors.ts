@@ -44,13 +44,13 @@ namespace Selectors {
 
   export const selectedRefinements = (state: Store.State) =>
     Selectors.navigations(state)
-      .reduce((allRefinements, navigation) =>
-        allRefinements.concat(navigation.selected
-          .map<any>((refinementIndex) => navigation.refinements[refinementIndex])
+      .reduce((allRefinements, nav) =>
+        allRefinements.concat(nav.selected
+          .map<any>((refinementIndex) => nav.refinements[refinementIndex])
           .reduce((refs, { low, high, value }) =>
-            refs.concat(navigation.range
-              ? { navigationName: navigation.field, type: 'Range', high, low }
-              : { navigationName: navigation.field, type: 'Value', value }), [])), []);
+            refs.concat(nav.range
+              ? { navigationName: nav.field, type: 'Range', high, low }
+              : { navigationName: nav.field, type: 'Value', value }), [])), []);
 
   export const navigation = (state: Store.State, navigationId: string) =>
     state.data.navigations.byId[navigationId];

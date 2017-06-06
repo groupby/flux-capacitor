@@ -152,8 +152,7 @@ export default class Creator {
       const recordCount = Adapters.Search.extractRecordCount(results);
       dispatch(this.receiveQuery(Adapters.Search.extractQuery(results, this.linkMapper)));
       dispatch(this.receiveProducts(results.records.map(Adapters.Search.extractProduct)));
-      // tslint:disable-next-line max-line-length
-      dispatch(this.receiveNavigations(Adapters.Search.combineNavigations(results.availableNavigation, results.selectedNavigation)));
+      dispatch(this.receiveNavigations(Adapters.Search.combineNavigations(results)));
       dispatch(this.receiveRecordCount(recordCount));
       dispatch(this.receiveCollectionCount(Selectors.collection(state), recordCount));
       dispatch(this.receivePage(Adapters.Search.extractPage(state, recordCount)));
