@@ -1,4 +1,5 @@
 import Adapter from '../../../../src/core/adapters/autocomplete';
+import SearchAdapter from '../../../../src/core/adapters/search';
 import suite from '../../_suite';
 
 suite('SearchAdapter', ({ expect, stub }) => {
@@ -61,7 +62,7 @@ suite('SearchAdapter', ({ expect, stub }) => {
 
   describe('extractProducts()', () => {
     it('should call extractProduct()', () => {
-      const extractProduct = stub(Adapter, 'extractProduct').returns('x');
+      const extractProduct = stub(SearchAdapter, 'extractProduct').returns('x');
 
       const products = Adapter.extractProducts({ result: { products: ['a', 'b'] } });
 

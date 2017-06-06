@@ -171,19 +171,25 @@ suite('SearchAdapter', ({ expect, stub }) => {
     it('should extract a rich content zone', () => {
       const content = 'Canada Day Sale!';
       const name = 'my zone';
-      const zone: any = { type: 'Rich_Content', name, content };
+      const zone: any = { type: 'Rich_Content', name, richContent: content };
 
-      expect(Adapter.extractZone(zone)).to.eql({ type: 'rich_content', name, content });
+      expect(Adapter.extractZone(zone)).to.eql({
+        type: 'rich_content',
+        name,
+        content
+      });
     });
 
     it('should extract a record zone', () => {
       const records = [{ allMeta: { a: 'b' } }, { allMeta: { c: 'd' } }];
       const name = 'my zone';
-      const zone: any = { type: 'Records', name, records };
+      const query = 'red leather';
+      const zone: any = { type: 'Record', name, records, query };
 
       expect(Adapter.extractZone(zone)).to.eql({
-        type: 'record',
+        type: 'products',
         name,
+        query,
         products: [{ a: 'b' }, { c: 'd' }],
       });
     });
