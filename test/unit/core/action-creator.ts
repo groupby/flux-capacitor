@@ -5,7 +5,7 @@ import SearchAdapter from '../../../src/core/adapters/search';
 import * as utils from '../../../src/core/utils';
 import suite from '../_suite';
 
-suite.only('ActionCreator', ({ expect, spy, stub }) => {
+suite('ActionCreator', ({ expect, spy, stub }) => {
   let actions: ActionCreator;
   const flux: any = { a: 'b' };
 
