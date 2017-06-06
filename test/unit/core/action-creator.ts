@@ -16,6 +16,12 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       expect(actions['flux']).to.eq(flux);
       expect(actions['linkMapper']).to.be.a('function');
     });
+
+    describe('linkMapper()', () => {
+      it('should return mapped link', () => {
+        expect(actions.linkMapper('test')).to.eql({ value: 'test', url: '/search/test'});
+      });
+    });
   });
 
   describe('fetch action creators', () => {
@@ -134,28 +140,6 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         expect(dispatch).to.not.be.called;
       });
 
-      // stuff
-      it('should call flux.clients.bridge.search()', () => {
-        const request = { a: 'b' };
-        const response = { c: 'd' };
-        const state: any = { isFetching: {} };
-        const receiveSearchResponseAction = () => null;
-        const dispatch = spy();
-        const search = stub().resolves(response);
-        const searchRequest = stub(Selectors, 'searchRequest').returns(request);
-        const receiveSearchResponse = stub(actions, 'receiveSearchResponse').returns(receiveSearchResponseAction);
-        const action = actions.fetchProducts();
-        flux.clients = { bridge: { search } };
-
-        return action(dispatch, () => state)
-          .then(() => {
-            expect(searchRequest).to.be.calledWith(state);
-            expect(search).to.be.calledWith(request);
-            expect(receiveSearchResponse).to.be.calledWith(response);
-            expect(dispatch).to.be.calledWith(receiveSearchResponseAction);
-          });
-      });
-
       it('should fetch more products', () => {
         const request = { a: 'b' };
         const response = { c: 'd' };
@@ -170,14 +154,15 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const receiveMoreProducts = stub(actions, 'receiveMoreProducts').returns(moreProducts);
         const action = actions.fetchMoreProducts(amount);
         const soFetching = stub(actions, 'soFetching').returns(moreProducts);
+        const extractProducts = stub(AutocompleteAdapter, 'extractProducts').callsFake((s) => s);
         stub(Selectors, 'products').returns(products);
-        stub(AutocompleteAdapter, 'extractProducts').callsFake((s) => s);
         flux.clients = { bridge: { search } };
 
         return action(dispatch, getStore)
           .then(() => {
             expect(search).to.be.calledWith({ ...request, pageSize: amount, skip: products.length });
             expect(searchRequest).to.be.calledWith(state);
+            expect(extractProducts).to.be.calledWith(response);
             expect(dispatch).to.be.calledWith(moreProducts).calledTwice;
           });
       });
@@ -255,27 +240,58 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       });
 
       it('should call flux.clients.bridge.search()', () => {
-        // const query = 'red app';
-        // const config = { a: 'b' };
-        // const response = { c: 'd' };
-        // const products = ['e', 'f'];
-        // const receiveAutocompleteProductsAction = () => null;
+        const collection = 'department';
+        const state = { a: 'b' };
+        const response = { c: 'd' };
+        const recordCount = 10293;
         const dispatch = spy();
-        // const productSearch = stub().resolves(response);
-        // const extractAutocompleteProducts = stub(AutocompleteAdapter, 'extractProducts').returns(products);
-        // const receiveAutocompleteProducts = stub(actions, 'receiveAutocompleteProducts')
-        //   .returns(receiveAutocompleteProductsAction);
-        // const action = actions.fetchAutocompleteProducts(query, config);
-        // flux.clients = { sayt: { productSearch } };
-        //
-        // return action(dispatch)
-        //   .then(() => {
-        //     expect(productSearch).to.be.calledWith(query, config);
-        //     expect(extractAutocompleteProducts).to.be.calledWith(response);
-        //     expect(receiveAutocompleteProducts).to.be.calledWith(products);
-        //     expect(dispatch).to.be.calledWith(receiveAutocompleteProductsAction);
-        //   });
+        const getStore = spy(() => state);
+        const search = stub().resolves(response);
+        const action = actions.fetchCollectionCount(collection);
+        const searchRequest = stub(Selectors, 'searchRequest').returns(state);
+        const receiveCollectionCount = stub(actions, 'receiveCollectionCount').returns(response);
+        const extractRecordCount = stub(SearchAdapter, 'extractRecordCount').returns(recordCount);
+        flux.clients = { bridge: { search } };
+
+        return action(dispatch, getStore)
+          .then(() => {
+            expect(search).to.be.calledWith({ ...state, collection });
+            expect(receiveCollectionCount).to.be.calledWith(collection, recordCount);
+            expect(extractRecordCount).to.be.calledWith(response);
+          });
       });
+
+      describe('fetchProductDetails()', () => {
+        it('should return a thunk', () => {
+          const thunk = actions.fetchProductDetails('');
+
+          expect(thunk).to.be.a('function');
+        });
+
+        it('should call flux.clients.bridge.search()', () => {
+          const id = '1923';
+          const state = { a: 'b' };
+          const allMeta = 'hey';
+          const response = { c: 'd', records: [{ allMeta }] };
+          const detailsProduct = '10293';
+          const dispatch = spy();
+          const getStore = spy(() => state);
+          const search = stub().resolves(response);
+          const action = actions.fetchProductDetails(id);
+          const searchRequest = stub(Selectors, 'searchRequest').returns(state);
+          const receiveDetailsProduct = stub(actions, 'receiveDetailsProduct').returns(detailsProduct);
+          flux.clients = { bridge: { search } };
+
+          return action(dispatch, getStore)
+            .then(() => {
+              expect(search).to.be.calledWith({
+                ...state,
+                refinements: [{ navigationName: 'id', type: 'Value', value: id }]
+              });
+              expect(dispatch).to.be.calledWith(detailsProduct);
+              expect(receiveDetailsProduct).to.be.calledWith(allMeta);
+            });
+        });
     });
   });
 

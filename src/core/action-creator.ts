@@ -96,7 +96,7 @@ export default class Creator {
     }
 
   fetchCollectionCount = (collection: string) => (dispatch: Dispatch<any>, getState: () => Store.State) =>
-    this.flux.clients.bridge.search(Object.assign(Selectors.searchRequest(getState()), { collection }))
+    this.flux.clients.bridge.search({ ...Selectors.searchRequest(getState()), collection })
       .then((res) => dispatch(this.receiveCollectionCount(collection, Adapters.Search.extractRecordCount(res))))
 
   fetchProductDetails = (id: string) => (dispatch: Dispatch<any>, getState: () => Store.State) =>
