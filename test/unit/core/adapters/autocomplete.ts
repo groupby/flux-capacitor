@@ -22,7 +22,7 @@ suite('SearchAdapter', ({ expect, stub }) => {
       const { categoryValues } = Adapter.extractSuggestions(response, 'brand');
 
       expect(categoryValues).to.eq(values);
-      expect(extractCategoryValues.calledWith(searchTerm)).to.be.true;
+      expect(extractCategoryValues).to.be.calledWith(searchTerm);
     });
 
     it('should should ignore category if not specified', () => {
@@ -67,8 +67,8 @@ suite('SearchAdapter', ({ expect, stub }) => {
       const products = Adapter.extractProducts({ result: { products: ['a', 'b'] } });
 
       expect(products).to.eql(['x', 'x']);
-      expect(extractProduct.calledWith('a')).to.be.true;
-      expect(extractProduct.calledWith('b')).to.be.true;
+      expect(extractProduct).to.be.calledWith('a');
+      expect(extractProduct).to.be.calledWith('b');
     });
   });
 });

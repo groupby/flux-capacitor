@@ -3,12 +3,11 @@ import thunk from 'redux-thunk';
 import * as uuid from 'uuid/v1';
 import FluxCapacitor from '../flux-capacitor';
 import Actions from './actions';
+import Adapter from './adapters/configuration';
 import reducer from './reducers';
 import * as PageReducer from './reducers/data/page';
 
 export { ReduxStore };
-
-export const DEFAULT_COLLECTION = 'default';
 
 export const RECALL_CHANGE_ACTIONS = [
   Actions.UPDATE_SEARCH,
@@ -37,80 +36,6 @@ export const idGenerator = (key: string, actions: string[]) =>
 
 namespace Store {
 
-  export function extractIndexedState(state: string | { options: string[], default: string }) {
-    if (typeof state === 'object') {
-      return { selected: state.default, allIds: state.options || [state.default] };
-    } else {
-      return { selected: state, allIds: [state] };
-    }
-  }
-
-  // tslint:disable-next-line max-line-length
-  export function extractCollectionsState(config: FluxCapacitor.Configuration, defaultValue: string): Indexed.Selectable<Collection> {
-    const { selected, allIds } = Store.extractIndexedState(config.collection || defaultValue);
-
-    return {
-      selected,
-      allIds,
-      byId: allIds.reduce((map, name) => Object.assign(map, { [name]: { name } }), {})
-    };
-  }
-
-  // tslint:disable-next-line max-line-length
-  export function extractPageSizeState(config: FluxCapacitor.Configuration, defaultValue: number): SelectableList<number> {
-    const state = config.search.pageSize || defaultValue;
-    if (typeof state === 'object') {
-      const selected = state.default;
-      const items = state.options || [defaultValue];
-      const selectedIndex = items.findIndex((pageSize) => pageSize === selected);
-
-      return { items, selected: selectedIndex === -1 ? 0 : selectedIndex };
-    } else {
-      return { selected: 0, items: [state] };
-    }
-  }
-
-  export function extractSortState(config: FluxCapacitor.Configuration): SelectableList<Sort> {
-    const state = config.search.sort;
-    if (typeof state === 'object' && ('options' in state || 'default' in state)) {
-      const selected: Sort = (<{ default: Sort }>state).default || <any>{};
-      const items = ((<{ options: Sort[] }>state).options || []);
-      const selectedIndex = items
-        .findIndex((sort) => sort.field === selected.field && !sort.descending === !selected.descending);
-
-      return { items, selected: selectedIndex === -1 ? 0 : selectedIndex };
-    } else {
-      return { selected: 0, items: [<Sort>state] };
-    }
-  }
-
-  export function extractSaytCategoryField(config: FluxCapacitor.Configuration) {
-    return config.autocomplete.category;
-  }
-
-  export function extractInitialState(config: FluxCapacitor.Configuration): Partial<State> {
-    return {
-      data: <any>{
-        autocomplete: {
-          suggestions: [],
-          navigations: [],
-          products: [],
-          category: {
-            field: Store.extractSaytCategoryField(config),
-            values: []
-          }
-        },
-        fields: config.search.fields || [],
-        collections: Store.extractCollectionsState(config, DEFAULT_COLLECTION),
-        sorts: Store.extractSortState(config),
-        page: {
-          ...PageReducer.DEFAULTS,
-          sizes: Store.extractPageSizeState(config, PageReducer.DEFAULT_PAGE_SIZE)
-        }
-      }
-    };
-  }
-
   // tslint:disable-next-line max-line-length
   export function create(config: FluxCapacitor.Configuration, listener?: (store: ReduxStore<State>) => () => void): ReduxStore<State> {
     const middleware = [
@@ -127,7 +52,7 @@ namespace Store {
 
     const store = createStore<State>(
       reducer,
-      <any>Store.extractInitialState(config),
+      <any>Adapter.initialState(config),
       applyMiddleware(...middleware),
     );
 

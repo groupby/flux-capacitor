@@ -2,6 +2,7 @@ import { EventEmitter } from 'eventemitter3';
 import { BrowserBridge, Request, Results } from 'groupby-api';
 import { Sayt } from 'sayt';
 import * as core from './core';
+import Adapter from './core/adapters/configuration';
 
 class FluxCapacitor extends EventEmitter {
 
@@ -134,17 +135,10 @@ class FluxCapacitor extends EventEmitter {
 
     return new Sayt(<any>{
       autocomplete: { language: saytConfig.language || config.language },
-      collection: saytConfig.collection || FluxCapacitor.extractCollection(config),
+      collection: saytConfig.collection || Adapter.extractCollection(config),
       productSearch: { area: saytConfig.area || config.area },
       subdomain: config.customerId,
     });
-  }
-
-  /**
-   * extract current collection from config
-   */
-  static extractCollection(config: FluxCapacitor.Configuration) {
-    return typeof config.collection === 'object' ? config.collection.default : config.collection;
   }
 }
 

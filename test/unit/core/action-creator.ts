@@ -36,9 +36,9 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         action(dispatch, getStore);
 
-        expect(getStore.called).to.be.true;
-        expect(hasMoreRefinements.calledWith(state, navigationId)).to.be.true;
-        expect(dispatch.called).to.be.false;
+        expect(getStore).to.be.called;
+        expect(hasMoreRefinements).to.be.calledWith(state, navigationId);
+        expect(dispatch).to.not.be.called;
       });
 
       it('should fetch more refinements', () => {
@@ -55,8 +55,8 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         return action(() => null, () => state)
           .then(() => {
-            expect(searchRequest.calledWith(state)).to.be.true;
-            expect(refinements.calledWith(search, name)).to.be.true;
+            expect(searchRequest).to.be.calledWith(state);
+            expect(refinements).to.be.calledWith(search, name);
           });
       });
 
@@ -78,10 +78,10 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         return action(dispatch, () => state)
           .then(() => {
-            expect(extractRefinement.calledWith('c')).to.be.true;
-            expect(extractRefinement.calledWith('d')).to.be.true;
-            expect(receiveMoreRefinements.calledWith(name, ['c', 'd'])).to.be.true;
-            expect(dispatch.calledWith(moreRefinementsAction)).to.be.true;
+            expect(extractRefinement).to.be.calledWith('c');
+            expect(extractRefinement).to.be.calledWith('d');
+            expect(receiveMoreRefinements).to.be.calledWith(name, ['c', 'd']);
+            expect(dispatch).to.be.calledWith(moreRefinementsAction);
           });
       });
     });
@@ -107,10 +107,10 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         return action(dispatch, () => state)
           .then(() => {
-            expect(searchRequest.calledWith(state)).to.be.true;
-            expect(search.calledWith(request)).to.be.true;
-            expect(receiveSearchResponse.calledWith(response)).to.be.true;
-            expect(dispatch.calledWith(receiveSearchResponseAction)).to.be.true;
+            expect(searchRequest).to.be.calledWith(state);
+            expect(search).to.be.calledWith(request);
+            expect(receiveSearchResponse).to.be.calledWith(response);
+            expect(dispatch).to.be.calledWith(receiveSearchResponseAction);
           });
       });
     });
@@ -140,10 +140,10 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         return action(dispatch, () => <any>({ data: { autocomplete: { category: { field: 'brand' } } } }))
           .then(() => {
-            // expect(autocomplete.calledWith(query, config)).to.be.true;
-            // expect(extractAutocompleteSuggestions.calledWith(response)).to.be.true;
-            // expect(receiveAutocompleteSuggestions.calledWith(suggestions, categoryValues)).to.be.true;
-            // expect(dispatch.calledWith(receiveAutocompleteSuggestionsAction)).to.be.true;
+            expect(autocomplete).to.be.calledWith(query, config);
+            expect(extractAutocompleteSuggestions).to.be.calledWith(response);
+            expect(receiveAutocompleteSuggestions).to.be.calledWith(suggestions, categoryValues);
+            expect(dispatch).to.be.calledWith(receiveAutocompleteSuggestionsAction);
           });
       });
     });
@@ -171,10 +171,10 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         return action(dispatch)
           .then(() => {
-            expect(productSearch.calledWith(query, config)).to.be.true;
-            expect(extractAutocompleteProducts.calledWith(response)).to.be.true;
-            expect(receiveAutocompleteProducts.calledWith(products)).to.be.true;
-            expect(dispatch.calledWith(receiveAutocompleteProductsAction)).to.be.true;
+            expect(productSearch).to.be.calledWith(query, config);
+            expect(extractAutocompleteProducts).to.be.calledWith(response);
+            expect(receiveAutocompleteProducts).to.be.calledWith(products);
+            expect(dispatch).to.be.calledWith(receiveAutocompleteProductsAction);
           });
       });
     });
@@ -188,7 +188,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.updateSearch(data);
 
-        expect(thunk.calledWith(Actions.UPDATE_SEARCH, data)).to.be.true;
+        expect(thunk).to.be.calledWith(Actions.UPDATE_SEARCH, data);
       });
     });
 
@@ -202,10 +202,10 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.selectRefinement(navigationId, index);
 
-        expect(conditional.calledWith(sinon.match((predicate) => {
+        expect(conditional).to.be.calledWith(sinon.match((predicate) => {
           predicate(state);
           return expect(isRefinementDeselected.calledWith(state, navigationId, index)).to.be.true;
-        }), Actions.SELECT_REFINEMENT, { navigationId, index })).to.be.true;
+        }), Actions.SELECT_REFINEMENT, { navigationId, index });
       });
     });
 
@@ -219,10 +219,10 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.deselectRefinement(navigationId, index);
 
-        expect(conditional.calledWith(sinon.match((predicate) => {
+        expect(conditional).to.be.calledWith(sinon.match((predicate) => {
           predicate(state);
           return expect(isRefinementSelected.calledWith(state, navigationId, index)).to.be.true;
-        }), Actions.DESELECT_REFINEMENT, { navigationId, index })).to.be.true;
+        }), Actions.DESELECT_REFINEMENT, { navigationId, index });
       });
     });
 
@@ -233,9 +233,9 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.selectCollection(id);
 
-        expect(conditional.calledWith(sinon.match((predicate) =>
+        expect(conditional).to.be.calledWith(sinon.match((predicate) =>
           predicate({ data: { collections: { selected: 'tutorials' } } })),
-          Actions.SELECT_COLLECTION, { id })).to.be.true;
+          Actions.SELECT_COLLECTION, { id });
       });
     });
 
@@ -246,9 +246,9 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.selectSort(index);
 
-        expect(conditional.calledWith(sinon.match((predicate) =>
+        expect(conditional).to.be.calledWith(sinon.match((predicate) =>
           predicate({ data: { sorts: { selected: 2 } } })),
-          Actions.SELECT_SORT, { index })).to.be.true;
+          Actions.SELECT_SORT, { index });
       });
     });
 
@@ -259,9 +259,9 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.updatePageSize(size);
 
-        expect(conditional.calledWith(sinon.match((predicate) =>
+        expect(conditional).to.be.calledWith(sinon.match((predicate) =>
           predicate({ data: { page: { sizes: { items: [10, 20, 80], selected: 20 } } } })),
-          Actions.UPDATE_PAGE_SIZE, { size })).to.be.true;
+          Actions.UPDATE_PAGE_SIZE, { size });
       });
     });
 
@@ -272,9 +272,9 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.updateCurrentPage(page);
 
-        expect(conditional.calledWith(sinon.match((predicate) =>
+        expect(conditional).to.be.calledWith(sinon.match((predicate) =>
           predicate({ data: { page: { current: 3 } } })),
-          Actions.UPDATE_CURRENT_PAGE, { page })).to.be.true;
+          Actions.UPDATE_CURRENT_PAGE, { page });
       });
     });
 
@@ -285,7 +285,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.updateDetailsId(id);
 
-        expect(thunk.calledWith(Actions.UPDATE_DETAILS_ID, { id })).to.be.true;
+        expect(thunk).to.be.calledWith(Actions.UPDATE_DETAILS_ID, { id });
       });
     });
 
@@ -296,9 +296,9 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.updateAutocompleteQuery(query);
 
-        expect(conditional.calledWith(sinon.match((predicate) =>
+        expect(conditional).to.be.calledWith(sinon.match((predicate) =>
           predicate({ data: { autocomplete: { query: 'Fred Flinsto' } } })),
-          Actions.UPDATE_AUTOCOMPLETE_QUERY, { query })).to.be.true;
+          Actions.UPDATE_AUTOCOMPLETE_QUERY, { query });
       });
     });
   });
@@ -356,26 +356,26 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         thunk(dispatch, getStore);
 
-        expect(receiveRedirect.calledWith(results.redirect)).to.be.true;
-        expect(dispatch.calledWith(receiveRedirectAction)).to.be.true;
-        expect(receiveQuery.calledWith(query)).to.be.true;
-        expect(extractQuery.calledWith(results, linkMapper)).to.be.true;
-        expect(dispatch.calledWith(receiveQueryAction)).to.be.true;
-        expect(receiveProducts.calledWith(['x', 'x'])).to.be.true;
-        expect(extractProduct.calledWith({ allMeta: { u: 'v' } })).to.be.true;
-        expect(extractProduct.calledWith({ allMeta: { w: 'x' } })).to.be.true;
-        expect(dispatch.calledWith(receiveProductsAction)).to.be.true;
-        expect(receiveNavigations.calledWith(navigations)).to.be.true;
-        expect(combineNavigations.calledWith(results.availableNavigation, results.selectedNavigation)).to.be.true;
-        expect(dispatch.calledWith(receiveNavigationsAction)).to.be.true;
-        expect(receivePage.calledWith(page)).to.be.true;
-        expect(extractPage.calledWith(state)).to.be.true;
-        expect(dispatch.calledWith(receivePageAction)).to.be.true;
-        expect(receiveTemplate.calledWith(template)).to.be.true;
-        expect(extractTemplate.calledWith(results.template)).to.be.true;
-        expect(dispatch.calledWith(receiveTemplateAction)).to.be.true;
-        expect(receiveCollectionCount.calledWith(state.data.collections.selected, results.totalRecordCount)).to.be.true;
-        expect(dispatch.calledWith(receiveCollectionCountAction)).to.be.true;
+        expect(receiveRedirect).to.be.calledWith(results.redirect);
+        expect(dispatch).to.be.calledWith(receiveRedirectAction);
+        expect(receiveQuery).to.be.calledWith(query);
+        expect(extractQuery).to.be.calledWith(results, linkMapper);
+        expect(dispatch).to.be.calledWith(receiveQueryAction);
+        expect(receiveProducts).to.be.calledWith(['x', 'x']);
+        expect(extractProduct).to.be.calledWith({ allMeta: { u: 'v' } });
+        expect(extractProduct).to.be.calledWith({ allMeta: { w: 'x' } });
+        expect(dispatch).to.be.calledWith(receiveProductsAction);
+        expect(receiveNavigations).to.be.calledWith(navigations);
+        expect(combineNavigations).to.be.calledWith(results.availableNavigation, results.selectedNavigation);
+        expect(dispatch).to.be.calledWith(receiveNavigationsAction);
+        expect(receivePage).to.be.calledWith(page);
+        expect(extractPage).to.be.calledWith(state);
+        expect(dispatch).to.be.calledWith(receivePageAction);
+        expect(receiveTemplate).to.be.calledWith(template);
+        expect(extractTemplate).to.be.calledWith(results.template);
+        expect(dispatch).to.be.calledWith(receiveTemplateAction);
+        expect(receiveCollectionCount).to.be.calledWith(state.data.collections.selected, results.totalRecordCount);
+        expect(dispatch).to.be.calledWith(receiveCollectionCountAction);
       });
     });
 
@@ -386,7 +386,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.receiveQuery(query);
 
-        expect(thunk.calledWith(Actions.RECEIVE_QUERY, query)).to.be.true;
+        expect(thunk).to.be.calledWith(Actions.RECEIVE_QUERY, query);
       });
     });
 
@@ -397,7 +397,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.receiveProducts(products);
 
-        expect(thunk.calledWith(Actions.RECEIVE_PRODUCTS, { products })).to.be.true;
+        expect(thunk).to.be.calledWith(Actions.RECEIVE_PRODUCTS, { products });
       });
     });
 
@@ -409,7 +409,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.receiveCollectionCount(collection, count);
 
-        expect(thunk.calledWith(Actions.RECEIVE_COLLECTION_COUNT, { collection, count })).to.be.true;
+        expect(thunk).to.be.calledWith(Actions.RECEIVE_COLLECTION_COUNT, { collection, count });
       });
     });
 
@@ -420,7 +420,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.receiveNavigations(navigations);
 
-        expect(thunk.calledWith(Actions.RECEIVE_NAVIGATIONS, { navigations })).to.be.true;
+        expect(thunk).to.be.calledWith(Actions.RECEIVE_NAVIGATIONS, { navigations });
       });
     });
 
@@ -431,7 +431,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.receivePage(page);
 
-        expect(thunk.calledWith(Actions.RECEIVE_PAGE, page)).to.be.true;
+        expect(thunk).to.be.calledWith(Actions.RECEIVE_PAGE, page);
       });
     });
 
@@ -442,7 +442,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.receiveTemplate(template);
 
-        expect(thunk.calledWith(Actions.RECEIVE_TEMPLATE, { template })).to.be.true;
+        expect(thunk).to.be.calledWith(Actions.RECEIVE_TEMPLATE, { template });
       });
     });
 
@@ -453,7 +453,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.receiveRedirect(redirect);
 
-        expect(thunk.calledWith(Actions.RECEIVE_REDIRECT, { redirect })).to.be.true;
+        expect(thunk).to.be.calledWith(Actions.RECEIVE_REDIRECT, { redirect });
       });
     });
 
@@ -465,7 +465,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.receiveMoreRefinements(navigationId, refinements);
 
-        expect(thunk.calledWith(Actions.RECEIVE_MORE_REFINEMENTS, { navigationId, refinements })).to.be.true;
+        expect(thunk).to.be.calledWith(Actions.RECEIVE_MORE_REFINEMENTS, { navigationId, refinements });
       });
     });
 
@@ -478,11 +478,33 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.receiveAutocompleteSuggestions(suggestions, categoryValues, navigations);
 
-        expect(thunk.calledWith(Actions.RECEIVE_AUTOCOMPLETE_SUGGESTIONS, {
+        expect(thunk).to.be.calledWith(Actions.RECEIVE_AUTOCOMPLETE_SUGGESTIONS, {
           suggestions,
           categoryValues,
           navigations
-        })).to.be.true;
+        });
+      });
+    });
+
+    describe('receiveMoreProducts()', () => {
+      it('should create a RECEIVE_MORE_PRODUCTS action', () => {
+        const products: any[] = ['a', 'b'];
+        const thunk = stub(utils, 'thunk');
+
+        actions.receiveMoreProducts(products);
+
+        expect(thunk).to.be.calledWith(Actions.RECEIVE_MORE_PRODUCTS, { products });
+      });
+    });
+
+    describe('receiveAutocompleteProducts()', () => {
+      it('should create a RECEIVE_AUTOCOMPLETE_PRODUCTS action', () => {
+        const products: any[] = ['a', 'b'];
+        const thunk = stub(utils, 'thunk');
+
+        actions.receiveAutocompleteProducts(products);
+
+        expect(thunk).to.be.calledWith(Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, { products });
       });
     });
 
@@ -493,7 +515,32 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         actions.receiveDetailsProduct(product);
 
-        expect(thunk.calledWith(Actions.RECEIVE_DETAILS_PRODUCT, { product })).to.be.true;
+        expect(thunk).to.be.calledWith(Actions.RECEIVE_DETAILS_PRODUCT, { product });
+      });
+    });
+
+    describe('createComponentState()', () => {
+      it('should create a CREATE_COMPONENT_STATE action', () => {
+        const tagName = 'my-tag';
+        const id = '123';
+        const state = { a: 'b' };
+        const thunk = stub(utils, 'thunk');
+
+        actions.createComponentState(tagName, id, state);
+
+        expect(thunk).to.be.calledWith(Actions.CREATE_COMPONENT_STATE, { tagName, id, state });
+      });
+    });
+
+    describe('removeComponentState()', () => {
+      it('should create a CREATE_COMPONENT_STATE action', () => {
+        const tagName = 'my-tag';
+        const id = '123';
+        const thunk = stub(utils, 'thunk');
+
+        actions.removeComponentState(tagName, id);
+
+        expect(thunk).to.be.calledWith(Actions.REMOVE_COMPONENT_STATE, { tagName, id });
       });
     });
   });

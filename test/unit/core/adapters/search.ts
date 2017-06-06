@@ -22,10 +22,10 @@ suite('SearchAdapter', ({ expect, stub }) => {
         related: ['x', 'x'],
         rewrites: ['e', 'f'],
       });
-      expect(linkMapper.calledWith('a')).to.be.true;
-      expect(linkMapper.calledWith('b')).to.be.true;
-      expect(linkMapper.calledWith('c')).to.be.true;
-      expect(linkMapper.calledWith('d')).to.be.true;
+      expect(linkMapper).to.be.calledWith('a');
+      expect(linkMapper).to.be.calledWith('b');
+      expect(linkMapper).to.be.calledWith('c');
+      expect(linkMapper).to.be.calledWith('d');
     });
   });
 
@@ -91,9 +91,9 @@ suite('SearchAdapter', ({ expect, stub }) => {
         selected: [],
         sort,
       });
-      expect(extractRefinement.calledWith('a')).to.be.true;
-      expect(extractRefinement.calledWith('b')).to.be.true;
-      expect(extractNavigationSort.calledWith({ c: 'd' })).to.be.true;
+      expect(extractRefinement).to.be.calledWith('a');
+      expect(extractRefinement).to.be.calledWith('b');
+      expect(extractNavigationSort).to.be.calledWith({ c: 'd' });
     });
 
     it('should ignore sort if not truthy', () => {
@@ -147,11 +147,11 @@ suite('SearchAdapter', ({ expect, stub }) => {
       Adapter.appendSelectedRefinements(available, selected);
 
       expect(available.selected).to.eql([0, 3]);
-      expect(refinementsMatch.calledWith('a', 'a')).to.be.true;
-      expect(refinementsMatch.calledWith('a', 'd')).to.be.true;
-      expect(refinementsMatch.calledWith('b', 'd')).to.be.true;
-      expect(refinementsMatch.calledWith('c', 'd')).to.be.true;
-      expect(refinementsMatch.calledWith('d', 'd')).to.be.true;
+      expect(refinementsMatch).to.be.calledWith('a', 'a');
+      expect(refinementsMatch).to.be.calledWith('a', 'd');
+      expect(refinementsMatch).to.be.calledWith('b', 'd');
+      expect(refinementsMatch).to.be.calledWith('c', 'd');
+      expect(refinementsMatch).to.be.calledWith('d', 'd');
     });
   });
 
@@ -215,8 +215,8 @@ suite('SearchAdapter', ({ expect, stub }) => {
           'zone 2': 'x',
         },
       });
-      expect(extractZone.calledWith('a')).to.be.true;
-      expect(extractZone.calledWith('b')).to.be.true;
+      expect(extractZone).to.be.calledWith('a');
+      expect(extractZone).to.be.calledWith('b');
     });
   });
 
@@ -227,7 +227,7 @@ suite('SearchAdapter', ({ expect, stub }) => {
       const build = stub(PageAdapter, 'build').returns(pageInfo);
 
       expect(Adapter.extractPage(store, 10)).to.eql(pageInfo);
-      expect(build.called).to.be.true;
+      expect(build).to.be.called;
     });
   });
 

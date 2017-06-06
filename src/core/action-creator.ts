@@ -213,7 +213,8 @@ export default class Creator {
       Actions.RECEIVE_AUTOCOMPLETE_SUGGESTIONS, { suggestions, categoryValues, navigations })
 
   receiveMoreProducts = (products: Store.Product[]) =>
-    thunk(Actions.RECEIVE_MORE_PRODUCTS, { products })
+    thunk<Actions.Autocomplete.ReceiveProducts>(
+      Actions.RECEIVE_MORE_PRODUCTS, { products })
 
   receiveAutocompleteProducts = (products: Store.Product[]) =>
     thunk<Actions.Autocomplete.ReceiveProducts>(

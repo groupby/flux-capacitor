@@ -18,7 +18,7 @@ suite('Observer', ({ expect, spy, stub }) => {
 
       observer();
 
-      expect(getState.called).to.be.true;
+      expect(getState).to.be.called;
     });
 
     it('should call Observer.resolve()', () => {
@@ -32,8 +32,8 @@ suite('Observer', ({ expect, spy, stub }) => {
 
       observer();
 
-      expect(resolve.calledWith(undefined, newState)).to.be.true;
-      expect(create.calledWith(flux)).to.be.true;
+      expect(resolve).to.be.calledWith(undefined, newState);
+      expect(create).to.be.calledWith(flux);
     });
   });
 
@@ -43,7 +43,7 @@ suite('Observer', ({ expect, spy, stub }) => {
 
       Observer.resolve(undefined, undefined, observer, '');
 
-      expect(observer.called).to.be.false;
+      expect(observer).to.not.be.called;
     });
 
     it.skip('should not call the observer if not a function', () => {
@@ -56,7 +56,7 @@ suite('Observer', ({ expect, spy, stub }) => {
 
       Observer.resolve(1, 2, (...args) => observer(...args), path);
 
-      expect(observer.calledWith(1, 2, path)).to.be.true;
+      expect(observer).to.be.calledWith(1, 2, path);
     });
 
     it.skip('should call resolve() on subtrees', () => {
@@ -75,10 +75,10 @@ suite('Observer', ({ expect, spy, stub }) => {
 
       Observer.resolve(oldState, newState, observers, '');
 
-      expect(observer1.calledWith(oldState, newState)).to.be.true;
-      expect(observer2.calledWith({ x: 1 }, undefined)).to.be.true;
-      expect(observer3.calledWith(1, undefined)).to.be.true;
-      expect(observer4.calledWith(undefined, 2)).to.be.true;
+      expect(observer1).to.be.calledWith(oldState, newState);
+      expect(observer2).to.be.calledWith({ x: 1 }, undefined);
+      expect(observer3).to.be.calledWith(1, undefined);
+      expect(observer4).to.be.calledWith(undefined, 2);
     });
 
     it.skip('should not call resolve() on equal subtrees', () => {
@@ -94,9 +94,9 @@ suite('Observer', ({ expect, spy, stub }) => {
 
       Observer.resolve(oldState, newState, observers, '');
 
-      expect(observer1.calledWith(oldState, newState)).to.be.true;
-      expect(observer2.called).to.be.false;
-      expect(observer3.called).to.be.false;
+      expect(observer1).to.be.calledWith(oldState, newState);
+      expect(observer2).to.not.be.called;
+      expect(observer3).to.not.be.called;
     });
   });
 
@@ -144,13 +144,13 @@ suite('Observer', ({ expect, spy, stub }) => {
         it('should emit AUTOCOMPLETE_PRODUCTS_UPDATED event', () => {
           observers.data.autocomplete.products(undefined, OBJ);
 
-          expect(emit.calledWith(Events.AUTOCOMPLETE_PRODUCTS_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.AUTOCOMPLETE_PRODUCTS_UPDATED, OBJ);
         });
 
         it('should emit AUTOCOMPLETE_QUERY_UPDATED event', () => {
           observers.data.autocomplete.query(undefined, OBJ);
 
-          expect(emit.calledWith(Events.AUTOCOMPLETE_QUERY_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.AUTOCOMPLETE_QUERY_UPDATED, OBJ);
         });
       });
 
@@ -158,13 +158,13 @@ suite('Observer', ({ expect, spy, stub }) => {
         it.skip('should emit COLLECTION_UPDATED event', () => {
           observers.data.collections.bydId.brand(undefined, OBJ);
 
-          expect(emit.calledWith(`${Events.COLLECTION_UPDATED}:brand`, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(`${Events.COLLECTION_UPDATED}:brand`, OBJ);
         });
 
         it('should emit SELECTED_COLLECTION_UPDATED event', () => {
           observers.data.collections.selected(undefined, OBJ);
 
-          expect(emit.calledWith(Events.SELECTED_COLLECTION_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.SELECTED_COLLECTION_UPDATED, OBJ);
         });
       });
 
@@ -172,13 +172,13 @@ suite('Observer', ({ expect, spy, stub }) => {
         it('should emit DETAILS_ID_UPDATED event', () => {
           observers.data.details.id(undefined, OBJ);
 
-          expect(emit.calledWith(Events.DETAILS_ID_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.DETAILS_ID_UPDATED, OBJ);
         });
 
         it('should emit DETAILS_PRODUCT_UPDATED event', () => {
           observers.data.details.product(undefined, OBJ);
 
-          expect(emit.calledWith(Events.DETAILS_PRODUCT_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.DETAILS_PRODUCT_UPDATED, OBJ);
         });
       });
 
@@ -186,7 +186,7 @@ suite('Observer', ({ expect, spy, stub }) => {
         it.skip('should emit SELECTED_REFINEMENTS_UPDATED event', () => {
           observers.data.navigations.bydId.brand.selected(undefined, OBJ);
 
-          expect(emit.calledWith(`${Events.SELECTED_REFINEMENTS_UPDATED}:brand`, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(`${Events.SELECTED_REFINEMENTS_UPDATED}:brand`, OBJ);
         });
       });
 
@@ -194,19 +194,19 @@ suite('Observer', ({ expect, spy, stub }) => {
         it('should emit PAGE_UPDATED event', () => {
           observers.data.page(undefined, OBJ);
 
-          expect(emit.calledWith(Events.PAGE_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.PAGE_UPDATED, OBJ);
         });
 
         it('should emit CURRENT_PAGE_UPDATED event', () => {
           observers.data.page.current(undefined, OBJ);
 
-          expect(emit.calledWith(Events.CURRENT_PAGE_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.CURRENT_PAGE_UPDATED, OBJ);
         });
 
         it('should emit PAGE_SIZE_UPDATED event', () => {
           observers.data.page.sizes(undefined, OBJ);
 
-          expect(emit.calledWith(Events.PAGE_SIZE_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.PAGE_SIZE_UPDATED, OBJ);
         });
       });
 
@@ -214,7 +214,7 @@ suite('Observer', ({ expect, spy, stub }) => {
         it('should emit PRODUCTS_UPDATED event', () => {
           observers.data.products(undefined, OBJ);
 
-          expect(emit.calledWith(Events.PRODUCTS_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.PRODUCTS_UPDATED, OBJ);
         });
       });
 
@@ -222,37 +222,37 @@ suite('Observer', ({ expect, spy, stub }) => {
         it('should emit QUERY_UPDATED event', () => {
           observers.data.query(undefined, OBJ);
 
-          expect(emit.calledWith(Events.QUERY_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.QUERY_UPDATED, OBJ);
         });
 
         it('should emit CORRECTED_QUERY_UPDATED event', () => {
           observers.data.query.corrected(undefined, OBJ);
 
-          expect(emit.calledWith(Events.CORRECTED_QUERY_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.CORRECTED_QUERY_UPDATED, OBJ);
         });
 
         it('should emit DID_YOU_MEANS_UPDATED event', () => {
           observers.data.query.didYouMean(undefined, OBJ);
 
-          expect(emit.calledWith(Events.DID_YOU_MEANS_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.DID_YOU_MEANS_UPDATED, OBJ);
         });
 
         it('should emit ORIGINAL_QUERY_UPDATED event', () => {
           observers.data.query.original(undefined, OBJ);
 
-          expect(emit.calledWith(Events.ORIGINAL_QUERY_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.ORIGINAL_QUERY_UPDATED, OBJ);
         });
 
         it('should emit RELATED_QUERIES_UPDATED event', () => {
           observers.data.query.related(undefined, OBJ);
 
-          expect(emit.calledWith(Events.RELATED_QUERIES_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.RELATED_QUERIES_UPDATED, OBJ);
         });
 
         it('should emit QUERY_REWRITES_UPDATED event', () => {
           observers.data.query.rewrites(undefined, OBJ);
 
-          expect(emit.calledWith(Events.QUERY_REWRITES_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.QUERY_REWRITES_UPDATED, OBJ);
         });
       });
 
@@ -260,7 +260,7 @@ suite('Observer', ({ expect, spy, stub }) => {
         it('should emit REDIRECT event', () => {
           observers.data.reditect(undefined, OBJ);
 
-          expect(emit.calledWith(Events.REDIRECT, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.REDIRECT, OBJ);
         });
       });
 
@@ -268,7 +268,7 @@ suite('Observer', ({ expect, spy, stub }) => {
         it('should emit SORTS_UPDATED event', () => {
           observers.data.sorts(undefined, OBJ);
 
-          expect(emit.calledWith(Events.SORTS_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.SORTS_UPDATED, OBJ);
         });
       });
 
@@ -276,7 +276,7 @@ suite('Observer', ({ expect, spy, stub }) => {
         it('should emit TEMPLATE_UPDATED event', () => {
           observers.data.template(undefined, OBJ);
 
-          expect(emit.calledWith(Events.TEMPLATE_UPDATED, OBJ)).to.be.true;
+          expect(emit).to.be.calledWith(Events.TEMPLATE_UPDATED, OBJ);
         });
       });
     });
