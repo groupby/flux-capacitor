@@ -16,6 +16,12 @@ export default class Creator {
     this.linkMapper = (value: string) => ({ value, url: `${paths.search}/${value}` });
   }
 
+  saveState = () =>
+    this.flux.emit('history:save', this.flux.store.getState().data)
+
+  refreshState = (state: any) =>
+    ({ type: Actions.REFRESH_STATE, state })
+
   soFetching = (requestType: keyof Store.IsFetching) =>
     ({ type: Actions.SO_FETCHING, requestType })
 
@@ -145,18 +151,24 @@ export default class Creator {
   // response action creators
   receiveSearchResponse = (results: Results) =>
     (dispatch: Dispatch<any>, getState: () => Store.State) => {
+      const updates = [];
       const state = getState();
       if (results.redirect) {
-        dispatch(this.receiveRedirect(results.redirect));
+        updates.push(dispatch(this.receiveRedirect(results.redirect)));
       }
       const recordCount = Adapters.Search.extractRecordCount(results);
-      dispatch(this.receiveQuery(Adapters.Search.extractQuery(results, this.linkMapper)));
-      dispatch(this.receiveProducts(results.records.map(Adapters.Search.extractProduct)));
-      dispatch(this.receiveNavigations(Adapters.Search.combineNavigations(results)));
-      dispatch(this.receiveRecordCount(recordCount));
-      dispatch(this.receiveCollectionCount(Selectors.collection(state), recordCount));
-      dispatch(this.receivePage(Adapters.Search.extractPage(state, recordCount)));
-      dispatch(this.receiveTemplate(Adapters.Search.extractTemplate(results.template)));
+      updates.push(
+        dispatch(this.receiveQuery(Adapters.Search.extractQuery(results, this.linkMapper))),
+        dispatch(this.receiveProducts(results.records.map(Adapters.Search.extractProduct))),
+        dispatch(this.receiveNavigations(Adapters.Search.combineNavigations(results))),
+        dispatch(this.receiveRecordCount(recordCount)),
+        dispatch(this.receiveCollectionCount(Selectors.collection(state), recordCount)),
+        dispatch(this.receivePage(Adapters.Search.extractPage(state, recordCount))),
+        dispatch(this.receiveTemplate(Adapters.Search.extractTemplate(results.template))),
+      );
+
+      Promise.all(updates)
+        .then(() => this.saveState());
     }
 
   receiveQuery = (query: Actions.Query) =>

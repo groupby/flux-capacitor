@@ -36,6 +36,7 @@ namespace Actions {
   // app
   export const START_APP = 'START_APP';
   export const SHUTDOWN_APP = 'SHUTDOWN_APP';
+  export const REFRESH_STATE = 'REFRESH_STATE';
 
   export interface Base { type: string; }
 
