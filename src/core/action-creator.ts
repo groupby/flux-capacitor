@@ -4,6 +4,7 @@ import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt'
 import FluxCapacitor from '../flux-capacitor';
 import Actions from './actions';
 import Adapters from './adapters';
+import * as Events from './events';
 import Selectors from './selectors';
 import Store from './store';
 import { conditional, thunk } from './utils';
@@ -17,7 +18,7 @@ export default class Creator {
   }
 
   saveState = () =>
-    this.flux.emit('history:save', this.flux.store.getState().data)
+    this.flux.emit(Events.HISTORY_SAVE, this.flux.store.getState())
 
   refreshState = (state: any) =>
     ({ type: Actions.REFRESH_STATE, state })
