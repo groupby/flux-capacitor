@@ -21,7 +21,7 @@ namespace Observer {
   export type Node = Map | Observer | (Observer & Map);
 
   export const listener = (flux: FluxCapacitor) =>
-    (store: ReduxStore<Store.State>) => listen(flux, store);
+    (store: ReduxStore<Store.State>) => Observer.listen(flux, store);
 
   export function listen(flux: FluxCapacitor, store: ReduxStore<Store.State>) {
     let savedState = store.getState();

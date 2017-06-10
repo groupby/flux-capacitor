@@ -96,7 +96,7 @@ export default class Creator {
     }
 
   fetchCollectionCount = (collection: string) => (dispatch: Dispatch<any>, getState: () => Store.State) =>
-    this.flux.clients.bridge.search(Object.assign(Selectors.searchRequest(getState()), { collection }))
+    this.flux.clients.bridge.search({ ...Selectors.searchRequest(getState()), collection })
       .then((res) => dispatch(this.receiveCollectionCount(collection, Adapters.Search.extractRecordCount(res))))
 
   fetchProductDetails = (id: string) => (dispatch: Dispatch<any>, getState: () => Store.State) =>
@@ -213,7 +213,8 @@ export default class Creator {
       Actions.RECEIVE_AUTOCOMPLETE_SUGGESTIONS, { suggestions, categoryValues, navigations })
 
   receiveMoreProducts = (products: Store.Product[]) =>
-    thunk(Actions.RECEIVE_MORE_PRODUCTS, { products })
+    thunk<Actions.Autocomplete.ReceiveProducts>(
+      Actions.RECEIVE_MORE_PRODUCTS, { products })
 
   receiveAutocompleteProducts = (products: Store.Product[]) =>
     thunk<Actions.Autocomplete.ReceiveProducts>(
