@@ -11,5 +11,3 @@ test/**/*.js
 test/**/*.d.ts
 
 *.log
-
-startup.js
