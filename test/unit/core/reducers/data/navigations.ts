@@ -205,7 +205,8 @@ suite('navigations', ({ expect }) => {
         byId: {
           Format: {
             ...Format,
-            refinements: state.byId['Format'].refinements.concat(refinements),
+            more: false,
+            refinements,
           },
           Section,
         },

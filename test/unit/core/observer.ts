@@ -196,9 +196,10 @@ suite('Observer', ({ expect, spy, stub }) => {
     });
 
     describe('data', () => {
+      const OBJ = { a: 'b' };
+      const path = '.search.whatever.stuff';
       let emit;
       let observers;
-      const path = '.search.whatever.stuff';
 
       beforeEach(() => {
         emit = spy();
@@ -263,32 +264,62 @@ suite('Observer', ({ expect, spy, stub }) => {
         });
 
         it('should emit SELECTED_COLLECTION_UPDATED event', () => {
-          observers.data.collections.selected();
+          observers.data.collections.selected(undefined, OBJ);
 
-          expect(emit).to.be.calledWith(Events.SELECTED_COLLECTION_UPDATED);
+          expect(emit).to.be.calledWith(Events.SELECTED_COLLECTION_UPDATED, OBJ);
         });
       });
 
       describe('details', () => {
         it('should emit DETAILS_ID_UPDATED event', () => {
-          observers.data.details.id();
+          observers.data.details.id(undefined, OBJ);
 
-          expect(emit).to.be.calledWith(Events.DETAILS_ID_UPDATED);
+          expect(emit).to.be.calledWith(Events.DETAILS_ID_UPDATED, OBJ);
         });
 
         it('should emit DETAILS_PRODUCT_UPDATED event', () => {
-          observers.data.details.product();
+          observers.data.details.product(undefined, OBJ);
 
-          expect(emit).to.be.calledWith(Events.DETAILS_PRODUCT_UPDATED);
+          expect(emit).to.be.calledWith(Events.DETAILS_PRODUCT_UPDATED, OBJ);
         });
       });
 
-      // TODO: fix these
       describe('navigations', () => {
-        it.skip('should emit SELECTED_REFINEMENTS_UPDATED event', () => {
-          observers.data.navigations.bydId.brand.selected(undefined, OBJ);
+        it('should emit NAVIGATIONS_UPDATED event', () => {
+          const newNavigations = { allIds: ['c', 'd'] };
+          observers.data.navigations({ allIds: ['a', 'b'] }, newNavigations);
 
-          expect(emit).to.be.calledWith(`${Events.SELECTED_REFINEMENTS_UPDATED}:brand`, OBJ);
+          expect(emit).to.be.calledWith(Events.NAVIGATIONS_UPDATED, newNavigations);
+        });
+
+        it('should emit SELECTED_REFINEMENTS_UPDATED event when selected changes', () => {
+          const allIds = ['a', 'b', 'c'];
+          const oldNavigations = {
+            allIds,
+            byId: { a: {}, b: {}, c: { selected: [] } }
+          };
+          const newNavigations = {
+            allIds,
+            byId: { a: {}, b: {}, c: { selected: [] } }
+          };
+          observers.data.navigations(oldNavigations, newNavigations);
+
+          expect(emit).to.be.calledWith(`${Events.SELECTED_REFINEMENTS_UPDATED}:c`, newNavigations.byId.c);
+        });
+
+        it('should emit SELECTED_REFINEMENTS_UPDATED event when refinements change', () => {
+          const allIds = ['a', 'b', 'c'];
+          const oldNavigations = {
+            allIds,
+            byId: { a: {}, b: {}, c: { refinements: [] } }
+          };
+          const newNavigations = {
+            allIds,
+            byId: { a: {}, b: {}, c: { refinements: [] } }
+          };
+          observers.data.navigations(oldNavigations, newNavigations);
+
+          expect(emit).to.be.calledWith(`${Events.SELECTED_REFINEMENTS_UPDATED}:c`, newNavigations.byId.c);
         });
       });
 
@@ -312,11 +343,19 @@ suite('Observer', ({ expect, spy, stub }) => {
         });
       });
 
-      describe.skip('products', () => {
+      describe('products', () => {
         it('should emit PRODUCTS_UPDATED event', () => {
-          observers.data.products(undefined, OBJ);
+          const newProducts = [];
+          observers.data.products([], newProducts);
 
-          expect(emit).to.be.calledWith(Events.PRODUCTS_UPDATED, OBJ);
+          expect(emit).to.be.calledWith(Events.PRODUCTS_UPDATED, newProducts);
+        });
+
+        it('should emit PRODUCTS_UPDATED event', () => {
+          const newProducts = ['a', 'b'];
+          observers.data.products(['a'], newProducts);
+
+          expect(emit).to.be.calledWith(Events.MORE_PRODUCTS_ADDED, ['b']);
         });
       });
 

@@ -39,7 +39,7 @@
   version "0.9.36"
   resolved "https://registry.yarnpkg.com/@types/axios/-/axios-0.9.36.tgz#94d156269562c726ce38115aeb8f34f09bfa3cd8"
 
-"@types/chai@^4.0.0":
+"@types/chai@*", "@types/chai@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.0.0.tgz#4c9adabd2d04265769e6d9e847e86cc404dc7dcd"
 
@@ -69,7 +69,14 @@
   dependencies:
     redux "^3.6.0"
 
-"@types/sinon@^2.2.2":
+"@types/sinon-chai@^2.7.28":
+  version "2.7.28"
+  resolved "https://registry.yarnpkg.com/@types/sinon-chai/-/sinon-chai-2.7.28.tgz#c9f775dee3bd27717f3aa94af3c0c9348e8a8c32"
+  dependencies:
+    "@types/chai" "*"
+    "@types/sinon" "*"
+
+"@types/sinon@*", "@types/sinon@^2.2.2":
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-2.3.1.tgz#5e214093e9e2345219ab0f31bf310c9790ad0712"
 
@@ -3266,6 +3273,10 @@ shelljs@^0.7.5:
 signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
+
+sinon-chai@^2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/sinon-chai/-/sinon-chai-2.10.0.tgz#6ab3008bb8cae9929e744d766574b4cf35f34b5b"
 
 sinon@^2.3.2:
   version "2.3.2"

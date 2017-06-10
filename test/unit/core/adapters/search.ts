@@ -1,5 +1,6 @@
 import PageAdapter from '../../../../src/core/adapters/page';
 import Adapter from '../../../../src/core/adapters/search';
+import Selectors from '../../../../src/core/selectors';
 import suite from '../../_suite';
 
 suite('SearchAdapter', ({ expect, stub }) => {
@@ -137,14 +138,14 @@ suite('SearchAdapter', ({ expect, stub }) => {
     });
   });
 
-  describe('appendSelectedRefinements()', () => {
+  describe('mergeSelectedRefinements()', () => {
     it('should set selected on availble navigation', () => {
       const available: any = { refinements: ['a', 'b', 'c', 'd'] };
       const selected: any = { refinements: ['a', 'd'] };
       const refinementsMatch = stub(Adapter, 'refinementsMatch')
         .callsFake((lhs, rhs) => lhs === rhs);
 
-      Adapter.appendSelectedRefinements(available, selected);
+      Adapter.mergeSelectedRefinements(available, selected);
 
       expect(available.selected).to.eql([0, 3]);
       expect(refinementsMatch).to.be.calledWith('a', 'a');
@@ -153,10 +154,6 @@ suite('SearchAdapter', ({ expect, stub }) => {
       expect(refinementsMatch).to.be.calledWith('c', 'd');
       expect(refinementsMatch).to.be.calledWith('d', 'd');
     });
-  });
-
-  describe('combineNavigations()', () => {
-    it('should append selected refinements to available navigation');
   });
 
   describe('extractZone()', () => {
@@ -220,14 +217,40 @@ suite('SearchAdapter', ({ expect, stub }) => {
     });
   });
 
-  describe.skip('extractPage()', () => {
+  describe('extractPage()', () => {
     it('should build page information', () => {
-      const store: any = { a: 'b' };
+      const current = 4;
+      const previous = 7;
+      const next = 2;
+      const last = 80;
+      const from = 17;
+      const to = 30;
+      const size = 21;
+      const total = 999;
+      const state: any = { data: { page: { current } } };
       const pageInfo = { c: 'd' };
-      const build = stub(PageAdapter, 'build').returns(pageInfo);
+      const pageSize = stub(Selectors, 'pageSize').returns(size);
+      const finalPage = stub(PageAdapter, 'finalPage').returns(last);
+      const fromResult = stub(PageAdapter, 'fromResult').returns(from);
+      const toResult = stub(PageAdapter, 'toResult').returns(to);
+      const nextPage = stub(PageAdapter, 'nextPage').returns(next);
+      const previousPage = stub(PageAdapter, 'previousPage').returns(previous);
 
-      expect(Adapter.extractPage(store, 10)).to.eql(pageInfo);
-      expect(build).to.be.called;
+      const page = Adapter.extractPage(state, total);
+
+      expect(page).to.eql({
+        from,
+        to,
+        last,
+        next,
+        previous
+      });
+      expect(pageSize).to.be.calledWith(state);
+      expect(finalPage).to.be.calledWith(size, total);
+      expect(fromResult).to.be.calledWith(current, size);
+      expect(toResult).to.be.calledWith(current, size, total);
+      expect(nextPage).to.be.calledWith(current, last);
+      expect(previousPage).to.be.calledWith(current);
     });
   });
 
