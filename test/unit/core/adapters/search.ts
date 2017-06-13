@@ -149,10 +149,10 @@ suite('SearchAdapter', ({ expect, stub }) => {
 
       expect(available.selected).to.eql([0, 3]);
       expect(refinementsMatch).to.be.calledWith('a', 'a')
-        .and.to.be.calledWith('a', 'd')
-        .and.to.be.calledWith('b', 'd')
-        .and.to.be.calledWith('c', 'd')
-        .and.to.be.calledWith('d', 'd');
+        .and.calledWith('a', 'd')
+        .and.calledWith('b', 'd')
+        .and.calledWith('c', 'd')
+        .and.calledWith('d', 'd');
     });
 
     it('should add selected value refinements', () => {
@@ -212,10 +212,10 @@ suite('SearchAdapter', ({ expect, stub }) => {
       ]);
       expect(mergeSelectedRefinements).to.be.calledWith(extractedAvailable[1], selectedNavigation[0]);
       expect(extractNavigation).to.have.callCount(4)
-        .and.to.be.calledWith(availableNavigation[0])
-        .and.to.be.calledWith(availableNavigation[1])
-        .and.to.be.calledWith(availableNavigation[2])
-        .and.to.be.calledWith(selectedNavigation[1]);
+        .and.calledWith(availableNavigation[0])
+        .and.calledWith(availableNavigation[1])
+        .and.calledWith(availableNavigation[2])
+        .and.calledWith(selectedNavigation[1]);
     });
   });
 
@@ -275,8 +275,8 @@ suite('SearchAdapter', ({ expect, stub }) => {
           'zone 2': 'x',
         },
       });
-      expect(extractZone).to.be.calledWith('a');
-      expect(extractZone).to.be.calledWith('b');
+      expect(extractZone).to.be.calledWith('a')
+        .and.calledWith('b');
     });
   });
 
