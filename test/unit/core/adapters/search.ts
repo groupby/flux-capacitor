@@ -136,6 +136,13 @@ suite('SearchAdapter', ({ expect, stub }) => {
 
       expect(Adapter.refinementsMatch(lhs, rhs)).to.be.false;
     });
+
+    it('should accept explicit type', () => {
+      const lhs: any = { type: 'Range', value: 'prestigious' };
+      const rhs: any = { type: 'Range', value: 'prestigious' };
+
+      expect(Adapter.refinementsMatch(lhs, rhs, 'Value')).to.be.true;
+    });
   });
 
   describe('mergeSelectedRefinements()', () => {
