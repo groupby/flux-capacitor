@@ -92,8 +92,8 @@ suite('SearchAdapter', ({ expect, stub }) => {
         selected: [],
         sort,
       });
-      expect(extractRefinement).to.be.calledWith('a');
-      expect(extractRefinement).to.be.calledWith('b');
+      expect(extractRefinement).to.be.calledWith('a')
+        .and.calledWith('b');
       expect(extractNavigationSort).to.be.calledWith({ c: 'd' });
     });
 
