@@ -86,8 +86,8 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         return action(dispatch, () => state)
           .then(() => {
-            expect(extractRefinement).to.be.calledWith('c');
-            expect(extractRefinement).to.be.calledWith('d');
+            expect(extractRefinement).to.be.calledWith('c')
+              .and.calledWith('d');
             expect(receiveMoreRefinements).to.be.calledWith(name, ['c', 'd'], []);
             expect(dispatch).to.be.calledWith(moreRefinementsAction);
           });
@@ -113,8 +113,8 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         return action(dispatch, () => state)
           .then(() => {
-            expect(extractRefinement).to.be.calledWith('c');
-            expect(extractRefinement).to.be.calledWith('d');
+            expect(extractRefinement).to.be.calledWith('c')
+              .and.calledWith('d');
             expect(receiveMoreRefinements).to.be.calledWith(name, ['c', 'd'], [0, 1]);
             expect(dispatch).to.be.calledWith(moreRefinementsAction);
           });
@@ -504,8 +504,8 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           expect(extractQuery).to.be.calledWith(results, linkMapper);
           expect(dispatch).to.be.calledWith(receiveQueryAction);
           expect(receiveProducts).to.be.calledWith(['x', 'x']);
-          expect(extractProduct).to.be.calledWith({ allMeta: { u: 'v' } });
-          expect(extractProduct).to.be.calledWith({ allMeta: { w: 'x' } });
+          expect(extractProduct).to.be.calledWith({ allMeta: { u: 'v' } })
+            .and.calledWith({ allMeta: { w: 'x' } });
           expect(dispatch).to.be.calledWith(receiveProductsAction);
           expect(receiveNavigations).to.be.calledWith(navigations);
           expect(combineNavigations).to.be.calledWith(results);
