@@ -341,6 +341,22 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.updateSearch(search)(dispatch);
         });
+
+        it('should trim query string', () => {
+          const search: Actions.Search = { query: '\t  h  a  r\tr  y  \t' };
+          const dispatch = spy();
+
+          actions.updateSearch(search)(dispatch);
+
+          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, query: 'h  a  r\tr  y' });
+        });
+
+        it('should not create an UPDATE_SEARCH action when query string only contains whitespace', () => {
+          const search: Actions.Search = { query: '  \t  ' };
+          const dispatch = () => expect.fail();
+
+          actions.updateSearch(search)(dispatch);
+        });
       });
 
       describe('selectRefinement()', () => {
