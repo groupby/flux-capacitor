@@ -327,12 +327,19 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
     describe('request action creators', () => {
       describe('updateSearch()', () => {
         it('should create an UPDATE_SEARCH action', () => {
-          const data: any = { a: 'b' };
-          const thunk = stub(utils, 'thunk');
+          const search: Actions.Search = { query: 'harry' };
+          const dispatch = spy();
 
-          actions.updateSearch(data);
+          actions.updateSearch(search)(dispatch);
 
-          expect(thunk).to.be.calledWith(Actions.UPDATE_SEARCH, data);
+          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, ...<any>search });
+        });
+
+        it('should not create an UPDATE_SEARCH action when query string is empty', () => {
+          const search: Actions.Search = { query: '' };
+          const dispatch = () => expect.fail();
+
+          actions.updateSearch(search)(dispatch);
         });
       });
 
