@@ -122,7 +122,7 @@ export default class Creator {
   // request action creators
   updateSearch = (search: Actions.Search) =>
     (dispatch: Dispatch<Actions.Search.UpdateSearch>) => {
-      const query = search.query ? search.query.trim() : '';
+      const query = search.query && search.query.trim();
       if (query) {
         dispatch({ type: Actions.UPDATE_SEARCH, ...<any>search, query });
       }
