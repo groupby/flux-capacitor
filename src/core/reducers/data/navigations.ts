@@ -106,54 +106,50 @@ export const deselectRefinement = (state: State, { navigationId, index: refineme
 };
 
 export const addRefinement = (state: State, { navigationId, value, low, high, range }: Action.UpdateSearch) => {
-  if (navigationId) {
-    const refinement: any = range ? { low, high } : { value };
+  const refinement: any = range ? { low, high } : { value };
 
-    if (navigationId in state.byId) {
-      const index = state.byId[navigationId].refinements
-        .findIndex((ref) => Adapter.refinementsMatch(ref, refinement, range ? 'Range' : 'Value'));
+  if (navigationId in state.byId) {
+    const index = state.byId[navigationId].refinements
+      .findIndex((ref) => Adapter.refinementsMatch(ref, refinement, range ? 'Range' : 'Value'));
 
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [navigationId]: {
-            ...state.byId[navigationId],
-            ...(index === -1
-              ? {
-                refinements: [
-                  ...state.byId[navigationId].refinements,
-                  refinement
-                ],
-                selected: [
-                  ...state.byId[navigationId].selected,
-                  state.byId[navigationId].refinements.length
-                ]
-              }
-              : {
-                selected: [...state.byId[navigationId].selected, index]
-              })
-          }
+    return {
+      ...state,
+      byId: {
+        ...state.byId,
+        [navigationId]: {
+          ...state.byId[navigationId],
+          ...(index === -1
+            ? {
+              refinements: [
+                ...state.byId[navigationId].refinements,
+                refinement
+              ],
+              selected: [
+                ...state.byId[navigationId].selected,
+                state.byId[navigationId].refinements.length
+              ]
+            }
+            : {
+              selected: [...state.byId[navigationId].selected, index]
+            })
         }
-      };
-    } else {
-      return {
-        ...state,
-        allIds: [...state.allIds, navigationId],
-        byId: {
-          ...state.byId,
-          [navigationId]: {
-            field: navigationId,
-            label: navigationId,
-            range,
-            refinements: [refinement],
-            selected: [0]
-          }
-        }
-      };
-    }
+      }
+    };
   } else {
-    return state;
+    return {
+      ...state,
+      allIds: [...state.allIds, navigationId],
+      byId: {
+        ...state.byId,
+        [navigationId]: {
+          field: navigationId,
+          label: navigationId,
+          range,
+          refinements: [refinement],
+          selected: [0]
+        }
+      }
+    };
   }
 };
 
