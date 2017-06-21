@@ -17,8 +17,8 @@ export default class Creator {
     this.linkMapper = (value: string) => ({ value, url: `${paths.search}/${value}` });
   }
 
-  saveState = () =>
-    this.flux.emit(Events.HISTORY_SAVE, this.flux.store.getState())
+  saveState = (route: string) =>
+    this.flux.emit(Events.HISTORY_SAVE, { state: this.flux.store.getState(), route })
 
   refreshState = (state: any) =>
     ({ type: Actions.REFRESH_STATE, state })
@@ -196,8 +196,8 @@ export default class Creator {
         dispatch(this.receiveTemplate(Adapters.Search.extractTemplate(results.template))),
       );
 
-      Promise.all(updates)
-        .then(() => this.saveState());
+      return Promise.all(updates)
+        .then(() => this.saveState('search'));
     }
 
   receiveQuery = (query: Actions.Query) =>
@@ -249,8 +249,10 @@ export default class Creator {
       Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, { products })
 
   receiveDetailsProduct = (product: Store.Product) =>
-    thunk<Actions.Details.ReceiveProduct>(
-      Actions.RECEIVE_DETAILS_PRODUCT, { product })
+    (dispatch: Dispatch<any>) => {
+      dispatch<any>({ type: Actions.RECEIVE_DETAILS_PRODUCT, product });
+      this.saveState('details');
+    }
 
   // ui action creators
   createComponentState = (tagName: string, id: string, state: any = {}) =>
