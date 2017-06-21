@@ -8,7 +8,7 @@ import isRunning from './is-running';
 import session from './session';
 import ui from './ui';
 
-export const reducer = redux.combineReducers<Store.State>({
+export const rootReducer = redux.combineReducers<Store.State>({
   isRunning,
   isFetching,
   session,
@@ -19,6 +19,6 @@ export const reducer = redux.combineReducers<Store.State>({
 export default (state: any, action) => {
   switch (action.type) {
     case Actions.REFRESH_STATE: return action.state;
-    default: return reducer(state, action);
+    default: return rootReducer(state, action);
   }
 };
