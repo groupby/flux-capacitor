@@ -1,29 +1,19 @@
 import * as sinon from 'sinon';
-import { Actions, ActionCreator, Selectors } from '../../../src/core';
+import createActions from '../../../src/core/action-creator';
+import Actions from '../../../src/core/actions';
 import AutocompleteAdapter from '../../../src/core/adapters/autocomplete';
 import SearchAdapter from '../../../src/core/adapters/search';
 import * as Events from '../../../src/core/events';
+import Selectors from '../../../src/core/selectors';
 import * as utils from '../../../src/core/utils';
+import FluxCapacitor from '../../../src/flux-capacitor';
 import suite from '../_suite';
 
 suite('ActionCreator', ({ expect, spy, stub }) => {
-  let actions: ActionCreator;
-  const flux: any = { a: 'b' };
+  let actions: typeof FluxCapacitor.prototype.actions;
+  let flux: any;
 
-  beforeEach(() => actions = new ActionCreator(flux, { search: '/search' }));
-
-  describe('constructor()', () => {
-    it('should set properties', () => {
-      expect(actions['flux']).to.eq(flux);
-      expect(actions['linkMapper']).to.be.a('function');
-    });
-
-    describe('linkMapper()', () => {
-      it('should return mapped link', () => {
-        expect(actions.linkMapper('test')).to.eql({ value: 'test', url: '/search/test' });
-      });
-    });
-  });
+  beforeEach(() => actions = createActions(flux = <any>{})(() => null));
 
   describe('application action creators', () => {
     const state = { c: 'd' };
@@ -202,19 +192,25 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       it('should catch error and clear fetching flag', () => {
         const products = ['e', 'f', 'g'];
         const state: any = { isFetching: {} };
-        const receiveProductsAction = () => null;
+        const receiveSearchResponseAction = () => null;
         const dispatch = spy();
-        const selectProducts = stub(Selectors, 'products').returns(products);
-        const receiveProducts = stub(actions, 'receiveProducts').returns(receiveProductsAction);
+        const receiveSearchResponse = stub(actions, 'receiveSearchResponse').returns(receiveSearchResponseAction);
         const action = actions.fetchProducts();
         stub(Selectors, 'searchRequest');
         flux.clients = { bridge: { search: () => Promise.reject('') } };
 
         return action(dispatch, () => state)
           .then(() => {
-            expect(selectProducts).to.be.calledWith(state);
-            expect(receiveProducts).to.be.calledWith(products);
-            expect(dispatch).to.be.calledWith(receiveProductsAction);
+            expect(receiveSearchResponse).to.be.calledWith({
+              availableNavigation: [],
+              selectedNavigation: [],
+              records: [],
+              didYouMean: [],
+              relatedQueries: [],
+              rewrites: [],
+              totalRecordCount: 0
+            });
+            expect(dispatch).to.be.calledWith(receiveSearchResponseAction);
           });
       });
     });
@@ -473,7 +469,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.updateSearch(search)(dispatch);
 
-          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, ...<any>search });
+          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, payload: search, metadata: {} });
         });
 
         it('should not create an UPDATE_SEARCH action when query string is empty', () => {
@@ -489,7 +485,8 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.updateSearch(search)(dispatch);
 
-          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, query: 'h  a  r\tr  y' });
+          // tslint:disable-next-line max-line-length
+          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, payload: { query: 'h  a  r\tr  y' }, metadata: {} });
         });
 
         it('should not create an UPDATE_SEARCH action when query string only contains whitespace', () => {
@@ -505,7 +502,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.updateSearch(search)(dispatch);
 
-          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, query: null });
+          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, payload: { query: null }, metadata: {} });
         });
       });
 
@@ -552,7 +549,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           expect(conditional).to.be.calledWith(sinon.match((predicate) =>
             predicate({ data: { collections: { selected: 'tutorials' } } })),
-            Actions.SELECT_COLLECTION, { id });
+            Actions.SELECT_COLLECTION, id);
         });
       });
 
@@ -565,7 +562,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           expect(conditional).to.be.calledWith(sinon.match((predicate) =>
             predicate({ data: { sorts: { selected: 2 } } })),
-            Actions.SELECT_SORT, { index });
+            Actions.SELECT_SORT, index);
         });
       });
 
@@ -578,7 +575,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           expect(conditional).to.be.calledWith(sinon.match((predicate) =>
             predicate({ data: { page: { sizes: { items: [10, 20, 80], selected: 20 } } } })),
-            Actions.UPDATE_PAGE_SIZE, { size });
+            Actions.UPDATE_PAGE_SIZE, size);
         });
       });
 
@@ -591,7 +588,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           expect(conditional).to.be.calledWith(sinon.match((predicate) =>
             predicate({ data: { page: { current: 3 } } })),
-            Actions.UPDATE_CURRENT_PAGE, { page });
+            Actions.UPDATE_CURRENT_PAGE, page);
         });
       });
 
@@ -603,7 +600,11 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.updateDetails(id, title);
 
+<<<<<<< HEAD
           expect(thunk).to.be.calledWith(Actions.UPDATE_DETAILS, { id, title });
+=======
+          expect(thunk).to.be.calledWith(Actions.UPDATE_DETAILS_ID, id);
+>>>>>>> all thetests
         });
       });
 
@@ -616,17 +617,18 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           expect(conditional).to.be.calledWith(sinon.match((predicate) =>
             predicate({ data: { autocomplete: { query: 'Fred Flinsto' } } })),
-            Actions.UPDATE_AUTOCOMPLETE_QUERY, { query });
+            Actions.UPDATE_AUTOCOMPLETE_QUERY, query);
         });
       });
 
       describe('refreshState()', () => {
         it('should create a REFRESH_STATE action', () => {
-          const state = { a: 'b' };
+          const payload = { a: 'b' };
 
-          expect(actions.refreshState(state)).to.eql({
+          expect(actions.refreshState(payload)).to.eql({
+            payload,
             type: Actions.REFRESH_STATE,
-            state
+            metadata: {},
           });
         });
       });
@@ -650,7 +652,6 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           const receivePageAction = () => null;
           const receiveTemplateAction = () => null;
           const receiveCollectionCountAction = () => null;
-          const linkMapper = actions['linkMapper'] = () => null;
           const results: any = {
             records: [
               { allMeta: { u: 'v' } },
@@ -681,7 +682,9 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           const receiveCollectionCount = stub(actions, 'receiveCollectionCount').returns(receiveCollectionCountAction);
           const saveState = stub(actions, 'saveState');
           const thunk = actions.receiveSearchResponse(results);
+          flux.saveState = () => null;
 
+<<<<<<< HEAD
           thunk(dispatch, getStore).then(() => {
             expect(receiveRedirect).to.be.calledWith(results.redirect);
             expect(dispatch).to.be.calledWith(receiveRedirectAction);
@@ -690,7 +693,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
             expect(dispatch).to.be.calledWith(receiveQueryAction);
             expect(receiveProducts).to.be.calledWith(['x', 'x']);
             expect(extractProduct).to.be.calledWith({ allMeta: { u: 'v' } })
-            .and.calledWith({ allMeta: { w: 'x' } });
+              .and.calledWith({ allMeta: { w: 'x' } });
             expect(dispatch).to.be.calledWith(receiveProductsAction);
             expect(receiveNavigations).to.be.calledWith(navigations);
             expect(combineNavigations).to.be.calledWith(results);
@@ -706,6 +709,32 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
             expect(saveState).to.be.calledWith('search');
           });
 
+=======
+          return thunk(dispatch, getStore)
+            .then(() => {
+              expect(receiveRedirect).to.be.calledWith(results.redirect);
+              expect(dispatch).to.be.calledWith(receiveRedirectAction);
+              expect(receiveQuery).to.be.calledWith(query);
+              expect(extractQuery).to.be.calledWith(results);
+              expect(dispatch).to.be.calledWith(receiveQueryAction);
+              expect(receiveProducts).to.be.calledWith(['x', 'x']);
+              expect(extractProduct).to.be.calledWith({ allMeta: { u: 'v' } })
+                .and.calledWith({ allMeta: { w: 'x' } });
+              expect(dispatch).to.be.calledWith(receiveProductsAction);
+              expect(receiveNavigations).to.be.calledWith(navigations);
+              expect(combineNavigations).to.be.calledWith(results);
+              expect(dispatch).to.be.calledWith(receiveNavigationsAction);
+              expect(receivePage).to.be.calledWith(page);
+              expect(extractPage).to.be.calledWith(state);
+              expect(dispatch).to.be.calledWith(receivePageAction);
+              expect(receiveTemplate).to.be.calledWith(template);
+              expect(extractTemplate).to.be.calledWith(results.template);
+              expect(dispatch).to.be.calledWith(receiveTemplateAction);
+              // tslint:disable-next-line max-line-length
+              expect(receiveCollectionCount).to.be.calledWith(state.data.collections.selected, results.totalRecordCount);
+              expect(dispatch).to.be.calledWith(receiveCollectionCountAction);
+            });
+>>>>>>> all thetests
         });
       });
 
@@ -727,7 +756,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.receiveProducts(products);
 
-          expect(thunk).to.be.calledWith(Actions.RECEIVE_PRODUCTS, { products });
+          expect(thunk).to.be.calledWith(Actions.RECEIVE_PRODUCTS, products);
         });
       });
 
@@ -750,7 +779,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.receiveNavigations(navigations);
 
-          expect(thunk).to.be.calledWith(Actions.RECEIVE_NAVIGATIONS, { navigations });
+          expect(thunk).to.be.calledWith(Actions.RECEIVE_NAVIGATIONS, navigations);
         });
       });
 
@@ -772,7 +801,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.receiveTemplate(template);
 
-          expect(thunk).to.be.calledWith(Actions.RECEIVE_TEMPLATE, { template });
+          expect(thunk).to.be.calledWith(Actions.RECEIVE_TEMPLATE, template);
         });
       });
 
@@ -783,7 +812,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.receiveRedirect(redirect);
 
-          expect(thunk).to.be.calledWith(Actions.RECEIVE_REDIRECT, { redirect });
+          expect(thunk).to.be.calledWith(Actions.RECEIVE_REDIRECT, redirect);
         });
       });
 
@@ -824,7 +853,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.receiveMoreProducts(products);
 
-          expect(thunk).to.be.calledWith(Actions.RECEIVE_MORE_PRODUCTS, { products });
+          expect(thunk).to.be.calledWith(Actions.RECEIVE_MORE_PRODUCTS, products);
         });
       });
 
@@ -835,7 +864,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.receiveAutocompleteProducts(products);
 
-          expect(thunk).to.be.calledWith(Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, { products });
+          expect(thunk).to.be.calledWith(Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, products);
         });
       });
 
@@ -849,8 +878,12 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           action(dispatch);
 
+<<<<<<< HEAD
           expect(dispatch).to.be.calledWith({ type: Actions.RECEIVE_DETAILS_PRODUCT, product });
           expect(saveState).to.be.calledWith('details');
+=======
+          expect(thunk).to.be.calledWith(Actions.RECEIVE_DETAILS_PRODUCT, product);
+>>>>>>> all thetests
         });
       });
 

@@ -20,8 +20,8 @@ export const thunk = <P, T extends string, M = {}>(type: T, payload: P, meta?: M
 
 export const conditional =
   <P, T extends string, M = {}>(predicate: (state: Store.State) => boolean, type: T, payload: P, meta?: M) =>
-    (dispatch: Dispatch<Actions.Action<T, P, M>>, getStore) => {
-      if (predicate(getStore())) {
+    (dispatch: Dispatch<Actions.Action<T, P, M>>, getState: () => Store.State) => {
+      if (predicate(getState())) {
         dispatch(action(type, payload, meta));
       }
     };

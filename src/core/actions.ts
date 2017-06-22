@@ -9,7 +9,7 @@ namespace Actions {
   }
 
   export interface Thunk<T> {
-    (dispatch: Dispatch<T>, getState: () => Store.State);
+    (dispatch: Dispatch<T>, getState?: () => Store.State);
   }
 
   export const UPDATE_AUTOCOMPLETE_QUERY = 'UPDATE_AUTOCOMPLETE_QUERY';

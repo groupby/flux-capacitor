@@ -211,7 +211,7 @@ export default function createActions(flux: FluxCapacitor) {
             dispatch(actions.receiveTemplate(Adapters.Search.extractTemplate(results.template))),
           );
 
-          Promise.all(updates)
+          return Promise.all(updates)
             .then(() => flux.saveState(Routes.SEARCH));
         },
 

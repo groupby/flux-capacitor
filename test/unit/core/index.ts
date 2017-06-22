@@ -1,5 +1,5 @@
 import * as core from '../../../src/core';
-import ActionCreator from '../../../src/core/action-creator';
+import createActions from '../../../src/core/action-creator';
 import Actions from '../../../src/core/actions';
 import Adapters from '../../../src/core/adapters';
 import * as Events from '../../../src/core/events';
@@ -10,9 +10,9 @@ import Store from '../../../src/core/store';
 import suite from '../_suite';
 
 suite('core', ({ expect }) => {
-  describe('ActionCreator', () => {
-    it('should expose ActionCreator', () => {
-      expect(core.ActionCreator).to.eq(ActionCreator);
+  describe('createActions()', () => {
+    it('should expose createActions', () => {
+      expect(core.createActions).to.eq(createActions);
     });
   });
 

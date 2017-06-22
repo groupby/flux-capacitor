@@ -19,7 +19,7 @@ export default function updateNavigations(state: State = DEFAULTS, action: Actio
     case Actions.UPDATE_SEARCH:
       // TODO: add case for clear
       if (action.payload.clear) {
-        return updateSearch(state, action);
+        return updateSearch(state, action.payload);
       } else {
         return state;
       }
