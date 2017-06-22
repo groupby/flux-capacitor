@@ -1,6 +1,7 @@
 import { Results } from 'groupby-api';
 import { Dispatch } from 'redux';
 import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt';
+import { Routes } from '.';
 import FluxCapacitor from '../flux-capacitor';
 import Actions from './actions';
 import Adapters from './adapters';
@@ -197,7 +198,7 @@ export default class Creator {
       );
 
       return Promise.all(updates)
-        .then(() => this.saveState('search'));
+        .then(() => this.saveState(Routes.SEARCH));
     }
 
   receiveQuery = (query: Actions.Query) =>
