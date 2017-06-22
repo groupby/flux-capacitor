@@ -1,4 +1,4 @@
-import ActionCreator from './action-creator';
+import createActions from './action-creator';
 import Actions from './actions';
 import Adapters from './adapters';
 import * as Events from './events';
@@ -19,7 +19,7 @@ export const Routes = {
 export {
   DEFAULT_AREA,
   DEFAULT_COLLECTION,
-  ActionCreator,
+  createActions,
   Actions,
   Adapters,
   Events,
