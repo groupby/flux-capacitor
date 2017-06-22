@@ -506,6 +506,71 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         });
       });
 
+      describe('search()', () => {
+        it('should call actions.updateSearch()', () => {
+          const query = 'pineapple';
+          const updateSearch = actions.updateSearch = spy();
+
+          actions.search(query);
+
+          expect(updateSearch).to.be.calledWith({ query, clear: true });
+        });
+
+        it('should fall back to current query', () => {
+          const query = 'pineapple';
+          const state = { a: 'b' };
+          const updateSearch = actions.updateSearch = spy();
+          const selectQuery = stub(Selectors, 'query').returns(query);
+          flux.store = { getState: () => state };
+
+          actions.search();
+
+          expect(updateSearch).to.be.calledWith({ query, clear: true });
+          expect(selectQuery).to.be.calledWith(state);
+        });
+      });
+
+      describe('resetRecall()', () => {
+        it('should call actions.updateSearch() with no params', () => {
+          const updateSearch = actions.updateSearch = spy();
+
+          actions.resetRecall();
+
+          // tslint:disable-next-line max-line-length
+          expect(updateSearch).to.be.calledWith({ query: null, navigationId: undefined, index: undefined, clear: true });
+        });
+
+        it('should call actions.updateSearch() with a query', () => {
+          const query = 'pineapple';
+          const updateSearch = actions.updateSearch = spy();
+
+          actions.resetRecall(query);
+
+          expect(updateSearch).to.be.calledWith({ query, navigationId: undefined, index: undefined, clear: true });
+        });
+
+        it('should call actions.updateSearch() with a query and refinement', () => {
+          const query = 'pineapple';
+          const navigationId = 'brand';
+          const index = 9;
+          const updateSearch = actions.updateSearch = spy();
+
+          actions.resetRecall(query, { field: navigationId, index });
+
+          expect(updateSearch).to.be.calledWith({ query, navigationId, index, clear: true });
+        });
+      });
+
+      describe('resetQuery()', () => {
+        it('should call actions.updateSearch()', () => {
+          const updateSearch = actions.updateSearch = spy();
+
+          actions.resetQuery();
+
+          expect(updateSearch).to.be.calledWith({ query: null });
+        });
+      });
+
       describe('selectRefinement()', () => {
         it('should create a SELECT_REFINEMENT action', () => {
           const navigationId = 'brand';
