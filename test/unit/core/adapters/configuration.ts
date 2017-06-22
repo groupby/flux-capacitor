@@ -54,19 +54,22 @@ suite('SearchAdapter', ({ expect, stub }) => {
         }
       });
     });
+
     it('should return initialState based on config', () => {
       const area = 'test';
-      const collection = 'All the depts';
+      const collection = {
+        default: 'All the depts',
+        options: ['All the depts', 'idk']
+      };
       const category = 'whatevs';
       const fields = ['a', 'b', 'c'];
-      const pageSize = 50;
-      const sort = 'Stuffs';
-      const page = {
-        ...PageReducer.DEFAULTS,
-        sizes: {
-          selected: 0,
-          items: [pageSize]
-        }
+      const pageSize = {
+        default: 50,
+        options: [10,20,50]
+      };
+      const sort = {
+        default: 'stuff',
+        options: [{ field: 'stuff', descending: true}, { field: 'other stuff' }]
       };
       const config = <any>{
         area,
@@ -94,24 +97,34 @@ suite('SearchAdapter', ({ expect, stub }) => {
           },
           fields,
           collections: {
-            selected: collection,
-            allIds: [collection],
+            selected: collection.default,
+            allIds: collection.options,
             byId: {
-              [collection]: {
-                name: collection
+              [collection.options[0]]: {
+                name: collection.options[0]
+              },
+              [collection.options[1]]: {
+                name: collection.options[1]
               }
             }
           },
           sorts: {
             selected: 0,
-            items: [sort]
+            items: sort.options
           },
-          page
+          page: {
+            ...PageReducer.DEFAULTS,
+            sizes: {
+              selected: 2,
+              items: pageSize.options
+            }
+          }
         }
       };
       expect(Adapter.initialState(config)).to.eql(state);
     });
   });
+
   describe('extractCollection()', () => {
     it('should return default', () => {
       const defaultCollection = 'All';
@@ -121,9 +134,20 @@ suite('SearchAdapter', ({ expect, stub }) => {
         }
       })).to.eq(defaultCollection);
     });
+
     it('should return collection', () => {
       const collection = 'All';
       expect(Adapter.extractCollection(<any>{ collection })).to.eq(collection);
+    });
+  });
+
+  describe('extractIndexedState()', () => {
+    it('should return indexed state', () => {
+      const collectionDefault = 'Im a collection';
+      expect(Adapter.extractIndexedState(<any>{ default: collectionDefault })).to.eql({
+        selected: collectionDefault,
+        allIds: [collectionDefault]
+      });
     });
   });
 });
