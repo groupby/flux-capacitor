@@ -112,4 +112,18 @@ suite('SearchAdapter', ({ expect, stub }) => {
       expect(Adapter.initialState(config)).to.eql(state);
     });
   });
+  describe('extractCollection()', () => {
+    it('should return default', () => {
+      const defaultCollection = 'All';
+      expect(Adapter.extractCollection(<any>{
+        collection: {
+          default: defaultCollection
+        }
+      })).to.eq(defaultCollection);
+    });
+    it('should return collection', () => {
+      const collection = 'All';
+      expect(Adapter.extractCollection(<any>{ collection })).to.eq(collection);
+    });
+  });
 });
