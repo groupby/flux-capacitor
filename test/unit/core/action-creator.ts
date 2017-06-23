@@ -169,11 +169,13 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       });
 
       it('should call flux.clients.bridge.search()', () => {
+        const id = '13123';
         const request = { a: 'b' };
-        const response = { c: 'd' };
+        const response = { c: 'd', id };
         const state: any = { isFetching: {} };
         const receiveSearchResponseAction = () => null;
         const dispatch = spy();
+        const emit = flux.emit = spy();
         const search = stub().resolves(response);
         const searchRequest = stub(Selectors, 'searchRequest').returns(request);
         const receiveSearchResponse = stub(actions, 'receiveSearchResponse').returns(receiveSearchResponseAction);
@@ -185,6 +187,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
             expect(searchRequest).to.be.calledWith(state);
             expect(search).to.be.calledWith(request);
             expect(receiveSearchResponse).to.be.calledWith(response);
+            expect(emit).to.be.calledWith(Events.BEACON_SEARCH, id);
             expect(dispatch).to.be.calledWith(receiveSearchResponseAction);
           });
       });
@@ -235,14 +238,16 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       });
 
       it('should fetch more products', () => {
+        const id = '13512';
         const request = { a: 'b' };
-        const response = { c: 'd' };
+        const response = { c: 'd', id };
         const amount = 5;
         const products = [1, 2, 3, 4, 5];
         const state: any = { a: 'b', isFetching: { moreProducts: false } };
         const moreProductsAction = { e: 'f' };
         const soFetchingAction = { g: 'h' };
         const dispatch = spy();
+        const emit = flux.emit = spy();
         const getStore = spy(() => state);
         const search = stub().resolves(response);
         const searchRequest = stub(Selectors, 'searchRequest').returns(request);
@@ -259,6 +264,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
             expect(soFetching).to.be.calledWith('moreProducts');
             expect(searchRequest).to.be.calledWith(state);
             expect(extractProducts).to.be.calledWith(response);
+            expect(emit).to.be.calledWith(Events.BEACON_SEARCH, id);
             expect(dispatch).to.be.calledTwice
               .and.calledWith(soFetchingAction)
               .and.calledWith(moreProductsAction);
@@ -420,9 +426,11 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           const id = '1923';
           const state = { a: 'b' };
           const allMeta = 'hey';
-          const response = { c: 'd', records: [{ allMeta }] };
+          const record = { allMeta };
+          const response = { c: 'd', records: [record] };
           const detailsProduct = '10293';
           const dispatch = spy();
+          const emit = flux.emit = spy();
           const getStore = spy(() => state);
           const search = stub().resolves(response);
           const action = actions.fetchProductDetails(id);
@@ -439,8 +447,9 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
                 skip: 0,
                 refinements: [{ navigationName: 'id', type: 'Value', value: id }]
               });
-              expect(dispatch).to.be.calledWith(detailsProduct);
+              expect(emit).to.be.calledWith(Events.BEACON_VIEW_PRODUCT, record);
               expect(receiveDetailsProduct).to.be.calledWith(allMeta);
+              expect(dispatch).to.be.calledWith(detailsProduct);
             });
         });
 
@@ -464,7 +473,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
     describe('request action creators', () => {
       describe('updateSearch()', () => {
         it('should create an UPDATE_SEARCH action', () => {
-          const search: Actions.Search = { query: 'harry' };
+          const search: Actions.Payload.Search = { query: 'harry' };
           const dispatch = spy();
 
           actions.updateSearch(search)(dispatch);
@@ -473,14 +482,14 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         });
 
         it('should not create an UPDATE_SEARCH action when query string is empty', () => {
-          const search: Actions.Search = { query: '' };
+          const search: Actions.Payload.Search = { query: '' };
           const dispatch = () => expect.fail();
 
           actions.updateSearch(search)(dispatch);
         });
 
         it('should trim query string', () => {
-          const search: Actions.Search = { query: '\t  h  a  r\tr  y  \t' };
+          const search: Actions.Payload.Search = { query: '\t  h  a  r\tr  y  \t' };
           const dispatch = spy();
 
           actions.updateSearch(search)(dispatch);
@@ -490,14 +499,14 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         });
 
         it('should not create an UPDATE_SEARCH action when query string only contains whitespace', () => {
-          const search: Actions.Search = { query: '  \t  ' };
+          const search: Actions.Payload.Search = { query: '  \t  ' };
           const dispatch = () => expect.fail();
 
           actions.updateSearch(search)(dispatch);
         });
 
         it('should create an UPDATE_SEARCH action with null query', () => {
-          const search: Actions.Search = { query: null };
+          const search: Actions.Payload.Search = { query: null };
           const dispatch = spy();
 
           actions.updateSearch(search)(dispatch);

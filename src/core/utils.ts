@@ -5,7 +5,7 @@ import Store from './store';
 export const rayify = <T>(arr: T | T[]): T[] => Array.isArray(arr) ? arr : [arr];
 
 // tslint:disable-next-line max-line-length
-export const action = <P, T extends string, M = {}>(type: T, payload?: P, meta?: M): Actions.Action<T, P, M | {}> => {
+export const action = <P, T extends string, M extends Actions.Metadata | {} = {}>(type: T, payload?: P, meta?: M): Actions.Action<T, P, M | {}> => {
   const builtAction: Actions.Action<T, P, M | {}> = { type, metadata: meta || {} };
 
   if (payload !== undefined) {
@@ -14,12 +14,13 @@ export const action = <P, T extends string, M = {}>(type: T, payload?: P, meta?:
   return builtAction;
 };
 
-export const thunk = <P, T extends string, M = {}>(type: T, payload: P, meta?: M) =>
+export const thunk = <P, T extends string, M extends Actions.Metadata | {} = {}>(type: T, payload: P, meta?: M) =>
   (dispatch: Dispatch<Actions.Action<T, P, M>>) =>
     dispatch(action(type, payload, meta));
 
 export const conditional =
-  <P, T extends string, M = {}>(predicate: (state: Store.State) => boolean, type: T, payload: P, meta?: M) =>
+  // tslint:disable-next-line max-line-length
+  <P, T extends string, M extends Actions.Metadata | {} = {}>(predicate: (state: Store.State) => boolean, type: T, payload: P, meta?: M) =>
     (dispatch: Dispatch<Actions.Action<T, P, M>>, getState: () => Store.State) => {
       if (predicate(getState())) {
         dispatch(action(type, payload, meta));

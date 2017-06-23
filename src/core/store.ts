@@ -174,6 +174,7 @@ namespace Store {
   export interface Session {
     recallId?: string;
     searchId?: string;
+    origin?: Actions.Metadata.Tag;
   }
 
   export interface IsFetching {

@@ -51,6 +51,6 @@ export function updateSize(state: State, size: number) {
   return selected === -1 ? state : { ...state, current: 1, sizes: { ...state.sizes, selected } };
 }
 
-export function receivePage(state: State, { from, to, last, next, previous }: Actions.Page) {
+export function receivePage(state: State, { from, to, last, next, previous }: Actions.Payload.Page) {
   return { ...state, from, to, last, next, previous };
 }

@@ -2,10 +2,23 @@ import { Dispatch } from 'redux';
 import Store from './store';
 
 namespace Actions {
-  export interface Action<S, T = never, M = any> {
+  export interface Action<S, T = never, M extends Metadata | {} = any> {
     type: S;
     payload?: T;
     metadata?: M;
+  }
+
+  export interface Metadata {
+    recallId: string;
+    searchId: string;
+    tag?: Metadata.Tag;
+  }
+  export namespace Metadata {
+    export interface Tag {
+      id: number;
+      name: string;
+      origin?: string;
+    }
   }
 
   export interface Thunk<T> {
@@ -160,195 +173,6 @@ namespace Actions {
       from: number;
       to: number;
     }
-  }
-
-  export interface Base { type: string; }
-
-  export namespace UI {
-    export interface ComponentStateAction extends Base {
-      tagName: string;
-      id: string;
-    }
-    export interface CreateComponentState extends ComponentStateAction {
-      state: object;
-    }
-    export type RemoveComponentState = ComponentStateAction;
-  }
-
-  export namespace Autocomplete {
-    export interface UpdateQuery extends Base {
-      query: string;
-    }
-
-    export interface ReceiveSuggestions extends Base {
-      suggestions: string[];
-      categoryValues: string[];
-      navigations: Store.Autocomplete.Navigation[];
-    }
-
-    export interface ReceiveProducts extends Base {
-      products: any[];
-    }
-  }
-
-  export interface Search {
-    query?: string;
-    navigationId?: string;
-
-    // used to select existing refinement
-    index?: number;
-
-    // used to add new value refinement
-    value?: string;
-
-    // used to add new range refinement
-    low?: number;
-    high?: number;
-
-    /**
-     * only for refinements
-     * if true, replace refinements with the provided ones
-     * if false, add the provided refinements
-     */
-    clear?: boolean;
-  }
-  export namespace Search {
-    export type Refinement = ValueRefinement | RangeRefinement;
-
-    export interface BaseRefinement {
-      field: string;
-    }
-
-    export interface ValueRefinement extends BaseRefinement {
-      value: string;
-    }
-
-    export interface RangeRefinement extends BaseRefinement {
-      low?: number;
-      high?: number;
-    }
-
-    export type UpdateSearch = Base & Actions.Search;
-  }
-
-  export namespace Collections {
-    export interface SelectCollection extends Base {
-      id: string;
-    }
-    export interface ReceiveCount extends Base {
-      collection: string;
-      count: number;
-    }
-  }
-
-  export namespace Details {
-    export interface Update extends Base {
-      id: string;
-      title: string;
-    }
-    export interface ReceiveProduct extends Base {
-      product: Store.Product;
-    }
-  }
-
-  export namespace Navigation {
-    export interface RefinementAction extends Base {
-      navigationId: string;
-      index: number;
-    }
-    export type SelectRefinement = RefinementAction;
-    export type DeselectRefinement = RefinementAction;
-    export interface UpdateSearch extends Partial<RefinementAction> {
-      range?: boolean;
-      value?: string;
-      low?: number;
-      high?: number;
-      clear?: boolean;
-    }
-    export interface ReceiveNavigations extends Base {
-      navigations: Store.Navigation[];
-    }
-    export interface ReceiveMoreRefinements extends Base {
-      navigationId: string;
-      refinements: Store.Refinement[];
-      selected: number[];
-    }
-  }
-
-  export interface Page {
-    previous: number;
-    next: number;
-    last: number;
-    from: number;
-    to: number;
-  }
-  export namespace Page {
-    export interface UpdateCurrent extends Base {
-      page: number;
-    }
-    export interface UpdateSize extends Base {
-      size: number;
-    }
-    export interface ReceivePage extends Base {
-      from: number;
-      to: number;
-      last: number;
-      next: number;
-      previous: number;
-    }
-  }
-
-  export namespace Products {
-    export interface ReceiveProducts extends Base {
-      products: Store.Product[];
-    }
-  }
-
-  export interface Query {
-    corrected?: string;
-    related: string[];
-    didYouMean: string[];
-    rewrites: string[];
-  }
-  export namespace Query {
-    export interface UpdateOriginal extends Base {
-      query: string;
-    }
-    export interface ReceiveQuery extends Base {
-      corrected?: string;
-      rewrites: string[];
-      didYouMean: string[];
-      related: string[];
-    }
-  }
-
-  export namespace RecordCount {
-    export interface ReceiveRecordCount extends Base {
-      recordCount: number;
-    }
-  }
-
-  export namespace Redirect {
-    export interface ReceiveRedirect extends Base {
-      redirect: string;
-    }
-  }
-
-  export namespace Sort {
-    export interface UpdateSelected extends Base {
-      index: number;
-    }
-  }
-
-  export namespace Template {
-    export interface UpdateTemplate extends Base {
-      template: Store.Template;
-    }
-  }
-
-  export interface Paths {
-    search: string;
-    // details: string;
   }
 }
 

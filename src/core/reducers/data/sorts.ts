@@ -1,6 +1,5 @@
 import Actions from '../../actions';
 import Store from '../../store';
-import Action = Actions.Sort;
 
 export type Action = Actions.SelectSort;
 export type State = Store.SelectableList<Store.Sort>;

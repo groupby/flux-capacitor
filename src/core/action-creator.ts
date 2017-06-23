@@ -57,7 +57,10 @@ export default function createActions(flux: FluxCapacitor) {
           if (!state.isFetching.search) {
             dispatch(actions.soFetching('search'));
             return flux.clients.bridge.search(Selectors.searchRequest(state))
-              .then((res) => dispatch(actions.receiveSearchResponse(res)))
+              .then((res) => {
+                flux.emit(Events.BEACON_SEARCH, res['id']);
+                return dispatch(actions.receiveSearchResponse(res));
+              })
               .catch((err) => dispatch(actions.receiveSearchResponse(<any>{
                 availableNavigation: [],
                 selectedNavigation: [],
@@ -80,8 +83,9 @@ export default function createActions(flux: FluxCapacitor) {
               pageSize: amount,
               skip: Selectors.products(state).length
             }).then((res) => {
+              flux.emit(Events.BEACON_SEARCH, res['id']);
               const products = Adapters.Autocomplete.extractProducts(res);
-              dispatch(actions.receiveMoreProducts(products));
+              return dispatch(actions.receiveMoreProducts(products));
               // this action will add 0 new products but clear the fetching flag
             }).catch((err) => dispatch(actions.receiveMoreProducts([])));
           }
@@ -127,18 +131,21 @@ export default function createActions(flux: FluxCapacitor) {
               actions.receiveCollectionCount(collection, Adapters.Search.extractRecordCount(res)))),
 
       fetchProductDetails: (id: string): Actions.Thunk<any> =>
-        (dispatch, getState) =>
-          flux.clients.bridge.search({
+        (dispatch, getState) => {
+          return flux.clients.bridge.search({
             ...Selectors.searchRequest(getState()),
             query: null,
             pageSize: 1,
             skip: 0,
             refinements: [<any>{ navigationName: 'id', type: 'Value', value: id }]
-          }).then((res) => dispatch(actions.receiveDetailsProduct(res.records[0].allMeta)))
-            .catch((err) => dispatch(actions.receiveDetailsProduct(<any>{}))),
+          }).then(({ records: [record] }) => {
+            flux.emit(Events.BEACON_VIEW_PRODUCT, record);
+            return dispatch(actions.receiveDetailsProduct(record.allMeta));
+          }).catch((err) => dispatch(actions.receiveDetailsProduct(<any>{})));
+        },
 
       // request action creators
-      updateSearch: (search: Actions.Search): Actions.Thunk<Actions.UpdateSearch> =>
+      updateSearch: (search: Actions.Payload.Search): Actions.Thunk<Actions.UpdateSearch> =>
         (dispatch) => {
           const query = search.query && search.query.trim();
           if (query || query === null) {
@@ -215,7 +222,7 @@ export default function createActions(flux: FluxCapacitor) {
             .then(() => flux.saveState(Routes.SEARCH));
         },
 
-      receiveQuery: (query: Actions.Query): Actions.Thunk<Actions.ReceiveQuery> =>
+      receiveQuery: (query: Actions.Payload.Query): Actions.Thunk<Actions.ReceiveQuery> =>
         thunk(Actions.RECEIVE_QUERY, query, metadata),
 
       receiveProducts: (products: Store.Product[]): Actions.Thunk<Actions.ReceiveProducts> =>
@@ -227,7 +234,7 @@ export default function createActions(flux: FluxCapacitor) {
       receiveNavigations: (navigations: Store.Navigation[]): Actions.Thunk<Actions.ReceiveNavigations> =>
         thunk(Actions.RECEIVE_NAVIGATIONS, navigations, metadata),
 
-      receivePage: (page: Actions.Page): Actions.Thunk<Actions.ReceivePage> =>
+      receivePage: (page: Actions.Payload.Page): Actions.Thunk<Actions.ReceivePage> =>
         thunk(Actions.RECEIVE_PAGE, page, metadata),
 
       receiveTemplate: (template: Store.Template): Actions.Thunk<Actions.ReceiveTemplate> =>
