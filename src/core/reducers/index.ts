@@ -18,7 +18,18 @@ export const rootReducer = redux.combineReducers<Store.State>({
 
 export default (state: any, action) => {
   switch (action.type) {
-    case Actions.REFRESH_STATE: return action.state;
+    case Actions.REFRESH_STATE: return updateState(state, action);
     default: return rootReducer(state, action);
   }
+};
+
+export const updateState = (state: any, action) => {
+  return {
+    ...action.state,
+    session: state.session,
+    details: {
+      ...action.state.details,
+      id: state.details.id
+    }
+  };
 };

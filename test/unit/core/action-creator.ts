@@ -438,6 +438,9 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
             .then(() => {
               expect(search).to.be.calledWith({
                 ...state,
+                pageSize: 1,
+                query: null,
+                skip: 0,
                 refinements: [{ navigationName: 'id', type: 'Value', value: id }]
               });
               expect(dispatch).to.be.calledWith(detailsProduct);
@@ -595,11 +598,12 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       describe('updateDetailsId()', () => {
         it('should create an UPDATE_CURRENT_PAGE action', () => {
           const id = '123';
+          const title = 'eh';
           const thunk = stub(utils, 'thunk');
 
-          actions.updateDetails(id);
+          actions.updateDetails(id, title);
 
-          expect(thunk).to.be.calledWith(Actions.UPDATE_DETAILS, { id });
+          expect(thunk).to.be.calledWith(Actions.UPDATE_DETAILS, { id, title });
         });
       });
 

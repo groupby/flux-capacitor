@@ -125,7 +125,7 @@ export default class Creator {
 
   fetchProductDetails = (id: string) => (dispatch: Dispatch<any>, getState: () => Store.State) => {
       if (id) {
-        this.flux.clients.bridge.search({
+        return this.flux.clients.bridge.search({
           ...Selectors.searchRequest(getState()),
           query: null,
           pageSize: 1,
