@@ -4,6 +4,7 @@ import Actions from '../../../src/core/actions';
 import AutocompleteAdapter from '../../../src/core/adapters/autocomplete';
 import SearchAdapter from '../../../src/core/adapters/search';
 import * as Events from '../../../src/core/events';
+import { Request } from '../../../src/core/reducers/is-fetching';
 import Selectors from '../../../src/core/selectors';
 import * as utils from '../../../src/core/utils';
 import FluxCapacitor from '../../../src/flux-capacitor';
@@ -245,7 +246,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const products = [1, 2, 3, 4, 5];
         const state: any = { a: 'b', isFetching: { moreProducts: false } };
         const moreProductsAction = { e: 'f' };
-        const soFetchingAction = { g: 'h' };
+        const startFetchingAction = { g: 'h' };
         const dispatch = spy();
         const emit = flux.emit = spy();
         const getStore = spy(() => state);
@@ -253,7 +254,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const searchRequest = stub(Selectors, 'searchRequest').returns(request);
         const receiveMoreProducts = stub(actions, 'receiveMoreProducts').returns(moreProductsAction);
         const action = actions.fetchMoreProducts(amount);
-        const soFetching = stub(actions, 'soFetching').returns(soFetchingAction);
+        const startFetching = stub(actions, 'startFetching').returns(startFetchingAction);
         const extractProducts = stub(AutocompleteAdapter, 'extractProducts').callsFake((s) => s);
         stub(Selectors, 'products').returns(products);
         flux.clients = { bridge: { search } };
@@ -261,12 +262,12 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         return action(dispatch, getStore)
           .then(() => {
             expect(search).to.be.calledWith({ ...request, pageSize: amount, skip: products.length });
-            expect(soFetching).to.be.calledWith('moreProducts');
+            expect(startFetching).to.be.calledWith(Request.MORE_PRODUCTS);
             expect(searchRequest).to.be.calledWith(state);
             expect(extractProducts).to.be.calledWith(response);
             expect(emit).to.be.calledWith(Events.BEACON_SEARCH, id);
             expect(dispatch).to.be.calledTwice
-              .and.calledWith(soFetchingAction)
+              .and.calledWith(startFetchingAction)
               .and.calledWith(moreProductsAction);
           });
       });
@@ -280,7 +281,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const receiveMoreProducts = stub(actions, 'receiveMoreProducts').returns(moreProductsAction);
         const action = actions.fetchMoreProducts(5);
         stub(Selectors, 'searchRequest').returns(request);
-        stub(actions, 'soFetching');
+        stub(actions, 'startFetching');
         stub(Selectors, 'products').returns([]);
         flux.clients = { bridge: { search: () => Promise.reject('') } };
 

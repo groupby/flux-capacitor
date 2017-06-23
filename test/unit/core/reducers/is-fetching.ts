@@ -29,7 +29,7 @@ suite('isFetching', ({ expect }) => {
         details
       };
 
-      const reducer = isFetching(state, { type: Actions.SO_FETCHING, payload: 'autocompleteSuggestions' });
+      const reducer = isFetching(state, { type: Actions.IS_FETCHING, payload: 'autocompleteSuggestions' });
 
       expect(reducer).to.eql(newState);
     });

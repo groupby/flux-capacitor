@@ -6,6 +6,7 @@ import FluxCapacitor from '../flux-capacitor';
 import Actions from './actions';
 import Adapters from './adapters';
 import * as Events from './events';
+import { Request } from './reducers/is-fetching';
 import Selectors from './selectors';
 import Store from './store';
 import { action, conditional, thunk } from './utils';
@@ -18,15 +19,15 @@ export default function createActions(flux: FluxCapacitor) {
       refreshState: (state: any): Actions.RefreshState =>
         action(Actions.REFRESH_STATE, state, metadata),
 
-      soFetching: (requestType: keyof Store.IsFetching): Actions.SoFetching =>
-        action(Actions.SO_FETCHING, requestType, metadata),
+      startFetching: (requestType: keyof Store.IsFetching): Actions.IsFetching =>
+        action(Actions.IS_FETCHING, requestType, metadata),
 
       // fetch action creators
       fetchMoreRefinements: (navigationId: string): Actions.Thunk<any> =>
         (dispatch, getState) => {
           const state = getState();
           if (Selectors.hasMoreRefinements(state, navigationId)) {
-            dispatch(actions.soFetching('moreRefinements'));
+            dispatch(actions.startFetching(Request.MORE_REFINEMENTS));
             return flux.clients.bridge.refinements(Selectors.searchRequest(state), navigationId)
               .then(({ navigation: { name, refinements } }) => {
                 const navigation = Selectors.navigation(state, name);
@@ -55,7 +56,7 @@ export default function createActions(flux: FluxCapacitor) {
         (dispatch, getState) => {
           const state = getState();
           if (!state.isFetching.search) {
-            dispatch(actions.soFetching('search'));
+            dispatch(actions.startFetching(Request.PRODUCTS));
             return flux.clients.bridge.search(Selectors.searchRequest(state))
               .then((res) => {
                 flux.emit(Events.BEACON_SEARCH, res['id']);
@@ -77,7 +78,7 @@ export default function createActions(flux: FluxCapacitor) {
         (dispatch, getState) => {
           const state = getState();
           if (!state.isFetching.moreProducts) {
-            dispatch(actions.soFetching('moreProducts'));
+            dispatch(actions.startFetching(Request.MORE_PRODUCTS));
             return flux.clients.bridge.search({
               ...Selectors.searchRequest(state),
               pageSize: amount,
@@ -94,7 +95,7 @@ export default function createActions(flux: FluxCapacitor) {
       fetchAutocompleteSuggestions: (query: string, config: QueryTimeAutocompleteConfig): Actions.Thunk<any> =>
         (dispatch, getState) => {
           if (query) {
-            dispatch(actions.soFetching('autocompleteSuggestions'));
+            dispatch(actions.startFetching(Request.AUTOCOMPLETE_SUGGESTIONS));
             return flux.clients.sayt.autocomplete(query, config)
               .then((res) => {
                 const category = getState().data.autocomplete.category.field;
@@ -113,7 +114,7 @@ export default function createActions(flux: FluxCapacitor) {
       fetchAutocompleteProducts: (query: string, config: QueryTimeProductSearchConfig): Actions.Thunk<any> =>
         (dispatch) => {
           if (query) {
-            dispatch(actions.soFetching('autocompleteProducts'));
+            dispatch(actions.startFetching(Request.AUTOCOMPLETE_PRODUCTS));
             return flux.clients.sayt.productSearch(query, config)
               .then((res) => {
                 const products = Adapters.Autocomplete.extractProducts(res);
