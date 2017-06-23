@@ -48,6 +48,9 @@ namespace Selectors {
   export const products = (state: Store.State) =>
     state.data.products;
 
+  export const details = (state: Store.State) =>
+    state.data.details;
+
   export const selectedRefinements = (state: Store.State) =>
     Selectors.navigations(state)
       .reduce((allRefinements, nav) =>

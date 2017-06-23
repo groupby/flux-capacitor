@@ -29,7 +29,7 @@ suite('details', ({ expect }) => {
         product,
       };
 
-      const reducer = details(state, { type: Actions.UPDATE_DETAILS_ID, id: product.id });
+      const reducer = details(state, { type: Actions.UPDATE_DETAILS, id: product.id });
 
       expect(reducer).to.eql(newState);
     });

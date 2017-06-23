@@ -123,12 +123,18 @@ export default class Creator {
     this.flux.clients.bridge.search({ ...Selectors.searchRequest(getState()), collection })
       .then((res) => dispatch(this.receiveCollectionCount(collection, Adapters.Search.extractRecordCount(res))))
 
-  fetchProductDetails = (id: string) => (dispatch: Dispatch<any>, getState: () => Store.State) =>
-    this.flux.clients.bridge.search({
-      ...Selectors.searchRequest(getState()),
-      refinements: [<any>{ navigationName: 'id', type: 'Value', value: id }]
-    }).then((res) => dispatch(this.receiveDetailsProduct(res.records[0].allMeta)))
-      .catch((err) => dispatch(this.receiveDetailsProduct(<any>{})))
+  fetchProductDetails = (id: string) => (dispatch: Dispatch<any>, getState: () => Store.State) => {
+      if (id) {
+        this.flux.clients.bridge.search({
+          ...Selectors.searchRequest(getState()),
+          query: null,
+          pageSize: 1,
+          skip: 0,
+          refinements: [<any>{ navigationName: 'id', type: 'Value', value: id }]
+        }).then((res) => dispatch(this.receiveDetailsProduct(res.records[0].allMeta)))
+          .catch((err) => dispatch(this.receiveDetailsProduct(<any>{})));
+      }
+    }
 
   // request action creators
   updateSearch = (search: Actions.Search) =>
@@ -169,9 +175,9 @@ export default class Creator {
       page !== null && state.data.page.current !== page,
       Actions.UPDATE_CURRENT_PAGE, { page })
 
-  updateDetailsId = (id: string) =>
-    thunk<Actions.Details.UpdateId>(
-      Actions.UPDATE_DETAILS_ID, { id })
+  updateDetails = (id: string, title: string) =>
+    thunk<Actions.Details.Update>(
+      Actions.UPDATE_DETAILS, { id, title })
 
   updateAutocompleteQuery = (query: string) =>
     conditional<Actions.Autocomplete.UpdateQuery>((state) =>

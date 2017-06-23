@@ -597,9 +597,9 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           const id = '123';
           const thunk = stub(utils, 'thunk');
 
-          actions.updateDetailsId(id);
+          actions.updateDetails(id);
 
-          expect(thunk).to.be.calledWith(Actions.UPDATE_DETAILS_ID, { id });
+          expect(thunk).to.be.calledWith(Actions.UPDATE_DETAILS, { id });
         });
       });
 
