@@ -19,7 +19,7 @@ suite('isFetching', ({ expect }) => {
   };
 
   describe('updateIsFetching()', () => {
-    it('should update state on SO_FETCHING', () => {
+    it('should update state on IS_FETCHING', () => {
       const newState = {
         moreRefinements,
         moreProducts,
