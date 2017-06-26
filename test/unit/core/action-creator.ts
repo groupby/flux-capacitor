@@ -394,13 +394,14 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const collection = 'department';
         const state = { a: 'b' };
         const response = { c: 'd' };
+        const collectionCountAction = { e: 'f' };
         const recordCount = 10293;
         const dispatch = spy();
         const getStore = spy(() => state);
         const search = stub().resolves(response);
         const action = actions.fetchCollectionCount(collection);
         const searchRequest = stub(Selectors, 'searchRequest').returns(state);
-        const receiveCollectionCount = stub(actions, 'receiveCollectionCount').returns(response);
+        const receiveCollectionCount = stub(actions, 'receiveCollectionCount').returns(collectionCountAction);
         const extractRecordCount = stub(SearchAdapter, 'extractRecordCount').returns(recordCount);
         flux.clients = { bridge: { search } };
 
@@ -409,6 +410,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
             expect(search).to.be.calledWith({ ...state, collection });
             expect(receiveCollectionCount).to.be.calledWith(collection, recordCount);
             expect(extractRecordCount).to.be.calledWith(response);
+            expect(dispatch).to.be.calledWith(collectionCountAction);
           });
       });
 
@@ -424,12 +426,11 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           const state = { a: 'b' };
           const allMeta = 'hey';
           const record = { allMeta };
-          const response = { c: 'd', records: [record] };
           const detailsProduct = '10293';
           const dispatch = spy();
           const emit = flux.emit = spy();
           const getStore = spy(() => state);
-          const search = stub().resolves(response);
+          const search = stub().resolves({ c: 'd', records: [record] });
           const action = actions.fetchProductDetails(id);
           const searchRequest = stub(Selectors, 'searchRequest').returns(state);
           const receiveDetailsProduct = stub(actions, 'receiveDetailsProduct').returns(detailsProduct);

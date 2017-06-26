@@ -4,17 +4,15 @@ import Store from '../store';
 export type Action = Actions.Action<string, any, Actions.Metadata>;
 export type State = Store.Session;
 
-export default function updateSession(state: State = {}, action: Action): State {
-  if ('metadata' in action) {
-    if ('recallId' in action.metadata) {
-      state = updateRecallId(state, action.metadata);
-    }
-    if ('searchId' in action.metadata) {
-      state = updateSearchId(state, action.metadata);
-    }
-    if ('tag' in action.metadata) {
-      state = updateOrigin(state, action.metadata);
-    }
+export default function updateSession(state: State = {}, { metadata = <Actions.Metadata>{} }: Action): State {
+  if ('recallId' in metadata) {
+    state = updateRecallId(state, metadata);
+  }
+  if ('searchId' in metadata) {
+    state = updateSearchId(state, metadata);
+  }
+  if ('tag' in metadata) {
+    state = updateOrigin(state, metadata);
   }
 
   return state;
