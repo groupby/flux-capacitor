@@ -298,7 +298,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
       it('should call flux.clients.sayt.autocomplete()', () => {
         const query = 'red app';
-        const config = { a: 'b' };
+        const config: any = { a: 'b' };
         const response = { c: 'd' };
         const suggestions = ['e', 'f'];
         const categoryValues = ['g', 'h'];
@@ -346,7 +346,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
       it('should call flux.sayt.productSearch()', () => {
         const query = 'red app';
-        const config = { a: 'b' };
+        const config: any = { a: 'b' };
         const response = { c: 'd' };
         const products = ['e', 'f'];
         const receiveAutocompleteProductsAction = () => null;
