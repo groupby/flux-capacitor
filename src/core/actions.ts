@@ -74,7 +74,7 @@ namespace Actions {
   export type ReceiveRedirect = Action<typeof RECEIVE_REDIRECT, string>;
 
   // request status
-  export const IS_FETCHING = 'SO_FETCHING';
+  export const IS_FETCHING = 'IS_FETCHING';
   export type IsFetching = Action<typeof IS_FETCHING, keyof Store.IsFetching>;
 
   // ui
