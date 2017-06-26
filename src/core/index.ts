@@ -8,24 +8,19 @@ import { DEFAULT_AREA } from './reducers/data/area';
 import { DEFAULT_COLLECTION } from './reducers/data/collections';
 import Selectors from './selectors';
 import Store, { ReduxStore } from './store';
-
-// tslint:disable-next-line variable-name
-export const Routes = {
-  SEARCH: 'search',
-  DETAILS: 'details',
-  NAVIGATION: 'navigation'
-};
+import { Routes } from './utils';
 
 export {
   DEFAULT_AREA,
   DEFAULT_COLLECTION,
-  createActions,
   Actions,
   Adapters,
   Events,
   ReduxStore,
+  Routes,
   Selectors,
   Store,
   Observer,
+  createActions,
   reducer
 };

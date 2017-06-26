@@ -5,6 +5,7 @@ import * as sinon from 'sinon';
 import * as core from '../../src/core';
 import createActions, * as ActionCreator from '../../src/core/action-creator';
 import ConfigAdapter from '../../src/core/adapters/configuration';
+import * as Events from '../../src/core/events';
 import Observer from '../../src/core/observer';
 import Selectors from '../../src/core/selectors';
 import Store from '../../src/core/store';
@@ -90,6 +91,19 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
       stub(Observer, 'listen');
       stub(Store, 'create').returns(store = {});
       flux = new FluxCapacitor(<any>{});
+    });
+
+    describe('saveState()', () => {
+      it('should emit HISTORY_SAVE event with state and route', () => {
+        const state = { a: 'b' };
+        const emit = flux.emit = spy();
+        const route = 'search';
+        flux.store = <any>{ getState: () => state };
+
+        flux.saveState(route);
+
+        expect(emit).to.be.calledWith(Events.HISTORY_SAVE, { state, route });
+      });
     });
 
     describe('search()', () => {

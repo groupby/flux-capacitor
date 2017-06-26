@@ -7,6 +7,7 @@ import Observer from '../../../src/core/observer';
 import reducer from '../../../src/core/reducers';
 import Selectors from '../../../src/core/selectors';
 import Store from '../../../src/core/store';
+import { Routes } from '../../../src/core/utils';
 import suite from '../_suite';
 
 suite('core', ({ expect }) => {
@@ -49,6 +50,12 @@ suite('core', ({ expect }) => {
   describe('Selectors', () => {
     it('should expose Selectors', () => {
       expect(core.Selectors).to.eq(Selectors);
+    });
+  });
+
+  describe('Routes', () => {
+    it('should expose Routes', () => {
+      expect(core.Routes).to.eq(Routes);
     });
   });
 });

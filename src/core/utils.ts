@@ -2,6 +2,13 @@ import { Dispatch } from 'redux';
 import Actions from './actions';
 import Store from './store';
 
+// tslint:disable-next-line variable-name
+export const Routes = {
+  SEARCH: 'search',
+  DETAILS: 'details',
+  NAVIGATION: 'navigation'
+};
+
 export const rayify = <T>(arr: T | T[]): T[] => Array.isArray(arr) ? arr : [arr];
 
 // tslint:disable-next-line max-line-length

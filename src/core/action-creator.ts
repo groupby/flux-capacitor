@@ -1,7 +1,6 @@
 import { Results } from 'groupby-api';
 import { Dispatch } from 'redux';
 import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt';
-import { Routes } from '.';
 import FluxCapacitor from '../flux-capacitor';
 import Actions from './actions';
 import Adapters from './adapters';
@@ -9,9 +8,9 @@ import * as Events from './events';
 import { Request } from './reducers/is-fetching';
 import Selectors from './selectors';
 import Store from './store';
-import { action, conditional, thunk } from './utils';
+import { action, conditional, thunk, Routes } from './utils';
 
-export default function createActions(flux: FluxCapacitor) {
+export function createActions(flux: FluxCapacitor) {
 
   return (meta: () => any) => {
     const metadata = meta();
@@ -284,7 +283,4 @@ export default function createActions(flux: FluxCapacitor) {
   };
 }
 
-export interface AddRefinement {
-  (navigationId: string, value: string): (dispatch: AddRefinement) => void;
-  (navigationId: string, low: number, high: number): (dispatch: AddRefinement) => void;
-}
+export default createActions;

@@ -18,33 +18,29 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
   describe('application action creators', () => {
     const state = { c: 'd' };
-    describe('saveState()', () => {
-      it('should emit HISTORY_SAVE event with state and route', () => {
-        const emit = spy();
-        const route = 'search';
-        actions['flux'] = <any>{
-          emit,
-          store: {
-            getState: () => state,
-          }
-        };
-
-        actions.saveState(route);
-
-        expect(emit).to.be.calledWith(Events.HISTORY_SAVE, { state, route });
-      });
-    });
 
     describe('refreshState()', () => {
       it('should return state with type REFRESH_STATE', () => {
-        expect(actions.refreshState(state)).to.eql({ type: Actions.REFRESH_STATE, state });
+        const created = { f: 'g' };
+        const createAction = stub(utils, 'action').returns(created);
+
+        const action = actions.refreshState(state);
+
+        expect(createAction).to.be.calledWith(Actions.REFRESH_STATE, state);
+        expect(action).to.eq(created);
       });
     });
 
-    describe('soFetching()', () => {
-      it('should return type SO_FETCHING with requestType', () => {
-        const requestType = <any>{ d: 'e' };
-        expect(actions.soFetching(requestType)).to.eql({ type: Actions.SO_FETCHING, requestType });
+    describe('startFetching()', () => {
+      it('should return type IS_FETCHING with requestType', () => {
+        const requestType = 'search';
+        const created = { f: 'g' };
+        const createAction = stub(utils, 'action').returns(created);
+
+        const action = actions.startFetching(requestType);
+
+        expect(createAction).to.be.calledWith(Actions.IS_FETCHING, requestType);
+        expect(action).to.eq(created);
       });
     });
   });
@@ -675,11 +671,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.updateDetails(id, title);
 
-<<<<<<< HEAD
           expect(thunk).to.be.calledWith(Actions.UPDATE_DETAILS, { id, title });
-=======
-          expect(thunk).to.be.calledWith(Actions.UPDATE_DETAILS_ID, id);
->>>>>>> all thetests
         });
       });
 
@@ -755,36 +747,9 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           const receivePage = stub(actions, 'receivePage').returns(receivePageAction);
           const receiveTemplate = stub(actions, 'receiveTemplate').returns(receiveTemplateAction);
           const receiveCollectionCount = stub(actions, 'receiveCollectionCount').returns(receiveCollectionCountAction);
-          const saveState = stub(actions, 'saveState');
+          const saveState = flux.saveState = spy();
           const thunk = actions.receiveSearchResponse(results);
-          flux.saveState = () => null;
 
-<<<<<<< HEAD
-          thunk(dispatch, getStore).then(() => {
-            expect(receiveRedirect).to.be.calledWith(results.redirect);
-            expect(dispatch).to.be.calledWith(receiveRedirectAction);
-            expect(receiveQuery).to.be.calledWith(query);
-            expect(extractQuery).to.be.calledWith(results, linkMapper);
-            expect(dispatch).to.be.calledWith(receiveQueryAction);
-            expect(receiveProducts).to.be.calledWith(['x', 'x']);
-            expect(extractProduct).to.be.calledWith({ allMeta: { u: 'v' } })
-              .and.calledWith({ allMeta: { w: 'x' } });
-            expect(dispatch).to.be.calledWith(receiveProductsAction);
-            expect(receiveNavigations).to.be.calledWith(navigations);
-            expect(combineNavigations).to.be.calledWith(results);
-            expect(dispatch).to.be.calledWith(receiveNavigationsAction);
-            expect(receivePage).to.be.calledWith(page);
-            expect(extractPage).to.be.calledWith(state);
-            expect(dispatch).to.be.calledWith(receivePageAction);
-            expect(receiveTemplate).to.be.calledWith(template);
-            expect(extractTemplate).to.be.calledWith(results.template);
-            expect(dispatch).to.be.calledWith(receiveTemplateAction);
-            expect(receiveCollectionCount).to.be.calledWith(state.data.collections.selected, results.totalRecordCount);
-            expect(dispatch).to.be.calledWith(receiveCollectionCountAction);
-            expect(saveState).to.be.calledWith('search');
-          });
-
-=======
           return thunk(dispatch, getStore)
             .then(() => {
               expect(receiveRedirect).to.be.calledWith(results.redirect);
@@ -808,8 +773,8 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
               // tslint:disable-next-line max-line-length
               expect(receiveCollectionCount).to.be.calledWith(state.data.collections.selected, results.totalRecordCount);
               expect(dispatch).to.be.calledWith(receiveCollectionCountAction);
+              expect(saveState).to.be.calledWith('search');
             });
->>>>>>> all thetests
         });
       });
 
@@ -946,19 +911,18 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       describe('receiveDetailsProduct()', () => {
         it('should create a RECEIVE_DETAILS_PRODUCT action', () => {
           const product: any = { a: 'b' };
+          const created: any = { c: 'd' };
           const dispatch = spy();
-          const saveState = stub(actions, 'saveState');
+          const createAction = stub(utils, 'action').returns(created);
+          const saveState = flux.saveState = spy();
 
           const action = actions.receiveDetailsProduct(product);
 
           action(dispatch);
 
-<<<<<<< HEAD
-          expect(dispatch).to.be.calledWith({ type: Actions.RECEIVE_DETAILS_PRODUCT, product });
+          expect(createAction).to.be.calledWith(Actions.RECEIVE_DETAILS_PRODUCT, product);
+          expect(dispatch).to.be.calledWith(created);
           expect(saveState).to.be.calledWith('details');
-=======
-          expect(thunk).to.be.calledWith(Actions.RECEIVE_DETAILS_PRODUCT, product);
->>>>>>> all thetests
         });
       });
 
