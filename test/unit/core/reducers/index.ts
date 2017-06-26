@@ -5,9 +5,10 @@ import suite from '../../_suite';
 
 suite('reducers', ({ expect, stub }) => {
   it('should handle REFRESH_STATE action', () => {
-    const state = { a: 'b' };
+    const state = { a: 'b', data: { details: {} } };
+    const newState = { a: 'b', session: undefined, data: { details: { id: undefined } } };
 
-    expect(reducer({}, { type: Actions.REFRESH_STATE, state })).to.eq(state);
+    expect(reducer({ data: { details: { } }}, { type: Actions.REFRESH_STATE, state })).to.eql(newState);
   });
 
   it('should return default', () => {
