@@ -191,7 +191,7 @@ export function createActions(flux: FluxCapacitor) {
           page !== null && state.data.page.current !== page,
           Actions.UPDATE_CURRENT_PAGE, page, metadata),
 
-      updateDetails: (id: string, title: string): Actions.Thunk<Actions.UpdateDetailsId> =>
+      updateDetails: (id: string, title: string): Actions.Thunk<Actions.UpdateDetails> =>
         thunk(Actions.UPDATE_DETAILS, { id, title }, metadata),
 
       updateAutocompleteQuery: (query: string): Actions.Thunk<Actions.UpdateAutocompleteQuery> =>

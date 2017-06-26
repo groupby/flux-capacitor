@@ -28,7 +28,7 @@ namespace Actions {
   export const UPDATE_AUTOCOMPLETE_QUERY = 'UPDATE_AUTOCOMPLETE_QUERY';
   export type UpdateAutocompleteQuery = Action<typeof UPDATE_AUTOCOMPLETE_QUERY, string>;
   export const UPDATE_DETAILS = 'UPDATE_DETAILS';
-  export type UpdateDetailsId = Action<typeof UPDATE_DETAILS, Payload.Details>;
+  export type UpdateDetails = Action<typeof UPDATE_DETAILS, Payload.Details>;
   export const UPDATE_SEARCH = 'UPDATE_SEARCH';
   export type UpdateSearch = Action<typeof UPDATE_SEARCH, Payload.Search>;
   export const SELECT_REFINEMENT = 'SELECT_REFINEMENT';

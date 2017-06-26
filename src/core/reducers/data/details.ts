@@ -1,7 +1,7 @@
 import Actions from '../../actions';
 import Store from '../../store';
 
-export type Action = Actions.UpdateDetailsId | Actions.ReceiveDetailsProduct;
+export type Action = Actions.UpdateDetails | Actions.ReceiveDetailsProduct;
 export type State = Store.Details;
 
 export const DEFAULTS: State = {};
