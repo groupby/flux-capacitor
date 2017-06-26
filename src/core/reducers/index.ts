@@ -27,9 +27,12 @@ export const updateState = (state: any, action) => {
   return {
     ...action.state,
     session: state.session,
-    details: {
-      ...action.state.details,
-      id: state.details.id
+    data: {
+      ...action.state.data,
+      details: {
+        ...action.state.data.details,
+        id: state.data.details.id
+      }
     }
   };
 };
