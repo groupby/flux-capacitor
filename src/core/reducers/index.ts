@@ -24,7 +24,6 @@ export default (state: any, action) => {
 };
 
 export const updateState = (state: any, action) => {
-  console.log(state);
   return {
     ...action.state,
     session: state.session,
