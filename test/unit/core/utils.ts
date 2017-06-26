@@ -53,7 +53,7 @@ suite('utils', ({ expect, spy }) => {
   });
 
   describe('conditional()', () => {
-    it('should return a thunk that evaluates the predicate', () => {
+    it('should return a thunk that swallows an action if the predicate evaluates to a falsey value', () => {
       const predicate = spy();
       const payload = { a: 'b' };
       const metadata = { c: 'd' };

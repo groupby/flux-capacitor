@@ -478,7 +478,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, payload: search, metadata: {} });
         });
 
-        it('should not create an UPDATE_SEARCH action when query string is empty', () => {
+        it('should not dispatch when query string is empty', () => {
           const search: Actions.Payload.Search = { query: '' };
           const dispatch = () => expect.fail();
 
@@ -495,7 +495,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, payload: { query: 'h  a  r\tr  y' }, metadata: {} });
         });
 
-        it('should not create an UPDATE_SEARCH action when query string only contains whitespace', () => {
+        it('should not dispatch when query string only contains whitespace', () => {
           const search: Actions.Payload.Search = { query: '  \t  ' };
           const dispatch = () => expect.fail();
 
@@ -537,7 +537,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       });
 
       describe('resetRecall()', () => {
-        it('should call actions.updateSearch() with no params', () => {
+        it('should call actions.updateSearch() with falsey params to clear request state', () => {
           const updateSearch = actions.updateSearch = spy();
 
           actions.resetRecall();
