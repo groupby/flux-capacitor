@@ -21,21 +21,21 @@ suite('utils', ({ expect, spy }) => {
   });
 
   describe('action()', () => {
-    it('should build an FSA compliant action with empty metadata', () => {
-      expect(utils.action(ACTION)).to.eql({ type: ACTION, metadata: {} });
+    it('should build an FSA compliant action with empty meta', () => {
+      expect(utils.action(ACTION)).to.eql({ type: ACTION, meta: {} });
     });
 
-    it('should build an FSA compliant action with empty metadata and a payload', () => {
+    it('should build an FSA compliant action with empty meta and a payload', () => {
       const payload = { a: 'b' };
 
-      expect(utils.action(ACTION, payload)).to.eql({ type: ACTION, payload, metadata: {} });
+      expect(utils.action(ACTION, payload)).to.eql({ type: ACTION, payload, meta: {} });
     });
 
-    it('should build an FSA compliant action with metadata and a payload', () => {
+    it('should build an FSA compliant action with meta and a payload', () => {
       const payload = { a: 'b' };
-      const metadata = { e: 'f' };
+      const meta = { e: 'f' };
 
-      expect(utils.action(ACTION, payload, metadata)).to.eql({ type: ACTION, payload, metadata });
+      expect(utils.action(ACTION, payload, meta)).to.eql({ type: ACTION, payload, meta });
     });
   });
 
@@ -43,12 +43,12 @@ suite('utils', ({ expect, spy }) => {
     it('should return a thunk that dispatches an action', () => {
       const dispatch = spy();
       const payload = { a: 'b' };
-      const metadata = { c: 'd' };
-      const thunk = utils.thunk(ACTION, payload, metadata);
+      const meta = { c: 'd' };
+      const thunk = utils.thunk(ACTION, payload, meta);
 
       thunk(dispatch);
 
-      expect(dispatch).to.be.calledWith({ type: ACTION, payload, metadata });
+      expect(dispatch).to.be.calledWith({ type: ACTION, payload, meta });
     });
   });
 
@@ -56,9 +56,9 @@ suite('utils', ({ expect, spy }) => {
     it('should return a thunk that swallows an action if the predicate evaluates to a falsey value', () => {
       const predicate = spy();
       const payload = { a: 'b' };
-      const metadata = { c: 'd' };
+      const meta = { c: 'd' };
       const state: any = { e: 'f' };
-      const thunk = utils.conditional(predicate, ACTION, payload, metadata);
+      const thunk = utils.conditional(predicate, ACTION, payload, meta);
 
       thunk(() => expect.fail(), () => state);
 
@@ -68,13 +68,13 @@ suite('utils', ({ expect, spy }) => {
     it('should return a thunk that dispatches an action if the predicate evaluates to a truthy value', () => {
       const dispatch = spy();
       const payload = { a: 'b' };
-      const metadata = { c: 'd' };
+      const meta = { c: 'd' };
       const state: any = { e: 'f' };
-      const thunk = utils.conditional(() => true, ACTION, payload, metadata);
+      const thunk = utils.conditional(() => true, ACTION, payload, meta);
 
       thunk(dispatch, () => state);
 
-      expect(dispatch).to.be.calledWith({ type: ACTION, payload, metadata });
+      expect(dispatch).to.be.calledWith({ type: ACTION, payload, meta });
     });
   });
 });

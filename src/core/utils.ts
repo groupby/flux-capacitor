@@ -13,10 +13,13 @@ export const rayify = <T>(arr: T | T[]): T[] => Array.isArray(arr) ? arr : [arr]
 
 // tslint:disable-next-line max-line-length
 export const action = <P, T extends string, M extends Actions.Metadata | {} = {}>(type: T, payload?: P, meta?: M): Actions.Action<T, P, M | {}> => {
-  const builtAction: Actions.Action<T, P, M | {}> = { type, metadata: meta || {} };
+  const builtAction: Actions.Action<T, P, M | {}> = { type, meta: meta || {} };
 
   if (payload !== undefined) {
     builtAction.payload = payload;
+    if (payload instanceof Error) {
+      builtAction.error = true;
+    }
   }
   return builtAction;
 };

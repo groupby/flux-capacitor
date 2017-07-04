@@ -484,7 +484,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.updateSearch(search)(dispatch);
 
-          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, payload: search, metadata: {} });
+          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, payload: search, meta: {} });
         });
 
         it('should not dispatch when query string is empty', () => {
@@ -501,7 +501,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           actions.updateSearch(search)(dispatch);
 
           // tslint:disable-next-line max-line-length
-          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, payload: { query: 'h  a  r\tr  y' }, metadata: {} });
+          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, payload: { query: 'h  a  r\tr  y' }, meta: {} });
         });
 
         it('should not dispatch when query string only contains whitespace', () => {
@@ -517,7 +517,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
           actions.updateSearch(search)(dispatch);
 
-          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, payload: { query: null }, metadata: {} });
+          expect(dispatch).to.be.calledWith({ type: Actions.UPDATE_SEARCH, payload: { query: null }, meta: {} });
         });
       });
 
@@ -704,7 +704,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           expect(actions.refreshState(payload)).to.eql({
             payload,
             type: Actions.REFRESH_STATE,
-            metadata: {},
+            meta: {},
           });
         });
       });
@@ -803,9 +803,9 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           const products: any = ['a', 'b'];
           const thunk = stub(utils, 'thunk');
 
-          actions.receiveProducts(products);
+          actions.receiveProductRecords(products);
 
-          expect(thunk).to.be.calledWith(Actions.RECEIVE_PRODUCTS, products);
+          expect(thunk).to.be.calledWith(Actions.RECEIVE_PRODUCT_RECORDS, products);
         });
       });
 

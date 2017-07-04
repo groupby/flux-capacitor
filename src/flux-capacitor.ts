@@ -31,7 +31,7 @@ class FluxCapacitor extends EventEmitter {
   /**
    * instance of the state store
    */
-  store: ReduxStore<Store.State> = Store.create(this.config, Observer.listener(this));
+  store: ReduxStore<Store.State> = Store.create(this, Observer.listener(this));
 
   constructor(public config: Configuration) {
     super();

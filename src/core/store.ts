@@ -1,11 +1,15 @@
-import { applyMiddleware, createStore, Store as ReduxStore } from 'redux';
-import thunk from 'redux-thunk';
+import { reduxBatch } from '@manaflair/redux-batch';
+import { applyMiddleware, compose, createStore, Store as ReduxStore } from 'redux';
+import createSagaMiddleware from 'redux-saga';
+import thunkMiddleware from 'redux-thunk';
+import * as validatorMiddleware from 'redux-validator';
 import * as uuid from 'uuid';
+import FluxCapacitor from '../flux-capacitor';
 import Actions from './actions';
 import Adapter from './adapters/configuration';
-import Configuration from './configuration';
 import reducer from './reducers';
 import * as PageReducer from './reducers/data/page';
+import createSagas from './sagas';
 
 export { ReduxStore };
 
@@ -16,9 +20,7 @@ export const RECALL_CHANGE_ACTIONS = [
 ];
 
 export const SEARCH_CHANGE_ACTIONS = [
-  Actions.UPDATE_SEARCH,
-  Actions.SELECT_REFINEMENT,
-  Actions.DESELECT_REFINEMENT,
+  ...RECALL_CHANGE_ACTIONS,
   Actions.SELECT_COLLECTION,
   Actions.SELECT_SORT,
   Actions.UPDATE_PAGE_SIZE,
@@ -28,7 +30,7 @@ export const SEARCH_CHANGE_ACTIONS = [
 export const idGenerator = (key: string, actions: string[]) =>
   (store) => (next) => (action) => {
     if (actions.includes(action.type)) {
-      return next({ ...action, metadata: { ...action.metadata, [key]: uuid.v1() } });
+      return next({ ...action, meta: { ...action.meta, [key]: uuid.v1() } });
     } else {
       return next(action);
     }
@@ -37,11 +39,15 @@ export const idGenerator = (key: string, actions: string[]) =>
 namespace Store {
 
   // tslint:disable-next-line max-line-length
-  export function create(config: Configuration, listener?: (store: ReduxStore<State>) => () => void): ReduxStore<State> {
+  export function create(flux: FluxCapacitor, listener?: (store: ReduxStore<State>) => () => void): ReduxStore<State> {
+    const { config } = flux;
+    const sagaMiddleware = createSagaMiddleware();
     const middleware = [
-      thunk,
+      // thunkMiddleware,
+      validatorMiddleware(),
       idGenerator('recallId', RECALL_CHANGE_ACTIONS),
-      idGenerator('searchId', SEARCH_CHANGE_ACTIONS)
+      idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
+      sagaMiddleware,
     ];
 
     if (process.env.NODE_ENV === 'development' && ((((<any>config).services || {}).logging || {}).debug || {}).flux) {
@@ -53,8 +59,10 @@ namespace Store {
     const store = createStore<State>(
       reducer,
       <any>Adapter.initialState(config),
-      applyMiddleware(...middleware),
+      compose(reduxBatch, applyMiddleware(...middleware), reduxBatch),
     );
+
+    createSagas(flux).forEach(sagaMiddleware.run);
 
     if (listener) {
       store.subscribe(listener(store));

@@ -66,12 +66,16 @@
     "typescript": "^2.3.3"
   },
   "dependencies": {
+    "@manaflair/redux-batch": "^0.1.0",
     "@types/redux-logger": "^3.0.0",
     "eventemitter3": "^2.0.3",
     "groupby-api": "^2.0.1",
     "redux": "^3.7.0",
     "redux-logger": "^3.0.6",
+    "redux-saga": "^0.15.4",
     "redux-thunk": "^2.2.0",
+    "redux-undo": "^0.6.1",
+    "redux-validator": "^0.2.1",
     "sayt": "^0.1.7",
     "uuid": "^3.1.0"
   }

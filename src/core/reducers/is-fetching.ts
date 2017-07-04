@@ -7,7 +7,7 @@ export type Action = Actions.IsFetching
   | Actions.ReceiveAutocompleteSuggestions
   | Actions.ReceiveAutocompleteProducts
   | Actions.ReceiveDetailsProduct
-  | Actions.ReceiveProducts;
+  | Actions.ReceiveProductRecords;
 export type State = Store.IsFetching;
 
 export namespace Request {
@@ -27,7 +27,7 @@ export default function updateIsFetching(state: State = {}, action: Action): Sta
     case Actions.RECEIVE_AUTOCOMPLETE_SUGGESTIONS: return doneFetching(state, Request.AUTOCOMPLETE_SUGGESTIONS);
     case Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS: return doneFetching(state, Request.AUTOCOMPLETE_PRODUCTS);
     case Actions.RECEIVE_DETAILS_PRODUCT: return doneFetching(state, Request.DETAILS_PRODUCT);
-    case Actions.RECEIVE_PRODUCTS: return doneFetching(state, Request.PRODUCTS);
+    case Actions.RECEIVE_PRODUCT_RECORDS: return doneFetching(state, Request.PRODUCTS);
     default: return state;
   }
 }

@@ -19,7 +19,7 @@ suite('session', ({ expect }) => {
         searchId: SEARCH_ID
       };
 
-      const reducer = session(state, <any>{ metadata: { recallId } });
+      const reducer = session(state, <any>{ meta: { recallId } });
 
       expect(reducer).to.eql(newState);
     });
@@ -31,7 +31,7 @@ suite('session', ({ expect }) => {
         searchId
       };
 
-      const reducer = session(state, <any>{ metadata: { searchId } });
+      const reducer = session(state, <any>{ meta: { searchId } });
 
       expect(reducer).to.eql(newState);
     });
@@ -41,7 +41,7 @@ suite('session', ({ expect }) => {
       const searchId = 'new stuffys';
       const newState = { recallId, searchId };
 
-      const reducer = session(state, <any>{ metadata: { searchId, recallId } });
+      const reducer = session(state, <any>{ meta: { searchId, recallId } });
 
       expect(reducer).to.eql(newState);
     });

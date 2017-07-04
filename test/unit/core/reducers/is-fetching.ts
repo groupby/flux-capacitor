@@ -120,7 +120,7 @@ suite('isFetching', ({ expect }) => {
         details
       };
 
-      const reducer = isFetching(state, { type: Actions.RECEIVE_PRODUCTS });
+      const reducer = isFetching(state, { type: Actions.RECEIVE_PRODUCT_RECORDS });
 
       expect(reducer).to.eql(newState);
     });
