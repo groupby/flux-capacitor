@@ -1,48 +1,45 @@
-import { call, put, select, takeLatest, ForkEffect } from 'redux-saga/effects';
+import * as effects from 'redux-saga/effects';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
-import Adapters from '../adapters';
-import * as Events from '../events';
+import Adapter from '../adapters/autocomplete';
 import Selectors from '../selectors';
 import Store from '../store';
-import * as utils from '../utils';
 
-export default (flux: FluxCapacitor) => {
-  function* fetchSuggestions(action: Actions.FetchAutocompleteSuggestions) {
+export namespace Tasks {
+  export function* fetchSuggestions(flux: FluxCapacitor, { payload: query }: Actions.FetchAutocompleteSuggestions) {
     try {
-      const state: Store.State = yield select();
-      const res = yield call(
+      const { sayt } = flux.clients;
+      const field = yield effects.select(Selectors.autocompleteCategoryField);
+      const res = yield effects.call(
         [flux.clients.sayt, flux.clients.sayt.autocomplete],
-        action.payload,
+        query,
         Selectors.autocompleteSuggestionsRequest(flux.config)
       );
-      const category = state.data.autocomplete.category.field;
-      const suggestions = Adapters.Autocomplete.extractSuggestions(res, category);
+      const suggestions = Adapter.extractSuggestions(res, field);
 
-      yield put(flux.actions.receiveAutocompleteSuggestions(suggestions));
+      yield effects.put(flux.actions.receiveAutocompleteSuggestions(suggestions));
     } catch (e) {
-      yield put(flux.actions.receiveAutocompleteSuggestions(e));
+      yield effects.put(flux.actions.receiveAutocompleteSuggestions(e));
     }
   }
 
-  function* fetchProducts(action: Actions.FetchAutocompleteProducts) {
+  export function* fetchProducts(flux: FluxCapacitor, action: Actions.FetchAutocompleteProducts) {
     try {
-      const state: Store.State = yield select();
-      const res = yield call(
+      const res = yield effects.call(
         [flux.clients.sayt, flux.clients.sayt.productSearch],
         action.payload,
         Selectors.autocompleteProductsRequest(flux.config)
       );
-      const products = Adapters.Autocomplete.extractProducts(res);
+      const products = Adapter.extractProducts(res);
 
-      yield put(flux.actions.receiveAutocompleteProducts(products));
+      yield effects.put(flux.actions.receiveAutocompleteProducts(products));
     } catch (e) {
-      yield put(flux.actions.receiveAutocompleteProducts(e));
+      yield effects.put(flux.actions.receiveAutocompleteProducts(e));
     }
   }
+}
 
-  return function* saga() {
-    yield takeLatest(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, fetchSuggestions);
-    yield takeLatest(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, fetchProducts);
-  };
+export default (flux: FluxCapacitor) => function* autocompleteSaga() {
+  yield effects.takeLatest(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, Tasks.fetchSuggestions, flux);
+  yield effects.takeLatest(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, Tasks.fetchProducts, flux);
 };

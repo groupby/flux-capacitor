@@ -1,7 +1,7 @@
 import { EventEmitter } from 'eventemitter3';
 import { BrowserBridge, Results } from 'groupby-api';
 import { Store as ReduxStore } from 'redux';
-import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig, Sayt } from 'sayt';
+import { Sayt } from 'sayt';
 import createActions from './core/action-creator';
 import Actions from './core/actions';
 import Adapter from './core/adapters/configuration';

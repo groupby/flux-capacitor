@@ -1,4 +1,4 @@
-import { Actions, Store } from '../../../../src/core';
+import { Store } from '../../../../src/core';
 import session from '../../../../src/core/reducers/session';
 import suite from '../../_suite';
 
@@ -6,17 +6,19 @@ suite('session', ({ expect }) => {
 
   const RECALL_ID = 'aksd';
   const SEARCH_ID = 'aslkf';
+  const ORIGIN: any = { y: 'z' };
   const state: Store.Session = {
     recallId: RECALL_ID,
-    searchId: SEARCH_ID
+    searchId: SEARCH_ID,
+    origin: ORIGIN
   };
 
   describe('updateSession()', () => {
-    it('should update state when recallId in action', () => {
+    it('should update state when recallId in meta', () => {
       const recallId = 'new thingay';
       const newState = {
-        recallId,
-        searchId: SEARCH_ID
+        ...state,
+        recallId
       };
 
       const reducer = session(state, <any>{ meta: { recallId } });
@@ -24,10 +26,10 @@ suite('session', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
-    it('should update state when searchId in action', () => {
+    it('should update state when searchId in meta', () => {
       const searchId = 'new stuffs';
       const newState = {
-        recallId: RECALL_ID,
+        ...state,
         searchId
       };
 
@@ -36,12 +38,14 @@ suite('session', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
-    it('should update state when both recallId and searchId in action', () => {
-      const recallId = 'thingomojigjog';
-      const searchId = 'new stuffys';
-      const newState = { recallId, searchId };
+    it('should update state when tag in meta', () => {
+      const origin = { a: 'b' };
+      const newState = {
+        ...state,
+        origin
+      };
 
-      const reducer = session(state, <any>{ meta: { searchId, recallId } });
+      const reducer = session(state, <any>{ meta: { tag: origin } });
 
       expect(reducer).to.eql(newState);
     });

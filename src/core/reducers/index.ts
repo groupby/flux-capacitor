@@ -1,4 +1,5 @@
 import * as redux from 'redux';
+import undoable from 'redux-undo';
 import Actions from '../actions';
 import Store from '../store';
 import data from './data';
@@ -13,7 +14,10 @@ export const rootReducer = redux.combineReducers<Store.State>({
   isRunning,
   isFetching,
   session,
-  data,
+  data: undoable(data, {
+    limit: 5,
+    filter: ({ type }) => !type.startsWith('FETCH_')
+  }),
   ui,
 });
 
@@ -29,12 +33,19 @@ export const updateState = (state: Store.State, { payload }: Actions.RefreshStat
     ...payload,
     session: state.session,
     data: {
-      ...payload.data,
-      autocomplete: state.data.autocomplete,
-      details: {
-        ...payload.data.details,
-        id: state.data.details.id
-      }
+      past: [
+        ...payload.data.past,
+        payload.data.present
+      ],
+      present: {
+        ...payload.data.present,
+        autocomplete: state.data.present.autocomplete,
+        details: {
+          ...payload.data.present.details,
+          id: state.data.present.details.id
+        }
+      },
+      future: []
     }
   };
 };

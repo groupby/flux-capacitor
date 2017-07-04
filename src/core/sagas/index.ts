@@ -6,6 +6,8 @@ import productDetails from './product-details';
 import products from './products';
 import refinements from './refinements';
 
+export type SagaCreator = (flux: FluxCapacitor) => () => IterableIterator<ForkEffect>;
+
 export const SAGA_CREATORS = [
   autocomplete,
   collection,
@@ -14,6 +16,6 @@ export const SAGA_CREATORS = [
   refinements
 ];
 
-export default function createSagas(flux: FluxCapacitor) {
-  return SAGA_CREATORS.map((createSaga) => createSaga(flux));
+export default function createSagas(sagaCreators: SagaCreator[], flux: FluxCapacitor) {
+  return sagaCreators.map((createSaga) => createSaga(flux));
 }

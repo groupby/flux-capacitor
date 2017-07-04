@@ -1,27 +1,29 @@
-import { call, put, select, takeLatest, ForkEffect } from 'redux-saga/effects';
+import * as effects from 'redux-saga/effects';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
-import Adapters from '../adapters';
+import Adapter from '../adapters/search';
 import Selectors from '../selectors';
 import Store from '../store';
-import * as utils from '../utils';
 
-export default (flux: FluxCapacitor) => {
-  function* fetchCount({ payload: collection }: Actions.FetchCollectionCount) {
+export namespace Tasks {
+  export function* fetchCount(flux: FluxCapacitor, { payload: collection }: Actions.FetchCollectionCount) {
     try {
-      const state: Store.State = yield select();
-      const res = yield call([flux.clients.bridge, flux.clients.bridge.search], {
-        ...Selectors.searchRequest(state, flux.config),
+      const request = yield effects.select(Selectors.searchRequest, flux.config);
+      const res = yield effects.call([flux.clients.bridge, flux.clients.bridge.search], {
+        ...request,
         collection
       });
 
-      yield put(flux.actions.receiveCollectionCount({ collection, count: Adapters.Search.extractRecordCount(res) }));
+      yield effects.put(flux.actions.receiveCollectionCount({
+        collection,
+        count: Adapter.extractRecordCount(res)
+      }));
     } catch (e) {
-      yield put(flux.actions.receiveCollectionCount(e));
+      yield effects.put(flux.actions.receiveCollectionCount(e));
     }
   }
+}
 
-  return function* saga() {
-    yield takeLatest(Actions.FETCH_COLLECTION_COUNT, fetchCount);
-  };
+export default (flux: FluxCapacitor) => function* saga() {
+  yield effects.takeLatest(Actions.FETCH_COLLECTION_COUNT, Tasks.fetchCount, flux);
 };

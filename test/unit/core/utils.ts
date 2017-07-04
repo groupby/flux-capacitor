@@ -37,44 +37,12 @@ suite('utils', ({ expect, spy }) => {
 
       expect(utils.action(ACTION, payload, meta)).to.eql({ type: ACTION, payload, meta });
     });
-  });
 
-  describe('thunk()', () => {
-    it('should return a thunk that dispatches an action', () => {
-      const dispatch = spy();
-      const payload = { a: 'b' };
-      const meta = { c: 'd' };
-      const thunk = utils.thunk(ACTION, payload, meta);
+    it('should add error flag if payload is an Error', () => {
+      const payload = new Error('request failed');
+      const meta = { e: 'f' };
 
-      thunk(dispatch);
-
-      expect(dispatch).to.be.calledWith({ type: ACTION, payload, meta });
-    });
-  });
-
-  describe('conditional()', () => {
-    it('should return a thunk that swallows an action if the predicate evaluates to a falsey value', () => {
-      const predicate = spy();
-      const payload = { a: 'b' };
-      const meta = { c: 'd' };
-      const state: any = { e: 'f' };
-      const thunk = utils.conditional(predicate, ACTION, payload, meta);
-
-      thunk(() => expect.fail(), () => state);
-
-      expect(predicate).to.be.calledWith(state);
-    });
-
-    it('should return a thunk that dispatches an action if the predicate evaluates to a truthy value', () => {
-      const dispatch = spy();
-      const payload = { a: 'b' };
-      const meta = { c: 'd' };
-      const state: any = { e: 'f' };
-      const thunk = utils.conditional(() => true, ACTION, payload, meta);
-
-      thunk(dispatch, () => state);
-
-      expect(dispatch).to.be.calledWith({ type: ACTION, payload, meta });
+      expect(utils.action(ACTION, payload, meta)).to.eql({ type: ACTION, payload, meta, error: true });
     });
   });
 });

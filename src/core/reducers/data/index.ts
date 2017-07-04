@@ -1,5 +1,4 @@
 import * as redux from 'redux';
-import undoable from 'redux-undo';
 
 import area from './area';
 import autocomplete from './autocomplete';
@@ -26,7 +25,6 @@ export default redux.combineReducers({
   navigations,
   page,
   products,
-  // query: undoable(query, { limit: 5 }),
   query,
   recordCount,
   redirect,

@@ -1,40 +1,15 @@
 import { reduxBatch } from '@manaflair/redux-batch';
 import { applyMiddleware, compose, createStore, Store as ReduxStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import thunkMiddleware from 'redux-thunk';
 import * as validatorMiddleware from 'redux-validator';
-import * as uuid from 'uuid';
-import FluxCapacitor from '../flux-capacitor';
-import Actions from './actions';
-import Adapter from './adapters/configuration';
-import reducer from './reducers';
-import * as PageReducer from './reducers/data/page';
-import createSagas from './sagas';
+import FluxCapacitor from '../../flux-capacitor';
+import Actions from '../actions';
+import Adapter from '../adapters/configuration';
+import reducer from '../reducers';
+import createSagas, { SAGA_CREATORS } from '../sagas';
+import createMiddleware, { MIDDLEWARE_CREATORS } from './middleware';
 
 export { ReduxStore };
-
-export const RECALL_CHANGE_ACTIONS = [
-  Actions.UPDATE_SEARCH,
-  Actions.SELECT_REFINEMENT,
-  Actions.DESELECT_REFINEMENT,
-];
-
-export const SEARCH_CHANGE_ACTIONS = [
-  ...RECALL_CHANGE_ACTIONS,
-  Actions.SELECT_COLLECTION,
-  Actions.SELECT_SORT,
-  Actions.UPDATE_PAGE_SIZE,
-  Actions.UPDATE_CURRENT_PAGE,
-];
-
-export const idGenerator = (key: string, actions: string[]) =>
-  (store) => (next) => (action) => {
-    if (actions.includes(action.type)) {
-      return next({ ...action, meta: { ...action.meta, [key]: uuid.v1() } });
-    } else {
-      return next(action);
-    }
-  };
 
 namespace Store {
 
@@ -43,10 +18,8 @@ namespace Store {
     const { config } = flux;
     const sagaMiddleware = createSagaMiddleware();
     const middleware = [
-      // thunkMiddleware,
       validatorMiddleware(),
-      idGenerator('recallId', RECALL_CHANGE_ACTIONS),
-      idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
+      ...createMiddleware(MIDDLEWARE_CREATORS, flux),
       sagaMiddleware,
     ];
 
@@ -62,7 +35,7 @@ namespace Store {
       compose(reduxBatch, applyMiddleware(...middleware), reduxBatch),
     );
 
-    createSagas(flux).forEach(sagaMiddleware.run);
+    createSagas(SAGA_CREATORS, flux).forEach(sagaMiddleware.run);
 
     if (listener) {
       store.subscribe(listener(store));
@@ -76,32 +49,38 @@ namespace Store {
     isFetching: IsFetching;
     session: Session;
     data: {
-      area: string;
-      query: Query; // mixed
-
-      sorts: SelectableList<Sort>;
-      products: Product[]; // post
-      collections: Indexed.Selectable<Collection>; // mixed
-      navigations: Indexed<Navigation>; // mixed
-
-      autocomplete: Autocomplete; // mixed
-
-      page: Page; // mixed
-
-      template?: Template; // post
-
-      details: Details; // mixed
-
-      recordCount: number; // post
-
-      redirect?: string; // post
-
-      fields: string[]; // static
-
-      errors: string[]; // post
-      warnings: string[]; // post
+      past: Data[];
+      present: Data;
+      future: Data[];
     };
     ui: UI;
+  }
+
+  export interface Data {
+    area: string;
+    query: Query; // mixed
+
+    sorts: SelectableList<Sort>;
+    products: Product[]; // post
+    collections: Indexed.Selectable<Collection>; // mixed
+    navigations: Indexed<Navigation>; // mixed
+
+    autocomplete: Autocomplete; // mixed
+
+    page: Page; // mixed
+
+    template?: Template; // post
+
+    details: Details; // mixed
+
+    recordCount: number; // post
+
+    redirect?: string; // post
+
+    fields: string[]; // static
+
+    errors: string[]; // post
+    warnings: string[]; // post
   }
 
   export interface UI {

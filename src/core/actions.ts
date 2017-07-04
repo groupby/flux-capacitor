@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 import Store from './store';
 
 namespace Actions {
-  export interface Action<S, T = never, M extends Metadata | {} = any> {
+  export interface Action<S, T = any, M extends Metadata | {} = any> {
     type: S;
     payload?: T;
     meta?: M;

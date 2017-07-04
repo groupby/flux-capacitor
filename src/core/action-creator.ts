@@ -1,14 +1,10 @@
 import { Results } from 'groupby-api';
-import { Dispatch } from 'redux';
-import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt';
 import FluxCapacitor from '../flux-capacitor';
 import Actions from './actions';
-import Adapters from './adapters';
-import * as Events from './events';
-import { Request } from './reducers/is-fetching';
+import SearchAdapter from './adapters/search';
 import Selectors from './selectors';
 import Store from './store';
-import { action, Routes } from './utils';
+import { action } from './utils';
 
 export function createActions(flux: FluxCapacitor) {
 
@@ -23,25 +19,25 @@ export function createActions(flux: FluxCapacitor) {
 
       // fetch action creators
       fetchMoreRefinements: (navigationId: string): Actions.FetchMoreRefinements =>
-        action(Actions.FETCH_MORE_REFINEMENTS, navigationId),
+        action(Actions.FETCH_MORE_REFINEMENTS, navigationId, metadata),
 
       fetchProducts: (): Actions.FetchProducts =>
-        action(Actions.FETCH_PRODUCTS),
+        action(Actions.FETCH_PRODUCTS, null, metadata),
 
       fetchMoreProducts: (amount: number): Actions.FetchMoreProducts =>
-        action(Actions.FETCH_MORE_PRODUCTS, amount),
+        action(Actions.FETCH_MORE_PRODUCTS, amount, metadata),
 
       fetchAutocompleteSuggestions: (query: string): Actions.FetchAutocompleteSuggestions =>
-        action(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, query),
+        action(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, query, metadata),
 
       fetchAutocompleteProducts: (query: string): Actions.FetchAutocompleteProducts =>
-        action(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, query),
+        action(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, query, metadata),
 
       fetchCollectionCount: (collection: string): Actions.FetchCollectionCount =>
-        action(Actions.FETCH_COLLECTION_COUNT, collection),
+        action(Actions.FETCH_COLLECTION_COUNT, collection, metadata),
 
       fetchProductDetails: (id: string): Actions.FetchProductDetails =>
-        action(Actions.FETCH_PRODUCT_DETAILS, id),
+        action(Actions.FETCH_PRODUCT_DETAILS, id, metadata),
 
       // request action creators
       updateSearch: (search: Actions.Payload.Search): Actions.UpdateSearch =>
@@ -90,7 +86,7 @@ export function createActions(flux: FluxCapacitor) {
           ...metadata,
           validator: {
             payload: {
-              func: (_, state) => state.data.collections.selected !== id,
+              func: (_, state) => Selectors.collection(state) !== id,
               msg: 'collection is already selected'
             }
           }
@@ -101,7 +97,7 @@ export function createActions(flux: FluxCapacitor) {
           ...metadata,
           validator: {
             payload: {
-              func: (_, state) => state.data.sorts.selected !== index,
+              func: (_, state) => Selectors.sortIndex(state) !== index,
               msg: 'sort is already selected'
             }
           }
@@ -123,7 +119,7 @@ export function createActions(flux: FluxCapacitor) {
           ...metadata,
           validator: {
             payload: {
-              func: (_, state) => page !== null && state.data.page.current !== page,
+              func: (_, state) => page !== null && Selectors.page(state) !== page,
               msg: 'page size is already selected'
             }
           }
@@ -137,8 +133,8 @@ export function createActions(flux: FluxCapacitor) {
           ...metadata,
           validator: {
             payload: {
-              func: (_, state) => state.data.autocomplete.query !== query,
-              msg: 'page size is already selected'
+              func: (_, state) => Selectors.autocompleteQuery(state) !== query,
+              msg: 'suggestions for query have already been requested'
             }
           }
         }),
@@ -147,26 +143,30 @@ export function createActions(flux: FluxCapacitor) {
       receiveQuery: (query: Actions.Payload.Query): Actions.ReceiveQuery =>
         action(Actions.RECEIVE_QUERY, query, metadata),
 
-      receiveProducts: (res: Results): Actions.Action<string, any>[] => {
+      receiveProducts: (res: Results): Actions.Action<string, any>[] | Actions.ReceiveProducts => {
         const receiveProducts = action(Actions.RECEIVE_PRODUCTS, res, metadata);
-        const state = flux.store.getState();
-        const recordCount = Adapters.Search.extractRecordCount(res);
 
-        return receiveProducts.error
-          ? [receiveProducts]
-          : [
+        // a passthrough to allow error to propagate to middleware
+        if (receiveProducts.error) {
+          return receiveProducts;
+        } else {
+          const state = flux.store.getState();
+          const recordCount = SearchAdapter.extractRecordCount(res);
+
+          return [
             receiveProducts,
-            actions.receiveQuery(Adapters.Search.extractQuery(res)),
-            actions.receiveProductRecords(res.records.map(Adapters.Search.extractProduct)),
-            actions.receiveNavigations(Adapters.Search.combineNavigations(res)),
+            actions.receiveQuery(SearchAdapter.extractQuery(res)),
+            actions.receiveProductRecords(res.records.map(SearchAdapter.extractProduct)),
+            actions.receiveNavigations(SearchAdapter.combineNavigations(res)),
             actions.receiveRecordCount(recordCount),
             actions.receiveCollectionCount({
-              collection: Selectors.collection(flux.store.getState()),
+              collection: Selectors.collection(state),
               count: recordCount
             }),
-            actions.receivePage(Adapters.Search.extractPage(state, recordCount)),
-            actions.receiveTemplate(Adapters.Search.extractTemplate(res.template)),
+            actions.receivePage(SearchAdapter.extractPage(state, recordCount)),
+            actions.receiveTemplate(SearchAdapter.extractTemplate(res.template)),
           ];
+        }
       },
 
       receiveProductRecords: (products: Store.Product[]): Actions.ReceiveProductRecords =>
