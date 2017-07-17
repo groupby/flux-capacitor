@@ -57,7 +57,7 @@ namespace Adapter {
     config.autocomplete.suggestionCount;
 
   export const extractAutocompleteProductCount = (config: Configuration) =>
-    config.autocomplete.suggestionCount;
+    config.autocomplete.productCount;
 
   export const extractAutocompleteNavigationCount = (config: Configuration) =>
     config.autocomplete.navigationCount;

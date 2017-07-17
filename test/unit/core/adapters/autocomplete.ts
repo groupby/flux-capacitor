@@ -2,7 +2,8 @@ import Adapter from '../../../../src/core/adapters/autocomplete';
 import SearchAdapter from '../../../../src/core/adapters/search';
 import suite from '../../_suite';
 
-suite('SearchAdapter', ({ expect, stub }) => {
+suite('Autocomplete Adapter', ({ expect, stub }) => {
+
   describe('extractSuggestions()', () => {
     it('should remap search term values', () => {
       const response = { result: { searchTerms: [{ value: 'a' }, { value: 'b' }] } };
