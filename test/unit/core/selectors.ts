@@ -20,7 +20,7 @@ suite('selectors', ({ expect, stub }) => {
       stub(Selectors, 'pageSize').returns(originalPageSize);
       stub(Selectors, 'skip').returns(originalSkip);
 
-      const { pageSize, skip } = Selectors.searchRequest(<any>{});
+      const { pageSize, skip } = Selectors.searchRequest(<any>{}, <any>{ search: {} });
 
       expect(pageSize).to.eq(remainingRecords);
       expect(skip).to.eq(originalSkip);
