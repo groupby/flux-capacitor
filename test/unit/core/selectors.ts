@@ -231,7 +231,7 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
-  describe('area()', () => {
+  describe('fields()', () => {
     it('should select the fields from state', () => {
       const fields = ['a', 'b'];
       const state: any = { data: { fields } };

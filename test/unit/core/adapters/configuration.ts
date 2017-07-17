@@ -161,7 +161,7 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     it('should return global language', () => {
       const language = 'en';
 
-      expect(Adapter.extractLanguage(<any>{ language })).to.eql(language);
+      expect(Adapter.extractLanguage(<any>{ language })).to.eq(language);
     });
   });
 
@@ -169,7 +169,7 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     it('should return autocomplete language', () => {
       const language = 'fr';
 
-      expect(Adapter.extractAutocompleteLanguage(<any>{ autocomplete: { language } })).to.eql(language);
+      expect(Adapter.extractAutocompleteLanguage(<any>{ autocomplete: { language } })).to.eq(language);
     });
   });
 
@@ -177,7 +177,7 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     it('should return autocomplete area', () => {
       const area = 'myProductionArea';
 
-      expect(Adapter.extractAutocompleteArea(<any>{ autocomplete: { area } })).to.eql(area);
+      expect(Adapter.extractAutocompleteArea(<any>{ autocomplete: { area } })).to.eq(area);
     });
   });
 
@@ -186,7 +186,7 @@ suite('Configuration Adapter', ({ expect, stub }) => {
       const suggestionCount = 30;
 
       // tslint:disable-next-line max-line-length
-      expect(Adapter.extractAutocompleteSuggestionCount(<any>{ autocomplete: { suggestionCount } })).to.eql(suggestionCount);
+      expect(Adapter.extractAutocompleteSuggestionCount(<any>{ autocomplete: { suggestionCount } })).to.eq(suggestionCount);
     });
   });
 
@@ -195,7 +195,7 @@ suite('Configuration Adapter', ({ expect, stub }) => {
       const navigationCount = 14;
 
       // tslint:disable-next-line max-line-length
-      expect(Adapter.extractAutocompleteNavigationCount(<any>{ autocomplete: { navigationCount } })).to.eql(navigationCount);
+      expect(Adapter.extractAutocompleteNavigationCount(<any>{ autocomplete: { navigationCount } })).to.eq(navigationCount);
     });
   });
 
@@ -203,7 +203,7 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     it('should return number of autocomplete products to request', () => {
       const productCount = 23;
 
-      expect(Adapter.extractAutocompleteProductCount(<any>{ autocomplete: { productCount } })).to.eql(productCount);
+      expect(Adapter.extractAutocompleteProductCount(<any>{ autocomplete: { productCount } })).to.eq(productCount);
     });
   });
 
