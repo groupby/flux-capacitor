@@ -22,8 +22,9 @@ namespace Selectors {
       skip
     };
 
-    if (config.language) {
-      request.language = Configuration.extractLanguage(config);
+    const language = Configuration.extractLanguage(config);
+    if (language) {
+      request.language = language;
     }
     if (sort) {
       request.sort = <any>Selectors.requestSort(sort);
