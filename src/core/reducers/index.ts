@@ -3,7 +3,6 @@ import undoable from 'redux-undo';
 import Actions from '../actions';
 import Store from '../store';
 import data from './data';
-import isFetching from './is-fetching';
 import isRunning from './is-running';
 import session from './session';
 import ui from './ui';
@@ -12,7 +11,6 @@ export type Action = Actions.RefreshState;
 
 export const rootReducer = redux.combineReducers<Store.State>({
   isRunning,
-  isFetching,
   session,
   data: undoable(data, {
     limit: 5,

@@ -628,4 +628,21 @@ suite('selectors', ({ expect, stub }) => {
       expect(autocompleteSelector).to.be.calledWith(state);
     });
   });
+
+  describe('refinementCrumb()', () => {
+    it('should convert refinement to breadcrumb', () => {
+      const field = 'brand';
+      const value = 'Apple';
+      const low = 4;
+      const high = 5;
+      const refinementIndex = 1;
+      const navigation = { range: true, refinements: [{}, { value, low, high }, {}] };
+      const state: any = { a: 'b' };
+      const navigationSelector = stub(Selectors, 'navigation').returns(navigation);
+
+      const crumb = Selectors.refinementCrumb(state, field, refinementIndex);
+
+      expect(crumb).to.eql({ field, value, low, high, range: true });
+    });
+  });
 });

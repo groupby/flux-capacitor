@@ -2,17 +2,6 @@ import { Store as ReduxStore } from 'redux';
 import FluxCapacitor from '../flux-capacitor';
 import * as Events from './events';
 import Store from './store';
-import { rayify } from './utils';
-
-export const DETAIL_QUERY_INDICATOR = 'gbiDetailQuery';
-export const FETCH_EVENTS = {
-  autocompleteProducts: Events.FETCH_AUTOCOMPLETE_PRODUCTS_DONE,
-  autocompleteSuggestions: Events.FETCH_AUTOCOMPLETE_SUGGESTIONS_DONE,
-  details: Events.FETCH_DETAILS_DONE,
-  moreRefinements: Events.FETCH_MORE_REFINEMENTS_DONE,
-  moreProducts: Events.FETCH_MORE_PRODUCTS_DONE,
-  search: Events.FETCH_SEARCH_DONE,
-};
 
 type Observer = (oldState: any, newState: any, path: string) => void;
 
@@ -156,13 +145,6 @@ namespace Observer {
           emit(Events.APP_KILLED)(oldState, newState, path);
         }
       },
-      isFetching: (oldState, newState) =>
-        Object.keys(newState)
-          .forEach((key) => {
-            if (!oldState[key] && newState[key]) {
-              flux.emit(FETCH_EVENTS[key]);
-            }
-          }),
       session: {
         recallId: emit(Events.RECALL_CHANGED),
         searchId: emit(Events.SEARCH_CHANGED)

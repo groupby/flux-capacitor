@@ -93,10 +93,6 @@ namespace Actions {
   export const RECEIVE_REDIRECT = 'RECEIVE_REDIRECT';
   export type ReceiveRedirect = Action<typeof RECEIVE_REDIRECT, string>;
 
-  // request status
-  export const IS_FETCHING = 'IS_FETCHING';
-  export type IsFetching = Action<typeof IS_FETCHING, keyof Store.IsFetching>;
-
   // ui
   export const CREATE_COMPONENT_STATE = 'CREATE_COMPONENT_STATE';
   export type CreateComponentState = Action<typeof CREATE_COMPONENT_STATE, Payload.Component.State>;

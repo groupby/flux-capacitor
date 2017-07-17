@@ -46,19 +46,6 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         expect(action).to.eq(created);
       });
     });
-
-    describe('startFetching()', () => {
-      it('should return type IS_FETCHING with requestType', () => {
-        const requestType = 'search';
-        const created = { f: 'g' };
-        const createAction = stub(utils, 'action').returns(created);
-
-        const action = actions.startFetching(requestType);
-
-        expect(createAction).to.be.calledWith(Actions.IS_FETCHING, requestType);
-        expect(action).to.eq(created);
-      });
-    });
   });
 
   describe('fetch action creators', () => {

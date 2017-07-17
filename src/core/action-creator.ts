@@ -14,9 +14,6 @@ export function createActions(flux: FluxCapacitor) {
       refreshState: (state: any): Actions.RefreshState =>
         action(Actions.REFRESH_STATE, state, metadata),
 
-      startFetching: (requestType: keyof Store.IsFetching): Actions.IsFetching =>
-        action(Actions.IS_FETCHING, requestType, metadata),
-
       // fetch action creators
       fetchMoreRefinements: (navigationId: string): Actions.FetchMoreRefinements =>
         action(Actions.FETCH_MORE_REFINEMENTS, navigationId, metadata),
