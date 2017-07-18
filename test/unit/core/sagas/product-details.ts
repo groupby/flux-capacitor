@@ -15,6 +15,7 @@ suite('product details saga', ({ expect, spy, stub }) => {
 
       // tslint:disable-next-line max-line-length
       expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_PRODUCT_DETAILS, Tasks.fetchProductDetails, flux));
+      saga.next();
     });
   });
 
@@ -64,6 +65,7 @@ suite('product details saga', ({ expect, spy, stub }) => {
         task.next();
         expect(task.throw(error).value).to.eql(effects.put(receiveDetailsProductAction));
         expect(receiveDetailsProduct).to.be.calledWith(error);
+        task.next();
       });
     });
   });

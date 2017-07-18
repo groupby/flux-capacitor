@@ -18,6 +18,7 @@ suite('products saga', ({ expect, spy, stub }) => {
       // tslint:disable-next-line max-line-length
       expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_PRODUCTS, Tasks.fetchProducts, flux));
       expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_MORE_PRODUCTS, Tasks.fetchMoreProducts, flux));
+      saga.next();
     });
   });
 
@@ -57,7 +58,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         const receiveRedirect = spy(() => receiveRedirectAction);
         const flux: any = {
           clients: { bridge: { search: () => null } },
-          actions: { receiveRedirect }
+          actions: { receiveRedirect, receiveProducts: () => ({}) }
         };
 
         const task = Tasks.fetchProducts(flux, <any>{ payload });
@@ -66,6 +67,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         task.next().value;
         expect(task.next({ redirect }).value).to.eql(effects.put(receiveRedirectAction));
         expect(receiveRedirect).to.be.calledWith(redirect);
+        task.next();
       });
 
       it('should handle request failure', () => {
@@ -84,6 +86,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         task.next();
         expect(task.throw(error).value).to.eql(effects.put(receiveProductsAction));
         expect(receiveProducts).to.be.calledWith(error);
+        task.next();
       });
     });
 
@@ -116,6 +119,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         expect(task.next(results).value).to.eql(effects.put(receiveMoreProductsAction));
         expect(receiveMoreProducts).to.be.calledWithExactly(records);
         expect(emit).to.be.calledWithExactly(Events.BEACON_SEARCH, id);
+        task.next();
       });
 
       it('should handle request failure', () => {
@@ -132,6 +136,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         task.next();
         expect(task.throw(error).value).to.eql(effects.put(receiveMoreProductsAction));
         expect(receiveMoreProducts).to.be.calledWith(error);
+        task.next();
       });
     });
   });

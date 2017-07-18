@@ -16,6 +16,7 @@ suite('refinements saga', ({ expect, spy, stub }) => {
 
       // tslint:disable-next-line max-line-length
       expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_MORE_REFINEMENTS, Tasks.fetchMoreRefinements, flux));
+      saga.next();
     });
   });
 
@@ -49,6 +50,7 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         expect(searchRequest).to.be.calledWithExactly(state, config);
         expect(mergeRefinements).to.be.calledWithExactly(results, state);
         expect(receiveMoreRefinements).to.be.calledWithExactly(navigationId, mergedRefinements, selected);
+        task.next();
       });
 
       it('should handle request failure', () => {
@@ -64,6 +66,7 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         task.next();
         expect(task.throw(error).value).to.eql(effects.put(receiveMoreRefinementsAction));
         expect(action).to.be.calledWith(Actions.RECEIVE_MORE_REFINEMENTS, error);
+        task.next();
       });
     });
   });

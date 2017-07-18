@@ -37,163 +37,147 @@ namespace Selectors {
     };
   };
 
-  export const autocompleteSuggestionsRequest = (config: AppConfig): QueryTimeAutocompleteConfig => {
-    return {
+export const autocompleteSuggestionsRequest = (config: AppConfig): QueryTimeAutocompleteConfig => {
+  return {
       ...config.autocomplete.defaults.suggestions,
-      language: Autocomplete.extractLanguage(config),
-      numSearchTerms: Configuration.extractAutocompleteSuggestionCount(config),
+  language: Autocomplete.extractLanguage(config),
+    numSearchTerms: Configuration.extractAutocompleteSuggestionCount(config),
       numNavigations: Configuration.extractAutocompleteNavigationCount(config),
-      sortAlphabetically: Configuration.isAutocompleteAlphabeticallySorted(config),
-      fuzzyMatch: Configuration.isAutocompleteMatchingFuzzily(config),
+        sortAlphabetically: Configuration.isAutocompleteAlphabeticallySorted(config),
+          fuzzyMatch: Configuration.isAutocompleteMatchingFuzzily(config),
       ...config.autocomplete.overrides.suggestions,
     };
   };
 
-  export const autocompleteProductsRequest = (config: AppConfig): QueryTimeProductSearchConfig => {
-    return {
+export const autocompleteProductsRequest = (config: AppConfig): QueryTimeProductSearchConfig => {
+  return {
       ...config.autocomplete.defaults.products,
-      language: Autocomplete.extractLanguage(config),
-      area: Autocomplete.extractArea(config),
+  language: Autocomplete.extractLanguage(config),
+    area: Autocomplete.extractArea(config),
       numProducts: Configuration.extractAutocompleteProductCount(config),
       ...config.autocomplete.overrides.products,
     };
   };
 
-  export const area = (state: Store.State) =>
-    state.data.present.area;
+export const area = (state: Store.State) =>
+  state.data.present.area;
 
-  export const fields = (state: Store.State) =>
-    state.data.present.fields;
+export const fields = (state: Store.State) =>
+  state.data.present.fields;
 
-  export const query = (state: Store.State) =>
-    state.data.present.query.original;
+export const query = (state: Store.State) =>
+  state.data.present.query.original;
 
-  export const collections = (state: Store.State) =>
-    state.data.present.collections;
+export const collections = (state: Store.State) =>
+  state.data.present.collections;
 
-  export const collection = (state: Store.State) =>
-    Selectors.collections(state).selected;
+export const collection = (state: Store.State) =>
+  Selectors.collections(state).selected;
 
-  export const collectionIndex = (state: Store.State, name: string) =>
-    Selectors.collections(state).allIds.indexOf(name);
+export const collectionIndex = (state: Store.State, name: string) =>
+  Selectors.collections(state).allIds.indexOf(name);
 
-  export const pageSizes = (state: Store.State) =>
-    state.data.present.page.sizes;
+export const pageSizes = (state: Store.State) =>
+  state.data.present.page.sizes;
 
-  export const pageSize = (state: Store.State) => {
-    const selectedPageSizes = Selectors.pageSizes(state);
-    return selectedPageSizes.items[selectedPageSizes.selected];
+export const pageSize = (state: Store.State) => {
+  const selectedPageSizes = Selectors.pageSizes(state);
+  return selectedPageSizes.items[selectedPageSizes.selected];
+};
+
+export const pageSizeIndex = (state: Store.State) =>
+  Selectors.pageSizes(state).selected;
+
+export const page = (state: Store.State) =>
+  state.data.present.page.current;
+
+export const requestSort = ({ field, descending }: Store.Sort) =>
+  ({ field, order: descending && 'Descending' });
+
+export const sorts = (state: Store.State) =>
+  state.data.present.sorts;
+
+export const sort = (state: Store.State) => {
+  const selectedSorts = Selectors.sorts(state);
+  return selectedSorts.items[selectedSorts.selected];
+};
+
+export const sortIndex = (state: Store.State) =>
+  Selectors.sorts(state).selected;
+
+export const skip = (state: Store.State, pagesize: number) =>
+  (Selectors.page(state) - 1) * pagesize;
+
+export const products = (state: Store.State) =>
+  state.data.present.products;
+
+export const details = (state: Store.State) =>
+  state.data.present.details;
+
+export const selectedRefinements = (state: Store.State) =>
+  Selectors.navigations(state)
+    .reduce((allRefinements, nav) =>
+      allRefinements.concat(nav.selected
+        .map<any>((refinementIndex) => nav.refinements[refinementIndex])
+        .reduce((refs, { low, high, value }) =>
+          refs.concat(nav.range
+            ? { navigationName: nav.field, type: 'Range', high, low }
+            : { navigationName: nav.field, type: 'Value', value }), [])), []);
+
+export const navigation = (state: Store.State, navigationId: string) =>
+  state.data.present.navigations.byId[navigationId];
+
+export const navigations = (state: Store.State) =>
+  state.data.present.navigations.allIds.map<Store.Navigation>(Selectors.navigation.bind(null, state));
+
+export const isRefinementDeselected = (state: Store.State, navigationId: string, index: number) => {
+  const nav = Selectors.navigation(state, navigationId);
+  return nav && !nav.selected.includes(index);
+};
+
+export const isRefinementSelected = (state: Store.State, navigationId: string, index: number) => {
+  const nav = Selectors.navigation(state, navigationId);
+  return nav && nav.selected.includes(index);
+};
+
+export const hasMoreRefinements = (state: Store.State, navigationId: string) => {
+  const nav = Selectors.navigation(state, navigationId);
+  return nav && nav.more;
+};
+
+export const refinementCrumb = (state: Store.State, navigationId: string, index: number) => {
+  const nav = Selectors.navigation(state, navigationId);
+  const { value, low, high } = <any>nav.refinements[index];
+
+  return {
+    value,
+    low,
+    high,
+    field: navigationId,
+    range: nav.range,
   };
+};
 
-  export const pageSizeIndex = (state: Store.State) =>
-    Selectors.pageSizes(state).selected;
+export const recordCount = (state: Store.State) =>
+  state.data.present.recordCount;
 
-  export const page = (state: Store.State) =>
-    state.data.present.page.current;
+export const autocomplete = (state: Store.State) =>
+  state.data.present.autocomplete;
 
-  export const requestSort = ({ field, descending }: Store.Sort) =>
-    ({ field, order: descending && 'Descending' });
+export const autocompleteQuery = (state: Store.State) =>
+  Selectors.autocomplete(state).query;
 
-  export const sorts = (state: Store.State) =>
-    state.data.present.sorts;
+export const autocompleteCategoryField = (state: Store.State) =>
+  Selectors.autocomplete(state).category.field;
 
-  export const sort = (state: Store.State) => {
-    const selectedSorts = Selectors.sorts(state);
-    return selectedSorts.items[selectedSorts.selected];
-  };
+export const autocompleteCategoryValues = (state: Store.State) =>
+  Selectors.autocomplete(state).category.values;
 
-  export const sortIndex = (state: Store.State) =>
-    Selectors.sorts(state).selected;
+export const autocompleteSuggestions = (state: Store.State) =>
+  Selectors.autocomplete(state).suggestions;
 
-  export const skip = (state: Store.State, pagesize: number) =>
-    (Selectors.page(state) - 1) * pagesize;
-
-  export const products = (state: Store.State) =>
-    state.data.present.products;
-
-  export const details = (state: Store.State) =>
-    state.data.present.details;
-
-  export const selectedRefinements = (state: Store.State) =>
-    Selectors.navigations(state)
-      .reduce((allRefinements, nav) =>
-        allRefinements.concat(nav.selected
-          .map<any>((refinementIndex) => nav.refinements[refinementIndex])
-          .reduce((refs, { low, high, value }) =>
-            refs.concat(nav.range
-              ? { navigationName: nav.field, type: 'Range', high, low }
-              : { navigationName: nav.field, type: 'Value', value }), [])), []);
-
-  export const mergedRefinements = (state: Store.State, navigationId: string) => {
-    const navigation = Selectors.navigation(state, navigationId);
-    const navigationType = navigation.range ? 'Range' : 'Value';
-    const selectedRefinements = navigation.refinements
-      .filter((_, index) => navigation.selected.includes(index));
-    const remapped = refinements.map(Search.extractRefinement);
-    const selected = remapped.reduce((refs, refinement, index) => {
-      // tslint:disable-next-line max-line-length
-      const found = selectedRefinements.findIndex((ref: any) => Search.refinementsMatch(refinement, ref, navigationType));
-      if (found !== -1) {
-        refs.push(index);
-      }
-      return refs;
-    }, []);
-  };
-
-  export const navigation = (state: Store.State, navigationId: string) =>
-    state.data.present.navigations.byId[navigationId];
-
-  export const navigations = (state: Store.State) =>
-    state.data.present.navigations.allIds.map<Store.Navigation>(Selectors.navigation.bind(null, state));
-
-  export const isRefinementDeselected = (state: Store.State, navigationId: string, index: number) => {
-    const nav = Selectors.navigation(state, navigationId);
-    return nav && !nav.selected.includes(index);
-  };
-
-  export const isRefinementSelected = (state: Store.State, navigationId: string, index: number) => {
-    const nav = Selectors.navigation(state, navigationId);
-    return nav && nav.selected.includes(index);
-  };
-
-  export const hasMoreRefinements = (state: Store.State, navigationId: string) => {
-    const nav = Selectors.navigation(state, navigationId);
-    return nav && nav.more;
-  };
-
-  export const refinementCrumb = (state: Store.State, navigationId: string, index: number) => {
-    const nav = Selectors.navigation(state, navigationId);
-    const { value, low, high } = <any>nav.refinements[index];
-
-    return {
-      value,
-      low,
-      high,
-      field: navigationId,
-      range: nav.range,
-    };
-  };
-
-  export const recordCount = (state: Store.State) =>
-    state.data.present.recordCount;
-
-  export const autocomplete = (state: Store.State) =>
-    state.data.present.autocomplete;
-
-  export const autocompleteQuery = (state: Store.State) =>
-    Selectors.autocomplete(state).query;
-
-  export const autocompleteCategoryField = (state: Store.State) =>
-    Selectors.autocomplete(state).category.field;
-
-  export const autocompleteCategoryValues = (state: Store.State) =>
-    Selectors.autocomplete(state).category.values;
-
-  export const autocompleteSuggestions = (state: Store.State) =>
-    Selectors.autocomplete(state).suggestions;
-
-  export const autocompleteNavigations = (state: Store.State) =>
-    Selectors.autocomplete(state).navigations;
+export const autocompleteNavigations = (state: Store.State) =>
+  Selectors.autocomplete(state).navigations;
 }
 
 export default Selectors;

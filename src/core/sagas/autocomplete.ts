@@ -8,7 +8,6 @@ import Store from '../store';
 export namespace Tasks {
   export function* fetchSuggestions(flux: FluxCapacitor, { payload: query }: Actions.FetchAutocompleteSuggestions) {
     try {
-      const { sayt } = flux.clients;
       const field = yield effects.select(Selectors.autocompleteCategoryField);
       const res = yield effects.call(
         [flux.clients.sayt, flux.clients.sayt.autocomplete],

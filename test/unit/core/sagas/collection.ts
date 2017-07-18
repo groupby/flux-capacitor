@@ -15,6 +15,7 @@ suite('collection saga', ({ expect, spy, stub }) => {
 
       // tslint:disable-next-line max-line-length
       expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_COLLECTION_COUNT, Tasks.fetchCount, flux));
+      saga.next();
     });
   });
 
@@ -40,23 +41,24 @@ suite('collection saga', ({ expect, spy, stub }) => {
         expect(task.next(response).value).to.eql(effects.put(receiveCollectionCountAction));
         expect(receiveCollectionCount).to.be.calledWithExactly({ collection, count: recordCount });
         expect(extractRecordCount).to.be.calledWith(response);
+        task.next();
       });
 
       it('should handle request failure', () => {
+        const error = new Error();
         const receiveCollectionCountAction: any = { a: 'b' };
         const receiveCollectionCount = spy(() => receiveCollectionCountAction);
         const flux: any = {
           clients: { bridge: {} },
           actions: { receiveCollectionCount }
         };
-        const error = new Error('some error');
-        stub(Adapters.Search, 'extractRecordCount').throws(error);
 
         const task = Tasks.fetchCount(flux, <any>{});
 
         task.next();
         expect(task.throw(error).value).to.eql(effects.put(receiveCollectionCountAction));
         expect(receiveCollectionCount).to.be.calledWith(error);
+        task.next();
       });
     });
   });
