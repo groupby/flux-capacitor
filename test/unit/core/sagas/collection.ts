@@ -29,21 +29,24 @@ suite('collection saga', ({ expect, spy, stub }) => {
         const receiveCollectionCount = spy(() => receiveCollectionCountAction);
         const flux: any = { clients: { bridge }, actions: { receiveCollectionCount }, config };
         const recordCount = 89;
+        const request = { e: 'f' };
+        const response = { g: 'h' };
         const extractRecordCount = stub(Adapters.Search, 'extractRecordCount').returns(recordCount);
 
         const task = Tasks.fetchCount(flux, <any>{ payload: collection });
 
         expect(task.next().value).to.eql(effects.select(Selectors.searchRequest, config));
-        expect(task.next().value).to.eql(effects.call([bridge, search], { collection }));
-        expect(task.next().value).to.eql(effects.put(receiveCollectionCountAction));
-        expect(receiveCollectionCount).to.be.calledWith({ collection, count: recordCount });
-        expect(extractRecordCount).to.be.calledWith(undefined);
+        expect(task.next(request).value).to.eql(effects.call([bridge, search], { e: 'f', collection }));
+        expect(task.next(response).value).to.eql(effects.put(receiveCollectionCountAction));
+        expect(receiveCollectionCount).to.be.calledWithExactly({ collection, count: recordCount });
+        expect(extractRecordCount).to.be.calledWith(response);
       });
 
       it('should handle request failure', () => {
-        const receiveCollectionCount = spy(() => ({}));
+        const receiveCollectionCountAction: any = { a: 'b' };
+        const receiveCollectionCount = spy(() => receiveCollectionCountAction);
         const flux: any = {
-          clients: { bridge: { search: () => null } },
+          clients: { bridge: {} },
           actions: { receiveCollectionCount }
         };
         const error = new Error('some error');
@@ -52,8 +55,7 @@ suite('collection saga', ({ expect, spy, stub }) => {
         const task = Tasks.fetchCount(flux, <any>{});
 
         task.next();
-        task.next();
-        task.next();
+        expect(task.throw(error).value).to.eql(effects.put(receiveCollectionCountAction));
         expect(receiveCollectionCount).to.be.calledWith(error);
       });
     });

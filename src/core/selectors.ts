@@ -2,7 +2,7 @@ import { Request } from 'groupby-api';
 import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt';
 import Autocomplete from './adapters/autocomplete';
 import Configuration from './adapters/configuration';
-import { MAX_RECORDS } from './adapters/search';
+import Search, { MAX_RECORDS } from './adapters/search';
 import AppConfig from './configuration';
 import Store from './store';
 
@@ -123,6 +123,22 @@ namespace Selectors {
             refs.concat(nav.range
               ? { navigationName: nav.field, type: 'Range', high, low }
               : { navigationName: nav.field, type: 'Value', value }), [])), []);
+
+  export const mergedRefinements = (state: Store.State, navigationId: string) => {
+    const navigation = Selectors.navigation(state, navigationId);
+    const navigationType = navigation.range ? 'Range' : 'Value';
+    const selectedRefinements = navigation.refinements
+      .filter((_, index) => navigation.selected.includes(index));
+    const remapped = refinements.map(Search.extractRefinement);
+    const selected = remapped.reduce((refs, refinement, index) => {
+      // tslint:disable-next-line max-line-length
+      const found = selectedRefinements.findIndex((ref: any) => Search.refinementsMatch(refinement, ref, navigationType));
+      if (found !== -1) {
+        refs.push(index);
+      }
+      return refs;
+    }, []);
+  };
 
   export const navigation = (state: Store.State, navigationId: string) =>
     state.data.present.navigations.byId[navigationId];
