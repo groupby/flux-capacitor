@@ -222,56 +222,6 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
-  describe('area()', () => {
-    it('should select the global area from state', () => {
-      const area = 'myArea';
-      const state: any = { data: { present: { area } } };
-
-      expect(Selectors.area(state)).to.eq(area);
-    });
-  });
-
-  describe('fields()', () => {
-    it('should select the fields from state', () => {
-      const fields = ['a', 'b'];
-      const state: any = { data: { present: { fields } } };
-
-      expect(Selectors.fields(state)).to.eq(fields);
-    });
-  });
-
-  describe('query()', () => {
-    it('should select the original query from state', () => {
-      const query = 'pineapple';
-      const state: any = { data: { present: { query: { original: query } } } };
-
-      expect(Selectors.query(state)).to.eq(query);
-    });
-  });
-
-  describe('requestSort()', () => {
-    it('should transform state sort into request sort', () => {
-      const field = 'price';
-
-      expect(Selectors.requestSort({ field, descending: true })).to.eql({ field, order: 'Descending' });
-    });
-
-    it('should ignore ascending order', () => {
-      const field = 'price';
-
-      expect(Selectors.requestSort({ field })).to.eql({ field, order: undefined });
-    });
-  });
-
-  describe('sort()', () => {
-    it('should select the active sort from state', () => {
-      const sort = { a: 'b' };
-      const state: any = { data: { present: { sorts: { items: [{}, sort, {}], selected: 1 } } } };
-
-      expect(Selectors.sort(state)).to.eq(sort);
-    });
-  });
-
   describe('navigation()', () => {
     it('should select a navigation from the state', () => {
       const id = 'my navigation';
@@ -279,41 +229,6 @@ suite('selectors', ({ expect, stub }) => {
       const state: any = { data: { present: { navigations: { byId: { [id]: navigation } } } } };
 
       expect(Selectors.navigation(state, id)).to.eq(navigation);
-    });
-  });
-
-  describe('skip()', () => {
-    it('should select the record skip from the state', () => {
-      const state: any = { data: { present: { page: { current: 4 } } } };
-
-      expect(Selectors.skip(state, 12)).to.eq(36);
-    });
-  });
-
-  describe('products()', () => {
-    it('should select the products from the state', () => {
-      const products = ['a', 'b', 'd'];
-      const state: any = { data: { present: { products } } };
-
-      expect(Selectors.products(state)).to.eq(products);
-    });
-  });
-
-  describe('recordCount()', () => {
-    it('should select the record count', () => {
-      const recordCount = 18;
-      const state: any = { data: { present: { recordCount } } };
-
-      expect(Selectors.recordCount(state)).to.eq(recordCount);
-    });
-  });
-
-  describe('details()', () => {
-    it('should select the details section from the state', () => {
-      const details = { a: 'b' };
-      const state: any = { data: { present: { details } } };
-
-      expect(Selectors.details(state)).to.eq(details);
     });
   });
 

@@ -24,16 +24,16 @@ suite('store middleware', ({ expect, spy, stub }) => {
   });
 
   describe('idGenerator()', () => {
-    it('should add id if action type is in whitelist', (done) => {
+    it('should add id if action type is in whitelist', () => {
       const id = '1234';
       const idKey = 'myId';
       const v1 = stub(uuid, 'v1').returns(id);
+      const next = spy();
       const whitelist = ['a', 'b', 'c'];
 
-      idGenerator(idKey, whitelist)(null)(null)((action) => {
-        expect(action).to.eql({ type: 'b', c: 'd', meta: { [idKey]: id } });
-        done();
-      })({ type: 'b', c: 'd' });
+      idGenerator(idKey, whitelist)(null)(null)(next)({ type: 'b', c: 'd' });
+
+      expect(next).to.be.calledWith({ type: 'b', c: 'd', meta: { [idKey]: id } });
     });
 
     it('should augment existing meta', () => {

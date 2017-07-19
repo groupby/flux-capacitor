@@ -26,13 +26,10 @@ export const MIDDLEWARE_CREATORS = [
 ];
 
 export function idGenerator(key: string, actions: string[]) {
-  return (flux) => (store) => (next) => (action) => {
-    if (actions.includes(action.type)) {
-      return next({ ...action, meta: { ...action.meta, [key]: uuid.v1() } });
-    } else {
-      return next(action);
-    }
-  };
+  return (flux) => (store) => (next) => (action) =>
+    actions.includes(action.type)
+      ? next({ ...action, meta: { ...action.meta, [key]: uuid.v1() } })
+      : next(action);
 }
 
 export function errorHandler(flux: FluxCapacitor) {

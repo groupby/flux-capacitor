@@ -7,23 +7,28 @@ import Store from '../store';
 import * as utils from '../utils';
 
 export namespace Tasks {
-  export function* fetchProductDetails(flux: FluxCapacitor, action: Actions.FetchProductDetails) {
+  export function* fetchProductDetails(flux: FluxCapacitor, { payload: id }: Actions.FetchProductDetails) {
     try {
       const request = yield effects.select(Selectors.searchRequest, flux.config);
-      const { records: [record] } = yield effects.call(
+      const { records } = yield effects.call(
         [flux.clients.bridge, flux.clients.bridge.search],
         {
           ...request,
           query: null,
           pageSize: 1,
           skip: 0,
-          refinements: [{ navigationName: 'id', type: 'Value', value: action.payload }]
+          refinements: [{ navigationName: 'id', type: 'Value', value: id }]
         }
       );
 
-      flux.emit(Events.BEACON_VIEW_PRODUCT, record);
-      yield effects.put(flux.actions.receiveDetailsProduct(record.allMeta));
-      flux.saveState(utils.Routes.DETAILS);
+      if (records.length !== 0) {
+        const [record] = records;
+        flux.emit(Events.BEACON_VIEW_PRODUCT, record);
+        yield effects.put(flux.actions.receiveDetailsProduct(record.allMeta));
+        flux.saveState(utils.Routes.DETAILS);
+      } else {
+        throw new Error(`no records found matching id: ${id}`);
+      }
     } catch (e) {
       yield effects.put(flux.actions.receiveDetailsProduct(e));
     }

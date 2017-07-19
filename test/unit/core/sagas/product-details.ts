@@ -1,4 +1,5 @@
 import * as effects from 'redux-saga/effects';
+import * as sinon from 'sinon';
 import Actions from '../../../../src/core/actions';
 import * as Events from '../../../../src/core/events';
 import sagaCreator, { Tasks } from '../../../../src/core/sagas/product-details';
@@ -49,6 +50,24 @@ suite('product details saga', ({ expect, spy, stub }) => {
 
         task.next();
         expect(saveState).to.be.called;
+      });
+
+      it('should handle product not found', () => {
+        const error = new Error();
+        const receiveDetailsProductAction: any = { a: 'b' };
+        const receiveDetailsProduct = spy(() => receiveDetailsProductAction);
+        const flux: any = {
+          clients: { bridge: { search: () => null } },
+          actions: { receiveDetailsProduct }
+        };
+
+        const task = Tasks.fetchProductDetails(flux, <any>{});
+
+        task.next();
+        task.next();
+        expect(task.next({ records: [] }).value).to.eql(effects.put(receiveDetailsProductAction));
+        expect(receiveDetailsProduct).to.be.calledWith(sinon.match.instanceOf(Error));
+        task.next();
       });
 
       it('should handle request failure', () => {

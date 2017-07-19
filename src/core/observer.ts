@@ -52,9 +52,9 @@ namespace Observer {
   }
 
   export function create(flux: FluxCapacitor) {
-    const emit = (event: string) => (_, newValue, path) => {
-      flux.emit(event, newValue);
-      flux.emit(Events.OBSERVER_NODE_CHANGED, { event, path, value: newValue });
+    const emit = (event: string) => (_, value: any, path: string) => {
+      flux.emit(event, value);
+      flux.emit(Events.OBSERVER_NODE_CHANGED, { event, path, value });
     };
 
     return {
@@ -76,8 +76,11 @@ namespace Observer {
                   emitProductsUpdated(oldState.products, newState.products, `${path}.products`);
                 }
               }
-              // tslint:disable-next-line max-line-length
-            })(emit(Events.AUTOCOMPLETE_SUGGESTIONS_UPDATED), emit(Events.AUTOCOMPLETE_QUERY_UPDATED), emit(Events.AUTOCOMPLETE_PRODUCTS_UPDATED)),
+            })(
+            emit(Events.AUTOCOMPLETE_SUGGESTIONS_UPDATED),
+            emit(Events.AUTOCOMPLETE_QUERY_UPDATED),
+            emit(Events.AUTOCOMPLETE_PRODUCTS_UPDATED)
+            ),
 
           collections: {
             byId: Observer.indexed(emit(Events.COLLECTION_UPDATED)),
@@ -89,8 +92,8 @@ namespace Observer {
             product: emit(Events.DETAILS_PRODUCT_UPDATED),
           },
 
-          navigations: ((emitIndexUpdated) =>
-            (oldState: Store.Indexed<Store.Navigation>, newState: Store.Indexed<Store.Navigation>, path) => {
+          navigations: ((emitIndexUpdated: Observer) =>
+            (oldState: Store.Indexed<Store.Navigation>, newState: Store.Indexed<Store.Navigation>, path: string) => {
               if (oldState.allIds !== newState.allIds) {
                 emitIndexUpdated(oldState, newState, path);
               } else {
@@ -111,8 +114,8 @@ namespace Observer {
             sizes: emit(Events.PAGE_SIZE_UPDATED)
           }),
 
-          products: ((emitMoreProductsAdded, emitProductsUpdated) =>
-            (oldState: Store.Product[], newState: Store.Product[], path) => {
+          products: ((emitMoreProductsAdded: Observer, emitProductsUpdated: Observer) =>
+            (oldState: Store.Product[], newState: Store.Product[], path: string) => {
               const oldLength = oldState.length;
               if (oldLength < newState.length && oldState[0] === newState[0]) {
                 emitMoreProductsAdded(oldState, newState.slice(oldLength), path);

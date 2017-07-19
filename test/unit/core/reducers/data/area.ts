@@ -8,12 +8,12 @@ suite('area', ({ expect }) => {
 
     const reducer = area(newArea);
 
-    expect(reducer).to.eql(newArea);
+    expect(reducer).to.eq(newArea);
   });
 
   it('should return the default state', () => {
     const reducer = area();
 
-    expect(reducer).to.eql(DEFAULT_AREA);
+    expect(reducer).to.eq(DEFAULT_AREA);
   });
 });
