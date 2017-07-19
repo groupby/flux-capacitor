@@ -3,7 +3,6 @@ import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import Adapter from '../adapters/search';
 import Selectors from '../selectors';
-import Store from '../store';
 
 export namespace Tasks {
   export function* fetchCount(flux: FluxCapacitor, { payload: collection }: Actions.FetchCollectionCount) {
