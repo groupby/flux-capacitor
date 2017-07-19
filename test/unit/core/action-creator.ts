@@ -22,14 +22,13 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
     const action = fn();
 
     expect(action).to.eq(ACTION);
-    const expectation = expect(createAction);
     const args: any[] = [type, payload];
     if (metadataTest) {
       args.push(sinon.match(metadataTest));
     } else {
       args.push(sinon.match.any);
     }
-    expectation.to.be.calledWithExactly(...args);
+    expect(createAction).to.be.calledWithExactly(...args);
   }
 
   describe('application action creators', () => {
