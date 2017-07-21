@@ -150,7 +150,8 @@ namespace Observer {
       },
       session: {
         recallId: emit(Events.RECALL_CHANGED),
-        searchId: emit(Events.SEARCH_CHANGED)
+        searchId: emit(Events.SEARCH_CHANGED),
+        location: emit(Events.LOCATION_UPDATED)
       },
       ui: emit(Events.UI_UPDATED)
     };

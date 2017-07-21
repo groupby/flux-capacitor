@@ -54,8 +54,7 @@ namespace Actions {
   export const FETCH_MORE_PRODUCTS = 'FETCH_MORE_PRODUCTS';
   export type FetchMoreProducts = Action<typeof FETCH_MORE_PRODUCTS, number>;
   export const FETCH_AUTOCOMPLETE_SUGGESTIONS = 'FETCH_AUTOCOMPLETE_SUGGESTIONS';
-  // tslint:disable-next-line max-line-length
-  export type FetchAutocompleteSuggestions = Action<typeof FETCH_AUTOCOMPLETE_SUGGESTIONS, Payload.Autocomplete.FetchSuggestions>;
+  export type FetchAutocompleteSuggestions = Action<typeof FETCH_AUTOCOMPLETE_SUGGESTIONS, string>;
   export const FETCH_AUTOCOMPLETE_PRODUCTS = 'FETCH_AUTOCOMPLETE_PRODUCTS';
   export type FetchAutocompleteProducts = Action<typeof FETCH_AUTOCOMPLETE_PRODUCTS, string>;
   export const FETCH_COLLECTION_COUNT = 'FETCH_COLLECTION_COUNT';
@@ -99,6 +98,10 @@ namespace Actions {
   export type CreateComponentState = Action<typeof CREATE_COMPONENT_STATE, Payload.Component.State>;
   export const REMOVE_COMPONENT_STATE = 'REMOVE_COMPONENT_STATE';
   export type RemoveComponentState = Action<typeof REMOVE_COMPONENT_STATE, Payload.Component.Identifier>;
+
+  // session
+  export const UPDATE_LOCATION = 'UPDATE_LOCATION';
+  export type UpdateLocation = Action<typeof UPDATE_LOCATION, Store.Location>;
 
   // app
   export const START_APP = 'START_APP';
@@ -151,11 +154,6 @@ namespace Actions {
         categoryValues: string[];
         navigations: Store.Autocomplete.Navigation[];
       }
-
-      export interface FetchSuggestions {
-        query: string;
-        location?: Location;
-      }
     }
 
     export interface Details {
@@ -194,11 +192,6 @@ namespace Actions {
       last: number;
       from: number;
       to: number;
-    }
-
-    export interface Location {
-      latitude: number;
-      longitude: number;
     }
   }
 }
