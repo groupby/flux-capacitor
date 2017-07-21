@@ -9,12 +9,6 @@ import Store from '../store';
 
 declare function fetch();
 
-const SUGGESTION_MODES = {
-  popular: 'Popular',
-  trending: 'Trending',
-  recent: 'Recent'
-};
-
 export namespace Tasks {
   // tslint:disable-next-line max-line-length
   export function* fetchSuggestions(flux: FluxCapacitor, { payload: query }: Actions.FetchAutocompleteSuggestions) {
@@ -28,7 +22,7 @@ export namespace Tasks {
         Selectors.autocompleteSuggestionsRequest(flux.config)
       );
       const recommendations = flux.config.autocomplete.recommendations;
-      const suggestionMode = SUGGESTION_MODES[recommendations.suggestionMode || 'popular'];
+      const suggestionMode = Configuration.RECOMMENDATION_MODES[recommendations.suggestionMode || 'popular'];
       // tslint:disable-next-line max-line-length
       const trendingUrl = `https://${flux.config.customerId}.groupbycloud.com/wisdom/v2/public/recommendations/searches/_get${suggestionMode}`;
       const trendingBody: any = {
@@ -45,8 +39,13 @@ export namespace Tasks {
             visit: {
               generated: {
                 geo: {
-                  country: 'us',
-                  region: 'ny'
+                  location: {
+                    distance: '100km',
+                    center: {
+                      lat: location.latitude,
+                      lon: location.longitude
+                    }
+                  }
                 }
               }
             }

@@ -73,6 +73,8 @@ namespace Store {
 
     details: Details; // mixed
 
+    recommendations: Recommendations; // mixed
+
     recordCount: number; // post
 
     redirect?: string; // post
@@ -211,6 +213,11 @@ namespace Store {
     id?: string; // pre
     title?: string; // mixed
     product?: Product; // post
+  }
+
+  export interface Recommendations {
+    productIds: Array<string>;
+    products: Product[];
   }
 
   export interface Product {

@@ -172,6 +172,12 @@ namespace Configuration {
     suggestionMode: 'popular' | 'trending' | 'recent';
     location: boolean;
   }
+
+  export const RECOMMENDATION_MODES = {
+    popular: 'Popular',
+    trending: 'Trending',
+    recent: 'Recent'
+  };
 }
 
 export default Configuration;
