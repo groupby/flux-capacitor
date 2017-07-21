@@ -132,6 +132,10 @@ namespace Observer {
             rewrites: emit(Events.QUERY_REWRITES_UPDATED),
           },
 
+          recommendations: {
+            products: emit(Events.RECOMMENDATIONS_PRODUCTS_UPDATED)
+          },
+
           recordCount: emit(Events.RECORD_COUNT_UPDATED),
 
           redirect: emit(Events.REDIRECT),

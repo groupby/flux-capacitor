@@ -37,7 +37,7 @@ export function createActions(flux: FluxCapacitor) {
       fetchProductDetails: (id: string): Actions.FetchProductDetails =>
         action(Actions.FETCH_PRODUCT_DETAILS, id, metadata),
 
-      fetchRecommendations: (query?: string) =>
+      fetchRecommendationsProducts: (query?: string) =>
         action(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, query, metadata),
 
       // request action creators
@@ -207,6 +207,9 @@ export function createActions(flux: FluxCapacitor) {
 
       receiveDetailsProduct: (product: Store.Product): Actions.ReceiveDetailsProduct =>
         action(Actions.RECEIVE_DETAILS_PRODUCT, product, metadata),
+
+      receiveRecommendationsProducts: (products: Store.Product[]) =>
+        action(Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, products, metadata),
 
       // ui action creators
       createComponentState: (tagName: string, id: string, state: any = {}): Actions.CreateComponentState =>

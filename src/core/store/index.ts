@@ -216,7 +216,6 @@ namespace Store {
   }
 
   export interface Recommendations {
-    productIds: Array<string>;
     products: Product[];
   }
 

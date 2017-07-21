@@ -126,6 +126,12 @@ interface Configuration {
     overrides?: Partial<Request>;
   };
 
+  recommendations?: {
+    productCount: number;
+    idField: string;
+    mode: Configuration.RecommendationMode;
+  };
+
   /**
    * network request configuration
    */
@@ -169,9 +175,11 @@ namespace Configuration {
 
   export interface Recommendations {
     suggestionCount: number;
-    suggestionMode: 'popular' | 'trending' | 'recent';
+    suggestionMode: RecommendationMode;
     location: boolean;
   }
+
+  export type RecommendationMode = keyof typeof RECOMMENDATION_MODES;
 
   export const RECOMMENDATION_MODES = {
     popular: 'Popular',

@@ -46,17 +46,12 @@ export const SEARCH_CHANGED = 'search_changed';
 // redirect event
 export const REDIRECT = 'redirect';
 
+// recommendations events
+export const RECOMMENDATIONS_PRODUCTS_UPDATED = 'recommendations_products_updated';
+
 // error events
 export const ERROR_BRIDGE = 'error:bridge';
 export const ERROR_FETCH_ACTION = 'error:fetch_action';
-
-// fetch complete events
-export const FETCH_SEARCH_DONE = 'fetch:search:done';
-export const FETCH_AUTOCOMPLETE_SUGGESTIONS_DONE = 'fetch:autocomplete_suggestions:done';
-export const FETCH_AUTOCOMPLETE_PRODUCTS_DONE = 'fetch:autocomplete_products:done';
-export const FETCH_MORE_REFINEMENTS_DONE = 'fetch:more_refinements:done';
-export const FETCH_MORE_PRODUCTS_DONE = 'fetch:more_products:done';
-export const FETCH_DETAILS_DONE = 'fetch:details:done';
 
 // ui events
 export const UI_UPDATED = 'ui:updated';
