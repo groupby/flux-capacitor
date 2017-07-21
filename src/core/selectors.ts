@@ -181,6 +181,9 @@ namespace Selectors {
 
   export const location = (state: Store.State) =>
     state.session.location;
+
+  export const recommendationsProducts = (state: Store.State) =>
+    state.data.present.recommendations.products;
 }
 
 export default Selectors;

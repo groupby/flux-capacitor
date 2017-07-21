@@ -28,7 +28,7 @@ export namespace Tasks {
       });
       const recommendations = yield recommendationsResponse.json();
       // tslint:disable-next-line max-line-length
-      const refinements = recommendations.result.result
+      const refinements = recommendations.result
         .filter(({ productId }) => productId)
         .map(({ productId }) => ({ navigationName: config.idField, type: 'Value', value: productId }));
       const { records } = yield effects.call(
