@@ -161,6 +161,7 @@ namespace Store {
   export interface Session {
     recallId?: string;
     searchId?: string;
+    location?: Location;
     origin?: Actions.Metadata.Tag;
   }
 
@@ -285,6 +286,11 @@ namespace Store {
     export interface Selectable<T> extends Indexed<T> {
       selected?: string;
     }
+  }
+
+  export interface Location {
+    latitude: number;
+    longitude: number;
   }
 }
 

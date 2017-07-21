@@ -178,6 +178,9 @@ namespace Selectors {
 
   export const autocompleteNavigations = (state: Store.State) =>
     Selectors.autocomplete(state).navigations;
+
+  export const location = (state: Store.State) =>
+    state.session.location;
 }
 
 export default Selectors;

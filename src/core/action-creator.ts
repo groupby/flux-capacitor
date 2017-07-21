@@ -25,8 +25,8 @@ export function createActions(flux: FluxCapacitor) {
         action(Actions.FETCH_MORE_PRODUCTS, amount, metadata),
 
       // tslint:disable-next-line max-line-length
-      fetchAutocompleteSuggestions: (query: string, location?: Actions.Payload.Location): Actions.FetchAutocompleteSuggestions =>
-        action(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, { query, location }, metadata),
+      fetchAutocompleteSuggestions: (query: string): Actions.FetchAutocompleteSuggestions =>
+        action(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, query, metadata),
 
       fetchAutocompleteProducts: (query: string): Actions.FetchAutocompleteProducts =>
         action(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, query, metadata),
@@ -211,6 +211,10 @@ export function createActions(flux: FluxCapacitor) {
 
       removeComponentState: (tagName: string, id: string): Actions.RemoveComponentState =>
         action(Actions.REMOVE_COMPONENT_STATE, { tagName, id }, metadata),
+
+      // session action creators
+      updateLocation: (location: Store.Location): Actions.UpdateLocation =>
+        action(Actions.UPDATE_LOCATION, location, metadata),
 
       // app action creators
       startApp: (): Actions.StartApp =>

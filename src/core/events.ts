@@ -65,6 +65,9 @@ export const UI_UPDATED = 'ui:updated';
 export const APP_STARTED = 'app:started';
 export const APP_KILLED = 'app:killed';
 
+// location events
+export const LOCATION_UPDATED = 'location:updated';
+
 // tracker events
 export const BEACON_SEARCH = 'beacon:search';
 export const BEACON_VIEW_PRODUCT = 'beacon:view_product';

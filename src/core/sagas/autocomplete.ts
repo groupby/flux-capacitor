@@ -17,9 +17,11 @@ const SUGGESTION_MODES = {
 
 export namespace Tasks {
   // tslint:disable-next-line max-line-length
-  export function* fetchSuggestions(flux: FluxCapacitor, { payload: { query, location } }: Actions.FetchAutocompleteSuggestions) {
+  export function* fetchSuggestions(flux: FluxCapacitor, { payload: query }: Actions.FetchAutocompleteSuggestions) {
     try {
-      const field = yield effects.select(Selectors.autocompleteCategoryField);
+      const state = yield effects.select();
+      const field = Selectors.autocompleteCategoryField(state);
+      const location = Selectors.location(state);
       const suggestionsRequest = effects.call(
         [flux.clients.sayt, flux.clients.sayt.autocomplete],
         query,
