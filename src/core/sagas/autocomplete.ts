@@ -9,28 +9,49 @@ import Store from '../store';
 declare function fetch();
 
 export namespace Tasks {
-  export function* fetchSuggestions(flux: FluxCapacitor, { payload: query }: Actions.FetchAutocompleteSuggestions) {
+  // tslint:disable-next-line max-line-length
+  export function* fetchSuggestions(flux: FluxCapacitor, { payload: { query, location } }: Actions.FetchAutocompleteSuggestions) {
     try {
       const field = yield effects.select(Selectors.autocompleteCategoryField);
-      const requestSuggestions = effects.call(
+      const suggestionsRequest = effects.call(
         [flux.clients.sayt, flux.clients.sayt.autocomplete],
         query,
         Selectors.autocompleteSuggestionsRequest(flux.config)
       );
       // tslint:disable-next-line max-line-length
       const trendingUrl = `https://${flux.config.customerId}.groupbycloud.com/wisdom/v2/public/recommendations/searches/_getPopular`;
-      const requestTrending = effects.call(fetch, trendingUrl, {
+      const trendingBody: any = {
+        size: flux.config.autocomplete.suggestionTrendingCount,
+        matchPartial: {
+          and: [{
+            search: { query }
+          }]
+        }
+      };
+      if (location) {
+        trendingBody.matchExact = {
+          and: [{
+            visit: {
+              generated: {
+                geo: {
+                  location: {
+                    distance: '250km',
+                    center: {
+                      lat: location.latitude,
+                      lon: location.longitude
+                    }
+                  }
+                }
+              }
+            }
+          }]
+        };
+      }
+      const trendingRequest = effects.call(fetch, trendingUrl, {
         method: 'POST',
-        body: JSON.stringify({
-          size: flux.config.autocomplete.suggestionTrendingCount,
-          matchPartial: {
-            and: [{
-              search: { query }
-            }]
-          }
-        })
+        body: JSON.stringify(trendingBody)
       });
-      const [results, trending] = yield effects.all([requestSuggestions, requestTrending]);
+      const [results, trending] = yield effects.all([suggestionsRequest, trendingRequest]);
       const autocompleteSuggestions = Adapter.extractSuggestions(results, field);
       const trendingSuggestions = Adapter.mergeSuggestions(autocompleteSuggestions.suggestions, yield trending.json());
 

@@ -54,7 +54,8 @@ namespace Actions {
   export const FETCH_MORE_PRODUCTS = 'FETCH_MORE_PRODUCTS';
   export type FetchMoreProducts = Action<typeof FETCH_MORE_PRODUCTS, number>;
   export const FETCH_AUTOCOMPLETE_SUGGESTIONS = 'FETCH_AUTOCOMPLETE_SUGGESTIONS';
-  export type FetchAutocompleteSuggestions = Action<typeof FETCH_AUTOCOMPLETE_SUGGESTIONS, string>;
+  // tslint:disable-next-line max-line-length
+  export type FetchAutocompleteSuggestions = Action<typeof FETCH_AUTOCOMPLETE_SUGGESTIONS, Payload.Autocomplete.FetchSuggestions>;
   export const FETCH_AUTOCOMPLETE_PRODUCTS = 'FETCH_AUTOCOMPLETE_PRODUCTS';
   export type FetchAutocompleteProducts = Action<typeof FETCH_AUTOCOMPLETE_PRODUCTS, string>;
   export const FETCH_COLLECTION_COUNT = 'FETCH_COLLECTION_COUNT';
@@ -70,7 +71,7 @@ namespace Actions {
   export const RECEIVE_MORE_PRODUCTS = 'RECEIVE_MORE_PRODUCTS';
   export type ReceiveMoreProducts = Action<typeof RECEIVE_MORE_PRODUCTS, Store.Product[]>;
   export const RECEIVE_AUTOCOMPLETE_SUGGESTIONS = 'RECEIVE_AUTOCOMPLETE_SUGGESTIONS';
-  // tslint:disable-next-line
+  // tslint:disable-next-line max-line-length
   export type ReceiveAutocompleteSuggestions = Action<typeof RECEIVE_AUTOCOMPLETE_SUGGESTIONS, Payload.Autocomplete.Suggestions>;
   export const RECEIVE_AUTOCOMPLETE_PRODUCTS = 'RECEIVE_AUTOCOMPLETE_PRODUCTS';
   export type ReceiveAutocompleteProducts = Action<typeof RECEIVE_AUTOCOMPLETE_PRODUCTS, Store.Product[]>;
@@ -150,6 +151,11 @@ namespace Actions {
         categoryValues: string[];
         navigations: Store.Autocomplete.Navigation[];
       }
+
+      export interface FetchSuggestions {
+        query: string;
+        location?: Location;
+      }
     }
 
     export interface Details {
@@ -188,6 +194,11 @@ namespace Actions {
       last: number;
       from: number;
       to: number;
+    }
+
+    export interface Location {
+      latitude: number;
+      longitude: number;
     }
   }
 }

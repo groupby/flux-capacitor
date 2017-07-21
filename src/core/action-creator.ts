@@ -24,8 +24,9 @@ export function createActions(flux: FluxCapacitor) {
       fetchMoreProducts: (amount: number): Actions.FetchMoreProducts =>
         action(Actions.FETCH_MORE_PRODUCTS, amount, metadata),
 
-      fetchAutocompleteSuggestions: (query: string): Actions.FetchAutocompleteSuggestions =>
-        action(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, query, metadata),
+      // tslint:disable-next-line max-line-length
+      fetchAutocompleteSuggestions: (query: string, location?: Actions.Payload.Location): Actions.FetchAutocompleteSuggestions =>
+        action(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, { query, location }, metadata),
 
       fetchAutocompleteProducts: (query: string): Actions.FetchAutocompleteProducts =>
         action(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, query, metadata),
