@@ -53,10 +53,6 @@ interface Configuration {
      */
     suggestionCount?: number;
     /**
-     * number of trending suggestions to request
-     */
-    suggestionTrendingCount?: number;
-    /**
      * number of navigations to request
      */
     navigationCount?: number;
@@ -77,6 +73,10 @@ interface Configuration {
      * whether to use fuzzy matching for suggestion results
      */
     fuzzy?: boolean;
+    /**
+     * recommendations API settings
+     */
+    recommendations: Configuration.Recommendations;
     /**
      * default request values
      */
@@ -166,6 +166,12 @@ namespace Configuration {
   }
 
   export type ValueOptions<T> = T | { options: T[], default: T };
+
+  export interface Recommendations {
+    suggestionCount: number;
+    suggestionMode: 'popular' | 'trending' | 'recent';
+    location: boolean;
+  }
 }
 
 export default Configuration;
