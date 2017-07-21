@@ -3,10 +3,17 @@ import * as effects from 'redux-saga/effects';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import Adapter from '../adapters/autocomplete';
+import Configuration from '../configuration';
 import Selectors from '../selectors';
 import Store from '../store';
 
 declare function fetch();
+
+const SUGGESTION_MODES = {
+  popular: 'Popular',
+  trending: 'Trending',
+  recent: 'Recent'
+};
 
 export namespace Tasks {
   // tslint:disable-next-line max-line-length
@@ -18,29 +25,26 @@ export namespace Tasks {
         query,
         Selectors.autocompleteSuggestionsRequest(flux.config)
       );
+      const recommendations = flux.config.autocomplete.recommendations;
+      const suggestionMode = SUGGESTION_MODES[recommendations.suggestionMode || 'popular'];
       // tslint:disable-next-line max-line-length
-      const trendingUrl = `https://${flux.config.customerId}.groupbycloud.com/wisdom/v2/public/recommendations/searches/_getPopular`;
+      const trendingUrl = `https://${flux.config.customerId}.groupbycloud.com/wisdom/v2/public/recommendations/searches/_get${suggestionMode}`;
       const trendingBody: any = {
-        size: flux.config.autocomplete.suggestionTrendingCount,
+        size: recommendations.suggestionCount,
         matchPartial: {
           and: [{
             search: { query }
           }]
         }
       };
-      if (location) {
+      if (location && recommendations.location) {
         trendingBody.matchExact = {
           and: [{
             visit: {
               generated: {
                 geo: {
-                  location: {
-                    distance: '250km',
-                    center: {
-                      lat: location.latitude,
-                      lon: location.longitude
-                    }
-                  }
+                  country: 'us',
+                  region: 'ny'
                 }
               }
             }
