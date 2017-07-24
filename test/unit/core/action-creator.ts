@@ -104,13 +104,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
     describe('fetchRecommendationsProducts()', () => {
       it('should return an action', () => {
-        expectAction(() => actions.fetchRecommendationsProducts(), Actions.FETCH_RECOMMENDATIONS_PRODUCTS);
-      });
-
-      it('should accept a query', () => {
-        const query = 'fabric';
-
-        expectAction(() => actions.fetchRecommendationsProducts(query), Actions.FETCH_RECOMMENDATIONS_PRODUCTS, query);
+        expectAction(() => actions.fetchRecommendationsProducts(), Actions.FETCH_RECOMMENDATIONS_PRODUCTS, null);
       });
     });
   });

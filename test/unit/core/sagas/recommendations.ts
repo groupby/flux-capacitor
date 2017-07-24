@@ -44,7 +44,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
           body: JSON.stringify({
             size: productCount,
             type: 'viewProduct',
-            target: 'productId'
+            target: idField
           })
         };
         const records = ['a', 'b', 'c'];
@@ -75,6 +75,30 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
           .and.calledWith('b')
           .and.calledWith('c');
         task.next();
+      });
+
+      it('should make request against specified endpoint', () => {
+        const customerId = 'myCustomer';
+        const productCount = 8;
+        const idField = 'myId';
+        const recommendations = { productCount, idField, mode: 'trending' };
+        const config = { customerId, recommendations };
+        const flux: any = { config };
+        const url = `https://${customerId}.groupbycloud.com/wisdom/v2/public/recommendations/products/_getTrending`;
+        const request = {
+          method: 'POST',
+          body: JSON.stringify({
+            size: productCount,
+            type: 'viewProduct',
+            target: idField
+          })
+        };
+        const records = ['a', 'b', 'c'];
+
+        const task = Tasks.fetchProducts(flux, <any>{ payload: {} });
+
+        task.next();
+        expect(task.next().value).to.eql(effects.call(fetch, url, request));
       });
 
       it('should handle request failure', () => {

@@ -23,7 +23,7 @@ export namespace Tasks {
         body: JSON.stringify({
           size: config.productCount,
           type: 'viewProduct',
-          target: 'productId'
+          target: config.idField
         })
       });
       const recommendations = yield recommendationsResponse.json();

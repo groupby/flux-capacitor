@@ -78,6 +78,40 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         task.next();
       });
 
+      it('should make request against specified endpoint', () => {
+        const autocomplete = () => null;
+        const sayt = { autocomplete };
+        const query = 'rain boots';
+        const customerId = 'myCustomer';
+        const suggestionCount = 10;
+        const recommendations = { suggestionCount, suggestionMode: 'trending' };
+        const config = { a: 'b', customerId, autocomplete: { recommendations } };
+        const flux: any = { clients: { sayt }, config };
+        const request = { g: 'h' };
+        // tslint:disable-next-line max-line-length
+        const trendingUrl = `https://${customerId}.groupbycloud.com/wisdom/v2/public/recommendations/searches/_getTrending`;
+        const postRequest = {
+          method: 'POST',
+          body: JSON.stringify({
+            size: suggestionCount,
+            matchPartial: {
+              and: [{
+                search: { query }
+              }]
+            }
+          })
+        };
+        stub(Selectors, 'autocompleteSuggestionsRequest').returns(request);
+        stub(Selectors, 'location');
+        stub(Selectors, 'autocompleteCategoryField');
+
+        const task = Tasks.fetchSuggestions(flux, <any>{ payload: query });
+
+        task.next();
+        // tslint:disable-next-line max-line-length
+        expect(task.next().value).to.eql(effects.all([effects.call([sayt, autocomplete], query, request), effects.call(fetch, trendingUrl, postRequest)]));
+      });
+
       it('should add location filter', () => {
         const autocomplete = () => null;
         const sayt = { autocomplete };
@@ -91,12 +125,7 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         const request = { g: 'h' };
         const latitude = 30.401;
         const longitude = -132.140;
-        const location = { latitude, longitude  };
-        stub(Selectors, 'autocompleteSuggestionsRequest').returns(request);
-        stub(Selectors, 'location').returns(location);
-        stub(Selectors, 'autocompleteCategoryField');
-        stub(Adapter, 'extractSuggestions');
-        stub(Adapter, 'mergeSuggestions');
+        const location = { latitude, longitude };
         // tslint:disable-next-line max-line-length
         const trendingUrl = `https://${customerId}.groupbycloud.com/wisdom/v2/public/recommendations/searches/_getPopular`;
         const postRequest = {
@@ -127,6 +156,11 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
             }
           })
         };
+        stub(Selectors, 'autocompleteSuggestionsRequest').returns(request);
+        stub(Selectors, 'location').returns(location);
+        stub(Selectors, 'autocompleteCategoryField');
+        stub(Adapter, 'extractSuggestions');
+        stub(Adapter, 'mergeSuggestions');
 
         const task = Tasks.fetchSuggestions(flux, <any>{ payload: query });
 

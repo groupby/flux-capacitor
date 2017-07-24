@@ -37,8 +37,8 @@ export function createActions(flux: FluxCapacitor) {
       fetchProductDetails: (id: string): Actions.FetchProductDetails =>
         action(Actions.FETCH_PRODUCT_DETAILS, id, metadata),
 
-      fetchRecommendationsProducts: (query?: string) =>
-        action(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, query, metadata),
+      fetchRecommendationsProducts: () =>
+        action(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, null, metadata),
 
       // request action creators
       updateSearch: (search: Actions.Payload.Search): Actions.UpdateSearch =>
