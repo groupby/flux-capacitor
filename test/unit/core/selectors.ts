@@ -560,4 +560,22 @@ suite('selectors', ({ expect, stub }) => {
       expect(crumb).to.eql({ field, value, low, high, range: true });
     });
   });
+
+  describe('location()', () => {
+    it('should return the current session location', () => {
+      const location = { a: 'b' };
+
+      expect(Selectors.location(<any>{ session: { location } })).to.eq(location);
+    });
+  });
+
+  describe('recommendationsProducts()', () => {
+    it('should return the currently recommended products', () => {
+      const products = ['a', 'b', 'c'];
+
+      expect(Selectors.recommendationsProducts(<any>{
+        data: { present: { recommendations: { products } } }
+      })).to.eq(products);
+    });
+  });
 });

@@ -190,6 +190,8 @@ suite('Observer', ({ expect, spy, stub }) => {
       expect(present.query.original).to.be.a('function');
       expect(present.query.related).to.be.a('function');
       expect(present.query.rewrites).to.be.a('function');
+      expect(present.recommendations).to.be.an('object');
+      expect(present.recommendations.products).to.be.a('function');
       expect(present.redirect).to.be.a('function');
       expect(present.sorts).to.be.a('function');
       expect(present.template).to.be.a('function');

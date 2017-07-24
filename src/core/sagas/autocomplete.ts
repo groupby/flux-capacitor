@@ -21,19 +21,19 @@ export namespace Tasks {
         query,
         Selectors.autocompleteSuggestionsRequest(flux.config)
       );
-      const recommendations = flux.config.autocomplete.recommendations;
-      const suggestionMode = Configuration.RECOMMENDATION_MODES[recommendations.suggestionMode || 'popular'];
+      const config = flux.config.autocomplete.recommendations;
+      const suggestionMode = Configuration.RECOMMENDATION_MODES[config.suggestionMode || 'popular'];
       // tslint:disable-next-line max-line-length
       const trendingUrl = `https://${flux.config.customerId}.groupbycloud.com/wisdom/v2/public/recommendations/searches/_get${suggestionMode}`;
       const trendingBody: any = {
-        size: recommendations.suggestionCount,
+        size: config.suggestionCount,
         matchPartial: {
           and: [{
             search: { query }
           }]
         }
       };
-      if (location && recommendations.location) {
+      if (location && config.location) {
         trendingBody.matchExact = {
           and: [{
             visit: {

@@ -28,8 +28,9 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         const query = 'rain boots';
         const field = 'popularity';
         const customerId = 'myCustomer';
-        const suggestionTrendingCount = 10;
-        const config = { a: 'b', customerId, autocomplete: { suggestionTrendingCount } };
+        const suggestionCount = 10;
+        const recommendations = { suggestionCount };
+        const config = { a: 'b', customerId, autocomplete: { recommendations } };
         const receiveAutocompleteSuggestionsAction: any = { c: 'd' };
         const receiveAutocompleteSuggestions = spy(() => receiveAutocompleteSuggestionsAction);
         const flux: any = { clients: { sayt }, actions: { receiveAutocompleteSuggestions }, config };
@@ -40,7 +41,11 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         const trendingBodyPromise = Promise.resolve();
         const trendingResponse = { json: () => trendingBodyPromise };
         const mergedSuggestions = { m: 'n' };
+        const location = { q: 'r' };
+        const state = { s: 't' };
         const autocompleteSuggestionsRequest = stub(Selectors, 'autocompleteSuggestionsRequest').returns(request);
+        const locationSelector = stub(Selectors, 'location').returns(location);
+        const autocompleteCategoryFieldSelector = stub(Selectors, 'autocompleteCategoryField').returns(field);
         const extractSuggestions = stub(Adapter, 'extractSuggestions').returns(suggestions);
         const mergeSuggestions = stub(Adapter, 'mergeSuggestions').returns(mergedSuggestions);
         // tslint:disable-next-line max-line-length
@@ -48,7 +53,7 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         const postRequest = {
           method: 'POST',
           body: JSON.stringify({
-            size: suggestionTrendingCount,
+            size: suggestionCount,
             matchPartial: {
               and: [{
                 search: { query }
@@ -59,16 +64,77 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
 
         const task = Tasks.fetchSuggestions(flux, <any>{ payload: query });
 
-        expect(task.next().value).to.eql(effects.select(Selectors.autocompleteCategoryField));
+        expect(task.next().value).to.eql(effects.select());
         // tslint:disable-next-line max-line-length
-        expect(task.next(field).value).to.eql(effects.all([effects.call([sayt, autocomplete], query, request), effects.call(fetch, trendingUrl, postRequest)]));
+        expect(task.next(state).value).to.eql(effects.all([effects.call([sayt, autocomplete], query, request), effects.call(fetch, trendingUrl, postRequest)]));
         expect(task.next([response, trendingResponse]).value).to.eql(trendingBodyPromise);
         expect(task.next(trendingResponseValue).value).to.eql(effects.put(receiveAutocompleteSuggestionsAction));
         expect(extractSuggestions).to.be.calledWithExactly(response, field);
+        expect(locationSelector).to.be.calledWithExactly(state);
         expect(mergeSuggestions).to.be.calledWithExactly(suggestions.suggestions, trendingResponseValue);
         // tslint:disable-next-line max-line-length
-        expect(receiveAutocompleteSuggestions).to.be.calledWithExactly({...suggestions, suggestions: mergedSuggestions });
+        expect(receiveAutocompleteSuggestions).to.be.calledWithExactly({ ...suggestions, suggestions: mergedSuggestions });
         expect(autocompleteSuggestionsRequest).to.be.calledWith(config);
+        task.next();
+      });
+
+      it('should add location filter', () => {
+        const autocomplete = () => null;
+        const sayt = { autocomplete };
+        const query = 'rain boots';
+        const customerId = 'myCustomer';
+        const suggestionCount = 10;
+        const config = { customerId, autocomplete: { recommendations: { suggestionCount, location: true } } };
+        const receiveAutocompleteSuggestionsAction: any = { c: 'd' };
+        const receiveAutocompleteSuggestions = spy(() => receiveAutocompleteSuggestionsAction);
+        const flux: any = { clients: { sayt }, actions: { receiveAutocompleteSuggestions }, config };
+        const request = { g: 'h' };
+        const latitude = 30.401;
+        const longitude = -132.140;
+        const location = { latitude, longitude  };
+        stub(Selectors, 'autocompleteSuggestionsRequest').returns(request);
+        stub(Selectors, 'location').returns(location);
+        stub(Selectors, 'autocompleteCategoryField');
+        stub(Adapter, 'extractSuggestions');
+        stub(Adapter, 'mergeSuggestions');
+        // tslint:disable-next-line max-line-length
+        const trendingUrl = `https://${customerId}.groupbycloud.com/wisdom/v2/public/recommendations/searches/_getPopular`;
+        const postRequest = {
+          method: 'POST',
+          body: JSON.stringify({
+            size: suggestionCount,
+            matchPartial: {
+              and: [{
+                search: { query }
+              }]
+            },
+            matchExact: {
+              and: [{
+                visit: {
+                  generated: {
+                    geo: {
+                      location: {
+                        distance: '100km',
+                        center: {
+                          lat: latitude,
+                          lon: longitude
+                        }
+                      }
+                    }
+                  }
+                }
+              }]
+            }
+          })
+        };
+
+        const task = Tasks.fetchSuggestions(flux, <any>{ payload: query });
+
+        task.next();
+        // tslint:disable-next-line max-line-length
+        expect(task.next().value).to.eql(effects.all([effects.call([sayt, autocomplete], query, request), effects.call(fetch, trendingUrl, postRequest)]));
+        task.next();
+        task.next();
         task.next();
       });
 
