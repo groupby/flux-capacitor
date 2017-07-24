@@ -76,7 +76,7 @@ interface Configuration {
     /**
      * recommendations API settings
      */
-    recommendations: Configuration.Recommendations;
+    recommendations?: Configuration.Recommendations;
     /**
      * default request values
      */
