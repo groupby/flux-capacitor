@@ -48,6 +48,22 @@ export function createActions(flux: FluxCapacitor) {
 	}
       }),
 
+      addRefinement: (field: string, valueOrLow: any, high: any = null) => {
+	if (typeof high === 'number') {
+	  actions.updateSearch({
+	    navigationId: field,
+	    low: valueOrLow,
+	    high,
+	    range: true
+	  });
+	} else {
+	  actions.updateSearch({
+	    navigationId: field,
+	    value: valueOrLow
+	  });
+	}
+      },
+
       search: (query: string = Selectors.query(flux.store.getState())) =>
         actions.updateSearch({ query, clear: true }),
 
