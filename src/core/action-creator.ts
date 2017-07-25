@@ -38,15 +38,15 @@ export function createActions(flux: FluxCapacitor) {
 
       // request action creators
       updateSearch: (search: Actions.Payload.Search): Actions.UpdateSearch =>
-      action(Actions.UPDATE_SEARCH, 'query' in search ? { ...<any>search, query: search.query && search.query.trim() } : search, {
-	...metadata,
-	validator: {
-	  payload: {
-	    func: ({ query }) => !('query' in search) || (!!query || query === null),
-	    msg: 'search term is empty'
-	  }
-	}
-      }),
+        action(Actions.UPDATE_SEARCH, 'query' in search ? { ...<any>search, query: search.query && search.query.trim() } : search, {
+          ...metadata,
+          validator: {
+            payload: {
+              func: ({ query }) => !('query' in search) || (!!query || query === null),
+              msg: 'search term is empty'
+            }
+          }
+        }),
 
       addRefinement: (field: string, valueOrLow: any, high: any = null) => {
 	if (typeof high === 'number') {
