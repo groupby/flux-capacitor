@@ -54,14 +54,14 @@ export function createActions(flux: FluxCapacitor) {
 
       addRefinement: (field: string, valueOrLow: any, high: any = null) => {
         if (typeof high === 'number') {
-          actions.updateSearch({
+          return actions.updateSearch({
             navigationId: field,
             low: valueOrLow,
             high,
             range: true
           });
         } else {
-          actions.updateSearch({
+          return actions.updateSearch({
             navigationId: field,
             value: valueOrLow
           });
