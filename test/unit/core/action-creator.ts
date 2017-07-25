@@ -150,7 +150,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         const result = actions.addRefinement(navigationId, value);
 
-        expect(result.type).to.be.eql('UPDATE_SEARCH');
+        expect(result.type).to.be.eq('UPDATE_SEARCH');
         expect(result.payload).to.be.eql({ navigationId, value });
       });
 
@@ -161,7 +161,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         const result = actions.addRefinement(navigationId, low, high);
 
-        expect(result.type).to.be.eql('UPDATE_SEARCH');
+        expect(result.type).to.be.eq('UPDATE_SEARCH');
         expect(result.payload).to.be.eql({
           navigationId,
           low,
