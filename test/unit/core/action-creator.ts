@@ -105,16 +105,27 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
   describe('request action creators', () => {
     describe('updateSearch()', () => {
-      it('should return an action with validation', () => {
-        const search: any = { a: 'b' };
+      it('should return an action with validation if search contains query', () => {
+        const search: any = { a: 'b', query: 'q' };
 
         expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH,
-          { ...search, query: undefined },
+          search,
           (meta) => {
             expect(meta.validator.payload.func({})).to.be.false;
             expect(meta.validator.payload.func({ query: '' })).to.be.false;
             expect(meta.validator.payload.func({ query: undefined })).to.be.false;
             return expect(meta.validator.payload.func({ query: null })).to.be.true;
+          });
+      });
+
+      it('should return an action with validation if search does not contain query', () => {
+        const search: any = { a: 'b' };
+
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH,
+          search,
+          (meta) => {
+            expect(meta.validator.payload.func({})).to.be.true;
+            return expect(meta.validator.payload.func({ query: 'q' })).to.be.true;
           });
       });
 
