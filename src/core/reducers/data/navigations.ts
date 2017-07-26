@@ -26,10 +26,10 @@ export default function updateNavigations(state: State = DEFAULTS, action: Actio
 }
 
 export const updateSearch = (state: State, payload: Actions.Payload.Search) => {
-  const byId = state.allIds.reduce((navs, nav) =>
-    Object.assign(navs, { [nav]: { ...state.byId[nav], selected: [] } }), {});
-
   if (payload.clear) {
+    const byId = state.allIds.reduce((navs, nav) =>
+      Object.assign(navs, { [nav]: { ...state.byId[nav], selected: [] } }), {});
+
     state = { ...state, byId };
   }
 
