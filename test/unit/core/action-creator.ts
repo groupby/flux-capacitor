@@ -144,10 +144,11 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
     });
 
     describe('addRefinement()', () => {
-      it('should add a refinement', () => {
+      const navigationId = 'book';
+
+      it('should add a value refinement', () => {
         const action = { a: 'b' };
         const refinement = { c: 'd' };
-        const navigationId = 'book';
         const value = 'a';
         const updateSearch = stub(actions, 'updateSearch').returns(action);
         const refinementPayload = stub(utils, 'refinementPayload').returns(refinement);
@@ -156,12 +157,25 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         expect(result).to.be.eq(action);
         expect(updateSearch).to.be.calledWithExactly(refinement);
+        expect(refinementPayload).to.be.calledWithExactly(navigationId, value, null);
+      });
+
+      it('should add a range refinement', () => {
+        const low = 20;
+        const high = 57;
+        const refinementPayload = stub(utils, 'refinementPayload');
+        stub(actions, 'updateSearch');
+
+        actions.addRefinement(navigationId, low, high);
+
+        expect(refinementPayload).to.be.calledWithExactly(navigationId, low, high);
       });
     });
 
     describe('switchRefinement()', () => {
-      it('should clear the refinements and add a refinement', () => {
-        const navigationId = 'book';
+      const navigationId = 'book';
+
+      it('should clear the refinements and add a value refinement', () => {
         const value = 'a';
         const action = { a: 'b' };
         const updateSearch = stub(actions, 'updateSearch').returns(action);
@@ -171,6 +185,18 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         expect(result).to.be.eq(action);
         expect(updateSearch).to.be.calledWithExactly({ c: 'd', clear: navigationId });
+        expect(refinementPayload).to.be.calledWithExactly(navigationId, value, null);
+      });
+
+      it('should clear the refinements and add a range refinement', () => {
+        const low = 10;
+        const high = 24;
+        const refinementPayload = stub(utils, 'refinementPayload');
+        stub(actions, 'updateSearch');
+
+        actions.switchRefinement(navigationId, low, high);
+
+        expect(refinementPayload).to.be.calledWithExactly(navigationId, low, high);
       });
     });
 
