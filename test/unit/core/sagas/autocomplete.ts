@@ -99,7 +99,6 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         stub(Selectors, 'location');
         stub(Selectors, 'autocompleteCategoryField');
         stub(Adapter, 'extractSuggestions').returns(suggestions);
-        // tslint:disable-next-line max-line-length
 
         const task = Tasks.fetchSuggestions(flux, <any>{ payload: query });
 
