@@ -80,10 +80,13 @@ export namespace Tasks {
 
   export function* fetchProducts(flux: FluxCapacitor, action: Actions.FetchAutocompleteProducts) {
     try {
+      const request = yield effects.select(Requests.autocompleteProducts, flux.config);
       const res = yield effects.call(
-        [flux.clients.sayt, flux.clients.sayt.productSearch],
-        action.payload,
-        Requests.autocompleteProducts(flux.config)
+        [flux.clients.bridge, flux.clients.bridge.search],
+        {
+          ...request,
+          query: action.payload
+        }
       );
       const products = Adapter.extractProducts(res);
 
