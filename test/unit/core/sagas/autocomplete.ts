@@ -1,6 +1,7 @@
 import * as effects from 'redux-saga/effects';
 import Actions from '../../../../src/core/actions';
 import Adapter from '../../../../src/core/adapters/autocomplete';
+import SearchAdapter from '../../../../src/core/adapters/search';
 import Requests from '../../../../src/core/requests';
 import sagaCreator, { Tasks } from '../../../../src/core/sagas/autocomplete';
 import Selectors from '../../../../src/core/selectors';
@@ -236,7 +237,7 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         const response = { i: 'j' };
         const config: any = { k: 'l' };
         const flux: any = { clients: { bridge }, actions: { receiveAutocompleteProducts }, config };
-        const extractProducts = stub(Adapter, 'extractProducts').returns(products);
+        const extractProducts = stub(SearchAdapter, 'extractProducts').returns(products);
 
         const task = Tasks.fetchProducts(flux, action);
 

@@ -3,6 +3,7 @@ import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import Adapter from '../adapters/autocomplete';
 import RecommendationsAdapter from '../adapters/recommendations';
+import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';
 import Requests from '../requests';
 import Selectors from '../selectors';
@@ -88,7 +89,7 @@ export namespace Tasks {
           query: action.payload
         }
       );
-      const products = Adapter.extractProducts(res);
+      const products = SearchAdapter.extractProducts(res);
 
       yield effects.put(flux.actions.receiveAutocompleteProducts(products));
     } catch (e) {
