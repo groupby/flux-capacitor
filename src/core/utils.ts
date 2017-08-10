@@ -40,5 +40,5 @@ export const refinementPayload = (field: string, valueOrLow: any, high: any = nu
 
 // a passthrough to allow error to propagate to middleware
 // tslint:disable-next-line max-line-length
-export const handleError = (action: Actions.Action<any>, bulkActionCreator: () => any) =>
-  action.error ? action : bulkActionCreator();
+export const handleError = (action: Actions.Action<any>,  createAction: () => any) =>
+  action.error ? action :  createAction();
