@@ -157,21 +157,20 @@ namespace Observer {
         searchId: emit(Events.SEARCH_CHANGED),
         location: emit(Events.LOCATION_UPDATED)
       },
-      ui: ((emitIsActiveUpdated: Observer) =>
-        (oldState: Store.UI, newState: Store.UI, path: string) => {
+      ui: ((oldState: Store.UI, newState: Store.UI, path: string) => {
           if (oldState !== newState) {
-            emitIsActiveUpdated(oldState, newState, path);
             Object.keys(newState).forEach((tagName) => {
               Object.keys(newState[tagName]).forEach((id) => {
-                const oldID = (oldState[tagName] || {})[id] || {};
-                const newID = newState[tagName][id];
-                if (oldID.isActive !== newID.isActive) {
-                  emit(`${Events.UI_ISACTIVE_UPDATED}:${id}`)(oldID, newID, `${path}.${tagName}.${id}`);
+                const oldTagState = (oldState[tagName] || {})[id] || {};
+                const newTagState = newState[tagName][id];
+                if (oldTagState !== newTagState) {
+                  // TODO: fix :)
+                  emit(`${Events.UI_UPDATED}:${tagName}:${id}`)(oldTagState, newTagState, `${path}.${tagName}.${id}`);
                 }
               });
             });
           }
-        })(emit(Events.UI_ISACTIVE_UPDATED)),
+        }),
     };
   }
 }

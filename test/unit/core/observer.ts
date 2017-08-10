@@ -489,4 +489,28 @@ suite('Observer', ({ expect, spy, stub }) => {
       });
     });
   });
+
+  describe('ui', () => {
+    let emit;
+    let observers;
+
+    beforeEach(() => {
+      emit = spy();
+      observers = Observer.create(<any>{ emit });
+    });
+
+    it('should emit UI_ISACTIVE_UPDATED event', () => {
+      const id = 'brand';
+      const OBJ = {
+        Main: {
+          [id]: {
+            isActive: false
+          }
+        }
+      };
+      observers.ui(undefined, OBJ);
+
+      expect(emit).to.be.calledWith(`${Events.UI_ISACTIVE_UPDATED}:${id}`, id);
+    });
+  });
 });
