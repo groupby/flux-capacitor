@@ -54,7 +54,7 @@ export const ERROR_BRIDGE = 'error:bridge';
 export const ERROR_FETCH_ACTION = 'error:fetch_action';
 
 // ui events
-export const UI_ISACTIVE_UPDATED = 'ui:is_active:updated';
+export const UI_UPDATED = 'ui:updated';
 
 // app events
 export const APP_STARTED = 'app:started';

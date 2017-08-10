@@ -500,17 +500,18 @@ suite('Observer', ({ expect, spy, stub }) => {
     });
 
     it('should emit UI_ISACTIVE_UPDATED event', () => {
+      const tagName = 'Main';
       const id = 'brand';
       const OBJ = {
-        Main: {
+        [tagName]: {
           [id]: {
             isActive: false
           }
         }
       };
-      observers.ui(undefined, OBJ);
+      observers.ui({}, OBJ);
 
-      expect(emit).to.be.calledWith(`${Events.UI_ISACTIVE_UPDATED}:${id}`, id);
+      expect(emit).to.be.calledWith(`${Events.UI_UPDATED}:${tagName}:${id}`, OBJ[tagName][id]);
     });
   });
 });
