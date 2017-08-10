@@ -220,10 +220,8 @@ export function createActions(flux: FluxCapacitor) {
         action(Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, products, metadata),
 
       // ui action creators
-      createComponentState: (tagName: string, id: string, state: any = {}): Actions.CreateComponentState => {
-          console.log(tagName, id, state);
-          return action(Actions.CREATE_COMPONENT_STATE, { tagName, id, state }, metadata);
-        },
+      createComponentState: (tagName: string, id: string, state: any = {}): Actions.CreateComponentState =>
+        action(Actions.CREATE_COMPONENT_STATE, { tagName, id, state }, metadata),
 
       removeComponentState: (tagName: string, id: string): Actions.RemoveComponentState =>
         action(Actions.REMOVE_COMPONENT_STATE, { tagName, id }, metadata),

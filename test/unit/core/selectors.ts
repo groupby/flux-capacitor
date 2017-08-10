@@ -381,4 +381,33 @@ suite('selectors', ({ expect, stub }) => {
       })).to.eq(products);
     });
   });
+
+  describe('uiTagName()', () => {
+    it('should return ui tagName state', () => {
+      const tagName = 'gb-navigation';
+      const state = { a: 'b' };
+
+      expect(Selectors.uiTagName(<any>{ ui: { [tagName]: state } }, tagName)).to.eq(state);
+    });
+  });
+
+  describe('tagId()', () => {
+    it('should return ui tag id state', () => {
+      const tagName = 'gb-navigation-display';
+      const id = 'Main';
+      const tagIdState = { c: 'd' };
+      const state: any = { ui: { [tagName]: { [id]: tagIdState } } };
+
+      expect(Selectors.tagId(state, tagName, id)).to.eq(tagIdState);
+    });
+
+    it('should not throw', () => {
+      const tagName = 'gb-navigation-display';
+      const id = 'Main';
+      const tagIdState = { c: 'd' };
+      const state: any = { ui: { } };
+
+      expect(() => Selectors.tagId(state, tagName, id)).to.not.throw();
+    });
+  });
 });

@@ -161,7 +161,6 @@ namespace Observer {
         (oldState: Store.UI, newState: Store.UI, path: string) => {
           if (oldState !== newState) {
             emitIsActiveUpdated(oldState, newState, path);
-            console.log('observer', oldState, newState);
             Object.keys(newState).forEach((tagName) => {
               Object.keys(newState[tagName]).forEach((id) => {
                 const oldID = (oldState[tagName] || {})[id] || {};
