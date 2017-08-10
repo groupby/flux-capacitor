@@ -177,11 +177,28 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     });
   });
 
+  describe('extractAutocompleteProductLanguage()', () => {
+    it('should return autocomplete product language', () => {
+      const language = 'fr';
+
+      // tslint:disable-next-line max-line-length
+      expect(Adapter.extractAutocompleteProductLanguage(<any>{ autocomplete: { products: { language } } })).to.eq(language);
+    });
+  });
+
   describe('extractAutocompleteArea()', () => {
     it('should return autocomplete area', () => {
       const area = 'myProductionArea';
 
       expect(Adapter.extractAutocompleteArea(<any>{ autocomplete: { area } })).to.eq(area);
+    });
+  });
+
+  describe('extractAutocompleteProductArea()', () => {
+    it('should return autocomplete product area', () => {
+      const area = 'myProductionArea';
+
+      expect(Adapter.extractAutocompleteProductArea(<any>{ autocomplete: { products: { area } } })).to.eq(area);
     });
   });
 
