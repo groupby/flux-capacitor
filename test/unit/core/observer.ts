@@ -499,7 +499,7 @@ suite('Observer', ({ expect, spy, stub }) => {
       observers = Observer.create(<any>{ emit });
     });
 
-    it('should emit UI_ISACTIVE_UPDATED event', () => {
+    it('should emit UI_UPDATED event', () => {
       const tagName = 'Main';
       const id = 'brand';
       const OBJ = {
