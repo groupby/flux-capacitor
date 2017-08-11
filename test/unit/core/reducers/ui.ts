@@ -47,7 +47,7 @@ suite('ui', ({ expect }) => {
       const newState = <any>{ a: 'b' };
       const reducer = ui(newState, { type: Actions.UPDATE_SEARCH, payload: {} });
 
-      expect(reducer).to.eql(newState);
+      expect(reducer).to.eq(newState);
     });
 
     it('should return state on default', () => {
