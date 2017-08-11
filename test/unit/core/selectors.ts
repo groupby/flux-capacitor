@@ -407,7 +407,7 @@ suite('selectors', ({ expect, stub }) => {
       const tagName = 'gb-navigation';
       const state = { a: 'b' };
 
-      expect(Selectors.uiTagName(<any>{ ui: { [tagName]: state } }, tagName)).to.eq(state);
+      expect(Selectors.uiTagStates(<any>{ ui: { [tagName]: state } }, tagName)).to.eq(state);
     });
   });
 
@@ -418,7 +418,7 @@ suite('selectors', ({ expect, stub }) => {
       const tagIdState = { c: 'd' };
       const state: any = { ui: { [tagName]: { [id]: tagIdState } } };
 
-      expect(Selectors.tagId(state, tagName, id)).to.eq(tagIdState);
+      expect(Selectors.uiTagState(state, tagName, id)).to.eq(tagIdState);
     });
 
     it('should not throw', () => {
@@ -427,7 +427,7 @@ suite('selectors', ({ expect, stub }) => {
       const tagIdState = { c: 'd' };
       const state: any = { ui: { } };
 
-      expect(() => Selectors.tagId(state, tagName, id)).to.not.throw();
+      expect(() => Selectors.uiTagState(state, tagName, id)).to.not.throw();
     });
   });
 });
