@@ -49,7 +49,7 @@ suite('Page Adapter', ({ expect }) => {
       expect(Adapter.toResult(2, 10, 12)).to.eq(12);
     });
 
-    it('should return the product of currentPage and pageSize when totalRecords is less than pageSize', () => {
+    it('should return the product of currentPage and pageSize when totalRecords is greater than pageSize', () => {
       expect(Adapter.toResult(1, 10, 16)).to.eq(10);
     });
   });
