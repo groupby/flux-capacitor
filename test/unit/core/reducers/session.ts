@@ -62,6 +62,18 @@ suite('session', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
+    it('should update state on UPDATE_BASE_URL', () => {
+      const baseUrl = 'https://www.example.com/';
+      const newState = {
+        ...state,
+        baseUrl
+      };
+
+      const reducer = session(state, <any>{ type: Actions.UPDATE_BASE_URL, payload: baseUrl });
+
+      expect(reducer).to.eql(newState);
+    });
+
     it('should return state on default', () => {
       const reducer = session(state, <any>{});
 
