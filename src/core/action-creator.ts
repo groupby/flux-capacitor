@@ -151,6 +151,9 @@ export function createActions(flux: FluxCapacitor) {
           }
         }),
 
+      updateBaseUrl: (baseUrl: string): Actions.UpdateBaseUrl =>
+        action(Actions.UPDATE_BASE_URL, baseUrl, metadata),
+
       // response action creators
       receiveQuery: (query: Actions.Payload.Query): Actions.ReceiveQuery =>
         action(Actions.RECEIVE_QUERY, query, metadata),

@@ -81,6 +81,7 @@ namespace Store {
 
     fields: string[]; // static
 
+    baseUrl: string; // static
     errors: string[]; // post
     warnings: string[]; // post
   }
