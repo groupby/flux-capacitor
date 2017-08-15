@@ -26,7 +26,8 @@ namespace Adapter {
           page: {
             ...PageReducer.DEFAULTS,
             sizes: Adapter.extractPageSizes(config, PageReducer.DEFAULT_PAGE_SIZE)
-          }
+          },
+          baseUrl: '/'
         }
       }
     });

@@ -53,7 +53,8 @@ suite('Configuration Adapter', ({ expect, stub }) => {
                 selected: 0,
                 items: [PageReducer.DEFAULT_PAGE_SIZE]
               }
-            }
+            },
+            baseUrl: '/'
           }
         }
       });
@@ -123,7 +124,8 @@ suite('Configuration Adapter', ({ expect, stub }) => {
                 selected: 2,
                 items: pageSize.options
               }
-            }
+            },
+            baseUrl: '/'
           }
         }
       };
