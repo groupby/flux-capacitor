@@ -81,7 +81,6 @@ namespace Store {
 
     fields: string[]; // static
 
-    baseUrl: string; // static
     errors: string[]; // post
     warnings: string[]; // post
   }
@@ -166,6 +165,7 @@ namespace Store {
     searchId?: string;
     location?: Geolocation;
     origin?: Actions.Metadata.Tag;
+    baseUrl?: string;
   }
 
   export interface IsFetching {

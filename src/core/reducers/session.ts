@@ -7,6 +7,7 @@ export type State = Store.Session;
 // tslint:disable-next-line max-line-length
 export default function updateSession(state: State = {}, { type, payload, meta = <Actions.Metadata>{} }: Action): State {
   switch (type) {
+    case Actions.UPDATE_BASE_URL: return updateBaseUrl(state, payload);
     case Actions.UPDATE_LOCATION: return updateLocation(state, payload);
     default: {
       if ('recallId' in meta) {
@@ -23,6 +24,9 @@ export default function updateSession(state: State = {}, { type, payload, meta =
     }
   }
 }
+
+export const updateBaseUrl = (state: State, baseUrl: string) =>
+  ({ ...state, baseUrl });
 
 export const updateLocation = (state: State, location: Store.Geolocation) =>
   ({ ...state, location });

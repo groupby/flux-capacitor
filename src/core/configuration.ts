@@ -47,11 +47,6 @@ interface Configuration {
    * network request configuration
    */
   network?: Configuration.Bridge;
-
-  /**
-   * state initial configuration for Base URL
-   */
-  baseUrl?: string;
 }
 
 namespace Configuration {
