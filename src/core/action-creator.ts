@@ -151,9 +151,6 @@ export function createActions(flux: FluxCapacitor) {
           }
         }),
 
-      updateBaseUrl: (baseUrl: string): Actions.UpdateBaseUrl =>
-        action(Actions.UPDATE_BASE_URL, baseUrl, metadata),
-
       // response action creators
       receiveQuery: (query: Actions.Payload.Query): Actions.ReceiveQuery =>
         action(Actions.RECEIVE_QUERY, query, metadata),
@@ -245,6 +242,10 @@ export function createActions(flux: FluxCapacitor) {
       // session action creators
       updateLocation: (location: Store.Geolocation): Actions.UpdateLocation =>
         action(Actions.UPDATE_LOCATION, location, metadata),
+
+      // base url action creators
+      updateBaseUrl: (baseUrl: string): Actions.UpdateBaseUrl =>
+        action(Actions.UPDATE_BASE_URL, baseUrl, metadata),
 
       // app action creators
       startApp: (): Actions.StartApp =>

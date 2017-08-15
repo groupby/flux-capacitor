@@ -737,6 +737,14 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
     });
   });
 
+  describe('updateBaseUrl()', () => {
+    it('should return an action', () => {
+      const baseUrl = 'https://www.example.com/';
+
+      expectAction(() => actions.updateBaseUrl(baseUrl), Actions.UPDATE_BASE_URL, baseUrl);
+    });
+  });
+
   describe('refreshState()', () => {
     it('should create a REFRESH_STATE action', () => {
       const payload = { a: 'b' };
