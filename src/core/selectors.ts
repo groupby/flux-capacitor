@@ -144,6 +144,9 @@ namespace Selectors {
 
   export const uiTagState = (state: Store.State, tagName: string, id: string) =>
     (Selectors.uiTagStates(state, tagName) || {})[id];
+
+  export const baseUrl = (state: Store.State) =>
+    state.session.baseUrl;
 }
 
 export default Selectors;
