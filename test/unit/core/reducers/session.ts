@@ -7,10 +7,14 @@ suite('session', ({ expect }) => {
   const RECALL_ID = 'aksd';
   const SEARCH_ID = 'aslkf';
   const ORIGIN: any = { y: 'z' };
+  const LOCATION: any = { y: 'z' };
+  const BASE_URL = 'http://www.abc.com/';
   const state: Store.Session = {
     recallId: RECALL_ID,
     searchId: SEARCH_ID,
-    origin: ORIGIN
+    origin: ORIGIN,
+    location: LOCATION,
+    baseUrl: BASE_URL
   };
 
   describe('updateSession()', () => {
