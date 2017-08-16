@@ -45,6 +45,8 @@ namespace Actions {
   export type UpdatePageSize = Action<typeof UPDATE_PAGE_SIZE, number>;
   export const UPDATE_CURRENT_PAGE = 'UPDATE_CURRENT_PAGE';
   export type UpdateCurrentPage = Action<typeof UPDATE_CURRENT_PAGE, number>;
+  export const UPDATE_BASE_URL = 'UPDATE_BASE_URL';
+  export type UpdateBaseUrl = Action<typeof UPDATE_BASE_URL, string>;
 
   // fetch actions
   export const FETCH_MORE_REFINEMENTS = 'FETCH_MORE_REFINEMENTS';

@@ -165,6 +165,7 @@ namespace Store {
     searchId?: string;
     location?: Geolocation;
     origin?: Actions.Metadata.Tag;
+    baseUrl?: string;
   }
 
   export interface IsFetching {

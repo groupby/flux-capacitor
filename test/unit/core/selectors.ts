@@ -425,9 +425,17 @@ suite('selectors', ({ expect, stub }) => {
       const tagName = 'gb-navigation-display';
       const id = 'Main';
       const tagIdState = { c: 'd' };
-      const state: any = { ui: { } };
+      const state: any = { ui: {} };
 
       expect(() => Selectors.uiTagState(state, tagName, id)).to.not.throw();
+    });
+  });
+
+  describe('baseUrl()', () => {
+    it('should return the current session baseUrl', () => {
+      const baseUrl = 'https://www.example.com/';
+
+      expect(Selectors.baseUrl(<any>{ session: { baseUrl } })).to.eq(baseUrl);
     });
   });
 });

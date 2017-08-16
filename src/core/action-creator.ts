@@ -243,6 +243,10 @@ export function createActions(flux: FluxCapacitor) {
       updateLocation: (location: Store.Geolocation): Actions.UpdateLocation =>
         action(Actions.UPDATE_LOCATION, location, metadata),
 
+      // base url action creators
+      updateBaseUrl: (baseUrl: string): Actions.UpdateBaseUrl =>
+        action(Actions.UPDATE_BASE_URL, baseUrl, metadata),
+
       // app action creators
       startApp: (): Actions.StartApp =>
         action<any, typeof Actions.START_APP, any>(Actions.START_APP, undefined, metadata)

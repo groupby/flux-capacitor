@@ -84,3 +84,4 @@ export const HISTORY_SAVE = 'history:save';
 
 // url events
 export const URL_UPDATED = 'url:updated';
+export const BASE_URL_UPDATED = 'base_url:updated';

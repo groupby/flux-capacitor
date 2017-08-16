@@ -7,10 +7,14 @@ suite('session', ({ expect }) => {
   const RECALL_ID = 'aksd';
   const SEARCH_ID = 'aslkf';
   const ORIGIN: any = { y: 'z' };
+  const LOCATION: any = { y: 'z' };
+  const BASE_URL = 'http://www.abc.com/';
   const state: Store.Session = {
     recallId: RECALL_ID,
     searchId: SEARCH_ID,
-    origin: ORIGIN
+    origin: ORIGIN,
+    location: LOCATION,
+    baseUrl: BASE_URL
   };
 
   describe('updateSession()', () => {
@@ -58,6 +62,18 @@ suite('session', ({ expect }) => {
       };
 
       const reducer = session(state, <any>{ type: Actions.UPDATE_LOCATION, payload: location });
+
+      expect(reducer).to.eql(newState);
+    });
+
+    it('should update state on UPDATE_BASE_URL', () => {
+      const baseUrl = 'https://www.example.com/';
+      const newState = {
+        ...state,
+        baseUrl
+      };
+
+      const reducer = session(state, <any>{ type: Actions.UPDATE_BASE_URL, payload: baseUrl });
 
       expect(reducer).to.eql(newState);
     });
