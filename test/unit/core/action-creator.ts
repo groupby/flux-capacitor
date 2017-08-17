@@ -117,10 +117,10 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH,
           search,
           (meta) => {
-            expect(meta.validator.payload.func({})).to.be.false;
-            expect(meta.validator.payload.func({ query: '' })).to.be.false;
-            expect(meta.validator.payload.func({ query: undefined })).to.be.false;
-            return expect(meta.validator.payload.func({ query: null })).to.be.true;
+            expect(meta.validator.payload[0].func({})).to.be.false;
+            expect(meta.validator.payload[0].func({ query: '' })).to.be.false;
+            expect(meta.validator.payload[0].func({ query: undefined })).to.be.false;
+            return expect(meta.validator.payload[0].func({ query: null })).to.be.true;
           });
       });
 
@@ -130,9 +130,36 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH,
           search,
           (meta) => {
-            expect(meta.validator.payload.func({})).to.be.true;
-            return expect(meta.validator.payload.func({ query: 'q' })).to.be.true;
+            expect(meta.validator.payload[0].func({})).to.be.true;
+            return expect(meta.validator.payload[0].func({ query: 'q' })).to.be.true;
           });
+      });
+
+      it('should return an action with validation if new search is different from previous', () => {
+        const query = 'book';
+        const search: any = { a: 'b' };
+        const state = { a: 'b' };
+        stub(Selectors, 'query').withArgs(state).returns(query);
+
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH,
+          search,
+          (meta) => {
+            return expect(meta.validator.payload[1].func({ query }, state)).to.be.false;
+          }
+        )
+      });
+
+      it('should return an action with validation if new search is the same as previous', () => {
+        const search: any = { a: 'b' };
+        const state = { a: 'b' };
+        stub(Selectors, 'query').withArgs(state).returns('book');
+
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH,
+          search,
+          (meta) => {
+            return expect(meta.validator.payload[1].func({ query: 'boot' }, state)).to.be.true;
+          }
+        )
       });
 
       it('should trim query', () => {
