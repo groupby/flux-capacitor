@@ -54,7 +54,7 @@ export function createActions(flux: FluxCapacitor) {
                 },
                 {
                   func: ({ query }, state) => query !== Selectors.query(state),
-                  msg: 'search term is same as before'
+                  msg: 'search term is same as previous one'
                 }
               ]
             }

@@ -135,7 +135,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           });
       });
 
-      it('should return an action with validation if new search is different from previous', () => {
+      it('should return an action with validation if search term is same as previous one', () => {
         const query = 'book';
         const search: any = { a: 'b' };
         const state = { a: 'b' };
@@ -146,10 +146,10 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           (meta) => {
             return expect(meta.validator.payload[1].func({ query }, state)).to.be.false;
           }
-        )
+        );
       });
 
-      it('should return an action with validation if new search is the same as previous', () => {
+      it('should return an action with validation if search term is different from previous one', () => {
         const search: any = { a: 'b' };
         const state = { a: 'b' };
         stub(Selectors, 'query').withArgs(state).returns('book');
@@ -159,7 +159,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           (meta) => {
             return expect(meta.validator.payload[1].func({ query: 'boot' }, state)).to.be.true;
           }
-        )
+        );
       });
 
       it('should trim query', () => {
