@@ -42,23 +42,23 @@ export function createActions(flux: FluxCapacitor) {
 
       // request action creators
       updateSearch: (search: Actions.Payload.Search): Actions.UpdateSearch =>
-      action(Actions.UPDATE_SEARCH,
-        'query' in search ? { ...search, query: search.query && search.query.trim() } : search,
-        {
-          ...metadata,
-          validator: {
-            payload: [
-              {
-                func: ({ query }) => !('query' in search) || !!query || query === null,
-                msg: 'search term is empty'
-              },
-              {
-                func: ({ query }, state) => query !== Selectors.query(state),
-                msg: 'search term is same as before'
-              }
-            ]
-          }
-        }),
+        action(Actions.UPDATE_SEARCH,
+          'query' in search ? { ...search, query: search.query && search.query.trim() } : search,
+          {
+            ...metadata,
+            validator: {
+              payload: [
+                {
+                  func: ({ query }) => !('query' in search) || !!query || query === null,
+                  msg: 'search term is empty'
+                },
+                {
+                  func: ({ query }, state) => query !== Selectors.query(state),
+                  msg: 'search term is same as before'
+                }
+              ]
+            }
+          }),
 
       addRefinement: (field: string, valueOrLow: any, high: any = null) =>
         actions.updateSearch(refinementPayload(field, valueOrLow, high)),
