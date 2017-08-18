@@ -51,10 +51,9 @@ export function createActions(flux: FluxCapacitor) {
                 {
                   func: ({ query }) => !('query' in search) || !!query || query === null,
                   msg: 'search term is empty'
-                },
-                {
+                }, {
                   func: ({ query }, state) => query !== Selectors.query(state),
-                  msg: 'search term is same as previous one'
+                  msg: 'search term is not different'
                 }
               ]
             }

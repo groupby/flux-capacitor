@@ -135,7 +135,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           });
       });
 
-      it('should return an action with validation if search term is same as previous one', () => {
+      it('should return an action with validation if search term is not different', () => {
         const query = 'book';
         const search: any = { a: 'b' };
         const state = { a: 'b' };
@@ -149,7 +149,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         );
       });
 
-      it('should return an action with validation if search term is different from previous one', () => {
+      it('should return an action with validation if search term is different', () => {
         const search: any = { a: 'b' };
         const state = { a: 'b' };
         stub(Selectors, 'query').withArgs(state).returns('book');
