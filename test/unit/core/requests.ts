@@ -145,6 +145,8 @@ suite('requests', ({ expect, stub }) => {
       expect(request).to.eql(chained);
       expect(chain).to.be.calledWith(defaults, {
         i: 'j',
+        skip: 0,
+        refinements: [],
         area,
         language,
         pageSize: productCount,
