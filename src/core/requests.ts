@@ -48,6 +48,7 @@ namespace Requests {
       ...Requests.search(state, config),
       refinements: [],
       skip: 0,
+      sort: undefined,
       language: Autocomplete.extractProductLanguage(config),
       area: Autocomplete.extractProductArea(config),
       pageSize: Configuration.extractAutocompleteProductCount(config)

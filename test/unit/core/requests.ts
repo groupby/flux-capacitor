@@ -147,6 +147,7 @@ suite('requests', ({ expect, stub }) => {
         i: 'j',
         skip: 0,
         refinements: [],
+        sort: undefined,
         area,
         language,
         pageSize: productCount,
