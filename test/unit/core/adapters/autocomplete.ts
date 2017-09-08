@@ -71,6 +71,17 @@ suite('Autocomplete Adapter', ({ expect, stub }) => {
 
       expect(extractCategoryValues.called).to.be.false;
     });
+
+    it ('should shift searchTerms by one element',() => {
+      const searchTerms = ['g', 'r', 'o', 'u', 'p', 'b', 'y'];
+
+      stub(Adapter, 'termsMatch').returns(true);
+      stub(Adapter, 'extractCategoryValues');
+
+      Adapter.extractSuggestions({ result: { searchTerms } }, '', 'brand', {});
+
+      expect(searchTerms).to.eql(['r', 'o', 'u', 'p', 'b', 'y']);
+    });
   });
 
   describe('extractCategoryValues()', () => {
