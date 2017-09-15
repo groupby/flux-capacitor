@@ -212,6 +212,14 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       });
     });
 
+    describe('resetPage()', () => {
+      it ('should return an action', () => {
+        expectAction(() => actions.resetPage(), Actions.RESET_PAGE, undefined, (meta) => {
+          return expect(meta.validator.payload.func()).to.be.true;
+        });
+      });
+    });
+
     describe('addRefinement()', () => {
       const navigationId = 'book';
 
