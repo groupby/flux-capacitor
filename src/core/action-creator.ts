@@ -50,10 +50,16 @@ export function createActions(flux: FluxCapacitor) {
         if ('clear' in search) {
           searchActions.push(actions.resetRefinements(search.clear));
         }
-        // updateSearch: (search: Actions.Payload.Search): Actions.UpdateSearch => {
-        // action(Actions.UPDATE_SEARCH,
-        //   'query' in search ? { ...search, query: search.query && search.query.trim() } : search)
-        //
+        if ('navigationId' in search) {
+          if ('index' in search) {
+            searchActions.push(actions.selectRefinement(search.navigationId, search.index));
+          } else if (search.range) {
+            // add range
+          } else {
+            // add value
+          }
+        }
+
         return searchActions;
       },
 
@@ -71,8 +77,8 @@ export function createActions(flux: FluxCapacitor) {
           }
         }),
 
-      addRefinement: (field: string, valueOrLow: any, high: any = null) =>
-        actions.updateSearch(refinementPayload(field, valueOrLow, high)),
+      addRefinement: (field: string, valueOrLow: any, high: any = null): Actions.AddRefinement =>
+        action(Actions.ADD_REFINEMENT, refinementPayload(field, valueOrLow, high), metadata),
 
       switchRefinement: (field: string, valueOrLow: any, high: any = null) =>
         actions.updateSearch({ ...refinementPayload(field, valueOrLow, high), clear: field }),
@@ -81,10 +87,16 @@ export function createActions(flux: FluxCapacitor) {
         action(Actions.RESET_REFINEMENTS, field, {
           ...metadata,
           validator: {
-            payload: {
+            payload: [{
               func: () => field === true || typeof field === 'string',
               msg: 'clear must be a string or true'
-            }
+            }, {
+              func: (_, state) => Selectors.selectedRefinements(state).length !== 0,
+              msg: 'no refinements to clear'
+            }, {
+              func: (_, state) => typeof field === 'string' && Selectors.navigation(state, field).selected.length !== 0,
+              msg: `no refinements to clear for field "${field}"`
+            }]
           }
         }),
 

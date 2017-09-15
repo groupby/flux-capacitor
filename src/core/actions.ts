@@ -52,6 +52,8 @@ namespace Actions {
   export type ResetRefinements = Action<typeof RESET_REFINEMENTS, boolean | string>;
   export const RESET_PAGE = 'RESET_PAGE';
   export type ResetPage = Action<typeof RESET_PAGE, undefined>;
+  export const ADD_REFINEMENT = 'ADD_REFINEMENT';
+  export type AddRefinement = Action<typeof ADD_REFINEMENT, Actions.Payload.Navigation.AddRefinement>
 
   // fetch actions
   export const FETCH_MORE_REFINEMENTS = 'FETCH_MORE_REFINEMENTS';
