@@ -41,21 +41,33 @@ export function createActions(flux: FluxCapacitor) {
         action(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, null, metadata),
 
       // request action creators
-      updateSearch: (search: Actions.Payload.Search): Actions.UpdateSearch =>
-        action(Actions.UPDATE_SEARCH,
-          'query' in search ? { ...search, query: search.query && search.query.trim() } : search,
-          {
-            ...metadata,
-            validator: {
-              payload: [{
-                func: ({ query }) => !('query' in search) || !!query || query === null,
-                msg: 'search term is empty'
-              }, {
-                func: ({ query }, state) => query !== Selectors.query(state) || query === null,
-                msg: 'search term is not different'
-              }]
-            }
-          }),
+      updateSearch: (search: Actions.Payload.Search) => {
+        const searchActions = [];
+
+        if ('query' in search) {
+          searchActions.push(actions.updateQuery(search.query));
+        }
+        // updateSearch: (search: Actions.Payload.Search): Actions.UpdateSearch => {
+        // action(Actions.UPDATE_SEARCH,
+        //   'query' in search ? { ...search, query: search.query && search.query.trim() } : search,
+        //   {
+        //     ...metadata,
+        //     validator: {
+        //       payload: [{
+        //         func: ({ query }) => !('query' in search) || !!query || query === null,
+        //         msg: 'search term is empty'
+        //       }, {
+        //         func: ({ query }, state) => query !== Selectors.query(state) || query === null,
+        //         msg: 'search term is not different'
+        //       }]
+        //     }
+        //   })
+        //
+        return searchActions;
+      },
+
+      updateQuery: (query: string): Actions.UpdateQuery =>
+        action(Actions.UPDATE_QUERY, query, metadata),
 
       addRefinement: (field: string, valueOrLow: any, high: any = null) =>
         actions.updateSearch(refinementPayload(field, valueOrLow, high)),
