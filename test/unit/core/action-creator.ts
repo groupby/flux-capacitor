@@ -162,6 +162,30 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         expect(selectRefinement).to.be.calledWithExactly(navigationId, index);
       });
 
+      it('should return a bulk action with value ADD_REFINEMENT', () => {
+        const navigationId = 'color';
+        const value = 'blue';
+        const addRefinement = actions.addRefinement = spy(() => ACTION);
+
+        const batchAction = actions.updateSearch({ navigationId, value });
+
+        expect(batchAction).to.eql([resetPageAction, ACTION]);
+        expect(addRefinement).to.be.calledWithExactly(navigationId, value);
+      });
+
+      it('should return a bulk action with range ADD_REFINEMENT', () => {
+        const navigationId = 'color';
+        const range = true;
+        const low = 1;
+        const high = 2;
+        const addRefinement = actions.addRefinement = spy(() => ACTION);
+
+        const batchAction = actions.updateSearch({ navigationId, range, low, high });
+
+        expect(batchAction).to.eql([resetPageAction, ACTION]);
+        expect(addRefinement).to.be.calledWithExactly(navigationId, low, high);
+      });
+
       // it('should return an action with validation if search does not contain query', () => {
       //   const search: any = { a: 'b' };
       //
