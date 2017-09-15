@@ -55,9 +55,9 @@ export function createActions(flux: FluxCapacitor) {
           if ('index' in search) {
             searchActions.push(actions.selectRefinement(search.navigationId, search.index));
           } else if (search.range) {
-            // add range
-          } else {
-            // add value
+            searchActions.push(actions.addRefinement(search.navigationId, search.low, search.high));
+          } else if ('value' in search) {
+            searchActions.push(actions.addRefinement(search.navigationId, search.value));
           }
         }
 
