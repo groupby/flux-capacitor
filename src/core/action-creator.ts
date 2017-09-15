@@ -42,7 +42,7 @@ export function createActions(flux: FluxCapacitor) {
 
       // request action creators
       updateSearch: (search: Actions.Payload.Search) => {
-        const searchActions = [];
+        const searchActions: any[] = [actions.resetPage()];
 
         if ('query' in search) {
           searchActions.push(actions.updateQuery(search.query));
@@ -85,6 +85,17 @@ export function createActions(flux: FluxCapacitor) {
             payload: {
               func: () => field === true || typeof field === 'string',
               msg: 'clear must be a string or true'
+            }
+          }
+        }),
+
+      resetPage: (): Actions.ResetPage =>
+        action(Actions.RESET_PAGE, undefined, {
+          ...metadata,
+          validator: {
+            payload: {
+              func: (_, state) => Selectors.page(state) !== 1,
+              msg: 'page must not be on first page'
             }
           }
         }),
