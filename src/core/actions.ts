@@ -49,7 +49,7 @@ namespace Actions {
   export const UPDATE_QUERY = 'UPDATE_QUERY';
   export type UpdateQuery = Action<typeof UPDATE_QUERY, string>;
   export const RESET_REFINEMENTS = 'RESET_REFINEMENTS';
-  export type ResetRefinements = Action<typeof RESET_REFINEMENTS, string>
+  export type ResetRefinements = Action<typeof RESET_REFINEMENTS, boolean | string>
 
   // fetch actions
   export const FETCH_MORE_REFINEMENTS = 'FETCH_MORE_REFINEMENTS';

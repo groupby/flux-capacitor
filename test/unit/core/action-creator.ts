@@ -130,6 +130,16 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         expect(updateQuery).to.be.calledWithExactly(query);
       });
 
+      it('should return an action with validation if search contains clear', () => {
+        const clear = 'q';
+        const resetRefinements = actions.resetRefinements = spy(() => ACTION);
+
+        const actualActions = actions.updateSearch({ clear });
+
+        expect(actualActions).to.eql([ACTION]);
+        expect(resetRefinements).to.be.calledWithExactly(clear);
+      });
+
       // it('should return an action with validation if search does not contain query', () => {
       //   const search: any = { a: 'b' };
       //
@@ -181,6 +191,24 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const query = 'rambo';
 
         expectAction(() => actions.updateQuery(query), Actions.UPDATE_QUERY, query);
+      });
+    });
+
+    describe('resetRefinements()', () => {
+      it('should return an action', () => {
+        const field = 'rambo';
+
+        expectAction(() => actions.resetRefinements(field), Actions.RESET_REFINEMENTS, field, (meta) => {
+          return expect(meta.validator.payload.func()).to.be.true;
+        });
+      });
+
+      it('should not return an action', () => {
+        const field = false;
+
+        expectAction(() => actions.resetRefinements(field), Actions.RESET_REFINEMENTS, field, (meta) => {
+          return expect(meta.validator.payload.func()).to.be.false;
+        });
       });
     });
 
@@ -238,18 +266,6 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         actions.switchRefinement(navigationId, low, high);
 
         expect(refinementPayload).to.be.calledWithExactly(navigationId, low, high);
-      });
-    });
-
-    describe('resetRefinements()', () => {
-      it('should reset refinements', () => {
-        const action = { a: 'b' };
-        const updateSearch = stub(actions, 'updateSearch').returns(action);
-
-        const result = actions.resetRefinements();
-
-        expect(result).to.be.eq(action);
-        expect(updateSearch).to.be.calledWithExactly({ clear: true });
       });
     });
 

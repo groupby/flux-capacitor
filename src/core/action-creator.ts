@@ -47,6 +47,9 @@ export function createActions(flux: FluxCapacitor) {
         if ('query' in search) {
           searchActions.push(actions.updateQuery(search.query));
         }
+        if ('clear' in search) {
+          searchActions.push(actions.resetRefinements(search.clear));
+        }
         // updateSearch: (search: Actions.Payload.Search): Actions.UpdateSearch => {
         // action(Actions.UPDATE_SEARCH,
         //   'query' in search ? { ...search, query: search.query && search.query.trim() } : search,
@@ -75,8 +78,16 @@ export function createActions(flux: FluxCapacitor) {
       switchRefinement: (field: string, valueOrLow: any, high: any = null) =>
         actions.updateSearch({ ...refinementPayload(field, valueOrLow, high), clear: field }),
 
-      resetRefinements: () =>
-        actions.updateSearch({ clear: true }),
+      resetRefinements: (field?: boolean | string): Actions.ResetRefinements =>
+        action(Actions.RESET_REFINEMENTS, field, {
+          ...metadata,
+          validator: {
+            payload: {
+              func: () => field === true || typeof field === 'string',
+              msg: 'clear must be a string or true'
+            }
+          }
+        }),
 
       search: (query: string = Selectors.query(flux.store.getState())) =>
         actions.updateSearch({ query, clear: true }),
