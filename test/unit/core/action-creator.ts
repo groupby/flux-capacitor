@@ -4,6 +4,7 @@ import Actions from '../../../src/core/actions';
 import SearchAdapter from '../../../src/core/adapters/search';
 import Selectors from '../../../src/core/selectors';
 import * as utils from '../../../src/core/utils';
+import * as validators from '../../../src/core/validators';
 import FluxCapacitor from '../../../src/flux-capacitor';
 import suite from '../_suite';
 
@@ -286,6 +287,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
     describe('addRefinement()', () => {
       const navigationId = 'book';
       const refinement = { c: 'd' };
+      const rangeRefinement = { range: true };
 
       it('should return an action with value refinement', () => {
         const value = 'a';
@@ -304,6 +306,77 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         expect(refinementPayload).to.be.calledWithExactly(navigationId, low, high);
       });
 
+      it('should validate navigationId', () => {
+        stub(utils, 'refinementPayload').returns(refinement);
+
+        expectAction(() => actions.addRefinement(null, null), Actions.ADD_REFINEMENT, refinement,
+          (meta) => expect(meta.validator.navigationId).to.eq(validators.isString));
+      });
+
+      it('should invalidate non-numeric low value', () => {
+        stub(utils, 'refinementPayload').returns(rangeRefinement);
+
+        expectAction(() => actions.addRefinement(null, 'g'), Actions.ADD_REFINEMENT, rangeRefinement,
+          (meta) => expect(meta.validator.payload[0].func(rangeRefinement)).to.be.false);
+      });
+
+      it('should invalidate non-numeric high value', () => {
+        stub(utils, 'refinementPayload').returns(rangeRefinement);
+
+        expectAction(() => actions.addRefinement(null, 2, 'j'), Actions.ADD_REFINEMENT, rangeRefinement,
+          (meta) => expect(meta.validator.payload[0].func(rangeRefinement)).to.be.false);
+      });
+
+      it('should invalidate low greater than high', () => {
+        stub(utils, 'refinementPayload').returns(rangeRefinement);
+
+        expectAction(() => actions.addRefinement(null, 2, 1), Actions.ADD_REFINEMENT, rangeRefinement,
+          (meta) => expect(meta.validator.payload[1].func(rangeRefinement)).to.be.false);
+      });
+
+      it('should invalidate nonstring value', () => {
+        const value = 7;
+        const isStringValidator = stub(validators.isString, 'func').returns(false);
+        stub(utils, 'refinementPayload').returns(refinement);
+
+        expectAction(() => actions.addRefinement(null, value), Actions.ADD_REFINEMENT, refinement,
+          (meta) => expect(meta.validator.payload[2].func(refinement)).to.be.false);
+        expect(isStringValidator).to.be.calledWith(value);
+      });
+
+      it('should validate refinement for untracked field', () => {
+        const state = { a: 'b' };
+        const selectNavigation = stub(Selectors, 'navigation');
+        stub(utils, 'refinementPayload').returns(refinement);
+
+        expectAction(() => actions.addRefinement(navigationId, null), Actions.ADD_REFINEMENT, refinement,
+          (meta) => expect(meta.validator.payload[3].func(null, state)).to.be.true);
+        expect(selectNavigation).to.be.calledWithExactly(state, navigationId);
+      });
+
+      it('should invalidate currently selected value refinement', () => {
+        const value = 7;
+        const selected = { a: 'b' };
+        const refinementsMatch = stub(SearchAdapter, 'refinementsMatch').returns(true);
+        stub(utils, 'refinementPayload').returns(refinement);
+        stub(Selectors, 'navigation').returns({ selected: [1], refinements: [{}, selected, {}] });
+
+        expectAction(() => actions.addRefinement(null, value), Actions.ADD_REFINEMENT, refinement,
+          (meta) => expect(meta.validator.payload[3].func(refinement)).to.be.false);
+        expect(refinementsMatch).to.be.calledWithExactly(refinement, selected, 'Value');
+      });
+
+      it('should invalidate currently selected value refinement', () => {
+        const value = 7;
+        const selected = { a: 'b' };
+        const refinementsMatch = stub(SearchAdapter, 'refinementsMatch').returns(true);
+        stub(utils, 'refinementPayload').returns(refinement);
+        stub(Selectors, 'navigation').returns({ range: true, selected: [1], refinements: [{}, selected, {}] });
+
+        expectAction(() => actions.addRefinement(null, value), Actions.ADD_REFINEMENT, refinement,
+          (meta) => expect(meta.validator.payload[3].func(refinement)).to.be.false);
+        expect(refinementsMatch).to.be.calledWithExactly(refinement, selected, 'Range');
+      });
     });
 
     describe('switchRefinement()', () => {
