@@ -120,23 +120,33 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
   describe('request action creators', () => {
     describe('updateSearch()', () => {
-      it('should return an action with validation if search contains query', () => {
+      const resetPageAction = { m: 'n' };
+
+      beforeEach(() => actions.resetPage = spy(() => resetPageAction));
+
+      it('should return a bulk action', () => {
+        const batchAction = actions.updateSearch({});
+
+        expect(batchAction).to.eql([resetPageAction]);
+      });
+
+      it('should return a bulk action with UPDATE_QUERY', () => {
         const query = 'q';
         const updateQuery = actions.updateQuery = spy(() => ACTION);
 
-        const actualActions = actions.updateSearch({ query });
+        const batchAction = actions.updateSearch({ query });
 
-        expect(actualActions).to.eql([ACTION]);
+        expect(batchAction).to.eql([resetPageAction, ACTION]);
         expect(updateQuery).to.be.calledWithExactly(query);
       });
 
-      it('should return an action with validation if search contains clear', () => {
+      it('should return a bulk action with RESET_REFINEMENTS', () => {
         const clear = 'q';
         const resetRefinements = actions.resetRefinements = spy(() => ACTION);
 
-        const actualActions = actions.updateSearch({ clear });
+        const batchAction = actions.updateSearch({ clear });
 
-        expect(actualActions).to.eql([ACTION]);
+        expect(batchAction).to.eql([resetPageAction, ACTION]);
         expect(resetRefinements).to.be.calledWithExactly(clear);
       });
 
@@ -189,34 +199,60 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
     describe('updateQuery()', () => {
       it('should return an action', () => {
         const query = 'rambo';
+        stub(Selectors, 'query').returns('blueberry');
 
-        expectAction(() => actions.updateQuery(query), Actions.UPDATE_QUERY, query);
+        expectAction(() => actions.updateQuery(query), Actions.UPDATE_QUERY, query,
+          (meta) => {
+            expect(meta.validator.payload[0].func(query)).to.be.true;
+            return expect(meta.validator.payload[1].func(query)).to.be.true;
+          });
+      });
+
+      it('should not return an action when query is invalid', () => {
+        const query = '';
+
+        expectAction(() => actions.updateQuery(query), Actions.UPDATE_QUERY, query,
+          (meta) => expect(meta.validator.payload[0].func(query)).to.be.false);
+      });
+
+      it('should not return an action when query will not change', () => {
+        const query = 'umbrella';
+        stub(Selectors, 'query').returns(query);
+
+        expectAction(() => actions.updateQuery(query), Actions.UPDATE_QUERY, query,
+          (meta) => expect(meta.validator.payload[1].func(query)).to.be.false);
       });
     });
 
     describe('resetRefinements()', () => {
       it('should return an action', () => {
-        const field = 'rambo';
+        const field = 'brand';
 
-        expectAction(() => actions.resetRefinements(field), Actions.RESET_REFINEMENTS, field, (meta) => {
-          return expect(meta.validator.payload.func()).to.be.true;
-        });
+        expectAction(() => actions.resetRefinements(field), Actions.RESET_REFINEMENTS, field,
+          (meta) => expect(meta.validator.payload.func()).to.be.true);
       });
 
       it('should not return an action', () => {
         const field = false;
 
-        expectAction(() => actions.resetRefinements(field), Actions.RESET_REFINEMENTS, field, (meta) => {
-          return expect(meta.validator.payload.func()).to.be.false;
-        });
+        expectAction(() => actions.resetRefinements(field), Actions.RESET_REFINEMENTS, field,
+          (meta) => expect(meta.validator.payload.func()).to.be.false);
       });
     });
 
     describe('resetPage()', () => {
-      it ('should return an action', () => {
-        expectAction(() => actions.resetPage(), Actions.RESET_PAGE, undefined, (meta) => {
-          return expect(meta.validator.payload.func()).to.be.true;
-        });
+      it('should return an action', () => {
+        stub(Selectors, 'page').returns(8);
+
+        expectAction(() => actions.resetPage(), Actions.RESET_PAGE, undefined,
+          (meta) => expect(meta.validator.payload.func()).to.be.true);
+      });
+
+      it('should not return an action', () => {
+        stub(Selectors, 'page').returns(1);
+
+        expectAction(() => actions.resetPage(), Actions.RESET_PAGE, undefined,
+          (meta) => expect(meta.validator.payload.func()).to.be.false);
       });
     });
 
