@@ -4,6 +4,7 @@ import Actions from './actions';
 import SearchAdapter from './adapters/search';
 import Selectors from './selectors';
 import Store from './store';
+import * as validators from './validators';
 import { action, handleError, refinementPayload } from './utils';
 
 export function createActions(flux: FluxCapacitor) {
@@ -81,9 +82,9 @@ export function createActions(flux: FluxCapacitor) {
         action(Actions.ADD_REFINEMENT, refinementPayload(field, valueOrLow, high), {
           ...metadata,
           validator: {
-            payload: [{
-            //  func: (_, state) => field &&
-            }]
+            navigationId: validators.isString,
+            payload: [
+            ]
           }
         }),
 
