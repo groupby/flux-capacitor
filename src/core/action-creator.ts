@@ -52,25 +52,24 @@ export function createActions(flux: FluxCapacitor) {
         }
         // updateSearch: (search: Actions.Payload.Search): Actions.UpdateSearch => {
         // action(Actions.UPDATE_SEARCH,
-        //   'query' in search ? { ...search, query: search.query && search.query.trim() } : search,
-        //   {
-        //     ...metadata,
-        //     validator: {
-        //       payload: [{
-        //         func: ({ query }) => !('query' in search) || !!query || query === null,
-        //         msg: 'search term is empty'
-        //       }, {
-        //         func: ({ query }, state) => query !== Selectors.query(state) || query === null,
-        //         msg: 'search term is not different'
-        //       }]
-        //     }
-        //   })
+        //   'query' in search ? { ...search, query: search.query && search.query.trim() } : search)
         //
         return searchActions;
       },
 
       updateQuery: (query: string): Actions.UpdateQuery =>
-        action(Actions.UPDATE_QUERY, query, metadata),
+        action(Actions.UPDATE_QUERY, query && query.trim(), {
+          ...metadata,
+          validator: {
+            payload: [{
+              func: (_query) => !!_query || _query === null,
+              msg: 'search term is empty'
+            }, {
+              func: (_query, state) => _query !== Selectors.query(state),
+              msg: 'search term is not different'
+            }]
+          }
+        }),
 
       addRefinement: (field: string, valueOrLow: any, high: any = null) =>
         actions.updateSearch(refinementPayload(field, valueOrLow, high)),
