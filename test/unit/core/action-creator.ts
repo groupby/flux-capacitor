@@ -285,31 +285,25 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
     describe('addRefinement()', () => {
       const navigationId = 'book';
+      const refinement = { c: 'd' };
 
-      it('should add a value refinement', () => {
-        const action = { a: 'b' };
-        const refinement = { c: 'd' };
+      it('should return an action with value refinement', () => {
         const value = 'a';
-        const updateSearch = stub(actions, 'updateSearch').returns(action);
         const refinementPayload = stub(utils, 'refinementPayload').returns(refinement);
 
-        const result = actions.addRefinement(navigationId, value);
-
-        expect(result).to.be.eq(action);
-        expect(updateSearch).to.be.calledWithExactly(refinement);
+        expectAction(() => actions.addRefinement(navigationId, value), Actions.ADD_REFINEMENT, refinement);
         expect(refinementPayload).to.be.calledWithExactly(navigationId, value, null);
       });
 
-      it('should add a range refinement', () => {
-        const low = 20;
-        const high = 57;
-        const refinementPayload = stub(utils, 'refinementPayload');
-        stub(actions, 'updateSearch');
+      it('should return an action with range refinement', () => {
+        const low = 2;
+        const high = 4;
+        const refinementPayload = stub(utils, 'refinementPayload').returns(refinement);
 
-        actions.addRefinement(navigationId, low, high);
-
+        expectAction(() => actions.addRefinement(navigationId, low, high), Actions.ADD_REFINEMENT, refinement);
         expect(refinementPayload).to.be.calledWithExactly(navigationId, low, high);
       });
+
     });
 
     describe('switchRefinement()', () => {

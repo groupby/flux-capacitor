@@ -41,7 +41,7 @@ export function createActions(flux: FluxCapacitor) {
         action(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, null, metadata),
 
       // request action creators
-      updateSearch: (search: Actions.Payload.Search) => {
+      updateSearch: (search: Actions.Payload.Search): any => {
         const searchActions: any[] = [actions.resetPage()];
 
         if ('query' in search) {
@@ -78,7 +78,14 @@ export function createActions(flux: FluxCapacitor) {
         }),
 
       addRefinement: (field: string, valueOrLow: any, high: any = null): Actions.AddRefinement =>
-        action(Actions.ADD_REFINEMENT, refinementPayload(field, valueOrLow, high), metadata),
+        action(Actions.ADD_REFINEMENT, refinementPayload(field, valueOrLow, high), {
+          ...metadata,
+          validator: {
+            payload: [{
+            //  func: (_, state) => field &&
+            }]
+          }
+        }),
 
       switchRefinement: (field: string, valueOrLow: any, high: any = null) =>
         actions.updateSearch({ ...refinementPayload(field, valueOrLow, high), clear: field }),
