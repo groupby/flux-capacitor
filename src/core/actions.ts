@@ -27,6 +27,7 @@ namespace Actions {
     (dispatch: Dispatch<T>, getState?: () => Store.State);
   }
 
+  // update actions
   export const UPDATE_AUTOCOMPLETE_QUERY = 'UPDATE_AUTOCOMPLETE_QUERY';
   export type UpdateAutocompleteQuery = Action<typeof UPDATE_AUTOCOMPLETE_QUERY, string>;
   export const UPDATE_DETAILS = 'UPDATE_DETAILS';
@@ -45,6 +46,10 @@ namespace Actions {
   export type UpdatePageSize = Action<typeof UPDATE_PAGE_SIZE, number>;
   export const UPDATE_CURRENT_PAGE = 'UPDATE_CURRENT_PAGE';
   export type UpdateCurrentPage = Action<typeof UPDATE_CURRENT_PAGE, number>;
+  export const UPDATE_QUERY = 'UPDATE_QUERY';
+  export type UpdateQuery = Action<typeof UPDATE_QUERY, string>;
+  export const RESET_REFINEMENTS = 'RESET_REFINEMENTS';
+  export type ResetRefinements = Action<typeof RESET_REFINEMENTS, string>
 
   // fetch actions
   export const FETCH_MORE_REFINEMENTS = 'FETCH_MORE_REFINEMENTS';

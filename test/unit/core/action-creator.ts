@@ -121,60 +121,66 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
   describe('request action creators', () => {
     describe('updateSearch()', () => {
       it('should return an action with validation if search contains query', () => {
-        const search: any = { a: 'b', query: 'q' };
+        const query = 'q';
+        const updateQuery = actions.updateQuery = spy(() => ACTION);
 
-        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
-          (meta) => {
-            expect(meta.validator.payload[0].func({})).to.be.false;
-            expect(meta.validator.payload[0].func({ query: '' })).to.be.false;
-            expect(meta.validator.payload[0].func({ query: undefined })).to.be.false;
-            return expect(meta.validator.payload[0].func({ query: null })).to.be.true;
-          });
+        const actualActions = actions.updateSearch({ query });
+
+        expect(actualActions).to.eql([ACTION]);
+        expect(updateQuery).to.be.calledWithExactly(query);
       });
 
-      it('should return an action with validation if search does not contain query', () => {
-        const search: any = { a: 'b' };
+      // it('should return an action with validation if search does not contain query', () => {
+      //   const search: any = { a: 'b' };
+      //
+      //   expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+      //     (meta) => {
+      //       expect(meta.validator.payload[0].func({})).to.be.true;
+      //       return expect(meta.validator.payload[0].func({ query: 'q' })).to.be.true;
+      //     });
+      // });
+      //
+      // it('should return an action with validation if search term is not different', () => {
+      //   const query = 'book';
+      //   const search: any = { a: 'b' };
+      //   const state = { a: 'b' };
+      //   stub(Selectors, 'query').withArgs(state).returns(query);
+      //
+      //   expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+      //     (meta) => expect(meta.validator.payload[1].func({ query }, state)).to.be.false);
+      // });
+      //
+      // it('should return an action with validation if search term is different', () => {
+      //   const search: any = { a: 'b' };
+      //   const state = { a: 'b' };
+      //   stub(Selectors, 'query').withArgs(state).returns('book');
+      //
+      //   expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+      //     (meta) => expect(meta.validator.payload[1].func({ query: 'boot' }, state)).to.be.true);
+      // });
+      //
+      // it('should return an action with validation if search term is null', () => {
+      //   const query = null;
+      //   const search: any = { a: 'b' };
+      //   const state = { a: 'b' };
+      //   stub(Selectors, 'query').withArgs(state).returns(query);
+      //
+      //   expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+      //     (meta) => expect(meta.validator.payload[1].func({ query }, state)).to.be.true);
+      // });
+      //
+      // it('should trim query', () => {
+      //   const search: any = { query: '  untrimmed \n \r  ' };
+      //
+      //   expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, { query: 'untrimmed' });
+      // });
+    });
 
-        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
-          (meta) => {
-            expect(meta.validator.payload[0].func({})).to.be.true;
-            return expect(meta.validator.payload[0].func({ query: 'q' })).to.be.true;
-          });
-      });
+    describe('updateQuery()', () => {
+      it('should return an action', () => {
+        const query = 'rambo';
 
-      it('should return an action with validation if search term is not different', () => {
-        const query = 'book';
-        const search: any = { a: 'b' };
-        const state = { a: 'b' };
-        stub(Selectors, 'query').withArgs(state).returns(query);
-
-        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
-          (meta) => expect(meta.validator.payload[1].func({ query }, state)).to.be.false);
-      });
-
-      it('should return an action with validation if search term is different', () => {
-        const search: any = { a: 'b' };
-        const state = { a: 'b' };
-        stub(Selectors, 'query').withArgs(state).returns('book');
-
-        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
-          (meta) => expect(meta.validator.payload[1].func({ query: 'boot' }, state)).to.be.true);
-      });
-
-      it('should return an action with validation if search term is null', () => {
-        const query = null;
-        const search: any = { a: 'b' };
-        const state = { a: 'b' };
-        stub(Selectors, 'query').withArgs(state).returns(query);
-
-        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
-          (meta) => expect(meta.validator.payload[1].func({ query }, state)).to.be.true);
-      });
-
-      it('should trim query', () => {
-        const search: any = { query: '  untrimmed \n \r  ' };
-
-        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, { query: 'untrimmed' });
+        expectAction(() => actions.updateQuery(query), Actions.UPDATE_QUERY, query);
       });
     });
 
