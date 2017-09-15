@@ -150,6 +150,17 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         expect(resetRefinements).to.be.calledWithExactly(clear);
       });
 
+      it('should return a bulk action with SELECT_REFINEMENT', () => {
+        const navigationId = 'color';
+        const index = 4;
+        const selectRefinement = actions.selectRefinement = spy(() => ACTION);
+
+        const batchAction = actions.updateSearch({ navigationId, index });
+
+        expect(batchAction).to.eql([resetPageAction, ACTION]);
+        expect(selectRefinement).to.be.calledWithExactly(navigationId, index);
+      });
+
       // it('should return an action with validation if search does not contain query', () => {
       //   const search: any = { a: 'b' };
       //
@@ -229,14 +240,30 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const field = 'brand';
 
         expectAction(() => actions.resetRefinements(field), Actions.RESET_REFINEMENTS, field,
-          (meta) => expect(meta.validator.payload.func()).to.be.true);
+          (meta) => expect(meta.validator.payload[0].func()).to.be.true);
       });
 
-      it('should not return an action', () => {
+      it('should not return an action when field is invalid', () => {
         const field = false;
 
         expectAction(() => actions.resetRefinements(field), Actions.RESET_REFINEMENTS, field,
-          (meta) => expect(meta.validator.payload.func()).to.be.false);
+          (meta) => expect(meta.validator.payload[0].func()).to.be.false);
+      });
+
+      it('should not return an action when no refinements selected', () => {
+        stub(Selectors, 'selectedRefinements').returns([]);
+
+        expectAction(() => actions.resetRefinements(), Actions.RESET_REFINEMENTS, undefined,
+          (meta) => expect(meta.validator.payload[1].func()).to.be.false);
+      });
+
+      it('should not return an action when no refinements selected for field', () => {
+        const field = 'brand';
+        stub(Selectors, 'selectedRefinements').returns([{}]);
+        stub(Selectors, 'navigation').returns({ selected: [] });
+
+        expectAction(() => actions.resetRefinements(field), Actions.RESET_REFINEMENTS, field,
+          (meta) => expect(meta.validator.payload[2].func()).to.be.false);
       });
     });
 
