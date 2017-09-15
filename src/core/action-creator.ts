@@ -4,8 +4,8 @@ import Actions from './actions';
 import SearchAdapter from './adapters/search';
 import Selectors from './selectors';
 import Store from './store';
-import * as validators from './validators';
 import { action, handleError, refinementPayload } from './utils';
+import * as validators from './validators';
 
 export function createActions(flux: FluxCapacitor) {
 
@@ -83,8 +83,24 @@ export function createActions(flux: FluxCapacitor) {
           ...metadata,
           validator: {
             navigationId: validators.isString,
-            payload: [
-            ]
+            payload: [{
+              func: ({ range }) => !range || (typeof valueOrLow === 'number' && typeof high === 'number'),
+              msg: 'low and high values must be numeric'
+            }, {
+              func: ({ range }) => !range || valueOrLow < high,
+              msg: 'low value must be lower than high'
+            }, {
+              func: ({ range }) => !!range || validators.isString.func(valueOrLow),
+              msg: `value ${validators.isString.msg}`
+            }, {
+              func: (payload, state) => {
+                const navigation = Selectors.navigation(state, field);
+                // tslint:disable-next-line max-line-length
+                return !navigation || !navigation.selected
+                  .find((index) => SearchAdapter.refinementsMatch(payload, <any>navigation.refinements[index], navigation.range ? 'Range' : 'Value'));
+              },
+              msg: 'refinement is already selected'
+            }]
           }
         }),
 
