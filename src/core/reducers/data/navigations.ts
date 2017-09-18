@@ -2,7 +2,7 @@ import Actions from '../../actions';
 import Adapter from '../../adapters/search';
 import Store from '../../store';
 
-export type Action = Actions.UpdateSearch
+export type Action = Actions.ResetRefinements
   | Actions.ReceiveNavigations
   | Actions.SelectRefinement
   | Actions.DeselectRefinement
@@ -16,7 +16,8 @@ export const DEFAULTS: State = {
 
 export default function updateNavigations(state: State = DEFAULTS, action: Action) {
   switch (action.type) {
-    case Actions.UPDATE_SEARCH: return updateSearch(state, action.payload);
+    case Actions.RESET_REFINEMENTS: return resetRefinements(state,action.payload);
+    // case Actions.UPDATE_SEARCH: return updateSearch(state, action.payload);
     case Actions.RECEIVE_NAVIGATIONS: return receiveNavigations(state, action.payload);
     case Actions.SELECT_REFINEMENT: return selectRefinement(state, action.payload);
     case Actions.DESELECT_REFINEMENT: return deselectRefinement(state, action.payload);
@@ -26,26 +27,26 @@ export default function updateNavigations(state: State = DEFAULTS, action: Actio
 }
 
 export const updateSearch = (state: State, payload: Actions.Payload.Search) => {
-  if (payload.clear in state.byId) {
-    const navigationId = <string>payload.clear;
+  // if (payload.clear in state.byId) {
+  //   const navigationId = <string>payload.clear;
 
-    state = {
-      ...state,
-      byId: {
-        ...state.byId,
-        [navigationId]: {
-          ...state.byId[navigationId],
-          selected: []
-        }
-      }
-    };
-  } else if (payload.clear) {
-    state = {
-      ...state,
-      byId: state.allIds.reduce((navs, nav) =>
-        Object.assign(navs, { [nav]: { ...state.byId[nav], selected: [] } }), {})
-    };
-  }
+  //   state = {
+  //     ...state,
+  //     byId: {
+  //       ...state.byId,
+  //       [navigationId]: {
+  //         ...state.byId[navigationId],
+  //         selected: []
+  //       }
+  //     }
+  //   };
+  // } else if (payload.clear) {
+  //   state = {
+  //     ...state,
+  //     byId: state.allIds.reduce((navs, nav) =>
+  //       Object.assign(navs, { [nav]: { ...state.byId[nav], selected: [] } }), {})
+  //   };
+  // }
 
   if ('navigationId' in payload) {
     if ('index' in payload) {
@@ -55,6 +56,27 @@ export const updateSearch = (state: State, payload: Actions.Payload.Search) => {
     }
   } else {
     return state;
+  }
+};
+
+export const resetRefinements = (state: State, navigationId: boolean | string) => {
+  if (typeof navigationId === 'boolean') {
+    return {
+      ...state,
+      byId: state.allIds.reduce((navs, nav) =>
+        Object.assign(navs, { [nav]: { ...state.byId[nav], selected: [] } }), {})
+    };
+  } else {
+    return {
+      ...state,
+      byId: {
+        ...state.byId,
+        [navigationId]: {
+          ...state.byId[navigationId],
+          selected: []
+        }
+      }
+    };
   }
 };
 
