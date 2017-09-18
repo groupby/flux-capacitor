@@ -55,6 +55,21 @@ namespace Actions {
   export const ADD_REFINEMENT = 'ADD_REFINEMENT';
   export type AddRefinement = Action<typeof ADD_REFINEMENT, Actions.Payload.Navigation.AddRefinement>;
 
+  // batch actions
+  // tslint:disable-next-line max-line-length
+  export type SwitchRefinement = [Actions.ResetPage, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.AddRefinement];
+  export type Search = [Actions.ResetPage, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.AddRefinement];
+  // tslint:disable-next-line max-line-length
+  export type ResetRecall = [Actions.ResetPage, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.UpdateQuery] |
+    [Actions.ResetPage, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.UpdateQuery, Actions.ResetPage, Actions.SelectRefinement];
+    // tslint:disable-next-line max-line-length
+  // export type UpdateSearch = Array<Actions.ResetPage | Actions.UpdateQuery | Actions.ResetRefinements | Actions.SelectRefinement | Actions.AddRefinement>;
+  export type ResetPageAndResetRefinements = [Actions.ResetPage, Actions.ResetRefinements];
+  export type ResetPageAndSelectRefinement = [Actions.ResetPage, Actions.SelectRefinement];
+  export type ResetPageAndDeselectRefinement = [Actions.ResetPage, Actions.DeselectRefinement];
+  export type ResetPageAndAddRefinement = [Actions.ResetPage, Actions.AddRefinement];
+  export type ResetPageAndUpdateQuery = [Actions.ResetPage, Actions.UpdateQuery];
+
   // fetch actions
   export const FETCH_MORE_REFINEMENTS = 'FETCH_MORE_REFINEMENTS';
   export type FetchMoreRefinements = Action<typeof FETCH_MORE_REFINEMENTS, string>;
