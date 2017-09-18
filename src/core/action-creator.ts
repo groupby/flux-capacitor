@@ -42,29 +42,30 @@ export function createActions(flux: FluxCapacitor) {
         action(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, null, metadata),
 
       // request action creators
-      updateSearch: (search: Actions.Payload.Search): any => {
-        const searchActions: any[] = [actions.resetPage()];
+      updateSearch: (search: Actions.Payload.Search): Actions.UpdateSearch => {
+        const searchActions: any = [actions.resetPage()];
 
         if ('query' in search) {
-          searchActions.push(actions.updateQuery(search.query));
+          searchActions.push(...actions.updateQuery(search.query));
         }
         if ('clear' in search) {
-          searchActions.push(actions.resetRefinements(search.clear));
+          searchActions.push(...actions.resetRefinements(search.clear));
         }
         if ('navigationId' in search) {
           if ('index' in search) {
-            searchActions.push(actions.selectRefinement(search.navigationId, search.index));
+            searchActions.push(...actions.selectRefinement(search.navigationId, search.index));
           } else if (search.range) {
-            searchActions.push(actions.addRefinement(search.navigationId, search.low, search.high));
+            searchActions.push(...actions.addRefinement(search.navigationId, search.low, search.high));
           } else if ('value' in search) {
-            searchActions.push(actions.addRefinement(search.navigationId, search.value));
+            searchActions.push(...actions.addRefinement(search.navigationId, search.value));
           }
         }
 
         return searchActions;
       },
 
-      updateQuery: (query: string): Actions.UpdateQuery =>
+      updateQuery: (query: string): Actions.ResetPageAndUpdateQuery => [
+        actions.resetPage(),
         action(Actions.UPDATE_QUERY, query && query.trim(), {
           ...metadata,
           validator: {
@@ -76,9 +77,11 @@ export function createActions(flux: FluxCapacitor) {
               msg: 'search term is not different'
             }]
           }
-        }),
+        })
+      ],
 
-      addRefinement: (field: string, valueOrLow: any, high: any = null): Actions.AddRefinement =>
+      addRefinement: (field: string, valueOrLow: any, high: any = null): Actions.ResetPageAndAddRefinement => [
+        actions.resetPage(),
         action(Actions.ADD_REFINEMENT, refinementPayload(field, valueOrLow, high), {
           ...metadata,
           validator: {
@@ -102,15 +105,17 @@ export function createActions(flux: FluxCapacitor) {
               msg: 'refinement is already selected'
             }]
           }
-        }),
-
-      switchRefinement: (field: string, valueOrLow: any, high: any = null) => [
-        actions.resetPage(),
-        actions.resetRefinements(field),
-        actions.addRefinement(field, valueOrLow, high)
+        })
       ],
 
-      resetRefinements: (field?: boolean | string): Actions.ResetRefinements =>
+      switchRefinement: (field: string, valueOrLow: any, high: any = null): Actions.SwitchRefinement => <any>[
+        actions.resetPage(),
+        ...actions.resetRefinements(field),
+        ...actions.addRefinement(field, valueOrLow, high)
+      ],
+
+      resetRefinements: (field?: boolean | string): Actions.ResetPageAndResetRefinements => [
+        actions.resetPage(),
         action(Actions.RESET_REFINEMENTS, field, {
           ...metadata,
           validator: {
@@ -125,7 +130,8 @@ export function createActions(flux: FluxCapacitor) {
               msg: `no refinements to clear for field "${field}"`
             }]
           }
-        }),
+        })
+      ],
 
       resetPage: (): Actions.ResetPage =>
         action(Actions.RESET_PAGE, undefined, {
@@ -138,28 +144,28 @@ export function createActions(flux: FluxCapacitor) {
           }
         }),
 
-      search: (query: string = Selectors.query(flux.store.getState())) => [
+      search: (query: string = Selectors.query(flux.store.getState())): Actions.Search => <any>[
         actions.resetPage(),
-        actions.resetRefinements(true),
-        actions.updateQuery(query)
+        ...actions.resetRefinements(true),
+        ...actions.updateQuery(query)
       ],
-      // actions.updateSearch({ query, clear: true }),
+
       // tslint:disable-next-line max-line-length
-      resetRecall: (query: string = null, { field: navigationId, index }: { field: string, index: number } = <any>{}) => {
-        const resetActions: any[] = [
+      resetRecall: (query: string = null, { field, index }: { field: string, index: number } = <any>{}): Actions.ResetRecall => {
+        const resetActions: any = [
           actions.resetPage(),
-          actions.resetRefinements(true),
-          actions.updateQuery(query)
+          ...actions.resetRefinements(true),
+          ...actions.updateQuery(query)
         ];
-        if (navigationId) {
-          resetActions.push(actions.selectRefinement(navigationId, index));
+        if (field) {
+          resetActions.push(...actions.selectRefinement(field, index));
         }
 
         return resetActions;
       },
-        // actions.updateSearch({ query, navigationId, index, clear: true }),
 
-      selectRefinement: (navigationId: string, index: number): Actions.SelectRefinement =>
+      selectRefinement: (navigationId: string, index: number): Actions.ResetPageAndSelectRefinement => [
+        actions.resetPage(),
         action(Actions.SELECT_REFINEMENT, { navigationId, index }, {
           ...metadata,
           validator: {
@@ -168,9 +174,10 @@ export function createActions(flux: FluxCapacitor) {
               msg: 'navigation does not exist or refinement is already selected'
             }
           }
-        }),
+        })],
 
-      deselectRefinement: (navigationId: string, index: number): Actions.DeselectRefinement =>
+      deselectRefinement: (navigationId: string, index: number): Actions.ResetPageAndDeselectRefinement => [
+        actions.resetPage(),
         action(Actions.DESELECT_REFINEMENT, { navigationId, index }, {
           ...metadata,
           validator: {
@@ -179,7 +186,7 @@ export function createActions(flux: FluxCapacitor) {
               msg: 'navigation does not exist or refinement is not selected'
             }
           }
-        }),
+        })],
 
       selectCollection: (id: string): Actions.SelectCollection =>
         action(Actions.SELECT_COLLECTION, id, {
