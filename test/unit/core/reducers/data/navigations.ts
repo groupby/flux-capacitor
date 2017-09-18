@@ -38,7 +38,7 @@ suite('navigations', ({ expect }) => {
   };
 
   describe('updateNavigations()', () => {
-    it('should clear selected refinements state on UPDATE_SEARCH', () => {
+    it('should clear selected refinements state on RESET_REFINEMENTS', () => {
       const newState = {
         allIds,
         byId: {
@@ -53,46 +53,46 @@ suite('navigations', ({ expect }) => {
         },
       };
 
-      const reducer = navigations(state, { type: Actions.UPDATE_SEARCH, payload: { clear: true } });
+      const reducer = navigations(state, { type: Actions.RESET_REFINEMENTS, payload: true });
 
       expect(reducer).to.eql(newState);
     });
 
-    it('should clear and add selected refinement state on UPDATE_SEARCH', () => {
-      const newState = {
-        allIds,
-        byId: {
-          Format: {
-            ...Format,
-            selected: [0],
-          },
-          Section: {
-            ...Section,
-            selected: [],
-          },
-        },
-      };
+    // it('should clear and add selected refinement state on UPDATE_SEARCH', () => {
+    //   const newState = {
+    //     allIds,
+    //     byId: {
+    //       Format: {
+    //         ...Format,
+    //         selected: [0],
+    //       },
+    //       Section: {
+    //         ...Section,
+    //         selected: [],
+    //       },
+    //     },
+    //   };
 
-      const reducer = navigations(state, {
-        type: Actions.UPDATE_SEARCH,
-        payload: {
-          clear: true,
-          navigationId: 'Format',
-          index: 0,
-        }
-      });
+    //   const reducer = navigations(state, {
+    //     type: Actions.UPDATE_SEARCH,
+    //     payload: {
+    //       clear: true,
+    //       navigationId: 'Format',
+    //       index: 0,
+    //     }
+    //   });
 
-      expect(reducer).to.eql(newState);
-    });
+    //   expect(reducer).to.eql(newState);
+    // });
 
-    it('should return state if not clear on UPDATE_SEARCH', () => {
-      const reducer = navigations(state, {
-        type: Actions.UPDATE_SEARCH,
-        payload: { clear: false }
-      });
+    // it('should return state if not clear on UPDATE_SEARCH', () => {
+    //   const reducer = navigations(state, {
+    //     type: Actions.UPDATE_SEARCH,
+    //     payload: { clear: false }
+    //   });
 
-      expect(reducer).to.eql(state);
-    });
+    //   expect(reducer).to.eql(state);
+    // });
 
     it('should update navigations state on RECEIVE_NAVIGATIONS', () => {
       const newNavs = [
@@ -290,7 +290,7 @@ suite('navigations', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
-    it('should only clear specified navigation on UPDATE_SEARCH', () => {
+    it('should only clear specified navigation on RESET_REFINEMENTS', () => {
       const newState = {
         allIds,
         byId: {
@@ -303,10 +303,8 @@ suite('navigations', ({ expect }) => {
       };
 
       const reducer = navigations(state, {
-        type: Actions.UPDATE_SEARCH,
-        payload: {
-          clear: 'Format'
-        }
+        type: Actions.RESET_REFINEMENTS,
+        payload: 'Format'
       });
 
       expect(reducer).to.eql(newState);
@@ -336,16 +334,16 @@ suite('navigations', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
-    it('should return state on UPDATE_SEARCH if no navigationId and payload clear is falsy', () => {
-      const reducer = navigations(state, {
-        type: Actions.UPDATE_SEARCH,
-        payload: {}
-      });
+    // it('should return state on UPDATE_SEARCH if no navigationId and payload clear is falsy', () => {
+    //   const reducer = navigations(state, {
+    //     type: Actions.UPDATE_SEARCH,
+    //     payload: {}
+    //   });
 
-      expect(reducer).to.eql(state);
-    });
+    //   expect(reducer).to.eql(state);
+    // });
 
-    it('should return state on UPDATE_SEARCH if no navigationId and payload clear is truth', () => {
+    it('should return state on RESET_REFINEMENTS if no navigationId and payload clear is truth', () => {
       const newState = {
         allIds,
         byId: {
@@ -361,8 +359,8 @@ suite('navigations', ({ expect }) => {
       };
 
       const reducer = navigations(state, {
-        type: Actions.UPDATE_SEARCH,
-        payload: { clear: true }
+        type: Actions.RESET_REFINEMENTS,
+        payload: true
       });
 
       expect(reducer).to.eql(newState);

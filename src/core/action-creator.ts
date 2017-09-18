@@ -143,7 +143,6 @@ export function createActions(flux: FluxCapacitor) {
         actions.resetRefinements(true),
         actions.updateQuery(query)
       ],
-      // actions.updateSearch({ query, clear: true }),
       // tslint:disable-next-line max-line-length
       resetRecall: (query: string = null, { field: navigationId, index }: { field: string, index: number } = <any>{}) => {
         const resetActions: any[] = [
@@ -157,7 +156,6 @@ export function createActions(flux: FluxCapacitor) {
 
         return resetActions;
       },
-        // actions.updateSearch({ query, navigationId, index, clear: true }),
 
       selectRefinement: (navigationId: string, index: number): Actions.SelectRefinement =>
         action(Actions.SELECT_REFINEMENT, { navigationId, index }, {
