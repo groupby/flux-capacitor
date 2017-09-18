@@ -408,15 +408,23 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
       it('should clear the refinements and add a value refinement', () => {
         const value = 'a';
-        const action = { a: 'b' };
-        const updateSearch = stub(actions, 'updateSearch').returns(action);
-        const refinementPayload = stub(utils, 'refinementPayload').returns({ c: 'd' });
+        const resetRefinementsReturn = 'reset';
+        const addRefinementReturn = 'add';
+        const resetPageReturn = 'page';
+
+        const resetRefinements = stub(actions, 'resetRefinements').returns(resetRefinementsReturn);
+        const addRefinement = stub(actions, 'addRefinement').returns(addRefinementReturn);
+        stub(actions, 'resetPage').returns(resetPageReturn);
 
         const result = actions.switchRefinement(navigationId, value);
 
-        expect(result).to.be.eq(action);
-        expect(updateSearch).to.be.calledWithExactly({ c: 'd', clear: navigationId });
-        expect(refinementPayload).to.be.calledWithExactly(navigationId, value, null);
+        expect(result).to.be.eql([
+          resetPageReturn,
+          resetRefinementsReturn,
+          addRefinementReturn
+        ]);
+        expect(resetRefinements).to.be.calledWithExactly(navigationId);
+        expect(addRefinement).to.be.calledWithExactly(navigationId, value, null);
       });
 
       it('should clear the refinements and add a range refinement', () => {
@@ -434,24 +442,48 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
     describe('search()', () => {
       it('should call actions.updateSearch()', () => {
         const query = 'pineapple';
-        const updateSearch = actions.updateSearch = spy();
 
-        actions.search(query);
+        const resetRefinementsReturn = 'reset';
+        const updateReturn = 'update';
+        const resetPageReturn = 'page';
 
-        expect(updateSearch).to.be.calledWithExactly({ query, clear: true });
+        const resetRefinements = stub(actions, 'resetRefinements').returns(resetRefinementsReturn);
+        const updateQuery = stub(actions, 'updateQuery').returns(updateReturn);
+        stub(actions, 'resetPage').returns(resetPageReturn);
+
+        const result = actions.search(query);
+
+        expect(result).to.be.eql([
+          resetPageReturn,
+          resetRefinementsReturn,
+          updateReturn,
+        ]);
+        expect(resetRefinements).to.be.calledWithExactly(true);
+        expect(updateQuery).to.be.calledWithExactly(query);
       });
 
       it('should fall back to current query', () => {
         const query = 'pineapple';
-        const state = { a: 'b' };
-        const updateSearch = actions.updateSearch = spy();
-        const selectQuery = stub(Selectors, 'query').returns(query);
-        flux.store = { getState: () => state };
 
-        actions.search();
+        const resetRefinementsReturn = 'reset';
+        const updateReturn = 'update';
+        const resetPageReturn = 'page';
 
-        expect(updateSearch).to.be.calledWithExactly({ query, clear: true });
-        expect(selectQuery).to.be.calledWithExactly(state);
+        const resetRefinements = stub(actions, 'resetRefinements').returns(resetRefinementsReturn);
+        const updateQuery = stub(actions, 'updateQuery').returns(updateReturn);
+        const queryStub = stub(Selectors, 'query').returns(query);
+        stub(actions, 'resetPage').returns(resetPageReturn);
+        flux.store = { getState: () => null };
+
+        const result = actions.search();
+
+        expect(result).to.be.eql([
+          resetPageReturn,
+          resetRefinementsReturn,
+          updateReturn,
+        ]);
+        expect(resetRefinements).to.be.calledWithExactly(true);
+        expect(updateQuery).to.be.calledWithExactly(query);
       });
     });
 
