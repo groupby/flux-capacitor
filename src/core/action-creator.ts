@@ -99,8 +99,8 @@ export function createActions(flux: FluxCapacitor) {
               func: (payload, state) => {
                 const navigation = Selectors.navigation(state, field);
                 // tslint:disable-next-line max-line-length
-                return !navigation || !navigation.selected
-                  .find((index) => SearchAdapter.refinementsMatch(payload, <any>navigation.refinements[index], navigation.range ? 'Range' : 'Value'));
+                return !navigation || navigation.selected
+                  .findIndex((index) => SearchAdapter.refinementsMatch(payload, <any>navigation.refinements[index], navigation.range ? 'Range' : 'Value')) === -1;
               },
               msg: 'refinement is already selected'
             }]
@@ -126,7 +126,7 @@ export function createActions(flux: FluxCapacitor) {
               func: (_, state) => Selectors.selectedRefinements(state).length !== 0,
               msg: 'no refinements to clear'
             }, {
-              func: (_, state) => typeof field === 'string' && Selectors.navigation(state, field).selected.length !== 0,
+              func: (_, state) => typeof field === 'boolean' || Selectors.navigation(state, field).selected.length !== 0,
               msg: `no refinements to clear for field "${field}"`
             }]
           }
