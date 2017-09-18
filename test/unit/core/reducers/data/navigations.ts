@@ -58,42 +58,6 @@ suite('navigations', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
-    // it('should clear and add selected refinement state on UPDATE_SEARCH', () => {
-    //   const newState = {
-    //     allIds,
-    //     byId: {
-    //       Format: {
-    //         ...Format,
-    //         selected: [0],
-    //       },
-    //       Section: {
-    //         ...Section,
-    //         selected: [],
-    //       },
-    //     },
-    //   };
-
-    //   const reducer = navigations(state, {
-    //     type: Actions.UPDATE_SEARCH,
-    //     payload: {
-    //       clear: true,
-    //       navigationId: 'Format',
-    //       index: 0,
-    //     }
-    //   });
-
-    //   expect(reducer).to.eql(newState);
-    // });
-
-    // it('should return state if not clear on UPDATE_SEARCH', () => {
-    //   const reducer = navigations(state, {
-    //     type: Actions.UPDATE_SEARCH,
-    //     payload: { clear: false }
-    //   });
-
-    //   expect(reducer).to.eql(state);
-    // });
-
     it('should update navigations state on RECEIVE_NAVIGATIONS', () => {
       const newNavs = [
         {
@@ -168,18 +132,12 @@ suite('navigations', ({ expect }) => {
       expect(reducer).to.eql(state);
     });
 
-    it('should add value navigation and refinement on UPDATE_SEARCH', () => {
+    it('should add value refinement on ADD_REFINEMENT', () => {
       const newState = {
         allIds: ['Format', 'Section', 'Brand'],
         byId: {
-          Format: {
-            ...Format,
-            selected: []
-          },
-          Section: {
-            ...Section,
-            selected: []
-          },
+          Format,
+          Section,
           Brand: {
             field: 'Brand',
             label: 'Brand',
@@ -191,7 +149,7 @@ suite('navigations', ({ expect }) => {
       };
 
       const reducer = navigations(state, {
-        type: Actions.UPDATE_SEARCH,
+        type: Actions.ADD_REFINEMENT,
         payload: {
           navigationId: 'Brand',
           range: false,
@@ -203,7 +161,7 @@ suite('navigations', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
-    it('should add range navigation and refinement on UPDATE_SEARCH', () => {
+    it('should add range navigation and refinement on ADD_REFINEMENT', () => {
       const newState = {
         allIds: ['Format', 'Section', 'Brand'],
         byId: {
@@ -220,7 +178,7 @@ suite('navigations', ({ expect }) => {
       };
 
       const reducer = navigations(state, {
-        type: Actions.UPDATE_SEARCH,
+        type: Actions.ADD_REFINEMENT,
         payload: {
           navigationId: 'Brand',
           range: true,
@@ -232,7 +190,7 @@ suite('navigations', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
-    it('should add refinement to existing navigation on UPDATE_SEARCH', () => {
+    it('should add refinement to existing navigation on ADD_REFINEMENT', () => {
       const newState = {
         allIds,
         byId: {
@@ -249,41 +207,10 @@ suite('navigations', ({ expect }) => {
       };
 
       const reducer = navigations(state, {
-        type: Actions.UPDATE_SEARCH,
+        type: Actions.ADD_REFINEMENT,
         payload: {
           navigationId: 'Format',
           value: 'eBook'
-        }
-      });
-
-      expect(reducer).to.eql(newState);
-    });
-
-    it('should add refinement and clear extisting refinements on UPDATE_SEARCH', () => {
-      const newState = {
-        allIds,
-        byId: {
-          Section: {
-            ...Section,
-            selected: []
-          },
-          Format: {
-            ...Format,
-            refinements: [
-              ...Format.refinements,
-              { value: 'eBook' }
-            ],
-            selected: [3]
-          }
-        }
-      };
-
-      const reducer = navigations(state, {
-        type: Actions.UPDATE_SEARCH,
-        payload: {
-          navigationId: 'Format',
-          value: 'eBook',
-          clear: true
         }
       });
 
@@ -310,7 +237,7 @@ suite('navigations', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
-    it('should select existing refinement on UPDATE_SEARCH', () => {
+    it('should select existing refinement on ADD_REFINEMENT', () => {
       const newState = {
         allIds,
         byId: {
@@ -323,7 +250,7 @@ suite('navigations', ({ expect }) => {
       };
 
       const reducer = navigations(state, {
-        type: Actions.UPDATE_SEARCH,
+        type: Actions.ADD_REFINEMENT,
         payload: {
           navigationId: 'Format',
           range: false,
