@@ -104,8 +104,11 @@ export function createActions(flux: FluxCapacitor) {
           }
         }),
 
-      switchRefinement: (field: string, valueOrLow: any, high: any = null) =>
-        actions.updateSearch({ ...refinementPayload(field, valueOrLow, high), clear: field }),
+      switchRefinement: (field: string, valueOrLow: any, high: any = null) => [
+        actions.resetPage(),
+        actions.resetRefinements(field),
+        actions.addRefinement(field, valueOrLow, high)
+      ],
 
       resetRefinements: (field?: boolean | string): Actions.ResetRefinements =>
         action(Actions.RESET_REFINEMENTS, field, {
@@ -135,11 +138,26 @@ export function createActions(flux: FluxCapacitor) {
           }
         }),
 
-      search: (query: string = Selectors.query(flux.store.getState())) =>
-        actions.updateSearch({ query, clear: true }),
+      search: (query: string = Selectors.query(flux.store.getState())) => [
+        actions.resetPage(),
+        actions.resetRefinements(true),
+        actions.updateQuery(query)
+      ],
+      // actions.updateSearch({ query, clear: true }),
+      // tslint:disable-next-line max-line-length
+      resetRecall: (query: string = null, { field: navigationId, index }: { field: string, index: number } = <any>{}) => {
+        const resetActions: any[] = [
+          actions.resetPage(),
+          actions.resetRefinements(true),
+          actions.updateQuery(query)
+        ];
+        if (navigationId) {
+          resetActions.push(actions.selectRefinement(navigationId, index));
+        }
 
-      resetRecall: (query: string = null, { field: navigationId, index }: { field: string, index: number } = <any>{}) =>
-        actions.updateSearch({ query, navigationId, index, clear: true }),
+        return resetActions;
+      },
+        // actions.updateSearch({ query, navigationId, index, clear: true }),
 
       selectRefinement: (navigationId: string, index: number): Actions.SelectRefinement =>
         action(Actions.SELECT_REFINEMENT, { navigationId, index }, {
