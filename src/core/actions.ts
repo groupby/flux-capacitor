@@ -32,6 +32,8 @@ namespace Actions {
   export type UpdateAutocompleteQuery = Action<typeof UPDATE_AUTOCOMPLETE_QUERY, string>;
   export const UPDATE_DETAILS = 'UPDATE_DETAILS';
   export type UpdateDetails = Action<typeof UPDATE_DETAILS, Payload.Details>;
+  export const UPDATE_SEARCH = 'UPDATE_SEARCH';
+  export type UpdateSearch = Action<typeof UPDATE_SEARCH, Payload.Search>;
   export const SELECT_REFINEMENT = 'SELECT_REFINEMENT';
   export type SelectRefinement = Action<typeof SELECT_REFINEMENT, Payload.Navigation.Refinement>;
   export const DESELECT_REFINEMENT = 'DESELECT_REFINEMENT';
@@ -61,7 +63,7 @@ namespace Actions {
   export type ResetRecall = [Actions.ResetPage, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.UpdateQuery] |
     [Actions.ResetPage, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.UpdateQuery, Actions.ResetPage, Actions.SelectRefinement];
     // tslint:disable-next-line max-line-length
-  export type UpdateSearch = Array<Actions.ResetPage | Actions.UpdateQuery | Actions.ResetRefinements | Actions.SelectRefinement | Actions.AddRefinement>;
+  // export type UpdateSearch = Array<Actions.ResetPage | Actions.UpdateQuery | Actions.ResetRefinements | Actions.SelectRefinement | Actions.AddRefinement>;
   export type ResetPageAndResetRefinements = [Actions.ResetPage, Actions.ResetRefinements];
   export type ResetPageAndSelectRefinement = [Actions.ResetPage, Actions.SelectRefinement];
   export type ResetPageAndDeselectRefinement = [Actions.ResetPage, Actions.DeselectRefinement];
