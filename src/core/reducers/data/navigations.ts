@@ -17,7 +17,7 @@ export const DEFAULTS: State = {
 
 export default function updateNavigations(state: State = DEFAULTS, action: Action) {
   switch (action.type) {
-    case Actions.RESET_REFINEMENTS: return resetRefinements(state,action.payload);
+    case Actions.RESET_REFINEMENTS: return resetRefinements(state, action.payload);
     case Actions.RECEIVE_NAVIGATIONS: return receiveNavigations(state, action.payload);
     case Actions.ADD_REFINEMENT: return addRefinement(state, action.payload);
     case Actions.SELECT_REFINEMENT: return selectRefinement(state, action.payload);
@@ -95,37 +95,22 @@ export const deselectRefinement = (state: State, { navigationId, index: refineme
   }
 };
 
-// tslint:disable-next-line max-line-length
-export const addRefinementByIndex = (state: State, { navigationId, index: refinementIndex }: Actions.Payload.Search) => {
-
-  return {
-    ...state,
-    byId: {
-      ...state.byId,
-      [navigationId]: {
-        ...state.byId[navigationId],
-        selected: [refinementIndex],
-      },
-    },
-  };
-};
-
 const generateNavigationId = (state: State, navigationId: string, refinement: any, index: number) => ({
   ...state.byId[navigationId],
   ...(index === -1
-      ? {
-        refinements: [
-          ...state.byId[navigationId].refinements,
-          refinement
-        ],
-        selected: [
-          ...state.byId[navigationId].selected,
-          state.byId[navigationId].refinements.length
-        ]
-      }
-      : {
-        selected: [...state.byId[navigationId].selected, index]
-      })
+    ? {
+      refinements: [
+        ...state.byId[navigationId].refinements,
+        refinement
+      ],
+      selected: [
+        ...state.byId[navigationId].selected,
+        state.byId[navigationId].refinements.length
+      ]
+    }
+    : {
+      selected: [...state.byId[navigationId].selected, index]
+    })
 });
 
 // tslint:disable-next-line max-line-length
