@@ -549,27 +549,14 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       const resetRefinementsAction = { c: 'd' };
       const updateQueryAction = { e: 'f' };
 
-      it('should return bulk action with RESET_PAGE, RESET_REFINEMENTS and UPDATE_QUERY', () => {
-        const resetRefinements = actions.resetRefinements = spy(() => resetRefinementsAction);
-        const updateQuery = actions.updateQuery = spy(() => updateQueryAction);
-        actions.resetPage = (): any => resetPageAction;
+      it('should call search() if field not provided and return result of search()', () => {
+        const ret = ['1'];
+        const search = stub(actions, 'search').returns(ret);
 
         const batchAction = actions.resetRecall();
 
-        expect(batchAction).to.eql([resetPageAction, resetRefinementsAction, updateQueryAction]);
-        expect(resetRefinements).to.be.calledWithExactly(true);
-        expect(updateQuery).to.be.calledWithExactly(null);
-      });
-
-      it('should UPDATE_QUERY from query', () => {
-        const query = 'basketball';
-        const updateQuery = actions.updateQuery = spy();
-        actions.resetRefinements = () => null;
-        actions.resetPage = () => null;
-
-        actions.resetRecall(query);
-
-        expect(updateQuery).to.be.calledWithExactly(query);
+        expect(batchAction).to.eql(ret);
+        expect(search).to.be.calledOnce;
       });
 
       it('should return bulk action with SELECT_REFINEMENT if field and index provided', () => {
@@ -577,9 +564,11 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const index = 8;
         const selectRefinementAction = { g: 'h' };
         const selectRefinement = actions.selectRefinement = spy(() => [selectRefinementAction]);
-        actions.resetRefinements = (): any => [resetRefinementsAction];
-        actions.updateQuery = (): any => [updateQueryAction];
-        actions.resetPage = (): any => resetPageAction;
+        const search = stub(actions, 'search').returns([
+          resetPageAction,
+          resetRefinementsAction,
+          updateQueryAction,
+        ]);
 
         const batchAction = actions.resetRecall('', { field, index });
 

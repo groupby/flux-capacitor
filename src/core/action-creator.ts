@@ -164,9 +164,7 @@ export function createActions(flux: FluxCapacitor) {
       // tslint:disable-next-line max-line-length
       resetRecall: (query: string = null, { field, index }: { field: string, index: number } = <any>{}): Actions.ResetRecall => {
         const resetActions: any = [
-          actions.resetPage(),
-          ...actions.resetRefinements(true),
-          ...actions.updateQuery(query)
+          ...actions.search()
         ];
         if (field) {
           resetActions.push(...actions.selectRefinement(field, index));
