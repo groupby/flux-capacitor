@@ -143,12 +143,12 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
       it('should return a bulk action with RESET_REFINEMENTS', () => {
         const clear = 'q';
-        const resetRefinements = actions.resetRefinements = spy(() => [ACTION]);
+        const checkAndResetRefinements = actions.checkAndResetRefinements = spy(() => [ACTION]);
 
         const batchAction = actions.updateSearch({ clear });
 
         expect(batchAction).to.eql([resetPageAction, ACTION]);
-        expect(resetRefinements).to.be.calledWithExactly(clear);
+        expect(checkAndResetRefinements).to.be.calledWithExactly({ clear });
       });
 
       it('should return a bulk action with SELECT_REFINEMENT', () => {
@@ -187,6 +187,49 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       });
     });
 
+    describe('checkAndResetRefinements()', () => {
+      it('should call RESET_REFINEMENTS if refinementsMatch is false', () => {
+        const resetRefinements = stub(actions, 'resetRefinements');
+        stub(Selectors, 'selectedRefinements').returns(['hello']);
+        stub(SearchAdapter, 'refinementsMatch').returns(false);
+
+        flux.store = { getState: () => [] };
+        actions.checkAndResetRefinements({ navigationId: 'truthy' });
+        expect(resetRefinements).to.be.calledOnce;
+      });
+
+      it('should call RESET_REFINEMENTS if currentRefinements length is not 1', () => {
+        const resetRefinements = stub(actions, 'resetRefinements');
+        stub(Selectors, 'selectedRefinements').returns(['hello', 'hello']);
+        stub(SearchAdapter, 'refinementsMatch').returns(true);
+
+        flux.store = { getState: () => [] };
+        actions.checkAndResetRefinements({ navigationId: 'truthy' });
+        expect(resetRefinements).to.be.calledOnce;
+      });
+
+      it('should call RESET_REFINEMENTS if navigationId is falsy', () => {
+        const resetRefinements = stub(actions, 'resetRefinements');
+        stub(Selectors, 'selectedRefinements').returns(['hello']);
+        stub(SearchAdapter, 'refinementsMatch').returns(true);
+
+        flux.store = { getState: () => [] };
+        // undefined is falsy
+        actions.checkAndResetRefinements({ navigationId: undefined });
+        expect(resetRefinements).to.be.calledOnce;
+      });
+
+      it('should return [] all above conditions are false', () => {
+        const resetRefinements = stub(actions, 'resetRefinements');
+        stub(Selectors, 'selectedRefinements').returns(['hello']);
+        stub(SearchAdapter, 'refinementsMatch').returns(true);
+
+        flux.store = { getState: () => [] };
+        let result = actions.checkAndResetRefinements({ navigationId: 'truthy' });
+        expect(result).to.be.eql([]);
+      });
+    });
+
     describe('updateQuery()', () => {
       it('should return a batch action with RESET_PAGE', () => {
         const query = 'rambo';
@@ -196,7 +239,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         const batchAction = actions.updateQuery(query);
 
-        expect(batchAction[0]).to.eql(ACTION)
+        expect(batchAction[0]).to.eql(ACTION);
       });
 
       it('should return an action', () => {

@@ -65,12 +65,12 @@ export function createActions(flux: FluxCapacitor) {
       },
 
       checkAndResetRefinements: ({ low, high, value, navigationId, range, clear }: Actions.Payload.Search):
-      Actions.CheckAndResetRefinements => {
+        Actions.CheckAndResetRefinements => {
         const currentRefinements = Selectors.selectedRefinements(flux.store.getState());
         const refinement = { low, high, value };
         // assumes only one refinement can be added at once
         return (!navigationId || currentRefinements.length !== 1 ||
-                !SearchAdapter.refinementsMatch(<any>refinement, currentRefinements[0], range ? 'Range' : 'Value')) ?
+          !SearchAdapter.refinementsMatch(<any>refinement, currentRefinements[0], range ? 'Range' : 'Value')) ?
           actions.resetRefinements(clear) : [];
       },
 
@@ -136,6 +136,7 @@ export function createActions(flux: FluxCapacitor) {
               func: (_, state) => Selectors.selectedRefinements(state).length !== 0,
               msg: 'no refinements to clear'
             }, {
+              // tslint:disable-next-line max-line-length
               func: (_, state) => typeof field === 'boolean' || Selectors.navigation(state, field).selected.length !== 0,
               msg: `no refinements to clear for field "${field}"`
             }]
