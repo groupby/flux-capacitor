@@ -27,6 +27,7 @@ suite('navigations', ({ expect }) => {
       { value: 'Gifts', total: 1231 },
       { value: 'Toys', total: 231 },
       { value: 'Teens', total: 193 },
+      { high: 10, low: 5, total: 200 },
     ],
   };
   const state: Store.Indexed<Store.Navigation> = {
@@ -130,6 +131,31 @@ suite('navigations', ({ expect }) => {
       });
 
       expect(reducer).to.eql(state);
+    });
+
+    it('should not add duplicate range refinement on ADD_REFINEMENT', () => {
+      const newState = {
+        ...state,
+        byId: {
+          ...state.byId,
+          Section: {
+            ...Section,
+            selected: [...Section.selected, 4],
+          }
+        }
+      };
+
+      const reducer = navigations(state, {
+        type: Actions.ADD_REFINEMENT,
+        payload: {
+          navigationId: 'Section',
+          range: true,
+          high: 10,
+          low: 5
+        }
+      });
+
+      expect(reducer).to.eql(newState);
     });
 
     it('should add value refinement on ADD_REFINEMENT', () => {
