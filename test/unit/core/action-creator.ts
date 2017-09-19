@@ -185,6 +185,12 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         expect(batchAction).to.eql([resetPageAction, ACTION]);
         expect(addRefinement).to.be.calledWithExactly(navigationId, low, high);
       });
+
+      it('should return a bulk action without ADD_REFINEMENT', () => {
+        const batchAction = actions.updateSearch({ navigationId: 'truthy' });
+
+        expect(batchAction).to.eql([resetPageAction]);
+      });
     });
 
     describe('checkAndResetRefinements()', () => {
@@ -226,6 +232,16 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         flux.store = { getState: () => [] };
         let result = actions.checkAndResetRefinements({ navigationId: 'truthy' });
+        expect(result).to.be.eql([]);
+      });
+
+      it('should return [] all above conditions are false (range is truthy case)', () => {
+        const resetRefinements = stub(actions, 'resetRefinements');
+        stub(Selectors, 'selectedRefinements').returns(['hello']);
+        stub(SearchAdapter, 'refinementsMatch').returns(true);
+
+        flux.store = { getState: () => [] };
+        let result = actions.checkAndResetRefinements({ navigationId: 'truthy', range: true });
         expect(result).to.be.eql([]);
       });
     });
@@ -1035,6 +1051,14 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         // tslint:disable-next-line max-line-length
         expectAction(() => actions.createComponentState(tagName, id, state), Actions.CREATE_COMPONENT_STATE, { tagName, id, state });
+      });
+
+      it('should return an action if no state is passed as an argument', () => {
+        const tagName = 'my-tag';
+        const id = '123';
+
+        // tslint:disable-next-line max-line-length
+        expectAction(() => actions.createComponentState(tagName, id), Actions.CREATE_COMPONENT_STATE, { tagName, id, state: {} });
       });
     });
 
