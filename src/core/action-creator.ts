@@ -43,7 +43,7 @@ export function createActions(flux: FluxCapacitor) {
 
       // request action creators
       updateSearch: (search: Actions.Payload.Search): Actions.UpdateSearch => {
-        const searchActions: any = [actions.resetPage()];
+        const searchActions: Actions.UpdateSearch = [actions.resetPage()];
 
         if ('query' in search) {
           searchActions.push(...actions.updateQuery(search.query));
@@ -163,14 +163,12 @@ export function createActions(flux: FluxCapacitor) {
 
       // tslint:disable-next-line max-line-length
       resetRecall: (query: string = null, { field, index }: { field: string, index: number } = <any>{}): Actions.ResetRecall => {
-        const resetActions: any = [
-          ...actions.search()
-        ];
+        const resetActions: any[] = actions.search();
         if (field) {
           resetActions.push(...actions.selectRefinement(field, index));
         }
 
-        return resetActions;
+        return <Actions.ResetRecall>resetActions;
       },
 
       selectRefinement: (navigationId: string, index: number): Actions.ResetPageAndSelectRefinement => [
