@@ -146,7 +146,8 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const query = 'book';
         const search: any = { a: 'b' };
         const state = { a: 'b' };
-        stub(Selectors, 'query').withArgs(state).returns(query);
+        stub(Selectors, 'query').returns(query);
+        stub(Selectors, 'selectedRefinements').returns([]);
 
         expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
           (meta) => expect(meta.validator.payload[1].func({ query }, state)).to.be.false);
@@ -155,20 +156,203 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       it('should return an action with validation if search term is different', () => {
         const search: any = { a: 'b' };
         const state = { a: 'b' };
-        stub(Selectors, 'query').withArgs(state).returns('book');
+        stub(Selectors, 'query').returns('book');
+        stub(Selectors, 'selectedRefinements').returns([]);
 
         expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
           (meta) => expect(meta.validator.payload[1].func({ query: 'boot' }, state)).to.be.true);
       });
 
-      it('should return an action with validation if search term is null', () => {
+      it('should return an action with validation that evaluates to ' +
+        'false if search term is null and refinements are same', () => {
         const query = null;
         const search: any = { a: 'b' };
         const state = { a: 'b' };
-        stub(Selectors, 'query').withArgs(state).returns(query);
+        stub(Selectors, 'query').returns(query);
+        stub(Selectors, 'selectedRefinements').returns([]);
 
         expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
-          (meta) => expect(meta.validator.payload[1].func({ query }, state)).to.be.true);
+          (meta) => expect(meta.validator.payload[1].func({ query }, state)).to.be.false);
+      });
+
+      it('should return an action with validation that evaluates to ' +
+        'true if search term is same and refinements are different', () => {
+        const query = 'a';
+        const search: any = { query: 'b' };
+        const refinement = { navigationId : 'a', value: 'b' };
+        const state = { a: 'b' };
+        stub(Selectors, 'query').returns(query);
+        stub(Selectors, 'selectedRefinements').returns([]);
+
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+          (meta) => expect(meta.validator.payload[1].func({ ...refinement, query }, state)).to.be.true);
+      });
+
+      it('should return an action with validation that evaluates to ' +
+      'false if search term is same and refinements are same', () => {
+        const query = 'a';
+        const search: any = { query: 'a' };
+        const refinement = { navigationId : 'a', value: 'b' };
+        const state = { a: 'b' };
+        stub(Selectors, 'query').returns(query);
+        stub(Selectors, 'selectedRefinements').returns([{ navigationName: 'a', value: 'b'}]);
+
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+          (meta) => expect(meta.validator.payload[1].func({ ...refinement, query }, state)).to.be.false);
+      });
+
+      it('should return an action with validation that evaluates to ' +
+      'true if search term is same and there is more than 1 refinement and 1 of them matches', () => {
+        const query = 'a';
+        const search: any = { query: 'a' };
+        const refinement = { navigationId : 'a', value: 'b' };
+        const state = { a: 'b' };
+        stub(Selectors, 'query').returns(query);
+        stub(Selectors, 'selectedRefinements').returns(
+          [{ navigationName: 'aa', value: 'bb'},
+          { navigationName: 'a', value: 'b'}]);
+
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+          (meta) => expect(meta.validator.payload[1].func({ ...refinement, query }, state)).to.be.true);
+      });
+
+      it('should return an action with validation that evaluates to ' +
+      'true if there is one refinement and refinement navigationName matches but different value', () => {
+        const query = 'a';
+        const search: any = { query: 'a' };
+        const refinement = { navigationId : 'a', value: 'b' };
+        const state = { a: 'b' };
+        stub(Selectors, 'query').returns(query);
+        stub(Selectors, 'selectedRefinements').returns(
+        [{ navigationName: 'a', value: 'bb'}]);
+
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+          (meta) => expect(meta.validator.payload[1].func({ ...refinement, query }, state)).to.be.true);
+      });
+
+      it('should return an action with validation that evaluates to ' +
+      'true if there is one refinement and refinement value matches but navigationName is different', () => {
+        const query = 'a';
+        const search: any = { query: 'a' };
+        const refinement = { navigationId : 'a', value: 'b' };
+        const state = { a: 'b' };
+        stub(Selectors, 'query').returns(query);
+        stub(Selectors, 'selectedRefinements').returns(
+          [{ navigationName: 'aa', value: 'b'}]);
+
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+          (meta) => expect(meta.validator.payload[1].func({ ...refinement, query }, state)).to.be.true);
+      });
+
+      it('should return an action with validation that evaluates to ' +
+        'false if there is an index and current refinement but no search refinement', () => {
+          const query = 'a';
+          const search: any = { query: 'a' };
+          const refinement = { navigationId: 'aa', index: 0 };
+          const state = {};
+          stub(Selectors, 'query').returns(query);
+          stub(Selectors, 'selectedRefinements').returns(
+            [{ navigationName: 'aa', value: 'bb', range: true, low: 1, high: 2}]);
+          stub(Selectors, 'refinementCrumb').returns(
+            { navigationName: 'aa', value: 'bb', range: true, low: 1, high: 2});
+          expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+          (meta) => expect(meta.validator.payload[1].func({ ...refinement, query }, state)).to.be.false);
+      });
+
+      it('should return an action with validation that evaluates to ' +
+      'true if there is an index and current refinement but no search refinement', () => {
+        const query = 'a';
+        const search: any = { query: 'a' };
+        const refinement = { navigationId: 'aaa', index: 0 };
+        const state = {};
+        stub(Selectors, 'query').returns(query);
+        stub(Selectors, 'selectedRefinements').returns(
+          [{ navigationName: 'aa', value: 'bb', range: true, low: 1, high: 2}]);
+        stub(Selectors, 'refinementCrumb').returns(
+          { navigationName: 'aa', value: 'bb', range: true, low: 1, high: 3});
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+        (meta) => expect(meta.validator.payload[1].func({ ...refinement, query }, state)).to.be.true);
+      });
+
+      it('should return an action with validation that evaluates to ' +
+      'false if there is only one refinement with the same range', () => {
+        const query = 'a';
+        const search: any = { query: 'a' };
+        const refinement = { navigationId: 'aa', range: true, low: 1, high: 2 };
+        const state = {};
+        stub(Selectors, 'query').returns(query);
+        stub(Selectors, 'selectedRefinements').returns(
+          [{ navigationName: 'aa', value: 'bb', range: true, low: 1, high: 2}]);
+        stub(Selectors, 'refinementCrumb').returns(
+          [{ navigationName: 'aa', value: 'bb', range: true, low: 1, high: 2}]);
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+        (meta) => expect(meta.validator.payload[1].func({ ...refinement, query }, state)).to.be.false);
+      });
+
+      it('should return an action with validation that evaluates to ' +
+      'true if low value for the range is different', () => {
+        const query = 'a';
+        const search: any = { query: 'a' };
+        const refinement = { navigationId: 'aa', range: true, low: 3, high: 2 };
+        const state = {};
+        stub(Selectors, 'query').returns(query);
+        stub(Selectors, 'selectedRefinements').returns(
+          [{ navigationName: 'aa', value: 'bb', range: true, low: 1, high: 2}]);
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+        (meta) => expect(meta.validator.payload[1].func({ ...refinement, query }, state)).to.be.true);
+      });
+
+      it('should return an action with validation that evaluates to ' +
+      'true if high value for the range is different', () => {
+        const query = 'a';
+        const search: any = { query: 'a' };
+        const refinement = { navigationId: 'aa', range: true, low: 1, high: 222 };
+        const state = {};
+        stub(Selectors, 'query').returns(query);
+        stub(Selectors, 'selectedRefinements').returns(
+          [{ navigationName: 'aa', value: 'bb', range: true, low: 1, high: 2}]);
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+        (meta) => expect(meta.validator.payload[1].func({ ...refinement, query }, state)).to.be.true);
+      });
+
+      it('should return an action with validation that evaluates to ' +
+      'true if both low and high values for the range are different', () => {
+        const query = 'a';
+        const search: any = { query: 'a' };
+        const refinement = { navigationId: 'aa', range: true, low: 3, high: 22 };
+        const state = {};
+        stub(Selectors, 'query').returns(query);
+        stub(Selectors, 'selectedRefinements').returns(
+          [{ navigationName: 'aa', value: 'bb', range: true, low: 1, high: 2}]);
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+        (meta) => expect(meta.validator.payload[1].func({ ...refinement, query }, state)).to.be.true);
+      });
+
+      it('should return an action with validation that evaluates to ' +
+      'true if both low and high values for the range are same but navigationId is different', () => {
+        const query = 'a';
+        const search: any = { query: 'a' };
+        const refinement = { navigationId: 'ab', range: true, low: 1, high: 2 };
+        const state = {};
+        stub(Selectors, 'query').returns(query);
+        stub(Selectors, 'selectedRefinements').returns(
+          [{ navigationName: 'aa', value: 'bb', range: true, low: 1, high: 2}]);
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+        (meta) => expect(meta.validator.payload[1].func({ ...refinement, query }, state)).to.be.true);
+      });
+
+      it('should call Selectors.selectedRefinements and Selectors.query with state', () => {
+        const query = 'a';
+        const search = { query: 'a' };
+        const refinement = { navigationId: 'aa', range: true, low: 1, high: 2 };
+        const state = {};
+        const selectedRefinements = stub(Selectors, 'selectedRefinements').returns([]);
+        const selectorsQuery = stub(Selectors, 'query').returns(query);
+        actions.updateSearch(search);
+        expectAction(() => actions.updateSearch(search), Actions.UPDATE_SEARCH, search,
+        (meta) => expect(meta.validator.payload[1].func({ ...refinement, query }, state)).to.be.true);
+        expect(selectedRefinements).to.be.calledWith(state);
+        expect(selectorsQuery).to.be.calledWith(state);
       });
 
       it('should trim query', () => {

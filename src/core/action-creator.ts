@@ -51,7 +51,33 @@ export function createActions(flux: FluxCapacitor) {
                 func: ({ query }) => !('query' in search) || !!query || query === null,
                 msg: 'search term is empty'
               }, {
-                func: ({ query }, state) => query !== Selectors.query(state) || query === null,
+                  // currently assume that search will only ever have up to one refinement
+                  func: ({ query, value, navigationId, range, low, high, index }, state) => {
+                  const currentRefinements = Selectors.selectedRefinements(state);
+                  // checks that range is valid
+                  let searchHasRange;
+                  let searchHasRefinement;
+                  // this will set searchHasRange and searchHasRefinement again if a change is made to range, low,...
+                  for (let i = 0; i < 2; i++) {
+                    searchHasRange = range && Boolean(low && high);
+                    searchHasRefinement = Boolean(navigationId && (value || searchHasRange));
+                    if (!searchHasRefinement && Number.isInteger(index)) {
+                      ({ range, low, high, value } = Selectors.refinementCrumb(state, navigationId, index));
+                      index = undefined;
+                    } else break;
+                  }
+                  // query is not the same
+                  return query !== Selectors.query(state) ||
+                  // xor for either there exists refinements or the current search has refinement
+                  currentRefinements.length > 0 !== searchHasRefinement ||
+                  // current search has refinement and does not match any of the previous refinements
+                  searchHasRefinement &&
+                    // try to find any refinement not matching the refinement in the query
+                    currentRefinements.find(
+                      (refinement) => (refinement.navigationName !== navigationId ||
+                        (searchHasRange ? (low !== refinement.low || high !== refinement.high) :
+                        refinement.value !== value))) !== undefined;
+                },
                 msg: 'search term is not different'
               }]
             }
