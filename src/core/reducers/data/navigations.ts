@@ -98,19 +98,19 @@ export const deselectRefinement = (state: State, { navigationId, index: refineme
 const generateNavigationId = (state: State, navigationId: string, refinement: any, index: number) => ({
   ...state.byId[navigationId],
   ...(index === -1
-    ? {
-      refinements: [
-        ...state.byId[navigationId].refinements,
-        refinement
-      ],
-      selected: [
-        ...state.byId[navigationId].selected,
-        state.byId[navigationId].refinements.length
-      ]
-    }
-    : {
-      selected: [...state.byId[navigationId].selected, index]
-    })
+      ? {
+        refinements: [
+          ...state.byId[navigationId].refinements,
+          refinement
+        ],
+        selected: [
+          ...state.byId[navigationId].selected,
+          state.byId[navigationId].refinements.length
+        ]
+      }
+      : {
+        selected: [...state.byId[navigationId].selected, index]
+      })
 });
 
 // tslint:disable-next-line max-line-length
