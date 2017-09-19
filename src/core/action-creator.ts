@@ -49,7 +49,7 @@ export function createActions(flux: FluxCapacitor) {
           searchActions.push(...actions.updateQuery(search.query));
         }
         if ('clear' in search) {
-          searchActions.push(...actions.resetRefinements(search.clear));
+          searchActions.push(...actions.checkAndResetRefinements(search));
         }
         if ('navigationId' in search) {
           if ('index' in search) {
@@ -62,6 +62,16 @@ export function createActions(flux: FluxCapacitor) {
         }
 
         return searchActions;
+      },
+
+      checkAndResetRefinements: ({ low, high, value, navigationId, range, clear }: Actions.Payload.Search):
+      Actions.CheckAndResetRefinements => {
+        const currentRefinements = Selectors.selectedRefinements(flux.store.getState());
+        const refinement = { low, high, value };
+        // assumes only one refinement can be added at once
+        return (!navigationId || currentRefinements.length !== 1 ||
+                !SearchAdapter.refinementsMatch(<any>refinement, currentRefinements[0], range ? 'Range' : 'Value')) ?
+          actions.resetRefinements(clear) : [];
       },
 
       updateQuery: (query: string): Actions.ResetPageAndUpdateQuery => [

@@ -68,6 +68,7 @@ namespace Actions {
   export type ResetPageAndSelectRefinement = [Actions.ResetPage, Actions.SelectRefinement];
   export type ResetPageAndDeselectRefinement = [Actions.ResetPage, Actions.DeselectRefinement];
   export type ResetPageAndAddRefinement = [Actions.ResetPage, Actions.AddRefinement];
+  export type CheckAndResetRefinements = ResetPageAndResetRefinements | Action<any>[];
   export type ResetPageAndUpdateQuery = [Actions.ResetPage, Actions.UpdateQuery];
 
   // fetch actions
