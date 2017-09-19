@@ -133,7 +133,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
       it('should return a bulk action with UPDATE_QUERY', () => {
         const query = 'q';
-        const updateQuery = actions.updateQuery = spy(() => [ACTION]);
+        const updateQuery = stub(actions, 'updateQuery').returns([ACTION]);
 
         const batchAction = actions.updateSearch({ query });
 
@@ -143,18 +143,19 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
       it('should return a bulk action with RESET_REFINEMENTS', () => {
         const clear = 'q';
-        const checkAndResetRefinements = actions.checkAndResetRefinements = spy(() => [ACTION]);
+        const shouldResetRefinements = stub(actions, 'shouldResetRefinements').returns(true);
+        const resetRefinements = stub(actions, 'resetRefinements').returns([ACTION]);
 
         const batchAction = actions.updateSearch({ clear });
 
         expect(batchAction).to.eql([resetPageAction, ACTION]);
-        expect(checkAndResetRefinements).to.be.calledWithExactly({ clear });
+        expect(shouldResetRefinements).to.be.calledWithExactly({ clear });
       });
 
       it('should return a bulk action with SELECT_REFINEMENT', () => {
         const navigationId = 'color';
         const index = 4;
-        const selectRefinement = actions.selectRefinement = spy(() => [ACTION]);
+        const selectRefinement = stub(actions, 'selectRefinement').returns([ACTION]);
 
         const batchAction = actions.updateSearch({ navigationId, index });
 
@@ -165,7 +166,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       it('should return a bulk action with value ADD_REFINEMENT', () => {
         const navigationId = 'color';
         const value = 'blue';
-        const addRefinement = actions.addRefinement = spy(() => [ACTION]);
+        const addRefinement = stub(actions, 'addRefinement').returns([ACTION]);
 
         const batchAction = actions.updateSearch({ navigationId, value });
 
@@ -178,7 +179,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const range = true;
         const low = 1;
         const high = 2;
-        const addRefinement = actions.addRefinement = spy(() => [ACTION]);
+        const addRefinement = stub(actions, 'addRefinement').returns([ACTION]);
 
         const batchAction = actions.updateSearch({ navigationId, range, low, high });
 
@@ -193,56 +194,46 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       });
     });
 
-    describe('checkAndResetRefinements()', () => {
+    describe('shouldResetRefinements()', () => {
       it('should call RESET_REFINEMENTS if refinementsMatch is false', () => {
-        const resetRefinements = stub(actions, 'resetRefinements');
         stub(Selectors, 'selectedRefinements').returns(['hello']);
         stub(SearchAdapter, 'refinementsMatch').returns(false);
 
         flux.store = { getState: () => [] };
-        actions.checkAndResetRefinements({ navigationId: 'truthy' });
-        expect(resetRefinements).to.be.calledOnce;
+        expect(actions.shouldResetRefinements({ navigationId: 'truthy' })).to.be.true;
       });
 
       it('should call RESET_REFINEMENTS if currentRefinements length is not 1', () => {
-        const resetRefinements = stub(actions, 'resetRefinements');
         stub(Selectors, 'selectedRefinements').returns(['hello', 'hello']);
         stub(SearchAdapter, 'refinementsMatch').returns(true);
 
         flux.store = { getState: () => [] };
-        actions.checkAndResetRefinements({ navigationId: 'truthy' });
-        expect(resetRefinements).to.be.calledOnce;
+        expect(actions.shouldResetRefinements({ navigationId: 'truthy' })).to.be.true;
       });
 
       it('should call RESET_REFINEMENTS if navigationId is falsy', () => {
-        const resetRefinements = stub(actions, 'resetRefinements');
         stub(Selectors, 'selectedRefinements').returns(['hello']);
         stub(SearchAdapter, 'refinementsMatch').returns(true);
 
         flux.store = { getState: () => [] };
         // undefined is falsy
-        actions.checkAndResetRefinements({ navigationId: undefined });
-        expect(resetRefinements).to.be.calledOnce;
+        expect(actions.shouldResetRefinements({ navigationId: undefined })).to.be.true;
       });
 
       it('should return [] all above conditions are false', () => {
-        const resetRefinements = stub(actions, 'resetRefinements');
         stub(Selectors, 'selectedRefinements').returns(['hello']);
         stub(SearchAdapter, 'refinementsMatch').returns(true);
 
         flux.store = { getState: () => [] };
-        let result = actions.checkAndResetRefinements({ navigationId: 'truthy' });
-        expect(result).to.be.eql([]);
+        expect(actions.shouldResetRefinements({ navigationId: 'truthy' })).to.be.false;
       });
 
       it('should return [] all above conditions are false (range is truthy case)', () => {
-        const resetRefinements = stub(actions, 'resetRefinements');
         stub(Selectors, 'selectedRefinements').returns(['hello']);
         stub(SearchAdapter, 'refinementsMatch').returns(true);
 
         flux.store = { getState: () => [] };
-        let result = actions.checkAndResetRefinements({ navigationId: 'truthy', range: true });
-        expect(result).to.be.eql([]);
+        expect(actions.shouldResetRefinements({ navigationId: 'truthy', range: true })).to.be.false;
       });
     });
 
@@ -353,7 +344,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const resetPageAction = { a: 'b' };
         stub(utils, 'refinementPayload').returns(refinement);
         stub(utils, 'action');
-        actions.resetPage = spy(() => resetPageAction);
+        stub(actions, 'resetPage').returns(resetPageAction);
 
         const batchAction = actions.addRefinement(navigationId, value);
 
@@ -563,7 +554,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const field = 'color';
         const index = 8;
         const selectRefinementAction = { g: 'h' };
-        const selectRefinement = actions.selectRefinement = spy(() => [selectRefinementAction]);
+        const selectRefinement = stub(actions, 'selectRefinement').returns([selectRefinementAction]);
         const search = stub(actions, 'search').returns([
           resetPageAction,
           resetRefinementsAction,
@@ -806,12 +797,12 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const extractRecordCount = stub(SearchAdapter, 'extractRecordCount').returns(recordCount);
         const extractProducts = stub(SearchAdapter, 'extractProducts').returns(products);
         const selectCollection = stub(Selectors, 'collection').returns(collection);
-        const receiveQuery = actions.receiveQuery = spy(() => receiveQueryAction);
-        const receiveProductRecords = actions.receiveProductRecords = spy(() => receiveProductRecordsAction);
+        const receiveQuery = stub(actions, 'receiveQuery').returns(receiveQueryAction);
+        const receiveProductRecords = stub(actions, 'receiveProductRecords').returns(receiveProductRecordsAction);
         const receiveNavigations = actions.receiveNavigations = spy(() => receiveNavigationsAction);
-        const receiveRecordCount = actions.receiveRecordCount = spy(() => receiveRecordCountAction);
+        const receiveRecordCount = stub(actions, 'receiveRecordCount').returns(receiveRecordCountAction);
         const receiveCollectionCount = actions.receiveCollectionCount = spy(() => receiveCollectionCountAction);
-        const receivePage = actions.receivePage = spy(() => receivePageAction);
+        const receivePage = stub(actions, 'receivePage').returns(receivePageAction);
         const receiveTemplate = actions.receiveTemplate = spy(() => receiveTemplateAction);
         flux.store = { getState: () => state };
 
@@ -968,8 +959,8 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const extractProducts = stub(SearchAdapter, 'extractProducts').returns(products);
         const extractTemplate = stub(SearchAdapter, 'extractTemplate').returns(template);
         // tslint:disable-next-line max-line-length
-        const receiveAutocompleteProductRecords = actions.receiveAutocompleteProductRecords = spy(() => receiveAutocompleteProductRecordsAction);
-        const receiveAutocompleteTemplate = actions.receiveAutocompleteTemplate = spy(() => receiveAutocompleteTemplateAction);
+        const receiveAutocompleteProductRecords = stub(actions, 'receiveAutocompleteProductRecords').returns(receiveAutocompleteProductRecordsAction);
+        const receiveAutocompleteTemplate = stub(actions, 'receiveAutocompleteTemplate').returns(receiveAutocompleteTemplateAction);
 
         const batchAction = actions.receiveAutocompleteProducts(response);
 
