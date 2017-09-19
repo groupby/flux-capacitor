@@ -95,7 +95,7 @@ export const deselectRefinement = (state: State, { navigationId, index: refineme
   }
 };
 
-const generateNavigationId = (state: State, navigationId: string, refinement: any, index: number) => ({
+const generateNavigation = (state: State, navigationId: string, refinement: any, index: number) => ({
   ...state.byId[navigationId],
   ...(index === -1
       ? {
@@ -125,7 +125,7 @@ export const addRefinement = (state: State, { navigationId, value, low, high, ra
       ...state,
       byId: {
         ...state.byId,
-        [navigationId]: generateNavigationId(state, navigationId, refinement, index)
+        [navigationId]: generateNavigation(state, navigationId, refinement, index)
       }
     };
   } else {
