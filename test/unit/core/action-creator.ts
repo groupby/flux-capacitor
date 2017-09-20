@@ -142,14 +142,15 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       });
 
       it('should return a bulk action with RESET_REFINEMENTS', () => {
+        flux.store = { getState: () => null };
         const clear = 'q';
-        const shouldResetRefinements = stub(actions, 'shouldResetRefinements').returns(true);
+        const shouldResetRefinements = stub(utils, 'shouldResetRefinements').returns(true);
         const resetRefinements = stub(actions, 'resetRefinements').returns([ACTION]);
 
         const batchAction = actions.updateSearch({ clear });
 
         expect(batchAction).to.eql([resetPageAction, ACTION]);
-        expect(shouldResetRefinements).to.be.calledWithExactly({ clear });
+        expect(shouldResetRefinements).to.be.calledWithExactly({ clear }, null);
       });
 
       it('should return a bulk action with SELECT_REFINEMENT', () => {
