@@ -194,49 +194,6 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       });
     });
 
-    describe('shouldResetRefinements()', () => {
-      it('should call RESET_REFINEMENTS if refinementsMatch is false', () => {
-        stub(Selectors, 'selectedRefinements').returns(['hello']);
-        stub(SearchAdapter, 'refinementsMatch').returns(false);
-
-        flux.store = { getState: () => [] };
-        expect(actions.shouldResetRefinements({ navigationId: 'truthy' })).to.be.true;
-      });
-
-      it('should call RESET_REFINEMENTS if currentRefinements length is not 1', () => {
-        stub(Selectors, 'selectedRefinements').returns(['hello', 'hello']);
-        stub(SearchAdapter, 'refinementsMatch').returns(true);
-
-        flux.store = { getState: () => [] };
-        expect(actions.shouldResetRefinements({ navigationId: 'truthy' })).to.be.true;
-      });
-
-      it('should call RESET_REFINEMENTS if navigationId is falsy', () => {
-        stub(Selectors, 'selectedRefinements').returns(['hello']);
-        stub(SearchAdapter, 'refinementsMatch').returns(true);
-
-        flux.store = { getState: () => [] };
-        // undefined is falsy
-        expect(actions.shouldResetRefinements({ navigationId: undefined })).to.be.true;
-      });
-
-      it('should return [] all above conditions are false', () => {
-        stub(Selectors, 'selectedRefinements').returns(['hello']);
-        stub(SearchAdapter, 'refinementsMatch').returns(true);
-
-        flux.store = { getState: () => [] };
-        expect(actions.shouldResetRefinements({ navigationId: 'truthy' })).to.be.false;
-      });
-
-      it('should return [] all above conditions are false (range is truthy case)', () => {
-        stub(Selectors, 'selectedRefinements').returns(['hello']);
-        stub(SearchAdapter, 'refinementsMatch').returns(true);
-
-        flux.store = { getState: () => [] };
-        expect(actions.shouldResetRefinements({ navigationId: 'truthy', range: true })).to.be.false;
-      });
-    });
-
     describe('updateQuery()', () => {
       it('should return a batch action with RESET_PAGE', () => {
         const query = 'rambo';
