@@ -4,7 +4,7 @@ import Actions from './actions';
 import SearchAdapter from './adapters/search';
 import Selectors from './selectors';
 import Store from './store';
-import { action, handleError, refinementPayload } from './utils';
+import { action, handleError, refinementPayload, shouldResetRefinements } from './utils';
 import * as validators from './validators';
 
 export function createActions(flux: FluxCapacitor) {
@@ -48,7 +48,7 @@ export function createActions(flux: FluxCapacitor) {
         if ('query' in search) {
           searchActions.push(...actions.updateQuery(search.query));
         }
-        if ('clear' in search && actions.shouldResetRefinements(search)) {
+        if ('clear' in search && shouldResetRefinements(search, flux.store.getState())) {
           searchActions.push(...actions.resetRefinements(search.query));
         }
         if ('navigationId' in search) {
@@ -62,14 +62,6 @@ export function createActions(flux: FluxCapacitor) {
         }
 
         return searchActions;
-      },
-
-      shouldResetRefinements: ({ low, high, value, navigationId, range }: Actions.Payload.Search): boolean => {
-        const currentRefinements = Selectors.selectedRefinements(flux.store.getState());
-        const refinement = { low, high, value };
-        // assumes only one refinement can be added at once
-        return !navigationId || currentRefinements.length !== 1 ||
-          !SearchAdapter.refinementsMatch(<any>refinement, currentRefinements[0], range ? 'Range' : 'Value');
       },
 
       updateQuery: (query: string): Actions.ResetPageAndUpdateQuery => [
