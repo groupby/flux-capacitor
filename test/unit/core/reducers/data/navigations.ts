@@ -169,7 +169,8 @@ suite('navigations', ({ expect }) => {
             label: 'Brand',
             range: false,
             refinements: [{ value: 'Oakley' }],
-            selected: [0]
+            selected: [0],
+            metadata: {}
           }
         }
       };
@@ -198,7 +199,8 @@ suite('navigations', ({ expect }) => {
             label: 'Brand',
             range: true,
             refinements: [{ low: 23, high: 34 }],
-            selected: [0]
+            selected: [0],
+            metadata: {}
           }
         }
       };
