@@ -49,7 +49,7 @@ export function createActions(flux: FluxCapacitor) {
           searchActions.push(...actions.updateQuery(search.query));
         }
         if ('clear' in search && shouldResetRefinements(search, flux.store.getState())) {
-          searchActions.push(...actions.resetRefinements(search.query));
+          searchActions.push(...actions.resetRefinements(search.clear));
         }
         if ('navigationId' in search) {
           if ('index' in search) {
