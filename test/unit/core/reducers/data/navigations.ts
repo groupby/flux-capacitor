@@ -74,6 +74,7 @@ suite('navigations', ({ expect }) => {
             { value: 'green', total: 199 },
             { value: 'blue', total: 213 },
           ],
+          metadata: {}
         }, {
           field: 'size',
           label: 'Size',
@@ -85,6 +86,7 @@ suite('navigations', ({ expect }) => {
             { value: 'medium', total: 309 },
             { value: 'large', total: 13 },
           ],
+          metadata: {}
         },
       ];
       const newState = {
