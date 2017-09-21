@@ -113,27 +113,80 @@ suite('navigations', ({ expect }) => {
           Section,
         },
       };
-      const reducer = navigations({ ...state, allIds: [ 'Additional', ...state.allIds ] }, {
+
+      const reducer = navigations({ ...state, allIds: ['Additional', ...state.allIds] }, {
         type: Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS,
         payload: [{
-            name: 'Section',
-            values: [{
-              value: 'test',
-              count: 100
-            }]
-          }, {
-            name: 'Format',
-            values: [{
-              value: 'another',
-              count: 34
-            }]
-          }, {
-            name: 'Extra',
-            values: [{
-              value: 'another',
-              count: 34
-            }]
+          name: 'Section',
+          values: [{
+            value: 'test',
+            count: 100
           }]
+        }, {
+          name: 'Format',
+          values: [{
+            value: 'another',
+            count: 34
+          }]
+        }, {
+          name: 'Extra',
+          values: [{
+            value: 'another',
+            count: 34
+          }]
+        }]
+      });
+
+      expect(reducer).to.eql(newState);
+    });
+
+    it('should sort refinement state on RECEIVE_RECOMMENDATIONS_REFINEMENTS', () => {
+      const newState = {
+        allIds: ['Section', 'Format', 'Additional'],
+        byId: {
+          Section: {
+            ...Section,
+            refinements: [
+              { value: 'Toys', total: 231 },
+              { value: 'Gifts', total: 1231 },
+              { value: 'Books', total: 203 },
+              { value: 'Teens', total: 193 },
+              { high: 10, low: 5, total: 200 },
+            ]
+          },
+          Format: {
+            ...Format,
+            refinements: [
+              { value: 'Paper', total: 129 },
+              { value: 'Audio Book', total: 293 },
+              { value: 'Hardcover', total: 200 },
+            ]
+          }
+        },
+      };
+
+      const reducer = navigations(state, {
+        type: Actions.RECEIVE_RECOMMENDATIONS_REFINEMENTS,
+        payload: [{
+          name: 'Section',
+          values: [
+            { value: 'Toys', total: 1231 },
+            { value: 'Gifts', total: 131 }
+          ]
+        }, {
+          name: 'Format',
+          values: [
+            { value: 'Paper', count: 329 },
+            { value: 'Audio Book', count: 293 },
+            { value: 'Hardcover', count: 200 }
+          ]
+        }, {
+          name: 'Extra',
+          values: [{
+            value: 'another',
+            count: 34
+          }]
+        }]
       });
 
       expect(reducer).to.eql(newState);

@@ -70,12 +70,31 @@ export const sortNavigations = (state: State, navigations: Store.Recommendations
 
 export const sortRefinements = (state: State, navigations: Store.Recommendations.Navigation[]) => {
   const newObj = {};
-  for (const key in state.byId) {
-    if (navigations.find((nav) => key === nav)) {
-      newObj[key] = {...state.byId[key]};
-      newObj[key] = sortBasedOn(newObj[key], 
+  state.allIds.forEach((id) => {
+    const navigation = navigations.find(({ name }) => id === name);
+    if (navigation) {
+      console.log(state.byId[id].refinements);
+      console.log(navigation.values);
+      newObj[id] = sort(state.byId[id].refinements, navigation.values)
+      // newObj[id] = sortBasedOn(newObj[id],
+    } else {
+      newObj[id] = { ...state.byId[id] };
     }
-  }
+  });
+};
+
+export const sort = (toBeSorted: any[], basisArray: any[]): any[] => {
+  const output: string[] = [];
+  const ids = toBeSorted.concat();
+  basisArray.forEach((item) => {
+    const index = ids.findIndex((element) => item.value === element.value);
+    if (index !== -1) {
+      console.log(ids[index]);
+      output.push(item.value);
+      ids.splice(index, 1);
+    }
+  });
+  return output.concat(ids);
 };
 
 // tslint:disable-next-line max-line-length
@@ -117,19 +136,19 @@ export const deselectRefinement = (state: State, { navigationId, index: refineme
 const generateNavigation = (state: State, navigationId: string, refinement: any, index: number) => ({
   ...state.byId[navigationId],
   ...(index === -1
-      ? {
-        refinements: [
-          ...state.byId[navigationId].refinements,
-          refinement
-        ],
-        selected: [
-          ...state.byId[navigationId].selected,
-          state.byId[navigationId].refinements.length
-        ]
-      }
-      : {
-        selected: [...state.byId[navigationId].selected, index]
-      })
+    ? {
+      refinements: [
+        ...state.byId[navigationId].refinements,
+        refinement
+      ],
+      selected: [
+        ...state.byId[navigationId].selected,
+        state.byId[navigationId].refinements.length
+      ]
+    }
+    : {
+      selected: [...state.byId[navigationId].selected, index]
+    })
 });
 
 // tslint:disable-next-line max-line-length
