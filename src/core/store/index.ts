@@ -73,7 +73,7 @@ namespace Store {
 
     details: Details; // mixed
 
-    recommendations: Recommendations; // mixed
+    recommendations: Recommendations.Recommendations; // mixed
 
     recordCount: number; // post
 
@@ -214,14 +214,29 @@ namespace Store {
     product?: Product; // post
   }
 
-  export interface Recommendations {
-    products: Product[];
+  export namespace Recommendations {
+    export interface Recommendations {
+      products: Product[];
+      navigations: Recommendations.Navigation[];
+    }
+
+    export interface Navigation {
+      name: string;
+      values: RecomendationRefinement[];
+      lows?: any[];
+      highs?: any[];
+    }
+
+    export interface RecomendationRefinement {
+      value: string;
+      count: number;
+    }
   }
 
-  export interface Product {
-    id: string; // post
-    [key: string]: any; // post
-  }
+      export interface Product {
+        id: string; // post
+        [key: string]: any; // post
+      }
 
   export interface Navigation {
     /**
