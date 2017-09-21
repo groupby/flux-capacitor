@@ -5,6 +5,7 @@ import Store from '../../store';
 export type Action = Actions.ResetRefinements
   | Actions.AddRefinement
   | Actions.ReceiveNavigations
+  | Actions.ReceiveRecommendationsRefinements
   | Actions.SelectRefinement
   | Actions.DeselectRefinement
   | Actions.ReceiveMoreRefinements;
@@ -19,6 +20,7 @@ export default function updateNavigations(state: State = DEFAULTS, action: Actio
   switch (action.type) {
     case Actions.RESET_REFINEMENTS: return resetRefinements(state, action.payload);
     case Actions.RECEIVE_NAVIGATIONS: return receiveNavigations(state, action.payload);
+    case Actions.RECEIVE_RECOMMENDATIONS_REFINEMENTS: return sortNavigations(state, action.payload);
     case Actions.ADD_REFINEMENT: return addRefinement(state, action.payload);
     case Actions.SELECT_REFINEMENT: return selectRefinement(state, action.payload);
     case Actions.DESELECT_REFINEMENT: return deselectRefinement(state, action.payload);
@@ -57,6 +59,20 @@ export const receiveNavigations = (state: State, navigations: Store.Navigation[]
     allIds,
     byId,
   };
+};
+
+export const sortNavigations = (state: State, navigations: Store.Recommendations.Navigation[]) => {
+  //flux.config.recommendations;
+  const output = [];
+  const ids = state.allIds.concat();
+  navigations.forEach(({ name }) => {
+    const index = ids.findIndex((stateIndex) => name === ids[stateIndex]);
+    if (index !== -1) {
+      output.push(name);
+      ids.splice(index, 1);
+    }
+  });
+  return { ...state, allIds: output.concat(ids) };
 };
 
 // tslint:disable-next-line max-line-length
