@@ -221,12 +221,12 @@ namespace Store {
   export namespace Recommendations {
     export interface Navigation {
       name: string;
-      values: RecomendationRefinement[];
+      values: RecommendationRefinement[];
       lows?: any[];
       highs?: any[];
     }
 
-    export interface RecomendationRefinement {
+    export interface RecommendationRefinement {
       value: string;
       count: number;
     }

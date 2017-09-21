@@ -62,11 +62,10 @@ export const receiveNavigations = (state: State, navigations: Store.Navigation[]
 };
 
 export const sortNavigations = (state: State, navigations: Store.Recommendations.Navigation[]) => {
-  //flux.config.recommendations;
   const output = [];
   const ids = state.allIds.concat();
   navigations.forEach(({ name }) => {
-    const index = ids.findIndex((stateIndex) => name === ids[stateIndex]);
+    const index = ids.findIndex((element) => name === element);
     if (index !== -1) {
       output.push(name);
       ids.splice(index, 1);
