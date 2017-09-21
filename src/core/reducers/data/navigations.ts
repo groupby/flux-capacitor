@@ -1,11 +1,13 @@
 import Actions from '../../actions';
 import Adapter from '../../adapters/search';
 import Store from '../../store';
+import { sortBasedOn } from '../../utils';
 
 export type Action = Actions.ResetRefinements
   | Actions.AddRefinement
   | Actions.ReceiveNavigations
   | Actions.ReceiveRecommendationsNavigations
+  | Actions.ReceiveRecommendationsRefinements
   | Actions.SelectRefinement
   | Actions.DeselectRefinement
   | Actions.ReceiveMoreRefinements;
@@ -21,6 +23,7 @@ export default function updateNavigations(state: State = DEFAULTS, action: Actio
     case Actions.RESET_REFINEMENTS: return resetRefinements(state, action.payload);
     case Actions.RECEIVE_NAVIGATIONS: return receiveNavigations(state, action.payload);
     case Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS: return sortNavigations(state, action.payload);
+    case Actions.RECEIVE_RECOMMENDATIONS_REFINEMENTS: return sortRefinements(state, action.payload);
     case Actions.ADD_REFINEMENT: return addRefinement(state, action.payload);
     case Actions.SELECT_REFINEMENT: return selectRefinement(state, action.payload);
     case Actions.DESELECT_REFINEMENT: return deselectRefinement(state, action.payload);
@@ -62,16 +65,12 @@ export const receiveNavigations = (state: State, navigations: Store.Navigation[]
 };
 
 export const sortNavigations = (state: State, navigations: Store.Recommendations.Navigation[]) => {
-  const output = [];
-  const ids = state.allIds.concat();
-  navigations.forEach(({ name }) => {
-    const index = ids.findIndex((element) => name === element);
-    if (index !== -1) {
-      output.push(name);
-      ids.splice(index, 1);
-    }
-  });
-  return { ...state, allIds: output.concat(ids) };
+  return { ...state, allIds: sortBasedOn(state.allIds, navigations) };
+};
+
+export const sortRefinements = (state: State, navigations: Store.Recommendations.Navigation[]) => {
+  for (const key in state.byId) {
+  }
 };
 
 // tslint:disable-next-line max-line-length

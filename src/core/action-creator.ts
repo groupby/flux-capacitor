@@ -254,8 +254,13 @@ export function createActions(flux: FluxCapacitor) {
       receiveRecommendationsProducts: (products: Store.Product[]) =>
         action(Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, products),
 
-      receiveRecommendationsRefinements: (products: Store.Product[]) =>
+      receiveRecommendationsNavigations: (products: Store.Recommendations.Navigation[]):
+      Actions.ReceiveRecommendationsNavigations =>
         action(Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS, products, metadata),
+
+      receiveRecommendationsRefinements: (products: Store.Recommendations.Navigation[]):
+      Actions.ReceiveRecommendationsRefinements =>
+        action(Actions.RECEIVE_RECOMMENDATIONS_REFINEMENTS, products, metadata),
 
       // ui action creators
       createComponentState: (tagName: string, id: string, state: any = {}): Actions.CreateComponentState =>

@@ -46,7 +46,7 @@ export namespace Tasks {
     }
   }
 
-  export function* fetchRefinements(flux: FluxCapacitor, action: Actions.FetchRecommendationsProducts) {
+  export function* fetchNavigations(flux: FluxCapacitor, action: Actions.FetchRecommendationsProducts) {
     try {
       // const config = flux.config.recommendations;
       // const recommendationsUrl = `${Adapter.buildUrl(flux.config.customerId)}/refinements/_getPopular`;
@@ -60,6 +60,7 @@ export namespace Tasks {
       const recommendations = yield recommendationsResponse.json();
       const refinements = recommendations.result
         .filter(({ values }) => values); // assumes no values key will be empty
+      yield effects.put(flux.actions.receiveRecommendationsNavigations(refinements));
       yield effects.put(flux.actions.receiveRecommendationsRefinements(refinements));
     } catch (e) {
       console.log(e);
@@ -70,5 +71,5 @@ export namespace Tasks {
 
 export default (flux: FluxCapacitor) => function* recommendationsSaga() {
   yield effects.takeLatest(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, Tasks.fetchProducts, flux);
-  yield effects.takeLatest(Actions.FETCH_RECOMMENDATIONS_REFINEMENTS, Tasks.fetchRefinements, flux);
+  yield effects.takeLatest(Actions.FETCH_RECOMMENDATIONS_REFINEMENTS, Tasks.fetchNavigations, flux);
 };

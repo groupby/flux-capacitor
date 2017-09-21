@@ -123,7 +123,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
     describe('fetchRefinements()', () => {
       it('should return an action with refinements', () => {
         const flux = <any>{ a: 'b' };
-        const task = Tasks.fetchRefinements(flux, <any>{ payload: {} });
+        const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
 
         task.next();
         // task.next();
