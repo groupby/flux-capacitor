@@ -126,9 +126,10 @@ namespace Actions {
   export type ReceiveRedirect = Action<typeof RECEIVE_REDIRECT, string>;
   export const RECEIVE_RECOMMENDATIONS_PRODUCTS = 'RECEIVE_RECOMMENDATIONS_PRODUCTS';
   export type ReceiveRecommendationsProducts = Action<typeof RECEIVE_RECOMMENDATIONS_PRODUCTS, Store.Product[]>;
-  export const RECEIVE_RECOMMENDATIONS_REFINEMENTS = 'RECEIVE_RECOMMENDATIONS_REFINEMENTS';
+  // export const RECEIVE_RECOMMENDATIONS_NA
+  export const RECEIVE_RECOMMENDATIONS_NAVIGATIONS = 'RECEIVE_RECOMMENDATIONS_NAVIGATIONS';
   // tslint:disable-next-line max-line-length
-  export type ReceiveRecommendationsRefinements = Action<typeof RECEIVE_RECOMMENDATIONS_REFINEMENTS, Store.Recommendations.Navigation[]>;
+  export type ReceiveRecommendationsNavigations = Action<typeof RECEIVE_RECOMMENDATIONS_NAVIGATIONS, Store.Recommendations.Navigation[]>;
 
   // ui
   export const CREATE_COMPONENT_STATE = 'CREATE_COMPONENT_STATE';

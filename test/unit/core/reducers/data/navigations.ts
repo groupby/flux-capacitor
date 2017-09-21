@@ -105,7 +105,7 @@ suite('navigations', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
-    it('should sort navigation state on RECEIVE_RECOMMENDATIONS_REFINEMENTS', () => {
+    it('should sort navigation state on RECEIVE_RECOMMENDATIONS_NAVIGATIONS', () => {
       const newState = {
         allIds: ['Section', 'Format', 'Additional'],
         byId: {
@@ -114,7 +114,7 @@ suite('navigations', ({ expect }) => {
         },
       };
       const reducer = navigations({ ...state, allIds: [ 'Additional', ...state.allIds ] }, {
-        type: Actions.RECEIVE_RECOMMENDATIONS_REFINEMENTS,
+        type: Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS,
         payload: [{
             name: 'Section',
             values: [{

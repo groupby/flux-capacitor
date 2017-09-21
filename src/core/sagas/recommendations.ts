@@ -16,7 +16,7 @@ export namespace Tasks {
       const config = flux.config.recommendations.productSuggestions;
       // fall back to default mode "popular" if not provided
       // "popular" default will likely provide the most consistently strong data
-      const mode = Configuration.RECOMMENDATION_MODES[config.mode || 'Popular'];
+      const mode = Configuration.RECOMMENDATION_MODES[config.mode || 'popular'];
       // tslint:disable-next-line max-line-length
       const recommendationsUrl = Adapter.buildUrl(flux.config.customerId, 'products', mode);
       const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({

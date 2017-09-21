@@ -255,7 +255,7 @@ export function createActions(flux: FluxCapacitor) {
         action(Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, products),
 
       receiveRecommendationsRefinements: (products: Store.Product[]) =>
-        action(Actions.RECEIVE_RECOMMENDATIONS_REFINEMENTS, products, metadata),
+        action(Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS, products, metadata),
 
       // ui action creators
       createComponentState: (tagName: string, id: string, state: any = {}): Actions.CreateComponentState =>

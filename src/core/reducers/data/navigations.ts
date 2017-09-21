@@ -5,7 +5,7 @@ import Store from '../../store';
 export type Action = Actions.ResetRefinements
   | Actions.AddRefinement
   | Actions.ReceiveNavigations
-  | Actions.ReceiveRecommendationsRefinements
+  | Actions.ReceiveRecommendationsNavigations
   | Actions.SelectRefinement
   | Actions.DeselectRefinement
   | Actions.ReceiveMoreRefinements;
@@ -20,7 +20,7 @@ export default function updateNavigations(state: State = DEFAULTS, action: Actio
   switch (action.type) {
     case Actions.RESET_REFINEMENTS: return resetRefinements(state, action.payload);
     case Actions.RECEIVE_NAVIGATIONS: return receiveNavigations(state, action.payload);
-    case Actions.RECEIVE_RECOMMENDATIONS_REFINEMENTS: return sortNavigations(state, action.payload);
+    case Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS: return sortNavigations(state, action.payload);
     case Actions.ADD_REFINEMENT: return addRefinement(state, action.payload);
     case Actions.SELECT_REFINEMENT: return selectRefinement(state, action.payload);
     case Actions.DESELECT_REFINEMENT: return deselectRefinement(state, action.payload);
