@@ -45,11 +45,17 @@ export const refinementPayload = (field: string, valueOrLow: any, high: any = nu
 export const handleError = (errorAction: Actions.Action<any>,  createAction: () => any) =>
   errorAction.error ? errorAction :  createAction();
 
-export const shouldResetRefinements =  ({ low, high, value, navigationId, range }: Actions.Payload.Search,
+export const shouldResetRefinements =  ({ low, high, value, navigationId, range, index }: Actions.Payload.Search,
                                         state: any): boolean => {
   const currentRefinements = Selectors.selectedRefinements(state);
-  const refinement = { low, high, value };
+  let refinement = { low, high, value };
   // assumes only one refinement can be added at once
-  return !navigationId || currentRefinements.length !== 1 ||
-    !SearchAdapter.refinementsMatch(<any>refinement, currentRefinements[0], range ? 'Range' : 'Value');
+  if (!navigationId || currentRefinements.length !== 1) {
+    return true;
+  }
+
+  if (index) {
+    refinement = Selectors.refinementCrumb(state, navigationId, index);
+  }
+  return !SearchAdapter.refinementsMatch(<any>refinement, currentRefinements[0], range ? 'Range' : 'Value');
 };
