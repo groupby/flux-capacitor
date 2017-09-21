@@ -16,17 +16,14 @@ export namespace Tasks {
       const config = flux.config.recommendations.productSuggestions;
       // fall back to default mode "popular" if not provided
       // "popular" default will likely provide the most consistently strong data
-      const mode = Configuration.RECOMMENDATION_MODES[config.mode || 'popular'];
+      const mode = Configuration.RECOMMENDATION_MODES[config.mode || 'Popular'];
       // tslint:disable-next-line max-line-length
-      const recommendationsUrl = `${Adapter.buildUrl(flux.config.customerId)}/products/_get${mode}`;
-      const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, {
-        method: 'POST',
-        body: JSON.stringify({
-          size: config.productCount,
-          type: 'viewProduct',
-          target: config.idField
-        })
-      });
+      const recommendationsUrl = Adapter.buildUrl(flux.config.customerId, 'products', mode);
+      const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({
+        size: config.productCount,
+        type: 'viewProduct',
+        target: config.idField
+      }));
       const recommendations = yield recommendationsResponse.json();
       // tslint:disable-next-line max-line-length
       const refinements = recommendations.result
@@ -53,16 +50,17 @@ export namespace Tasks {
     try {
       // const config = flux.config.recommendations;
       // const recommendationsUrl = `${Adapter.buildUrl(flux.config.customerId)}/refinements/_getPopular`;
-      const recommendationsUrl = `${Adapter.buildUrl('zorotools')}/refinements/_getPopular`;
-      const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, {
-        method: 'POST',
-        body: JSON.stringify({
-          size: 1,
-          window: 'day',
-        })
-      });
-    } catch (e) {
+      const recommendationsUrl = Adapter.buildUrl('zorotools', 'refinements', 'Popular');
+      const recommendations = (yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({
+        size: 1,
+        window: 'day',
+      }))).json();
+      const refinements = recommendations.result
+        .filter(({ values }) => values); // assumes no values key will be empty
 
+      yield effects.put(flux.actions.receiveRecommendationsRefinements());
+    } catch (e) {
+      yield effects.put(flux.actions.receiveRecommendationsRefinements(e));
     }
   }
 }
