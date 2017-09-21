@@ -52,8 +52,15 @@ export namespace Tasks {
   export function* fetchRefinements(flux: FluxCapacitor, action: Actions.FetchRecommendationsProducts) {
     try {
       // const config = flux.config.recommendations;
-
-      
+      // const recommendationsUrl = `${Adapter.buildUrl(flux.config.customerId)}/refinements/_getPopular`;
+      const recommendationsUrl = `${Adapter.buildUrl('zorotools')}/refinements/_getPopular`;
+      const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, {
+        method: 'POST',
+        body: JSON.stringify({
+          size: 1,
+          window: 'day',
+        })
+      });
     } catch (e) {
 
     }
