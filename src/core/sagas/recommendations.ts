@@ -13,7 +13,7 @@ export namespace Tasks {
   export function* fetchProducts(flux: FluxCapacitor, action: Actions.FetchRecommendationsProducts) {
     try {
       const state = yield effects.select();
-      const config = flux.config.recommendations;
+      const config = flux.config.recommendations.productSuggestions;
       // fall back to default mode "popular" if not provided
       // "popular" default will likely provide the most consistently strong data
       const mode = Configuration.RECOMMENDATION_MODES[config.mode || 'popular'];
@@ -46,6 +46,16 @@ export namespace Tasks {
       yield effects.put(flux.actions.receiveRecommendationsProducts(records.map(SearchAdapter.extractProduct)));
     } catch (e) {
       yield effects.put(flux.actions.receiveRecommendationsProducts(e));
+    }
+  }
+
+  export function* fetchRefinements(flux: FluxCapacitor, action: Actions.FetchRecommendationsProducts) {
+    try {
+      // const config = flux.config.recommendations;
+
+      
+    } catch (e) {
+
     }
   }
 }

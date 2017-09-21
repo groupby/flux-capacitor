@@ -217,6 +217,11 @@ namespace Configuration {
   }
 
   export interface Recommendations {
+    productSuggestions: Configuration.ProductSuggestions;
+    iNav: Configuration.INav;
+  }
+
+  export interface ProductSuggestions {
     /**
      * number of products to request
      */
@@ -229,6 +234,10 @@ namespace Configuration {
      * type of product recommendations to request
      */
     mode: Configuration.RecommendationMode;
+  }
+
+  export interface INav {
+
   }
 
   export type ValueOptions<T> = T | { options: T[], default: T };

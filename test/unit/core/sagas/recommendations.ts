@@ -118,5 +118,9 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         task.next();
       });
     });
+
+    describe('fetchRefinements()', () => {
+      // it('should ')
+    });
   });
 });
