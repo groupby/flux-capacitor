@@ -65,23 +65,35 @@ export const receiveNavigations = (state: State, navigations: Store.Navigation[]
 };
 
 export const sortNavigations = (state: State, navigations: Store.Recommendations.Navigation[]) => {
-  return { ...state, allIds: sortBasedOn(state.allIds, navigations) };
+  return { ...state, allIds: sortBasedOn(state.allIds, navigations, 'name') };
 };
 
 export const sortRefinements = (state: State, navigations: Store.Recommendations.Navigation[]) => {
   const newObj = {};
   state.allIds.forEach((id) => {
-    const navigation = navigations.find(({ name }) => id === name);
-    if (navigation) {
-      console.log(state.byId[id].refinements);
-      console.log(navigation.values);
-      newObj[id] = sort(state.byId[id].refinements, navigation.values)
-      // newObj[id] = sortBasedOn(newObj[id],
-    } else {
+    const index = navigations.findIndex(({ name }) => id === name);
+    if (index !== -1) {
       newObj[id] = { ...state.byId[id] };
+      newObj[id].refinements = sortBasedOn(newObj[id].refinements, navigations[index].values, 'value');
     }
   });
+  return { ...state, byId:
+           { ...state.byId,
+             ...newObj
+           }
+         };
 };
+  // state.allIds.forEach((id) => {
+  //   const navigation = navigations.find(({ name }) => id === name);
+  //   if (navigation) {
+  //     console.log(state.byId[id].refinements);
+  //     console.log(navigation.values);
+  //     newObj[id] = sort(state.byId[id].refinements, navigation.values)
+  //     // newObj[id] = sortBasedOn(newObj[id],
+  //   } else {
+  //     newObj[id] = { ...state.byId[id] };
+  //   }
+  // });
 
 export const sort = (toBeSorted: any[], basisArray: any[]): any[] => {
   const output: string[] = [];
