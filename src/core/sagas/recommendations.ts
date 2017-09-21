@@ -50,16 +50,19 @@ export namespace Tasks {
     try {
       // const config = flux.config.recommendations;
       // const recommendationsUrl = `${Adapter.buildUrl(flux.config.customerId)}/refinements/_getPopular`;
+      console.log('imma tryin');
       const recommendationsUrl = Adapter.buildUrl('zorotools', 'refinements', 'Popular');
-      const recommendations = (yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({
-        size: 1,
+      const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({
+        size: 10,
         window: 'day',
-      }))).json();
+      }));
+      console.log(recommendationsResponse);
+      const recommendations = yield recommendationsResponse.json();
       const refinements = recommendations.result
         .filter(({ values }) => values); // assumes no values key will be empty
-
-      yield effects.put(flux.actions.receiveRecommendationsRefinements());
+      yield effects.put(flux.actions.receiveRecommendationsRefinements(refinements));
     } catch (e) {
+      console.log(e);
       yield effects.put(flux.actions.receiveRecommendationsRefinements(e));
     }
   }
@@ -67,4 +70,5 @@ export namespace Tasks {
 
 export default (flux: FluxCapacitor) => function* recommendationsSaga() {
   yield effects.takeLatest(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, Tasks.fetchProducts, flux);
+  yield effects.takeLatest(Actions.FETCH_RECOMMENDATIONS_REFINEMENTS, Tasks.fetchRefinements, flux);
 };

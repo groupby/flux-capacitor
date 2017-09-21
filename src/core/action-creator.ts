@@ -43,6 +43,9 @@ export function createActions(flux: FluxCapacitor) {
       fetchRecommendationsProducts: () =>
         action(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, null),
 
+      fetchRecommendationsRefinements: () =>
+        action(Actions.FETCH_RECOMMENDATIONS_REFINEMENTS, null, metadata),
+
       // request action creators
       updateSearch: (search: Actions.Payload.Search): Actions.UpdateSearch => {
         const searchActions: Actions.UpdateSearch = [actions.resetPage()];
@@ -250,6 +253,9 @@ export function createActions(flux: FluxCapacitor) {
 
       receiveRecommendationsProducts: (products: Store.Product[]) =>
         action(Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, products),
+
+      receiveRecommendationsRefinements: (products: Store.Product[]) =>
+        action(Actions.RECEIVE_RECOMMENDATIONS_REFINEMENTS, products, metadata),
 
       // ui action creators
       createComponentState: (tagName: string, id: string, state: any = {}): Actions.CreateComponentState =>
