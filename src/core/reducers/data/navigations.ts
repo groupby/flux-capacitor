@@ -69,7 +69,12 @@ export const sortNavigations = (state: State, navigations: Store.Recommendations
 };
 
 export const sortRefinements = (state: State, navigations: Store.Recommendations.Navigation[]) => {
+  const newObj = {};
   for (const key in state.byId) {
+    if (navigations.find((nav) => key === nav)) {
+      newObj[key] = {...state.byId[key]};
+      newObj[key] = sortBasedOn(newObj[key], 
+    }
   }
 };
 
