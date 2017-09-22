@@ -90,31 +90,6 @@ export const sortRefinements = (state: State, navigations: Store.Recommendations
     }
   };
 };
-// state.allIds.forEach((id) => {
-//   const navigation = navigations.find(({ name }) => id === name);
-//   if (navigation) {
-//     console.log(state.byId[id].refinements);
-//     console.log(navigation.values);
-//     newObj[id] = sort(state.byId[id].refinements, navigation.values)
-//     // newObj[id] = sortBasedOn(newObj[id],
-//   } else {
-//     newObj[id] = { ...state.byId[id] };
-//   }
-// });
-
-// export const sort = (toBeSorted: any[], basisArray: any[]): any[] => {
-//   const output: string[] = [];
-//   const ids = toBeSorted.concat();
-//   basisArray.forEach((item) => {
-//     const index = ids.findIndex((element) => item.value === element.value);
-//     if (index !== -1) {
-//       console.log(ids[index]);
-//       output.push(item.value);
-//       ids.splice(index, 1);
-//     }
-//   });
-//   return output.concat(ids);
-// };
 
 // tslint:disable-next-line max-line-length
 export const selectRefinement = (state: State, { navigationId, index: refinementIndex }: Actions.Payload.Navigation.Refinement) => {

@@ -189,7 +189,6 @@ export function createActions(flux: FluxCapacitor) {
             actions.receiveQuery(SearchAdapter.extractQuery(res)),
             actions.receiveProductRecords(SearchAdapter.extractProducts(res)),
             actions.receiveNavigations(SearchAdapter.combineNavigations(res)),
-            actions.fetchRecommendationsRefinements(),
             actions.receiveRecordCount(recordCount),
             actions.receiveCollectionCount({
               collection: Selectors.collection(state),
@@ -197,6 +196,7 @@ export function createActions(flux: FluxCapacitor) {
             }),
             actions.receivePage(SearchAdapter.extractPage(state, recordCount)),
             actions.receiveTemplate(SearchAdapter.extractTemplate(res.template)),
+            actions.fetchRecommendationsRefinements(),
           ];
         });
       },

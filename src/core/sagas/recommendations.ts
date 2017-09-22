@@ -12,7 +12,6 @@ export namespace Tasks {
   // tslint:disable-next-line max-line-length
   export function* fetchProducts(flux: FluxCapacitor, action: Actions.FetchRecommendationsProducts) {
     try {
-      console.log('test');
       const state = yield effects.select();
       const config = flux.config.recommendations.productSuggestions;
       // fall back to default mode "popular" if not provided
@@ -30,7 +29,6 @@ export namespace Tasks {
       const refinements = recommendations.result
         .filter(({ productId }) => productId)
         .map(({ productId }) => ({ navigationName: config.idField, type: 'Value', value: productId }));
-      console.log(refinements);
       const { records } = yield effects.call(
         [flux.clients.bridge, flux.clients.bridge.search],
         {
@@ -57,15 +55,12 @@ export namespace Tasks {
         size: 20,
         window: 'day',
       }));
-      console.log(recommendationsResponse);
       const recommendations = yield recommendationsResponse.json();
       const refinements = recommendations.result
         .filter(({ values }) => values); // assumes no values key will be empty
-      console.log('put');
       yield effects.put(flux.actions.receiveRecommendationsNavigations(refinements));
       yield effects.put(flux.actions.receiveRecommendationsRefinements(refinements));
     } catch (e) {
-      console.log(e);
       yield effects.put(flux.actions.receiveRecommendationsRefinements(e));
     }
   }

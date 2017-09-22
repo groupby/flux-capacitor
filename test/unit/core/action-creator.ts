@@ -626,11 +626,11 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           receiveQueryAction,
           receiveProductRecordsAction,
           receiveNavigationsAction,
-          fetchRecommendationsAction,
           receiveRecordCountAction,
           receiveCollectionCountAction,
           receivePageAction,
-          receiveTemplateAction
+          receiveTemplateAction,
+          fetchRecommendationsAction,
         ]);
       });
 
