@@ -11,6 +11,7 @@ export type Action = Actions.ResetRefinements
   | Actions.SelectRefinement
   | Actions.DeselectRefinement
   | Actions.ReceiveMoreRefinements;
+
 export type State = Store.Indexed<Store.Navigation>;
 
 export const DEFAULTS: State = {
@@ -72,13 +73,13 @@ export const sortNavigations = (state: State, navigations: Store.Recommendations
 };
 
 export const sortRefinements = (state: State, navigations: Store.Recommendations.Navigation[]) => {
-  const newById: Store.Indexed<Store.Navigation> | Object = {};
+  const newById: Store.Indexed<Store.Navigation>['byId'] = {};
   state.allIds.forEach((id) => {
     const index = navigations.findIndex(({ name }) => id === name);
     if (index !== -1) {
       newById[id] = { ...state.byId[id] };
       newById[id].refinements = sortBasedOn(newById[id].refinements, navigations[index].values,
-        (unsorted, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase());
+        (unsorted: Store.ValueRefinement, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase());
     }
   });
   return {
