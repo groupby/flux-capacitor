@@ -189,6 +189,7 @@ export function createActions(flux: FluxCapacitor) {
             actions.receiveQuery(SearchAdapter.extractQuery(res)),
             actions.receiveProductRecords(SearchAdapter.extractProducts(res)),
             actions.receiveNavigations(SearchAdapter.combineNavigations(res)),
+            actions.fetchRecommendationsRefinements(),
             actions.receiveRecordCount(recordCount),
             actions.receiveCollectionCount({
               collection: Selectors.collection(state),

@@ -67,5 +67,6 @@ export const sortBasedOn = (toBeSorted: any[], basisArray: any[], callback: any)
       ids.splice(index, 1);
     }
   });
+  console.log(output);
   return output.concat(ids);
 };

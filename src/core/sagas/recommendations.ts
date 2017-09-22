@@ -12,6 +12,7 @@ export namespace Tasks {
   // tslint:disable-next-line max-line-length
   export function* fetchProducts(flux: FluxCapacitor, action: Actions.FetchRecommendationsProducts) {
     try {
+      console.log('test');
       const state = yield effects.select();
       const config = flux.config.recommendations.productSuggestions;
       // fall back to default mode "popular" if not provided
@@ -29,6 +30,7 @@ export namespace Tasks {
       const refinements = recommendations.result
         .filter(({ productId }) => productId)
         .map(({ productId }) => ({ navigationName: config.idField, type: 'Value', value: productId }));
+      console.log(refinements);
       const { records } = yield effects.call(
         [flux.clients.bridge, flux.clients.bridge.search],
         {
@@ -50,7 +52,7 @@ export namespace Tasks {
     try {
       // const config = flux.config.recommendations;
       // const recommendationsUrl = `${Adapter.buildUrl(flux.config.customerId)}/refinements/_getPopular`;
-      const recommendationsUrl = Adapter.buildUrl('zorotools', 'refinements', 'Popular');
+      const recommendationsUrl = Adapter.buildUrl(flux.config.customerId, 'refinements', 'Popular');
       const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({
         size: 10,
         window: 'day',

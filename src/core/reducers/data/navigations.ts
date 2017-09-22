@@ -19,7 +19,6 @@ export const DEFAULTS: State = {
 };
 
 export default function updateNavigations(state: State = DEFAULTS, action: Action) {
-  console.log(action.type);
   switch (action.type) {
     case Actions.RESET_REFINEMENTS: return resetRefinements(state, action.payload);
     case Actions.RECEIVE_NAVIGATIONS: return receiveNavigations(state, action.payload);
@@ -66,11 +65,9 @@ export const receiveNavigations = (state: State, navigations: Store.Navigation[]
 };
 
 export const sortNavigations = (state: State, navigations: Store.Recommendations.Navigation[]) => {
-  console.log('test1');
-  console.log(state);
-  console.log(navigations);
+  console.log('test');
   return { ...state, allIds: sortBasedOn(state.allIds, navigations,
-                                         (unsorted, sorted) => unsorted === sorted.name).map(({ name }) => name) };
+                                         (unsorted, sorted) => unsorted === sorted.name) };
 };
 
 export const sortRefinements = (state: State, navigations: Store.Recommendations.Navigation[]) => {
@@ -78,7 +75,6 @@ export const sortRefinements = (state: State, navigations: Store.Recommendations
   console.log(state);
   const newObj = {};
   state.allIds.forEach((id) => {
-    console.log('ono');
     const index = navigations.findIndex(({ name }) => id === name);
     console.log(index);
     if (index !== -1) {
