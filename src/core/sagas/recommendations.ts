@@ -50,7 +50,6 @@ export namespace Tasks {
     try {
       // const config = flux.config.recommendations;
       // const recommendationsUrl = `${Adapter.buildUrl(flux.config.customerId)}/refinements/_getPopular`;
-      console.log('imma tryin');
       const recommendationsUrl = Adapter.buildUrl('zorotools', 'refinements', 'Popular');
       const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({
         size: 10,
@@ -60,6 +59,7 @@ export namespace Tasks {
       const recommendations = yield recommendationsResponse.json();
       const refinements = recommendations.result
         .filter(({ values }) => values); // assumes no values key will be empty
+      console.log('put');
       yield effects.put(flux.actions.receiveRecommendationsNavigations(refinements));
       yield effects.put(flux.actions.receiveRecommendationsRefinements(refinements));
     } catch (e) {

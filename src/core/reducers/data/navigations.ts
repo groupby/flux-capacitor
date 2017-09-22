@@ -19,6 +19,7 @@ export const DEFAULTS: State = {
 };
 
 export default function updateNavigations(state: State = DEFAULTS, action: Action) {
+  console.log(action.type);
   switch (action.type) {
     case Actions.RESET_REFINEMENTS: return resetRefinements(state, action.payload);
     case Actions.RECEIVE_NAVIGATIONS: return receiveNavigations(state, action.payload);
@@ -65,16 +66,27 @@ export const receiveNavigations = (state: State, navigations: Store.Navigation[]
 };
 
 export const sortNavigations = (state: State, navigations: Store.Recommendations.Navigation[]) => {
-  return { ...state, allIds: sortBasedOn(state.allIds, navigations, 'name') };
+  console.log('test1');
+  console.log(state);
+  console.log(navigations);
+  return { ...state, allIds: sortBasedOn(state.allIds, navigations,
+                                         (unsorted, sorted) => unsorted === sorted.name).map(({ name }) => name) };
 };
 
 export const sortRefinements = (state: State, navigations: Store.Recommendations.Navigation[]) => {
+  console.log('test2');
+  console.log(state);
   const newObj = {};
   state.allIds.forEach((id) => {
+    console.log('ono');
     const index = navigations.findIndex(({ name }) => id === name);
+    console.log(index);
     if (index !== -1) {
       newObj[id] = { ...state.byId[id] };
-      newObj[id].refinements = sortBasedOn(newObj[id].refinements, navigations[index].values, 'value');
+      console.log(navigations[id].refinements);
+      newObj[id].refinements = sortBasedOn(newObj[id].refinements, navigations[index].values,
+                                           (unsorted, sorted) => unsorted.value === sorted.value);
+      console.log(newObj[id].refinements);
     }
   });
   return { ...state, byId:
@@ -95,19 +107,19 @@ export const sortRefinements = (state: State, navigations: Store.Recommendations
   //   }
   // });
 
-export const sort = (toBeSorted: any[], basisArray: any[]): any[] => {
-  const output: string[] = [];
-  const ids = toBeSorted.concat();
-  basisArray.forEach((item) => {
-    const index = ids.findIndex((element) => item.value === element.value);
-    if (index !== -1) {
-      console.log(ids[index]);
-      output.push(item.value);
-      ids.splice(index, 1);
-    }
-  });
-  return output.concat(ids);
-};
+// export const sort = (toBeSorted: any[], basisArray: any[]): any[] => {
+//   const output: string[] = [];
+//   const ids = toBeSorted.concat();
+//   basisArray.forEach((item) => {
+//     const index = ids.findIndex((element) => item.value === element.value);
+//     if (index !== -1) {
+//       console.log(ids[index]);
+//       output.push(item.value);
+//       ids.splice(index, 1);
+//     }
+//   });
+//   return output.concat(ids);
+// };
 
 // tslint:disable-next-line max-line-length
 export const selectRefinement = (state: State, { navigationId, index: refinementIndex }: Actions.Payload.Navigation.Refinement) => {

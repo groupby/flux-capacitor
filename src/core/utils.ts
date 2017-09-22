@@ -54,16 +54,18 @@ export const shouldResetRefinements =  ({ low, high, value, navigationId, range,
           !SearchAdapter.refinementsMatch(<any>{ low, high, value }, currentRefinements[0], range ? 'Range' : 'Value'));
 };
 
-export const sortBasedOn = (toBeSorted: string[], basisArray: any[], key: string): string[] => {
-  const output: string[] = [];
+export const sortBasedOn = (toBeSorted: any[], basisArray: any[], callback: any): any[] => {
+  const output: any[] = [];
   const ids = toBeSorted.concat();
-  basisArray.forEach((something) => {
-    const index = ids.findIndex((element) => something[key] === element);
+  console.log(toBeSorted);
+  console.log(basisArray);
+  basisArray.forEach((basis) => {
+    const index = ids.findIndex((sortElement) => callback ? callback(basis, sortElement) :
+                                sortElement === basis);
     if (index !== -1) {
-      output.push(something[key]);
+      output.push(basis);
       ids.splice(index, 1);
     }
   });
-  console.log(output);
   return output.concat(ids);
 };
