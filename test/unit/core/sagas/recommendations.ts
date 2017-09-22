@@ -159,6 +159,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(receiveRecommendationsRefinements).to.be.calledWith(returnVal);
         task.next();
       });
+
       it('should handle request failure', () => {
         const error = new Error();
         const receiveRecommendationsNavigationsAction: any = { a: 'b' };
@@ -169,9 +170,10 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
           receiveRecommendationsNavigations, receiveRecommendationsRefinements } };
 
         const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
+        task.next();
         expect(task.throw(error).value).to.eql(effects.put(receiveRecommendationsNavigationsAction));
         expect(receiveRecommendationsNavigations).to.be.calledWithExactly(error);
-        expect(task.next()).to.eql(effects.put(receiveRecommendationsRefinementsAction));
+        task.next();
         expect(receiveRecommendationsRefinements).to.be.calledWithExactly(error);
         task.next();
       });
