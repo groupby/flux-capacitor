@@ -127,7 +127,19 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const receiveRecommendationsRefinements = spy((val) => val);
         const customerId = 'id';
         const flux: any = {
-          config: { customerId },
+          config: {
+            customerId,
+            recommendations: {
+              iNav: {
+                navigations: {
+                  sort: true
+                },
+                refinements: {
+                  sort: true
+                }
+              }
+            },
+          },
           actions: {
             receiveRecommendationsNavigations,
             receiveRecommendationsRefinements
@@ -166,7 +178,18 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const receiveRecommendationsRefinementsAction: any = { a: 'b' };
         const receiveRecommendationsNavigations = spy(() => receiveRecommendationsNavigationsAction);
         const receiveRecommendationsRefinements = spy(() => receiveRecommendationsRefinementsAction);
-        const flux: any = { config: {}, actions: {
+        const flux: any = { config: {
+          recommendations: {
+            iNav: {
+              navigations: {
+                sort: true
+              },
+              refinements: {
+                sort: true
+              }
+            }
+          },
+        }, actions: {
           receiveRecommendationsNavigations, receiveRecommendationsRefinements } };
 
         const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
@@ -177,7 +200,6 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(receiveRecommendationsRefinements).to.be.calledWithExactly(error);
         task.next();
       });
-
     });
   });
 });

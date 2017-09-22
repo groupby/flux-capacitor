@@ -218,7 +218,7 @@ namespace Configuration {
 
   export interface Recommendations {
     productSuggestions: Configuration.ProductSuggestions;
-    iNav: Configuration.INav;
+    iNav: Configuration.RecommendationsINav;
   }
 
   export interface ProductSuggestions {
@@ -236,8 +236,23 @@ namespace Configuration {
     mode: Configuration.RecommendationMode;
   }
 
-  export interface INav {
+  export interface RecommendationsINav {
+    navigations: Configuration.RecommendationsNavigations;
+    refinements: Configuration.RecommendationsRefinements;
+  }
 
+  export interface RecommendationsNavigations {
+    sort: boolean;
+    bringToTop?: string[];
+  }
+
+  export interface RecommendationsRefinements {
+    sort: boolean;
+    bringToTop?: Configuration.BringToTop;
+  }
+
+  export interface BringToTop {
+    [id: string]: string[];
   }
 
   export type ValueOptions<T> = T | { options: T[], default: T };
