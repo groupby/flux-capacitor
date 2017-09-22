@@ -120,15 +120,34 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
       });
     });
 
-    describe('fetchRefinements()', () => {
-      it('should return an action with refinements', () => {
-        const flux = <any>{ a: 'b' };
+    describe('fetchNavigations()', () => {
+      it('should return two actions', () => {
+        const receiveRecommendationsNavigations = spy();
+        const receiveRecommendationsRefinements = spy();
+        const flux: any = {
+          config: {},
+          actions: {
+            receiveRecommendationsNavigations,
+            receiveRecommendationsRefinements
+          }
+        };
+        const url = 'url';
+        const body = { a: 'b' };
+        stub(Adapter, 'buildUrl').returns(url);
+        stub(Adapter, 'buildBody').returns(body);
+
         const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
 
         const fetch = stub(utils, 'fetch');
+        expect(task.next().value).to.eql(effects.call(fetch, url, body));
 
-        task.next();
-        task.next();
+        const recommendations = {
+          result: [{ values: 'truthy' }, { values: false }, { values: 'literally truthy' }]
+        };
+        const jsonResult = 'hello';
+        expect(task.next({ json: () => jsonResult}).value).to.eql( jsonResult );
+        expect(task.next(recommendations).value).to.eql([{ values: 'truthy' }, { values: 'literally truthy' }]);
+
       });
     });
   });
