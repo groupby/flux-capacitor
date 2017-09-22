@@ -171,6 +171,143 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(receiveRecommendationsRefinements).to.be.calledWith(returnVal);
         task.next();
       });
+      it('should call receive navigations only when refinements sort is false', () => {
+        const receiveRecommendationsNavigations = spy((val) => val);
+        const receiveRecommendationsRefinements = spy((val) => val);
+        const customerId = 'id';
+        const flux: any = {
+          config: {
+            customerId,
+            recommendations: {
+              iNav: {
+                navigations: {
+                  sort: true
+                },
+                refinements: {
+                  sort: false
+                }
+              }
+            },
+          },
+          actions: {
+            receiveRecommendationsNavigations,
+            receiveRecommendationsRefinements
+          }
+        };
+        const url = 'url';
+        const body = { a: 'b' };
+        const recommendations = {
+          result: [{ values: 'truthy' }, { values: false }, { values: 'literally truthy' }]
+        };
+        const returnVal: any = [{ values: 'truthy' }, { values: 'literally truthy' }];
+        const jsonResult = 'hello';
+
+        const buildUrl = stub(RecommendationsAdapter, 'buildUrl').returns(url);
+        const buildBody = stub(RecommendationsAdapter, 'buildBody').returns(body);
+        const fetch = stub(utils, 'fetch');
+        const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
+
+        expect(task.next().value).to.eql(effects.call(fetch, url, body));
+        expect(buildUrl).to.be.calledWith(customerId, 'refinements', 'Popular');
+        expect(task.next({ json: () => jsonResult}).value).to.eql( jsonResult );
+        expect(buildBody).to.be.calledWith({
+          size: 10,
+          window: 'day',
+        });
+        expect(task.next(recommendations).value).to.eql(effects.put(returnVal));
+        expect(receiveRecommendationsNavigations).to.be.calledWith(returnVal);
+        expect(receiveRecommendationsRefinements).to.not.be.called;
+        task.next();
+      });
+      it('should only call receive refinements action when navigations sort is off', () => {
+        const receiveRecommendationsNavigations = spy((val) => val);
+        const receiveRecommendationsRefinements = spy((val) => val);
+        const customerId = 'id';
+        const flux: any = {
+          config: {
+            customerId,
+            recommendations: {
+              iNav: {
+                navigations: {
+                  sort: false
+                },
+                refinements: {
+                  sort: true
+                }
+              }
+            },
+          },
+          actions: {
+            receiveRecommendationsNavigations,
+            receiveRecommendationsRefinements
+          }
+        };
+        const url = 'url';
+        const body = { a: 'b' };
+        const recommendations = {
+          result: [{ values: 'truthy' }, { values: false }, { values: 'literally truthy' }]
+        };
+        const returnVal: any = [{ values: 'truthy' }, { values: 'literally truthy' }];
+        const jsonResult = 'hello';
+
+        const buildUrl = stub(RecommendationsAdapter, 'buildUrl').returns(url);
+        const buildBody = stub(RecommendationsAdapter, 'buildBody').returns(body);
+        const fetch = stub(utils, 'fetch');
+        const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
+
+        expect(task.next().value).to.eql(effects.call(fetch, url, body));
+        expect(buildUrl).to.be.calledWith(customerId, 'refinements', 'Popular');
+        expect(task.next({ json: () => jsonResult}).value).to.eql( jsonResult );
+        expect(buildBody).to.be.calledWith({
+          size: 10,
+          window: 'day',
+        });
+        expect(task.next(recommendations).value).to.eql(effects.put(returnVal));
+        expect(receiveRecommendationsRefinements).to.be.calledWith(returnVal);
+        expect(receiveRecommendationsNavigations).to.not.be.called;
+        task.next();
+      });
+      it('should not call any actions when both navigations and refinements sort are off', () => {
+        const receiveRecommendationsNavigations = spy((val) => val);
+        const receiveRecommendationsRefinements = spy((val) => val);
+        const customerId = 'id';
+        const flux: any = {
+          config: {
+            customerId,
+            recommendations: {
+              iNav: {
+                navigations: {
+                  sort: false
+                },
+                refinements: {
+                  sort: false
+                }
+              }
+            },
+          },
+          actions: {
+            receiveRecommendationsNavigations,
+            receiveRecommendationsRefinements
+          }
+        };
+        const url = 'url';
+        const body = { a: 'b' };
+        const recommendations = {
+          result: [{ values: 'truthy' }, { values: false }, { values: 'literally truthy' }]
+        };
+        const returnVal: any = [{ values: 'truthy' }, { values: 'literally truthy' }];
+        const jsonResult = 'hello';
+
+        const buildUrl = stub(RecommendationsAdapter, 'buildUrl').returns(url);
+        const buildBody = stub(RecommendationsAdapter, 'buildBody').returns(body);
+        const fetch = stub(utils, 'fetch');
+        const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
+
+        task.next();
+        expect(receiveRecommendationsRefinements).to.not.be.called;
+        expect(receiveRecommendationsNavigations).to.not.be.called;
+        task.next();
+      });
 
       it('should handle request failure', () => {
         const error = new Error();
