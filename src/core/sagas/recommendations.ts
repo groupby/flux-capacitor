@@ -54,7 +54,7 @@ export namespace Tasks {
       // const recommendationsUrl = `${Adapter.buildUrl(flux.config.customerId)}/refinements/_getPopular`;
       const recommendationsUrl = Adapter.buildUrl(flux.config.customerId, 'refinements', 'Popular');
       const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({
-        size: 10,
+        size: 20,
         window: 'day',
       }));
       console.log(recommendationsResponse);

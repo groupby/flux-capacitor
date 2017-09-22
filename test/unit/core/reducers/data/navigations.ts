@@ -170,8 +170,8 @@ suite('navigations', ({ expect }) => {
         payload: [{
           name: 'Section',
           values: [
-            { value: 'Toys', total: 1231 },
-            { value: 'Gifts', total: 131 }
+            { value: 'Toys', count: 1231 },
+            { value: 'Gifts', count: 131 }
           ]
         }, {
           name: 'Format',
