@@ -569,6 +569,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const receiveQueryAction = { aa: 'bb' };
         const receiveProductRecordsAction = { cc: 'dd' };
         const receiveNavigationsAction = { ee: 'ff' };
+        const fetchRecommendationsAction = { oo: 'pp' };
         const receiveRecordCountAction = { gg: 'hh' };
         const receiveCollectionCountAction = { ii: 'jj' };
         const receivePageAction = { kk: 'll' };
@@ -594,6 +595,8 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const receiveQuery = stub(actions, 'receiveQuery').returns(receiveQueryAction);
         const receiveProductRecords = stub(actions, 'receiveProductRecords').returns(receiveProductRecordsAction);
         const receiveNavigations = actions.receiveNavigations = spy(() => receiveNavigationsAction);
+        const fetchRecommendationsRefinements =
+          stub(actions, 'fetchRecommendationsRefinements').returns(fetchRecommendationsAction);
         const receiveRecordCount = stub(actions, 'receiveRecordCount').returns(receiveRecordCountAction);
         const receiveCollectionCount = actions.receiveCollectionCount = spy(() => receiveCollectionCountAction);
         const receivePage = stub(actions, 'receivePage').returns(receivePageAction);
@@ -606,6 +609,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         expect(receiveQuery).to.be.calledWith(query);
         expect(receiveProductRecords).to.be.calledWith(['x', 'x']);
         expect(receiveNavigations).to.be.calledWith(navigations);
+        expect(fetchRecommendationsRefinements).to.be.calledWith();
         expect(receiveRecordCount).to.be.calledWith(recordCount);
         expect(receiveTemplate).to.be.calledWith(template);
         expect(receiveCollectionCount).to.be.calledWith({ collection, count: recordCount });
@@ -622,6 +626,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
           receiveQueryAction,
           receiveProductRecordsAction,
           receiveNavigationsAction,
+          fetchRecommendationsAction,
           receiveRecordCountAction,
           receiveCollectionCountAction,
           receivePageAction,

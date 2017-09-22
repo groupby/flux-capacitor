@@ -125,8 +125,10 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const flux = <any>{ a: 'b' };
         const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
 
+        const fetch = stub(utils, 'fetch');
+
         task.next();
-        // task.next();
+        task.next();
       });
     });
   });

@@ -23,7 +23,6 @@ export namespace Tasks {
       } else {
         flux.emit(Events.BEACON_SEARCH, res.id);
         yield effects.put(<any>flux.actions.receiveProducts(res));
-        yield effects.put(<any>flux.actions.fetchRecommendationsRefinements());
         flux.saveState(utils.Routes.SEARCH);
       }
     } catch (e) {

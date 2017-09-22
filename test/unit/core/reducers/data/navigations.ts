@@ -142,7 +142,7 @@ suite('navigations', ({ expect }) => {
 
     it('should sort refinement state on RECEIVE_RECOMMENDATIONS_REFINEMENTS', () => {
       const newState = {
-        allIds: ['Section', 'Format', 'Additional'],
+        allIds: ['Format', 'Section'],
         byId: {
           Section: {
             ...Section,
