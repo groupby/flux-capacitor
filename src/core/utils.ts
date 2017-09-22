@@ -53,14 +53,14 @@ export const shouldResetRefinements =  ({ low, high, value, navigationId, range,
           (index && !Selectors.isRefinementSelected(state, navigationId, index)) ||
           !SearchAdapter.refinementsMatch(<any>{ low, high, value }, currentRefinements[0], range ? 'Range' : 'Value'));
 };
-
-export const sortBasedOn = (toBeSorted: any[], basisArray: any[], callback?: any): any[] => {
-  const output: any[] = [];
+// tslint:disable-next-line max-line-length
+export const sortBasedOn = function<T,S>(toBeSorted: T[], basisArray: S[], callback?: (a: T, b: S) => boolean): T[] {
+  const output: T[] = [];
   const ids = toBeSorted.concat();
   basisArray.forEach((basis) => {
     const index = ids.findIndex((sortElement) => callback
       ? callback(sortElement, basis)
-      : sortElement === basis);
+      : sortElement === <any>basis);
     if (index !== -1) {
       output.push(ids[index]);
       ids.splice(index, 1);

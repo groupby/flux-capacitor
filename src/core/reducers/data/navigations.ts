@@ -72,12 +72,12 @@ export const sortNavigations = (state: State, navigations: Store.Recommendations
 };
 
 export const sortRefinements = (state: State, navigations: Store.Recommendations.Navigation[]) => {
-  const newObj = {};
+  const newById: Store.Indexed<Store.Navigation> | Object = {};
   state.allIds.forEach((id) => {
     const index = navigations.findIndex(({ name }) => id === name);
     if (index !== -1) {
-      newObj[id] = { ...state.byId[id] };
-      newObj[id].refinements = sortBasedOn(newObj[id].refinements, navigations[index].values,
+      newById[id] = { ...state.byId[id] };
+      newById[id].refinements = sortBasedOn(newById[id].refinements, navigations[index].values,
         (unsorted, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase());
     }
   });
@@ -85,7 +85,7 @@ export const sortRefinements = (state: State, navigations: Store.Recommendations
     ...state,
     byId: {
       ...state.byId,
-      ...newObj
+      ...newById
     }
   };
 };
