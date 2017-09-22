@@ -48,11 +48,9 @@ export namespace Tasks {
 
   export function* fetchNavigations(flux: FluxCapacitor, action: Actions.FetchRecommendationsProducts) {
     try {
-      // const config = flux.config.recommendations;
-      // const recommendationsUrl = `${Adapter.buildUrl(flux.config.customerId)}/refinements/_getPopular`;
       const recommendationsUrl = Adapter.buildUrl(flux.config.customerId, 'refinements', 'Popular');
       const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({
-        size: 20,
+        size: 10,
         window: 'day',
       }));
       const recommendations = yield recommendationsResponse.json();
@@ -60,7 +58,8 @@ export namespace Tasks {
         .filter(({ values }) => values); // assumes no values key will be empty
       yield effects.put(flux.actions.receiveRecommendationsNavigations(refinements));
       yield effects.put(flux.actions.receiveRecommendationsRefinements(refinements));
-    } catch (e) {
+    } catch (e) { // TODO: ERRORS
+      yield effects.put(flux.actions.receiveRecommendationsNavigations(e));
       yield effects.put(flux.actions.receiveRecommendationsRefinements(e));
     }
   }

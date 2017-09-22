@@ -1,6 +1,7 @@
 import * as effects from 'redux-saga/effects';
 import Actions from '../../../../src/core/actions';
 import Adapter from '../../../../src/core/adapters/search';
+import RecommendationsAdapter from '../../../../src/core/adapters/recommendations';
 import Requests from '../../../../src/core/requests';
 import sagaCreator, { Tasks } from '../../../../src/core/sagas/recommendations';
 import Selectors from '../../../../src/core/selectors';
@@ -122,10 +123,11 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
 
     describe('fetchNavigations()', () => {
       it('should return two actions', () => {
-        const receiveRecommendationsNavigations = spy();
-        const receiveRecommendationsRefinements = spy();
+        const receiveRecommendationsNavigations = spy((val) => val);
+        const receiveRecommendationsRefinements = spy((val) => val);
+        const customerId = 'id';
         const flux: any = {
-          config: {},
+          config: { customerId },
           actions: {
             receiveRecommendationsNavigations,
             receiveRecommendationsRefinements
@@ -133,22 +135,47 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         };
         const url = 'url';
         const body = { a: 'b' };
-        stub(Adapter, 'buildUrl').returns(url);
-        stub(Adapter, 'buildBody').returns(body);
-
-        const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
-
-        const fetch = stub(utils, 'fetch');
-        expect(task.next().value).to.eql(effects.call(fetch, url, body));
-
         const recommendations = {
           result: [{ values: 'truthy' }, { values: false }, { values: 'literally truthy' }]
         };
+        const returnVal: any = [{ values: 'truthy' }, { values: 'literally truthy' }];
         const jsonResult = 'hello';
-        expect(task.next({ json: () => jsonResult}).value).to.eql( jsonResult );
-        expect(task.next(recommendations).value).to.eql([{ values: 'truthy' }, { values: 'literally truthy' }]);
 
+        const buildUrl = stub(RecommendationsAdapter, 'buildUrl').returns(url);
+        const buildBody = stub(RecommendationsAdapter, 'buildBody').returns(body);
+        const fetch = stub(utils, 'fetch');
+        const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
+
+        expect(task.next().value).to.eql(effects.call(fetch, url, body));
+        expect(buildUrl).to.be.calledWith(customerId, 'refinements', 'Popular');
+        expect(task.next({ json: () => jsonResult}).value).to.eql( jsonResult );
+        expect(buildBody).to.be.calledWith({
+          size: 10,
+          window: 'day',
+        });
+        expect(task.next(recommendations).value).to.eql(effects.put(returnVal));
+        expect(receiveRecommendationsNavigations).to.be.calledWith(returnVal);
+        expect(task.next().value).to.eql(effects.put(returnVal));
+        expect(receiveRecommendationsRefinements).to.be.calledWith(returnVal);
+        task.next();
       });
+      it('should handle request failure', () => {
+        const error = new Error();
+        const receiveRecommendationsNavigationsAction: any = { a: 'b' };
+        const receiveRecommendationsRefinementsAction: any = { a: 'b' };
+        const receiveRecommendationsNavigations = spy(() => receiveRecommendationsNavigationsAction);
+        const receiveRecommendationsRefinements = spy(() => receiveRecommendationsRefinementsAction);
+        const flux: any = { config: {}, actions: {
+          receiveRecommendationsNavigations, receiveRecommendationsRefinements } };
+
+        const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
+        expect(task.throw(error).value).to.eql(effects.put(receiveRecommendationsNavigationsAction));
+        expect(receiveRecommendationsNavigations).to.be.calledWithExactly(error);
+        expect(task.next()).to.eql(effects.put(receiveRecommendationsRefinementsAction));
+        expect(receiveRecommendationsRefinements).to.be.calledWithExactly(error);
+        task.next();
+      });
+
     });
   });
 });
