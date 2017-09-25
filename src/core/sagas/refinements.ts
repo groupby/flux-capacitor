@@ -15,8 +15,10 @@ export namespace Tasks {
         Requests.search(state, flux.config),
         action.payload
       );
+      console.log(res);
       const { navigationId, refinements, selected } = Adapter.mergeRefinements(res, state);
-
+      console.log('test');
+      console.log(navigationId, refinements, selected);
       yield effects.put(flux.actions.receiveMoreRefinements(navigationId, refinements, selected));
     } catch (e) {
       yield effects.put(utils.action(Actions.RECEIVE_MORE_REFINEMENTS, e));

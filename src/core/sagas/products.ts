@@ -11,7 +11,7 @@ import * as utils from '../utils';
 import { Tasks as productDetailsTasks } from './product-details';
 
 export namespace Tasks {
-  export function* fetchProductsAndNavigations (flux: FluxCapacitor, action: Actions.FetchProducts) {
+  export function* fetchProductsAndNavigations(flux: FluxCapacitor, action: Actions.FetchProducts) {
     try {
       const [products, navigations]: [Results, Store.Recommendations.Navigation[]] = yield effects.all([
         effects.call(fetchProducts, flux, action),
@@ -26,15 +26,8 @@ export namespace Tasks {
       } else {
         flux.emit(Events.BEACON_SEARCH, (<any>products).id);
         if (navigations && !(navigations instanceof Error)) {
-          products.availableNavigation = utils.sortBasedOn(products.availableNavigation,
-            navigations, (unsorted: any, sorted) => unsorted.name === sorted.name);
-          products.availableNavigation.forEach((product) => {
-            const index = navigations.findIndex(({ name }) => product.name === name);
-            if (index !== -1) {
-              product.refinements = utils.sortBasedOn(product.refinements, navigations[index].values,
-                (unsorted: ValueRefinement, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase());
-            }
-          });
+          products.availableNavigation = RecommendationsAdapter.sortNavigations(products, navigations);
+          RecommendationsAdapter.sortRefinements(products, navigations);
         }
         yield effects.put(<any>flux.actions.receiveProducts(products));
         yield effects.put(<any>flux.actions.receiveRecommendationsNavigations(navigations));
@@ -60,7 +53,7 @@ export namespace Tasks {
   export function* fetchNavigations(flux: FluxCapacitor, action: Actions.FetchProducts) {
     try {
       if (flux.config.recommendations.iNav.navigations.sort ||
-          flux.config.recommendations.iNav.refinements.sort) {
+        flux.config.recommendations.iNav.refinements.sort) {
         const recommendationsUrl = RecommendationsAdapter.buildUrl(flux.config.customerId, 'refinements', 'Popular');
         // tslint:disable-next-line max-line-length
         const recommendationsResponse = yield effects.call(utils.fetch, recommendationsUrl, RecommendationsAdapter.buildBody({
