@@ -6,11 +6,10 @@ import { sortBasedOn } from '../../utils';
 export type Action = Actions.ResetRefinements
   | Actions.AddRefinement
   | Actions.ReceiveNavigations
-  | Actions.ReceiveRecommendationsNavigations
-  | Actions.ReceiveRecommendationsRefinements
   | Actions.SelectRefinement
   | Actions.DeselectRefinement
-  | Actions.ReceiveMoreRefinements;
+  | Actions.ReceiveMoreRefinements
+  | Actions.ReceiveRecommendationsNavigations;
 
 export type State = Store.Indexed<Store.Navigation>;
 
@@ -23,12 +22,11 @@ export default function updateNavigations(state: State = DEFAULTS, action: Actio
   switch (action.type) {
     case Actions.RESET_REFINEMENTS: return resetRefinements(state, action.payload);
     case Actions.RECEIVE_NAVIGATIONS: return receiveNavigations(state, action.payload);
-    case Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS: return sortNavigations(state, action.payload);
-    case Actions.RECEIVE_RECOMMENDATIONS_REFINEMENTS: return sortRefinements(state, action.payload);
     case Actions.ADD_REFINEMENT: return addRefinement(state, action.payload);
     case Actions.SELECT_REFINEMENT: return selectRefinement(state, action.payload);
     case Actions.DESELECT_REFINEMENT: return deselectRefinement(state, action.payload);
     case Actions.RECEIVE_MORE_REFINEMENTS: return receiveMoreRefinements(state, action.payload);
+    case Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS: return receiveRecommendationsNavigations(state, action.payload);
     default: return state;
   }
 }
@@ -62,32 +60,6 @@ export const receiveNavigations = (state: State, navigations: Store.Navigation[]
     ...state,
     allIds,
     byId,
-  };
-};
-
-export const sortNavigations = (state: State, navigations: Store.Recommendations.Navigation[]) => {
-  return {
-    ...state,
-    allIds: sortBasedOn(state.allIds, navigations, (unsorted, sorted) => unsorted === sorted.name)
-  };
-};
-
-export const sortRefinements = (state: State, navigations: Store.Recommendations.Navigation[]) => {
-  const newById: Store.Indexed<Store.Navigation>['byId'] = {};
-  state.allIds.forEach((id) => {
-    const index = navigations.findIndex(({ name }) => id === name);
-    if (index !== -1) {
-      newById[id] = { ...state.byId[id] };
-      newById[id].refinements = sortBasedOn(newById[id].refinements, navigations[index].values,
-        (unsorted: Store.ValueRefinement, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase());
-    }
-  });
-  return {
-    ...state,
-    byId: {
-      ...state.byId,
-      ...newById
-    }
   };
 };
 
@@ -198,3 +170,8 @@ export const receiveMoreRefinements = (state: State, { navigationId, refinements
     return state;
   }
 };
+
+// tslint:disable-next-line max-line-length
+export const receiveRecommendationsNavigations = (state: State, { navigations }: { navigations: Store.Recommendations.Navigation[] }) => ({
+  ...state, navigations
+});
