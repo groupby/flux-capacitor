@@ -1,3 +1,4 @@
+import { Results } from 'groupby-api';
 import * as effects from 'redux-saga/effects';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
@@ -12,7 +13,7 @@ import { Tasks as productDetailsTasks } from './product-details';
 export namespace Tasks {
   export function* fetchProductsAndNavigations (flux: FluxCapacitor, action: Actions.FetchProducts) {
     try {
-      const [products, navigations] = yield effects.all([
+      const [products, navigations]: [any, Store.Recommendations.Navigation[]] = yield effects.all([
         effects.call(fetchProducts, flux, action),
         effects.call(fetchNavigations, flux, action)
       ]);
@@ -27,12 +28,12 @@ export namespace Tasks {
         if (navigations && !(navigations instanceof Error)) {
           products.availableNavigation = utils.sortBasedOn(products.availableNavigation,
                                                            navigations,
-                                                           (unsorted, sorted) => (<any>unsorted).name === (<any>sorted).name);
+                                                           (unsorted: any, sorted) => unsorted.name === sorted.name);
           products.availableNavigation.forEach((navigation) => {
             const index = navigations.findIndex(({ name }) => navigation.name === name);
             if (index !== -1) {
               navigation.refinements = utils.sortBasedOn(navigation.refinements, navigations[index].values,
-                                                         (unsorted: Store.ValueRefinement, sorted) => unsorted.value.toLowerCase() === (<any>sorted).value.toLowerCase());
+                                                         (unsorted: Store.ValueRefinement, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase());
             }
           });
         }
@@ -56,7 +57,7 @@ export namespace Tasks {
     return res;
   }
 
-  export function* fetchNavigations(flux: FluxCapacitor, action: Actions.FetchProducts): Store.Navigation[] | Error {
+  export function* fetchNavigations(flux: FluxCapacitor, action: Actions.FetchProducts) {
     try {
       if (flux.config.recommendations.iNav.navigations.sort ||
           flux.config.recommendations.iNav.refinements.sort) {
