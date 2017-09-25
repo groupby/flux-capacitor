@@ -477,7 +477,6 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       it('should apply validators to DESELECT_REFINEMENT', () => {
         const index = 30;
 
-        // tslint:disable-next-line max-line-length
         expectValidators(() => actions.deselectRefinement(navigationId, index), Actions.DESELECT_REFINEMENT, {
           payload: validators.isRefinementSelectedByIndex
         });
@@ -487,8 +486,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
     describe('selectCollection()', () => {
       const collection = 'products';
 
-      it('should return a batch action with SELECT_COLLECTION', () => {
-        // tslint:disable-next-line max-line-length
+      it('should return a SELECT_COLLECTION action', () => {
         expectAction(() => actions.selectCollection(collection), Actions.SELECT_COLLECTION, collection);
       });
 
@@ -502,8 +500,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
     describe('selectSort()', () => {
       const index = 9;
 
-      it('should return a batch action with SELECT_SORT', () => {
-        // tslint:disable-next-line max-line-length
+      it('should return a SELECT_SORT action', () => {
         expectAction(() => actions.selectSort(index), Actions.SELECT_SORT, index);
       });
 
@@ -515,51 +512,30 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
     });
 
     describe('updatePageSize()', () => {
-      it('should return an action', () => {
-        const pageSize = stub(Selectors, 'pageSize').returns(14);
-        const size = 12;
-        const state = { a: 'b' };
+      const pageSize = 20;
 
-        expectAction(() => actions.updatePageSize(size), Actions.UPDATE_PAGE_SIZE, size,
-          (meta) => {
-            expect(meta.validator.payload.func(null, state)).to.be.true;
-            return expect(pageSize).to.be.calledWithExactly(state);
-          });
+      it('should return an UPDATE_PAGE_SIZE action', () => {
+        expectAction(() => actions.updatePageSize(pageSize), Actions.UPDATE_PAGE_SIZE, pageSize);
       });
 
-      it('should invalidate action if selected page size is the same', () => {
-        const size = 12;
-        stub(Selectors, 'pageSize').returns(size);
-
-        expectAction(() => actions.updatePageSize(size), Actions.UPDATE_PAGE_SIZE, size,
-          (meta) => expect(meta.validator.payload.func(null, {})).to.be.false);
+      it('should apply validators to UPDATE_PAGE_SIZE', () => {
+        expectValidators(() => actions.updatePageSize(pageSize), Actions.UPDATE_PAGE_SIZE, {
+          payload: validators.isDifferentPageSize
+        });
       });
     });
 
     describe('updateCurrentPage()', () => {
-      it('should return an action', () => {
-        const page = 5;
-        const state = { a: 'b' };
-        const pageSelector = stub(Selectors, 'page').returns(8);
+      const page = 3;
 
-        expectAction(() => actions.updateCurrentPage(page), Actions.UPDATE_CURRENT_PAGE, page,
-          (meta) => {
-            expect(meta.validator.payload.func(null, state)).to.be.true;
-            return expect(pageSelector).to.be.calledWith(state);
-          });
+      it('should return an UPDATE_CURRENT_PAGE action', () => {
+        expectAction(() => actions.updateCurrentPage(page), Actions.UPDATE_CURRENT_PAGE, page);
       });
 
-      it('should invalidate action if page is the same as current page', () => {
-        const page = 5;
-        stub(Selectors, 'page').returns(page);
-
-        expectAction(() => actions.updateCurrentPage(page), Actions.UPDATE_CURRENT_PAGE, page,
-          (meta) => expect(meta.validator.payload.func(null, { a: 'b' })).to.be.false);
-      });
-
-      it('should invalidate action if page is null', () => {
-        expectAction(() => actions.updateCurrentPage(null), Actions.UPDATE_CURRENT_PAGE, null,
-          (meta) => expect(meta.validator.payload.func(null, {})).to.be.false);
+      it('should apply validators to UPDATE_CURRENT_PAGE', () => {
+        expectValidators(() => actions.updateCurrentPage(page), Actions.UPDATE_CURRENT_PAGE, {
+          payload: validators.isOnDifferentPage
+        });
       });
     });
 
@@ -573,27 +549,16 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
     });
 
     describe('updateAutocompleteQuery()', () => {
-      it('should return an action', () => {
-        const query = 'pink elephant';
-        const state = { a: 'b' };
-        const autocompleteQuery = stub(Selectors, 'autocompleteQuery').returns('red elephant');
+      const query = 'pink elephant';
 
-        // tslint:disable-next-line max-line-length
-        expectAction(() => actions.updateAutocompleteQuery(query), Actions.UPDATE_AUTOCOMPLETE_QUERY, query,
-          (meta) => {
-            expect(meta.validator.payload.func(null, state)).to.be.true;
-            return expect(autocompleteQuery).to.be.calledWith(state);
-          });
+      it('should return an UPDATE_AUTOCOMPLETE_QUERY action', () => {
+        expectAction(() => actions.updateAutocompleteQuery(query), Actions.UPDATE_AUTOCOMPLETE_QUERY, query);
       });
 
-      it('should invalidate action if queries are the same', () => {
-        const query = 'pink elephant';
-        const state = { a: 'b' };
-        stub(Selectors, 'autocompleteQuery').returns(query);
-
-        // tslint:disable-next-line max-line-length
-        expectAction(() => actions.updateAutocompleteQuery(query), Actions.UPDATE_AUTOCOMPLETE_QUERY, query,
-          (meta) => expect(meta.validator.payload.func(null, state)).to.be.false);
+      it('should apply validators to UPDATE_AUTOCOMPLETE_QUERY', () => {
+        expectValidators(() => actions.updateAutocompleteQuery(query), Actions.UPDATE_AUTOCOMPLETE_QUERY, {
+          payload: validators.isDifferentAutocompleteQuery
+        });
       });
     });
   });

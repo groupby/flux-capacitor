@@ -176,10 +176,16 @@ suite('validators', ({ expect, spy, stub }) => {
       expect(navigation).to.be.calledWithExactly(state, navigationId);
     });
 
-    it('should be valid if no matching refinement in navigation', () => {
+    it('should be valid if no matching range refinement in navigation', () => {
       stub(Selectors, 'navigation').returns({ selected: [1], refinements: [{}, { value: 'boar' }] });
 
       expect(validators.isRefinementDeselectedByValue.func({ navigationId, value: 'bear' })).to.be.true;
+    });
+
+    it('should be valid if no matching value refinement in navigation', () => {
+      stub(Selectors, 'navigation').returns({ range: true, selected: [1], refinements: [{}, { low: 4, high: 4 }] });
+
+      expect(validators.isRefinementDeselectedByValue.func({ navigationId, low: 4, high: 8 })).to.be.true;
     });
 
     it('should be invalid matching refinement exists already', () => {
@@ -257,10 +263,68 @@ suite('validators', ({ expect, spy, stub }) => {
       expect(sortIndex).to.be.calledWithExactly(state);
     });
 
-    it('should be valid if sort is selected', () => {
+    it('should be invalid if sort is selected', () => {
       stub(Selectors, 'sortIndex').returns(index);
 
       expect(validators.isSortDeselected.func(index)).to.be.false;
+    });
+  });
+
+  describe('isDifferentPageSize', () => {
+    const pageSize = 25;
+
+    it('should be valid if page size is different', () => {
+      const state: any = { a: 'b' };
+      const pageSizeSelector = stub(Selectors, 'pageSize').returns(12);
+
+      expect(validators.isDifferentPageSize.func(pageSize, state)).to.be.true;
+      expect(pageSizeSelector).to.be.calledWithExactly(state);
+    });
+
+    it('should be invalid if page size is the same', () => {
+      stub(Selectors, 'pageSize').returns(pageSize);
+
+      expect(validators.isDifferentPageSize.func(pageSize)).to.be.false;
+    });
+  });
+
+  describe('isOnDifferentPage', () => {
+    const page = 3;
+
+    it('should be valid if page is different not the current page', () => {
+      const state: any = { a: 'b' };
+      const pageSelector = stub(Selectors, 'page').returns(4);
+
+      expect(validators.isOnDifferentPage.func(page, state)).to.be.true;
+      expect(pageSelector).to.be.calledWithExactly(state);
+    });
+
+    it('should be invalid if page is the current page', () => {
+      stub(Selectors, 'page').returns(page);
+
+      expect(validators.isOnDifferentPage.func(page)).to.be.false;
+    });
+
+    it('should be invalid if page is null', () => {
+      expect(validators.isOnDifferentPage.func(null)).to.be.false;
+    });
+  });
+
+  describe('isDifferentAutocompleteQuery', () => {
+    const query = 'red apple';
+
+    it('should be valid is autocomplete query is different', () => {
+      const state: any = { a: 'b' };
+      const autocompleteQuery = stub(Selectors, 'autocompleteQuery').returns('orange');
+
+      expect(validators.isDifferentAutocompleteQuery.func(query, state)).to.be.true;
+      expect(autocompleteQuery).to.be.calledWithExactly(state);
+    });
+
+    it('should be invalid if autocomplete query is the same', () => {
+      stub(Selectors, 'autocompleteQuery').returns(query);
+
+      expect(validators.isDifferentAutocompleteQuery.func(query)).to.be.false;
     });
   });
 });
