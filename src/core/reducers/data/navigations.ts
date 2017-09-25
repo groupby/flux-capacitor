@@ -11,11 +11,14 @@ export type Action = Actions.ResetRefinements
   | Actions.ReceiveMoreRefinements
   | Actions.ReceiveRecommendationsNavigations;
 
-export type State = Store.Indexed<Store.Navigation>;
+export type State = Store.Indexed<Store.Navigation> & {
+  navigations: Store.Recommendations.Navigation[]
+};
 
 export const DEFAULTS: State = {
   allIds: [],
   byId: {},
+  navigations: [],
 };
 
 export default function updateNavigations(state: State = DEFAULTS, action: Action) {
@@ -172,6 +175,6 @@ export const receiveMoreRefinements = (state: State, { navigationId, refinements
 };
 
 // tslint:disable-next-line max-line-length
-export const receiveRecommendationsNavigations = (state: State, { navigations }: { navigations: Store.Recommendations.Navigation[] }) => ({
+export const receiveRecommendationsNavigations = (state: State, navigations: Store.Recommendations.Navigation[]) => ({
   ...state, navigations
 });
