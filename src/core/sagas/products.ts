@@ -26,8 +26,8 @@ export namespace Tasks {
       } else {
         flux.emit(Events.BEACON_SEARCH, (<any>products).id);
         if (navigations && !(navigations instanceof Error)) {
-          products.availableNavigation = RecommendationsAdapter.sortNavigations(products, navigations);
-          RecommendationsAdapter.sortRefinements(products, navigations);
+          products.availableNavigation = RecommendationsAdapter.sortNavigations(products.availableNavigation, navigations);
+          RecommendationsAdapter.sortRefinements(products.availableNavigation, navigations);
         }
         yield effects.put(<any>flux.actions.receiveProducts(products));
         yield effects.put(<any>flux.actions.receiveRecommendationsNavigations(navigations));

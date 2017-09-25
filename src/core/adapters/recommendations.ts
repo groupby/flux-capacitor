@@ -13,14 +13,14 @@ namespace Recommendations {
     body: JSON.stringify(body)
   });
   // tslint:disable-next-line max-line-length
-  export const sortNavigations = (results: Results, navigations: Store.Recommendations.Navigation[]): Results['availableNavigation'] => {
-    return sortBasedOn(results.availableNavigation,
+  export const sortNavigations = (results: Navigation[], navigations: Store.Recommendations.Navigation[]): Navigation[] => {
+    return sortBasedOn(results,
       navigations, (unsorted: any, sorted: any) => unsorted.name === sorted.name);
   };
   // tslint:disable-next-line max-line-length
-  export const sortRefinements = (results: Results, navigations: Store.Recommendations.Navigation[]) => {
+  export const sortRefinements = (results: Navigation[], navigations: Store.Recommendations.Navigation[]) => {
     // const newAvailableNavigations = { ...results.availableNavigation};
-    results.availableNavigation.forEach((product) => {
+    results.forEach((product) => {
       const index = navigations.findIndex(({ name }) => product.name === name);
       if (index !== -1) {
         product.refinements = sortBasedOn(product.refinements, navigations[index].values,
@@ -28,24 +28,7 @@ namespace Recommendations {
       }
     });
   };
-  // -export const sortRefinements = (state: State, navigations: Store.Recommendations.Navigation[]) => {
-  //   -  const newById: Store.Indexed<Store.Navigation>['byId'] = {};
-  //   -  state.allIds.forEach((id) => {
-  //   -    const index = navigations.findIndex(({ name }) => id === name);
-  //   -    if (index !== -1) {
-  //   -      newById[id] = { ...state.byId[id] };
-  //   -      newById[id].refinements = sortBasedOn(newById[id].refinements, navigations[index].values,
-  //   -        (unsorted: Store.ValueRefinement, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase());
-  //   -    }
-  //   -  });
-  //   -  return {
-  //   -    ...state,
-  //   -    byId: {
-  //   -      ...state.byId,
-  //   -      ...newById
-  //   -    }
-  //   -  };
-  //   -};
+
   export interface RecommendationsBody {
     size?: number;
     window?: string;

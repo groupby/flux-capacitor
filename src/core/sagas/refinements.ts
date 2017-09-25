@@ -2,7 +2,9 @@ import * as effects from 'redux-saga/effects';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import Adapter from '../adapters/refinements';
+import RecommendationsAdapter from '../adapters/recommendations';
 import Requests from '../requests';
+import Selectors from '../selectors';
 import Store from '../store';
 import * as utils from '../utils';
 
@@ -15,10 +17,8 @@ export namespace Tasks {
         Requests.search(state, flux.config),
         action.payload
       );
-      console.log(res);
+      RecommendationsAdapter.sortRefinements([res.navigation], Selectors.navigationSortOrder(flux.store.getState()));
       const { navigationId, refinements, selected } = Adapter.mergeRefinements(res, state);
-      console.log('test');
-      console.log(navigationId, refinements, selected);
       yield effects.put(flux.actions.receiveMoreRefinements(navigationId, refinements, selected));
     } catch (e) {
       yield effects.put(utils.action(Actions.RECEIVE_MORE_REFINEMENTS, e));

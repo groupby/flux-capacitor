@@ -11,9 +11,7 @@ export type Action = Actions.ResetRefinements
   | Actions.ReceiveMoreRefinements
   | Actions.ReceiveRecommendationsNavigations;
 
-export type State = Store.Indexed<Store.Navigation> & {
-  sortOrder: Store.Recommendations.Navigation[]
-};
+export type State = Store.AvailableNavigations;
 
 export const DEFAULTS: State = {
   allIds: [],
