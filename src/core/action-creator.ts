@@ -201,16 +201,6 @@ export function createActions(flux: FluxCapacitor) {
         });
       },
 
-      receiveProductsAndRecommendations: (products, navigations) => [
-        ...actions.receiveProducts(products),
-        ...actions.receiveRecommendations(navigations)
-      ],
-
-      receiveRecommendations: (navigations: ) => [
-        actions.receiveRecommendationsNavigations(navigations),
-        actions.receiveRecommendationsRefinements(navigations)
-      ]
-
       receiveProductRecords: (products: Store.Product[]): Actions.ReceiveProductRecords =>
         action(Actions.RECEIVE_PRODUCT_RECORDS, products),
 
