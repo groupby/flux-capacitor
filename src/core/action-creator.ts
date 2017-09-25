@@ -69,13 +69,10 @@ export function createActions(flux: FluxCapacitor) {
       updateQuery: (query: string): Actions.ResetPageAndUpdateQuery => [
         actions.resetPage(),
         action(Actions.UPDATE_QUERY, query && query.trim(), {
-          payload: [{
-            func: (_query) => !!_query || _query === null,
-            msg: 'search term is empty'
-          }, {
-            func: (_query, state) => _query !== Selectors.query(state),
-            msg: 'search term is not different'
-          }]
+          payload: [
+            validators.isValidQuery,
+            validators.isDifferentQuery
+          ]
         })
       ],
 
@@ -85,24 +82,12 @@ export function createActions(flux: FluxCapacitor) {
         actions.resetPage(),
         action(Actions.ADD_REFINEMENT, refinementPayload(field, valueOrLow, high), {
           navigationId: validators.isString,
-          payload: [{
-            func: ({ range }) => !range || (typeof valueOrLow === 'number' && typeof high === 'number'),
-            msg: 'low and high values must be numeric'
-          }, {
-            func: ({ range }) => !range || valueOrLow < high,
-            msg: 'low value must be lower than high'
-          }, {
-            func: ({ range }) => !!range || validators.isString.func(valueOrLow),
-            msg: `value ${validators.isString.msg}`
-          }, {
-            func: (payload, state) => {
-              const navigation = Selectors.navigation(state, field);
-              // tslint:disable-next-line max-line-length
-              return !navigation || navigation.selected
-                .findIndex((index) => SearchAdapter.refinementsMatch(payload, <any>navigation.refinements[index], navigation.range ? 'Range' : 'Value')) === -1;
-            },
-            msg: 'refinement is already selected'
-          }]
+          payload: [
+            validators.isRangeRefinement,
+            validators.isValidRange,
+            validators.isValueRefinement,
+            validators.isRefinementDeselectedByValue
+          ]
         })
       ],
 
@@ -115,26 +100,17 @@ export function createActions(flux: FluxCapacitor) {
       resetRefinements: (field?: boolean | string): Actions.ResetPageAndResetRefinements => [
         actions.resetPage(),
         action(Actions.RESET_REFINEMENTS, field, {
-          payload: [{
-            func: () => field === true || typeof field === 'string',
-            msg: 'clear must be a string or true'
-          }, {
-            func: (_, state) => Selectors.selectedRefinements(state).length !== 0,
-            msg: 'no refinements to clear'
-          }, {
-            // tslint:disable-next-line max-line-length
-            func: (_, state) => typeof field === 'boolean' || Selectors.navigation(state, field).selected.length !== 0,
-            msg: `no refinements to clear for field "${field}"`
-          }]
+          payload: [
+            validators.isValidClearField,
+            validators.hasSelectedRefinements,
+            validators.hasSelectedRefinementsByField
+          ]
         })
       ],
 
       resetPage: (): Actions.ResetPage =>
         action(Actions.RESET_PAGE, undefined, {
-          payload: {
-            func: (_, state) => Selectors.page(state) !== 1,
-            msg: 'page must not be on first page'
-          }
+          payload: validators.notOnFirstPage
         }),
 
       search: (query: string = Selectors.query(flux.store.getState())): Actions.Search => <any>[
