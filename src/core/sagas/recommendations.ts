@@ -45,34 +45,8 @@ export namespace Tasks {
       yield effects.put(flux.actions.receiveRecommendationsProducts(e));
     }
   }
-
-  export function* fetchNavigations(flux: FluxCapacitor, action: Actions.FetchRecommendationsProducts) {
-    try {
-      if (flux.config.recommendations.iNav.navigations.sort ||
-          flux.config.recommendations.iNav.refinements.sort) {
-        const recommendationsUrl = Adapter.buildUrl(flux.config.customerId, 'refinements', 'Popular');
-        const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({
-          size: 10,
-          window: 'day',
-        }));
-        const recommendations = yield recommendationsResponse.json();
-        const refinements = recommendations.result
-          .filter(({ values }) => values); // assumes no values key will be empty
-        if (flux.config.recommendations.iNav.navigations.sort) {
-          yield effects.put(flux.actions.receiveRecommendationsNavigations(refinements));
-        }
-        if (flux.config.recommendations.iNav.refinements.sort) {
-          yield effects.put(flux.actions.receiveRecommendationsRefinements(refinements));
-        }
-      }
-    } catch (e) { // TODO: ERRORS
-      yield effects.put(flux.actions.receiveRecommendationsNavigations(e));
-      yield effects.put(flux.actions.receiveRecommendationsRefinements(e));
-    }
-  }
 }
 
 export default (flux: FluxCapacitor) => function* recommendationsSaga() {
   yield effects.takeLatest(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, Tasks.fetchProducts, flux);
-  yield effects.takeLatest(Actions.FETCH_RECOMMENDATIONS_REFINEMENTS, Tasks.fetchNavigations, flux);
 };
