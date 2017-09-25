@@ -26,10 +26,10 @@ export namespace Tasks {
       yield effects.put(<any>flux.actions.receiveProductsAndNavigations(products, navigations));
       // yield effects.put(<any>flux.actions.receiveProducts(products));
 
-      yield flux.config.recommendations.iNav.navigations.sort &&
-        effects.put(flux.actions.receiveRecommendationsNavigations(refinements));
-      yield flux.config.recommendations.iNav.refinements.sort &&
-        effects.put(flux.actions.receiveRecommendationsRefinements(refinements));
+      // yield flux.config.recommendations.iNav.navigations.sort &&
+      //   effects.put(flux.actions.receiveRecommendationsNavigations(refinements));
+      // yield flux.config.recommendations.iNav.refinements.sort &&
+      //   effects.put(flux.actions.receiveRecommendationsRefinements(refinements));
       flux.saveState(utils.Routes.SEARCH);
     }
   }

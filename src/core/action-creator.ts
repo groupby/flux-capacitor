@@ -200,9 +200,16 @@ export function createActions(flux: FluxCapacitor) {
           ];
         });
       },
-      receiveProductsAndNavigations: (products, navigations) => {
-        
-      },
+
+      receiveProductsAndRecommendations: (products, navigations) => [
+        ...actions.receiveProducts(products),
+        ...actions.receiveRecommendations(navigations)
+      ],
+
+      receiveRecommendations: (navigations: ) => [
+        actions.receiveRecommendationsNavigations(navigations),
+        actions.receiveRecommendationsRefinements(navigations)
+      ]
 
       receiveProductRecords: (products: Store.Product[]): Actions.ReceiveProductRecords =>
         action(Actions.RECEIVE_PRODUCT_RECORDS, products),
@@ -258,13 +265,13 @@ export function createActions(flux: FluxCapacitor) {
       receiveRecommendationsProducts: (products: Store.Product[]) =>
         action(Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, products),
 
-      receiveRecommendationsNavigations: (products: Store.Recommendations.Navigation[]):
+      receiveRecommendationsNavigations: (navigations: Store.Recommendations.Navigation[]):
       Actions.ReceiveRecommendationsNavigations =>
-        action(Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS, products, metadata),
+        action(Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS, navigations, metadata),
 
-      receiveRecommendationsRefinements: (products: Store.Recommendations.Navigation[]):
+      receiveRecommendationsRefinements: (navigations: Store.Recommendations.Navigation[]):
       Actions.ReceiveRecommendationsRefinements =>
-        action(Actions.RECEIVE_RECOMMENDATIONS_REFINEMENTS, products, metadata),
+        action(Actions.RECEIVE_RECOMMENDATIONS_REFINEMENTS, navigations, metadata),
 
       // ui action creators
       createComponentState: (tagName: string, id: string, state: any = {}): Actions.CreateComponentState =>
