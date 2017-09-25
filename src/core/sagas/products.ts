@@ -1,4 +1,4 @@
-import { Results } from 'groupby-api';
+import { Results, ValueRefinement } from 'groupby-api';
 import * as effects from 'redux-saga/effects';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
@@ -13,7 +13,7 @@ import { Tasks as productDetailsTasks } from './product-details';
 export namespace Tasks {
   export function* fetchProductsAndNavigations (flux: FluxCapacitor, action: Actions.FetchProducts) {
     try {
-      const [products, navigations]: [any, Store.Recommendations.Navigation[]] = yield effects.all([
+      const [products, navigations]: [Results, Store.Recommendations.Navigation[]] = yield effects.all([
         effects.call(fetchProducts, flux, action),
         effects.call(fetchNavigations, flux, action)
       ]);
@@ -24,16 +24,15 @@ export namespace Tasks {
       if (flux.config.search.redirectSingleResult && products.totalRecordCount === 1) {
         yield effects.call(productDetailsTasks.receiveDetailsProduct, flux, products.records[0]);
       } else {
-        flux.emit(Events.BEACON_SEARCH, products.id);
+        flux.emit(Events.BEACON_SEARCH, (<any>products).id);
         if (navigations && !(navigations instanceof Error)) {
           products.availableNavigation = utils.sortBasedOn(products.availableNavigation,
-                                                           navigations,
-                                                           (unsorted: any, sorted) => unsorted.name === sorted.name);
-          products.availableNavigation.forEach((navigation) => {
-            const index = navigations.findIndex(({ name }) => navigation.name === name);
+            navigations, (unsorted: any, sorted) => unsorted.name === sorted.name);
+          products.availableNavigation.forEach((product) => {
+            const index = navigations.findIndex(({ name }) => product.name === name);
             if (index !== -1) {
-              navigation.refinements = utils.sortBasedOn(navigation.refinements, navigations[index].values,
-                                                         (unsorted: Store.ValueRefinement, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase());
+              product.refinements = utils.sortBasedOn(product.refinements, navigations[index].values,
+                (unsorted: ValueRefinement, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase());
             }
           });
         }
