@@ -48,14 +48,8 @@ export const handleError = (errorAction: Actions.Action<any>,  createAction: () 
 export const shouldResetRefinements =  ({ low, high, value, navigationId, range, index }: Actions.Payload.Search,
                                         state: any): boolean => {
   const currentRefinements = Selectors.selectedRefinements(state);
-  let refinement = { low, high, value };
   // assumes only one refinement can be added at once
-  if (!navigationId || currentRefinements.length !== 1) {
-    return true;
-  }
-
-  if (index) {
-    refinement = Selectors.refinementCrumb(state, navigationId, index);
-  }
-  return !SearchAdapter.refinementsMatch(<any>refinement, currentRefinements[0], range ? 'Range' : 'Value');
+  return (!navigationId || currentRefinements.length !== 1 ||
+          (index && !Selectors.isRefinementSelected(state, navigationId, index)) ||
+          !SearchAdapter.refinementsMatch(<any>{ low, high, value }, currentRefinements[0], range ? 'Range' : 'Value'));
 };

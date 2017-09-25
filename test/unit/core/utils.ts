@@ -104,11 +104,11 @@ suite('utils', ({ expect, spy, stub }) => {
         });
 
         it('should look up refinement from index if index passed', () => {
-          const crumb = stub(Selectors, 'refinementCrumb').returns({ value: 'hello' });
+          const crumb = stub(Selectors, 'isRefinementSelected').returns(false);
           stub(Selectors, 'selectedRefinements').returns([{ value: 'hello' }]);
 
           expect(utils.shouldResetRefinements(
-            { navigationId: 'truthy', value: 'notHello', index: 4 }, null)).to.be.false;
+            { navigationId: 'truthy', value: 'notHello', index: 4 }, null)).to.be.true;
           expect(crumb).to.be.calledWith(null, 'truthy', 4);
         });
       });
