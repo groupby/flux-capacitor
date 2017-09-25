@@ -37,6 +37,7 @@ export namespace Tasks {
           });
         }
         yield effects.put(<any>flux.actions.receiveProducts(products));
+        yield effects.put(<any>flux.actions.receiveRecommendationsNavigations(navigations));
         // yield effects.put(<any>flux.actions.receiveProducts(products));
 
         // yield flux.config.recommendations.iNav.navigations.sort &&
