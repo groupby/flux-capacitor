@@ -200,6 +200,9 @@ export function createActions(flux: FluxCapacitor) {
           ];
         });
       },
+      receiveProductsAndNavigations: (products, navigations) => {
+        
+      },
 
       receiveProductRecords: (products: Store.Product[]): Actions.ReceiveProductRecords =>
         action(Actions.RECEIVE_PRODUCT_RECORDS, products),

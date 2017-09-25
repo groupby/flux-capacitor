@@ -10,27 +10,35 @@ import * as utils from '../utils';
 import { Tasks as productDetailsTasks } from './product-details';
 
 export namespace Tasks {
+  export function* fetchProductsAndNavigations (flux: FluxCapacitor, action: Actions.FetchProducts) {
+    const [products, navigations] = yield effects.all([
+      effects.call(fetchProducts, flux, action),
+      effects.call(fetchNavigations, flux, action)
+    ]);
+    if (products.redirect) {
+      yield effects.put(flux.actions.receiveRedirect(products.redirect));
+    }
+
+    if (flux.config.search.redirectSingleResult && products.totalRecordCount === 1) {
+      yield effects.call(productDetailsTasks.receiveDetailsProduct, flux, products.records[0]);
+    } else {
+      flux.emit(Events.BEACON_SEARCH, products.id);
+      yield effects.put(<any>flux.actions.receiveProductsAndNavigations(products, navigations));
+      // yield effects.put(<any>flux.actions.receiveProducts(products));
+
+      yield flux.config.recommendations.iNav.navigations.sort &&
+        effects.put(flux.actions.receiveRecommendationsNavigations(refinements));
+      yield flux.config.recommendations.iNav.refinements.sort &&
+        effects.put(flux.actions.receiveRecommendationsRefinements(refinements));
+      flux.saveState(utils.Routes.SEARCH);
+    }
+  }
   export function* fetchProducts(flux: FluxCapacitor, action: Actions.FetchProducts) {
     try {
       const navigationsTask = yield effects.fork(fetchNavigations, flux, action);
       const request = yield effects.select(Requests.search, flux.config);
       const res = yield effects.call([flux.clients.bridge, flux.clients.bridge.search], request);
-
-      if (res.redirect) {
-        yield effects.put(flux.actions.receiveRedirect(res.redirect));
-      }
-
-      if (flux.config.search.redirectSingleResult && res.totalRecordCount === 1) {
-        yield effects.call(productDetailsTasks.receiveDetailsProduct, flux, res.records[0]);
-      } else {
-        flux.emit(Events.BEACON_SEARCH, res.id);
-        yield effects.put(<any>flux.actions.receiveProducts(res));
-        navigationsTask.done
-          .then((test) => true)
-          .catch(() => true);
-        //yield effects.put(<any>flux.actions.fetchRecommendationsRefinements());
-        flux.saveState(utils.Routes.SEARCH);
-      }
+      return res;
     } catch (e) {
       yield effects.put(<any>flux.actions.receiveProducts(e));
     }
@@ -38,8 +46,9 @@ export namespace Tasks {
 
   export function* fetchNavigations(flux: FluxCapacitor, action: Actions.FetchProducts) {
     if (flux.config.recommendations.iNav.navigations.sort ||
-        flux.config.recommendations.iNav.refinements.sort) {
+      flux.config.recommendations.iNav.refinements.sort) {
       const recommendationsUrl = RecommendationsAdapter.buildUrl(flux.config.customerId, 'refinements', 'Popular');
+      // tslint:disable-next-line max-line-length
       const recommendationsResponse = yield effects.call(utils.fetch, recommendationsUrl, RecommendationsAdapter.buildBody({
         size: 10,
         window: 'day',
@@ -47,13 +56,7 @@ export namespace Tasks {
       const recommendations = yield recommendationsResponse.json();
       const refinements = recommendations.result
         .filter(({ values }) => values); // assumes no values key will be empty
-      console.log(flux.config.recommendations.iNav.navigations.sort);
-      yield flux.config.recommendations.iNav.navigations.sort &&
-        effects.put(flux.actions.receiveRecommendationsNavigations(refinements));
-      yield flux.config.recommendations.iNav.refinements.sort &&
-        effects.put(flux.actions.receiveRecommendationsRefinements(refinements));
     }
-  }
   }
 
   export function* fetchMoreProducts(flux: FluxCapacitor, action: Actions.FetchMoreProducts) {
