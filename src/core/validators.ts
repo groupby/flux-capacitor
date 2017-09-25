@@ -14,7 +14,7 @@ export const isString: Validator<string> = {
 };
 
 export const isValidQuery: Validator<string> = {
-  func: (query) => !!query || query === null,
+  func: (query) => isString.func(query) || query === null,
   msg: 'search term is empty'
 };
 
@@ -49,7 +49,7 @@ export const isValidRange: Validator<Actions.Payload.Navigation.AddRefinement> =
 };
 
 export const isValidClearField: Validator<string | boolean> = {
-  func: (field) => field === true || typeof field === 'string',
+  func: (field) => field === true || isString.func(<string>field),
   msg: 'clear must be a string or true'
 };
 
