@@ -132,51 +132,33 @@ export function createActions(flux: FluxCapacitor) {
       selectRefinement: (navigationId: string, index: number): Actions.ResetPageAndSelectRefinement => [
         actions.resetPage(),
         action(Actions.SELECT_REFINEMENT, { navigationId, index }, {
-          payload: {
-            func: (_, state) => Selectors.isRefinementDeselected(state, navigationId, index),
-            msg: 'navigation does not exist or refinement is already selected'
-          }
+          payload: validators.isRefinementDeselectedByIndex
         })],
 
       deselectRefinement: (navigationId: string, index: number): Actions.ResetPageAndDeselectRefinement => [
         actions.resetPage(),
         action(Actions.DESELECT_REFINEMENT, { navigationId, index }, {
-          payload: {
-            func: (_, state) => Selectors.isRefinementSelected(state, navigationId, index),
-            msg: 'navigation does not exist or refinement is not selected'
-          }
+          payload: validators.isRefinementSelectedByIndex
         })],
 
       selectCollection: (id: string): Actions.SelectCollection =>
         action(Actions.SELECT_COLLECTION, id, {
-          payload: {
-            func: (_, state) => Selectors.collection(state) !== id,
-            msg: 'collection is already selected'
-          }
+          payload: validators.isCollectionDeselected
         }),
 
       selectSort: (index: number): Actions.SelectSort =>
         action(Actions.SELECT_SORT, index, {
-          payload: {
-            func: (_, state) => Selectors.sortIndex(state) !== index,
-            msg: 'sort is already selected'
-          }
+          payload: validators.isSortDeselected
         }),
 
       updatePageSize: (size: number): Actions.UpdatePageSize =>
         action(Actions.UPDATE_PAGE_SIZE, size, {
-          payload: {
-            func: (_, state) => Selectors.pageSize(state) !== size,
-            msg: 'page size is already selected'
-          }
+          payload: validators.isDifferentPageSize
         }),
 
       updateCurrentPage: (page: number): Actions.UpdateCurrentPage =>
         action(Actions.UPDATE_CURRENT_PAGE, page, {
-          payload: {
-            func: (_, state) => page !== null && Selectors.page(state) !== page,
-            msg: 'page size is already selected'
-          }
+          payload: validators.isOnDifferentPage
         }),
 
       updateDetails: (product: Store.Product): Actions.UpdateDetails =>
@@ -184,10 +166,7 @@ export function createActions(flux: FluxCapacitor) {
 
       updateAutocompleteQuery: (query: string): Actions.UpdateAutocompleteQuery =>
         action(Actions.UPDATE_AUTOCOMPLETE_QUERY, query, {
-          payload: {
-            func: (_, state) => Selectors.autocompleteQuery(state) !== query,
-            msg: 'suggestions for query have already been requested'
-          }
+          payload: validators.isDifferentAutocompleteQuery
         }),
 
       // response action creators

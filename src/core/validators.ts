@@ -68,3 +68,38 @@ export const notOnFirstPage: Validator = {
   func: (_, state) => Selectors.page(state) !== 1,
   msg: 'page must not be on first page'
 };
+
+export const isRefinementDeselectedByIndex: Validator<Actions.Payload.Navigation.Refinement> = {
+  func: ({ navigationId, index }, state) => Selectors.isRefinementDeselected(state, navigationId, index),
+  msg: 'navigation does not exist or refinement is already selected'
+};
+
+export const isRefinementSelectedByIndex: Validator<Actions.Payload.Navigation.Refinement> = {
+  func: ({ navigationId, index }, state) => Selectors.isRefinementSelected(state, navigationId, index),
+  msg: 'navigation does not exist or refinement is not selected'
+};
+
+export const isCollectionDeselected: Validator<string> = {
+  func: (id, state) => Selectors.collection(state) !== id,
+  msg: 'collection is already selected'
+};
+
+export const isSortDeselected: Validator<number> = {
+  func: (index, state) => Selectors.sortIndex(state) !== index,
+  msg: 'sort is already selected'
+};
+
+export const isDifferentPageSize: Validator<number> = {
+  func: (size, state) => Selectors.pageSize(state) !== size,
+  msg: 'page size is already selected'
+};
+
+export const isOnDifferentPage: Validator<number> = {
+  func: (page, state) => page !== null && Selectors.page(state) !== page,
+  msg: 'page size is already selected'
+};
+
+export const isDifferentAutocompleteQuery: Validator<string> = {
+  func: (query, state) => Selectors.autocompleteQuery(state) !== query,
+  msg: 'suggestions for query have already been requested'
+};
