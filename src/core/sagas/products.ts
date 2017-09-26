@@ -26,7 +26,7 @@ export namespace Tasks {
         yield effects.call(productDetailsTasks.receiveDetailsProduct, flux, products.records[0]);
       } else {
         flux.emit(Events.BEACON_SEARCH, (<any>products).id);
-        if (navigations && !(navigations instanceof Error)) {
+        if (navigations && navigations.refinements && !(navigations instanceof Error)) {
           if (navigations.sortNavigations) {
             products.availableNavigation =
               RecommendationsAdapter.sortNavigations(products.availableNavigation, navigations.refinements);
@@ -41,6 +41,7 @@ export namespace Tasks {
         flux.saveState(utils.Routes.SEARCH);
       }
     } catch (e) {
+      console.log(e);
       yield effects.put(<any>flux.actions.receiveProducts(e));
     }
   }

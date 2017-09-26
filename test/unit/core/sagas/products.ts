@@ -42,6 +42,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         const response = { id, totalRecordCount: 3 };
         const receiveProducts = spy(() => receiveProductsAction);
         const receiveRecommendationsNavigations = spy(() => receiveNavigationsAction);
+        // tslint:disable-next-line max-line-length
         const flux: any = { emit, saveState, clients: { bridge }, actions: { receiveProducts, receiveRecommendationsNavigations }, config };
 
         const task = Tasks.fetchProductsAndNavigations(flux, action);
@@ -51,11 +52,33 @@ suite('products saga', ({ expect, spy, stub }) => {
           effects.call(Tasks.fetchNavigations, flux, action)
         ])));
         expect(task.next([response, undefined]).value).to.eql(effects.put(receiveProductsAction));
-        //expect(task.next().value).to.eql(effects.put(receiveNavigationsAction));
+        // expect(task.next().value).to.eql(effects.put(receiveNavigationsAction));
         expect(emit).to.be.calledWithExactly(Events.BEACON_SEARCH, id);
         expect(receiveProducts).to.be.calledWithExactly(response);
         task.next();
         expect(saveState).to.be.calledWith(utils.Routes.SEARCH);
+      });
+
+      it('should call actions.receiveRedirect when products.redirect is true', () => {
+        const receiveProductsAction: any = { c: 'd' };
+        const receiveNavigationsAction: any = { e: 'f' };
+        const receiveRedirect = spy(() => receiveProductsAction);
+        const receiveProducts = spy(() => receiveNavigationsAction);
+        const flux = { actions: { receiveProducts, receiveRedirect },
+          config: {
+            search: {
+              redirectSingleResult: false
+            }
+          },
+          emit: () => undefined,
+          saveState: () => undefined
+        };
+
+        let task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ hello: 'hello' });
+        task.next();
+        task.next([{ redirect: true }, undefined]);
+        task.next();
+        expect(receiveRedirect).to.be.calledOnce;
       });
     });
 
@@ -236,7 +259,7 @@ suite('products saga', ({ expect, spy, stub }) => {
 
         expect(task.next().value).to.eql(effects.call(fetch, url, body));
         expect(buildUrl).to.be.calledWith(customerId, 'refinements', 'Popular');
-        expect(task.next({ json: () => jsonResult}).value).to.eql( jsonResult );
+        expect(task.next({ json: () => jsonResult }).value).to.eql(jsonResult);
         expect(buildBody).to.be.calledWith({
           size: 10,
           window: 'day',
@@ -280,7 +303,7 @@ suite('products saga', ({ expect, spy, stub }) => {
 
         expect(task.next().value).to.eql(effects.call(fetch, url, body));
         expect(buildUrl).to.be.calledWith(customerId, 'refinements', 'Popular');
-        expect(task.next({ json: () => jsonResult}).value).to.eql( jsonResult );
+        expect(task.next({ json: () => jsonResult }).value).to.eql(jsonResult);
         expect(buildBody).to.be.calledWith({
           size: 10,
           window: 'day',
@@ -324,7 +347,7 @@ suite('products saga', ({ expect, spy, stub }) => {
 
         expect(task.next().value).to.eql(effects.call(fetch, url, body));
         expect(buildUrl).to.be.calledWith(customerId, 'refinements', 'Popular');
-        expect(task.next({ json: () => jsonResult}).value).to.eql( jsonResult );
+        expect(task.next({ json: () => jsonResult }).value).to.eql(jsonResult);
         expect(buildBody).to.be.calledWith({
           size: 10,
           window: 'day',
@@ -379,19 +402,22 @@ suite('products saga', ({ expect, spy, stub }) => {
         const receiveRecommendationsRefinementsAction: any = { a: 'b' };
         const receiveRecommendationsNavigations = spy(() => receiveRecommendationsNavigationsAction);
         const receiveRecommendationsRefinements = spy(() => receiveRecommendationsRefinementsAction);
-        const flux: any = { config: {
-          recommendations: {
-            iNav: {
-              navigations: {
-                sort: true
-              },
-              refinements: {
-                sort: true
+        const flux: any = {
+          config: {
+            recommendations: {
+              iNav: {
+                navigations: {
+                  sort: true
+                },
+                refinements: {
+                  sort: true
+                }
               }
-            }
-          },
-        }, actions: {
-          receiveRecommendationsNavigations, receiveRecommendationsRefinements } };
+            },
+          }, actions: {
+            receiveRecommendationsNavigations, receiveRecommendationsRefinements
+          }
+        };
 
         const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
         task.next();
