@@ -37,7 +37,7 @@ suite('navigations', ({ expect }) => {
     ],
     metadata: {}
   };
-  const nav = [{
+  const sortOrder = [{
     name: 'Format',
     values: valueRef
   },
@@ -45,20 +45,20 @@ suite('navigations', ({ expect }) => {
     name: 'Section',
     values: [valueRef[0]]
   }];
-  
+
   const state: Store.AvailableNavigations = {
     allIds,
     byId: {
       Format,
       Section,
     },
-    sortOrder: nav
+    sortOrder
   };
 
   describe('updateNavigations()', () => {
     it('should clear selected refinements state on RESET_REFINEMENTS', () => {
       const newState = {
-        allIds,
+        ...state,
         byId: {
           Format: {
             ...Format,
@@ -105,6 +105,7 @@ suite('navigations', ({ expect }) => {
         },
       ];
       const newState = {
+        ...state,
         allIds: ['colour', 'size'],
         byId: {
           colour: newNavs[0],
@@ -121,35 +122,34 @@ suite('navigations', ({ expect }) => {
     });
 
     it('should sort navigation state on RECEIVE_RECOMMENDATIONS_NAVIGATIONS', () => {
+      const nav = [{
+        name: 'Section',
+        values: [{
+          value: 'test',
+          count: 100
+        }]
+      }, {
+        name: 'Format',
+        values: [{
+          value: 'another',
+          count: 34
+        }]
+      }, {
+        name: 'Extra',
+        values: [{
+          value: 'another',
+          count: 34
+        }]
+      }];
+
       const newState = {
-        allIds: ['Section', 'Format', 'Additional'],
-        byId: {
-          Format,
-          Section,
-        },
+        ...state,
+        sortOrder: nav,
       };
 
-      const reducer = navigations({ ...state, allIds: ['Additional', ...state.allIds] }, {
+      const reducer = navigations({ ...state }, {
         type: Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS,
-        payload: [{
-          name: 'Section',
-          values: [{
-            value: 'test',
-            count: 100
-          }]
-        }, {
-          name: 'Format',
-          values: [{
-            value: 'another',
-            count: 34
-          }]
-        }, {
-          name: 'Extra',
-          values: [{
-            value: 'another',
-            count: 34
-          }]
-        }]
+        payload: nav,
       });
 
       expect(reducer).to.eql(newState);
@@ -157,7 +157,7 @@ suite('navigations', ({ expect }) => {
 
     it('should add selected refinement state on SELECT_REFINEMENT', () => {
       const newState = {
-        allIds,
+        ...state,
         byId: {
           Format,
           Section: {
@@ -214,6 +214,7 @@ suite('navigations', ({ expect }) => {
 
     it('should add value refinement on ADD_REFINEMENT', () => {
       const newState = {
+        ...state,
         allIds: ['Format', 'Section', 'Brand'],
         byId: {
           Format,
@@ -244,6 +245,7 @@ suite('navigations', ({ expect }) => {
 
     it('should add range navigation and refinement on ADD_REFINEMENT', () => {
       const newState = {
+        ...state,
         allIds: ['Format', 'Section', 'Brand'],
         byId: {
           Format,
@@ -274,7 +276,7 @@ suite('navigations', ({ expect }) => {
 
     it('should add refinement to existing navigation on ADD_REFINEMENT', () => {
       const newState = {
-        allIds,
+        ...state,
         byId: {
           Section,
           Format: {
@@ -301,7 +303,7 @@ suite('navigations', ({ expect }) => {
 
     it('should only clear specified navigation on RESET_REFINEMENTS', () => {
       const newState = {
-        allIds,
+        ...state,
         byId: {
           Section,
           Format: {
@@ -321,7 +323,7 @@ suite('navigations', ({ expect }) => {
 
     it('should select existing refinement on ADD_REFINEMENT', () => {
       const newState = {
-        allIds,
+        ...state,
         byId: {
           Section,
           Format: {
@@ -345,7 +347,7 @@ suite('navigations', ({ expect }) => {
 
     it('should return state on RESET_REFINEMENTS if no navigationId and payload clear is truth', () => {
       const newState = {
-        allIds,
+        ...state,
         byId: {
           Section: {
             ...Section,
@@ -368,7 +370,7 @@ suite('navigations', ({ expect }) => {
 
     it('should remove selected refinement state on DESELECT_REFINEMENT', () => {
       const newState = {
-        allIds,
+        ...state,
         byId: {
           Format: {
             ...Format,
@@ -405,7 +407,7 @@ suite('navigations', ({ expect }) => {
         { value: 'ebook', total: 2000 },
       ];
       const newState = {
-        allIds,
+        ...state,
         byId: {
           Format: {
             ...Format,

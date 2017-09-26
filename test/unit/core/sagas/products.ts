@@ -19,7 +19,7 @@ suite('products saga', ({ expect, spy, stub }) => {
       const saga = sagaCreator(flux)();
 
       // tslint:disable-next-line max-line-length
-      expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_PRODUCTS, Tasks.fetchProducts, flux));
+      expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_PRODUCTS, Tasks.fetchProductsAndNavigations, flux));
       expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_MORE_PRODUCTS, Tasks.fetchMoreProducts, flux));
       saga.next();
     });
