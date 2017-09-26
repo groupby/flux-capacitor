@@ -814,6 +814,15 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         expectAction(() => actions.receiveRecommendationsProducts(products), Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, products);
       });
     });
+
+    describe('receiveRecommendationsNavigations()', () => {
+      it('should return an action', () => {
+        const navigations: any[] = ['a', 'b', 'c'];
+
+        // tslint:disable-next-line max-line-length
+        expectAction(() => actions.receiveRecommendationsNavigations(navigations), Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS, navigations);
+      });
+    });
   });
 
   describe('ui action creators', () => {

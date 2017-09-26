@@ -37,6 +37,23 @@ suite('products saga', ({ expect, spy, stub }) => {
         { name: 'other', refinements: singleRefinement},
       ];
 
+      it('should handle error', () => {
+        const receiveProductsAction: any = 'test';
+        const receiveProducts = spy(() => receiveProductsAction);
+        const flux: any = {
+          actions: {
+            receiveProducts
+          }
+        };
+        const task = Tasks.fetchProductsAndNavigations(flux, <any>{});
+        const error = new Error();
+        task.next();
+        expect(task.throw(error).value).to.eql(effects.put(receiveProductsAction));
+        expect(receiveProducts).to.be.calledWith(error);
+        task.next();
+      }
+      );
+
       it('should fetch products and navigations', () => {
         const id = '1459';
         const config: any = { e: 'f', search: { redirectSingleResult: false } };
