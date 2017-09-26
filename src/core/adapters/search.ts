@@ -41,6 +41,8 @@ namespace Adapter {
     more: navigation.moreRefinements,
     or: navigation.or,
     range: !!navigation.range,
+    rangeHighest: navigation.rangeHighest,
+    rangeLowest: navigation.rangeLowest,
     refinements: navigation.refinements.map(Adapter.extractRefinement),
     selected: [],
     sort: navigation.sort && Adapter.extractNavigationSort(navigation.sort),
@@ -77,6 +79,8 @@ namespace Adapter {
 
   // tslint:disable-next-line max-line-length
   export const combineNavigations = ({ availableNavigation: available, selectedNavigation: selected }: Results): Store.Navigation[] => {
+    console.log('byeeee');
+    console.log(available);
     const navigations = available.reduce((map, navigation) =>
       Object.assign(map, { [navigation.name]: Adapter.extractNavigation(navigation) }), {});
 
@@ -92,8 +96,10 @@ namespace Adapter {
         navigations[selectedNav.name] = navigation;
       }
     });
-
-    return Object.keys(navigations).reduce((navs, key) => navs.concat(navigations[key]), []);
+    const aaa = Object.keys(navigations).reduce((navs, key) => navs.concat(navigations[key]), []);
+    console.log(aaa);
+    return aaa;
+    // return Object.keys(navigations).reduce((navs, key) => navs.concat(navigations[key]), []);
   };
 
   export const extractZone = (zone: Zone): Store.Zone => {
