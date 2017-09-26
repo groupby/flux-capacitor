@@ -4,6 +4,11 @@ import suite from '../../../_suite';
 
 suite('navigations', ({ expect }) => {
   const allIds = ['Format', 'Section'];
+  const valueRef = [
+    { value: 'Hardcover', count: 200 },
+    { value: 'Paper', count: 129 },
+    { value: 'Audio Book', count: 293 },
+  ];
   const Format = { // tslint:disable-line variable-name
     field: 'format',
     label: 'Format',
@@ -32,12 +37,22 @@ suite('navigations', ({ expect }) => {
     ],
     metadata: {}
   };
-  const state: Store.Indexed<Store.Navigation> = {
+  const nav = [{
+    name: 'Format',
+    values: valueRef
+  },
+  {
+    name: 'Section',
+    values: [valueRef[0]]
+  }];
+  
+  const state: Store.AvailableNavigations = {
     allIds,
     byId: {
       Format,
       Section,
     },
+    sortOrder: nav
   };
 
   describe('updateNavigations()', () => {
@@ -128,58 +143,6 @@ suite('navigations', ({ expect }) => {
             value: 'another',
             count: 34
           }]
-        }, {
-          name: 'Extra',
-          values: [{
-            value: 'another',
-            count: 34
-          }]
-        }]
-      });
-
-      expect(reducer).to.eql(newState);
-    });
-
-    it('should sort refinement state on RECEIVE_RECOMMENDATIONS_REFINEMENTS', () => {
-      const newState = {
-        allIds: ['Format', 'Section'],
-        byId: {
-          Section: {
-            ...Section,
-            refinements: [
-              { value: 'Toys', total: 231 },
-              { value: 'Gifts', total: 1231 },
-              { value: 'Books', total: 203 },
-              { value: 'Teens', total: 193 },
-              { high: 10, low: 5, total: 200 },
-            ]
-          },
-          Format: {
-            ...Format,
-            refinements: [
-              { value: 'Paper', total: 129 },
-              { value: 'Audio Book', total: 293 },
-              { value: 'Hardcover', total: 200 },
-            ]
-          }
-        },
-      };
-
-      const reducer = navigations(state, {
-        type: Actions.RECEIVE_RECOMMENDATIONS_REFINEMENTS,
-        payload: [{
-          name: 'Section',
-          values: [
-            { value: 'Toys', count: 1231 },
-            { value: 'Gifts', count: 131 }
-          ]
-        }, {
-          name: 'Format',
-          values: [
-            { value: 'Paper', count: 329 },
-            { value: 'Audio Book', count: 293 },
-            { value: 'Hardcover', count: 200 }
-          ]
         }, {
           name: 'Extra',
           values: [{
