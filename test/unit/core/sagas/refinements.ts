@@ -25,7 +25,16 @@ suite('refinements saga', ({ expect, spy, stub }) => {
     describe('fetchMoreRefinements()', () => {
       it('should return more refinements', () => {
         const navigationId = 'colour';
-        const config = { a: 'b' };
+        const config = {
+          recommendations: {
+            iNav: {
+              refinements: {
+                sort: false,
+                pinned: false
+              }
+            }
+          }
+        };
         const mergedRefinements = ['k', 'l'];
         const selected = ['m', 'n'];
         const refinements = () => null;

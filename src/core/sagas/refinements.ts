@@ -17,12 +17,13 @@ export namespace Tasks {
         Requests.search(state, flux.config),
         action.payload
       );
-      if (flux.config.recommendations.iNav.navigations.sort) {
+      const refinementsConfig = flux.config.recommendations.iNav.refinements;
+      if (refinementsConfig.sort) {
         res.navigation =
           RecommendationsAdapter.sortRefinements(
             [res.navigation], Selectors.navigationSortOrder(flux.store.getState()))[0];
       }
-      if (flux.config.recommendations.iNav.refinements.pinned) {
+      if (refinementsConfig.pinned) {
         // tslint:disable-next-line max-line-length
         res.navigation = RecommendationsAdapter.pinRefinements([res.navigation], flux.config)[0];
       }
