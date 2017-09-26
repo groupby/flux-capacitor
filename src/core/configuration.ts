@@ -243,15 +243,15 @@ namespace Configuration {
 
   export interface RecommendationsNavigations {
     sort: boolean;
-    bringToTop?: string[];
+    pinned?: string[];
   }
 
   export interface RecommendationsRefinements {
     sort: boolean;
-    bringToTop?: Configuration.BringToTop;
+    pinned?: Configuration.Pinned;
   }
 
-  export interface BringToTop {
+  export interface Pinned {
     [id: string]: string[];
   }
 

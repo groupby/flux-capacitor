@@ -12,10 +12,13 @@ import { Tasks as productDetailsTasks } from './product-details';
 
 export namespace Tasks {
   export function* fetchProductsAndNavigations(flux: FluxCapacitor, action: Actions.FetchProducts) {
+    // RecommendationsAdapter.pinNavigations(<any>{}, flux.config);
     try {
-      const [products, navigations]: [Results, { refinements: Store.Recommendations.Navigation[],
-                                                 sortNavigations: boolean,
-                                                 sortRefinements: boolean }] = yield effects.all([
+      const [products, navigations]: [Results, {
+        refinements: Store.Recommendations.Navigation[],
+        sortNavigations: boolean,
+        sortRefinements: boolean
+      }] = yield effects.all([
         effects.call(fetchProducts, flux, action),
         effects.call(fetchNavigations, flux, action)
       ]);
@@ -31,9 +34,17 @@ export namespace Tasks {
             products.availableNavigation =
               RecommendationsAdapter.sortNavigations(products.availableNavigation, navigations.refinements);
           }
+          if (Array.isArray(flux.config.recommendations.iNav.navigations.pinned)) {
+            // tslint:disable-next-line max-line-length
+            products.availableNavigation = RecommendationsAdapter.pinNavigations(products.availableNavigation, flux.config);
+          }
           if (navigations.sortRefinements) {
             products.availableNavigation =
               RecommendationsAdapter.sortRefinements(products.availableNavigation, navigations.refinements);
+          }
+          if (flux.config.recommendations.iNav.refinements.pinned) {
+            // tslint:disable-next-line max-line-length
+            products.availableNavigation = RecommendationsAdapter.pinRefinements(products.availableNavigation, flux.config);
           }
           yield effects.put(<any>flux.actions.receiveRecommendationsNavigations(navigations.refinements));
         }
