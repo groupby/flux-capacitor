@@ -35,9 +35,9 @@ export namespace Tasks {
             products.availableNavigation =
               RecommendationsAdapter.sortRefinements(products.availableNavigation, navigations.refinements);
           }
+          yield effects.put(<any>flux.actions.receiveRecommendationsNavigations(navigations.refinements));
         }
         yield effects.put(<any>flux.actions.receiveProducts(products));
-        yield effects.put(<any>flux.actions.receiveRecommendationsNavigations(navigations.refinements));
         flux.saveState(utils.Routes.SEARCH);
       }
     } catch (e) {

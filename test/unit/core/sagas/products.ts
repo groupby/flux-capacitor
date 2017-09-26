@@ -26,6 +26,39 @@ suite('products saga', ({ expect, spy, stub }) => {
   });
 
   describe('Tasks', () => {
+    describe('fetchProductsAndNavigations()', () => {
+      it('should fetch products and navigations', () => {
+        const id = '1459';
+        const config: any = { e: 'f', search: { redirectSingleResult: false } };
+        const emit = spy();
+        const saveState = spy();
+        const search = () => null;
+        const bridge = { search };
+        const payload = { a: 'b' };
+        const action: any = { payload };
+        const receiveProductsAction: any = { c: 'd' };
+        const receiveNavigationsAction: any = { e: 'f' };
+        const request = { e: 'f' };
+        const response = { id, totalRecordCount: 3 };
+        const receiveProducts = spy(() => receiveProductsAction);
+        const receiveRecommendationsNavigations = spy(() => receiveNavigationsAction);
+        const flux: any = { emit, saveState, clients: { bridge }, actions: { receiveProducts, receiveRecommendationsNavigations }, config };
+
+        const task = Tasks.fetchProductsAndNavigations(flux, action);
+
+        expect(task.next().value).to.eql(effects.all(([
+          effects.call(Tasks.fetchProducts, flux, action),
+          effects.call(Tasks.fetchNavigations, flux, action)
+        ])));
+        expect(task.next([response, undefined]).value).to.eql(effects.put(receiveProductsAction));
+        //expect(task.next().value).to.eql(effects.put(receiveNavigationsAction));
+        expect(emit).to.be.calledWithExactly(Events.BEACON_SEARCH, id);
+        expect(receiveProducts).to.be.calledWithExactly(response);
+        task.next();
+        expect(saveState).to.be.calledWith(utils.Routes.SEARCH);
+      });
+    });
+
     describe('fetchProducts()', () => {
       it('should return products', () => {
         const id = '1459';
