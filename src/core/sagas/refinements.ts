@@ -17,7 +17,9 @@ export namespace Tasks {
         Requests.search(state, flux.config),
         action.payload
       );
-      res.navigation = RecommendationsAdapter.sortRefinements([res.navigation], Selectors.navigationSortOrder(flux.store.getState()));
+      res.navigation =
+        RecommendationsAdapter.sortRefinements(
+          [res.navigation], Selectors.navigationSortOrder(flux.store.getState()))[0];
       const { navigationId, refinements, selected } = Adapter.mergeRefinements(res, state);
       yield effects.put(flux.actions.receiveMoreRefinements(navigationId, refinements, selected));
     } catch (e) {
