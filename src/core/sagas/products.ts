@@ -45,7 +45,6 @@ export namespace Tasks {
     }
   }
   export function* fetchProducts(flux: FluxCapacitor, action: Actions.FetchProducts) {
-    const navigationsTask = yield effects.fork(fetchNavigations, flux, action);
     const request = yield effects.select(Requests.search, flux.config);
     const res = yield effects.call([flux.clients.bridge, flux.clients.bridge.search], request);
     return res;
