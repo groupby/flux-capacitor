@@ -43,9 +43,6 @@ export function createActions(flux: FluxCapacitor) {
       fetchRecommendationsProducts: () =>
         action(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, null),
 
-      fetchRecommendationsRefinements: () =>
-        action(Actions.FETCH_RECOMMENDATIONS_REFINEMENTS, null, metadata),
-
       // request action creators
       updateSearch: (search: Actions.Payload.Search): Actions.UpdateSearch => {
         const searchActions: Actions.UpdateSearch = [actions.resetPage()];
@@ -196,7 +193,6 @@ export function createActions(flux: FluxCapacitor) {
             }),
             actions.receivePage(SearchAdapter.extractPage(state, recordCount)),
             actions.receiveTemplate(SearchAdapter.extractTemplate(res.template)),
-            actions.fetchRecommendationsRefinements(),
           ];
         });
       },
@@ -258,10 +254,6 @@ export function createActions(flux: FluxCapacitor) {
       receiveRecommendationsNavigations: (navigations: Store.Recommendations.Navigation[]):
       Actions.ReceiveRecommendationsNavigations =>
         action(Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS, navigations, metadata),
-
-      receiveRecommendationsRefinements: (navigations: Store.Recommendations.Navigation[]):
-      Actions.ReceiveRecommendationsRefinements =>
-        action(Actions.RECEIVE_RECOMMENDATIONS_REFINEMENTS, navigations, metadata),
 
       // ui action creators
       createComponentState: (tagName: string, id: string, state: any = {}): Actions.CreateComponentState =>
