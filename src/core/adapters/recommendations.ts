@@ -19,14 +19,18 @@ namespace Recommendations {
   };
   // tslint:disable-next-line max-line-length
   export const sortRefinements = (results: Navigation[], navigations: Store.Recommendations.Navigation[]) => {
-    // const newAvailableNavigations = { ...results.availableNavigation};
+    const newNavigations = [];
     results.forEach((product) => {
       const index = navigations.findIndex(({ name }) => product.name === name);
       if (index !== -1) {
-        product.refinements = sortBasedOn(product.refinements, navigations[index].values,
-          (unsorted: ValueRefinement, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase());
+        newNavigations.push({ ...product,
+                              refinements: sortBasedOn(product.refinements, navigations[index].values,
+            (unsorted: ValueRefinement, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase())});
+      } else {
+        newNavigations.push({ ...product });
       }
     });
+    return newNavigations;
   };
 
   export interface RecommendationsBody {

@@ -13,11 +13,12 @@ import { Tasks as productDetailsTasks } from './product-details';
 export namespace Tasks {
   export function* fetchProductsAndNavigations(flux: FluxCapacitor, action: Actions.FetchProducts) {
     try {
-      const [products, navigations]: [Results, Store.Recommendations.Navigation[]] = yield effects.all([
+      const [products, navigations]: [Results, { refinements: Store.Recommendations.Navigation[],
+                                                 sortNavigations: boolean,
+                                                 sortRefinements: boolean }] = yield effects.all([
         effects.call(fetchProducts, flux, action),
         effects.call(fetchNavigations, flux, action)
       ]);
-      console.log(navigations);
       if (products.redirect) {
         yield effects.put(flux.actions.receiveRedirect(products.redirect));
       }
@@ -26,17 +27,17 @@ export namespace Tasks {
       } else {
         flux.emit(Events.BEACON_SEARCH, (<any>products).id);
         if (navigations && !(navigations instanceof Error)) {
-          products.availableNavigation = RecommendationsAdapter.sortNavigations(products.availableNavigation, navigations);
-          RecommendationsAdapter.sortRefinements(products.availableNavigation, navigations);
+          if (navigations.sortNavigations) {
+            products.availableNavigation =
+              RecommendationsAdapter.sortNavigations(products.availableNavigation, navigations.refinements);
+          }
+          if (navigations.sortRefinements) {
+            products.availableNavigation =
+              RecommendationsAdapter.sortRefinements(products.availableNavigation, navigations.refinements);
+          }
         }
         yield effects.put(<any>flux.actions.receiveProducts(products));
-        yield effects.put(<any>flux.actions.receiveRecommendationsNavigations(navigations));
-        // yield effects.put(<any>flux.actions.receiveProducts(products));
-
-        // yield flux.config.recommendations.iNav.navigations.sort &&
-        //   effects.put(flux.actions.receiveRecommendationsNavigations(refinements));
-        // yield flux.config.recommendations.iNav.refinements.sort &&
-        //   effects.put(flux.actions.receiveRecommendationsRefinements(refinements));
+        yield effects.put(<any>flux.actions.receiveRecommendationsNavigations(navigations.refinements));
         flux.saveState(utils.Routes.SEARCH);
       }
     } catch (e) {
@@ -63,7 +64,11 @@ export namespace Tasks {
         const recommendations = yield recommendationsResponse.json();
         const refinements: Store.Navigation[] = recommendations.result
           .filter(({ values }) => values); // assumes no values key will be empty
-        return refinements;
+        return {
+          refinements,
+          sortNavigations: flux.config.recommendations.iNav.navigations.sort,
+          sortRefinements: flux.config.recommendations.iNav.refinements.sort,
+        };
       }
     } catch (e) {
       return e;
