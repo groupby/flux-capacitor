@@ -15,10 +15,10 @@ namespace Recommendations {
   // tslint:disable-next-line max-line-length
   export const sortNavigations = (results: Navigation[], navigations: Store.Recommendations.Navigation[]): Navigation[] => {
     return sortBasedOn(results,
-      navigations, (unsorted: any, sorted: any) => unsorted.name === sorted.name);
+      navigations, (unsorted: Navigation, sorted: Store.Recommendations.Navigation) => unsorted.name === sorted.name);
   };
   // tslint:disable-next-line max-line-length
-  export const sortRefinements = (results: Navigation[], navigations: Store.Recommendations.Navigation[]) => {
+  export const sortRefinements = (results: Navigation[], navigations: Store.Recommendations.Navigation[]): Navigation[] => {
     const newNavigations = [];
     results.forEach((product) => {
       const index = navigations.findIndex(({ name }) => product.name === name);
