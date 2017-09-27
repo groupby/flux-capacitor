@@ -87,8 +87,6 @@ namespace Actions {
   export type FetchProductDetails = Action<typeof FETCH_PRODUCT_DETAILS, string>;
   export const FETCH_RECOMMENDATIONS_PRODUCTS = 'FETCH_RECOMMENDATIONS_PRODUCTS';
   export type FetchRecommendationsProducts = Action<typeof FETCH_RECOMMENDATIONS_PRODUCTS, string>;
-  export const FETCH_RECOMMENDATIONS_REFINEMENTS = 'FETCH_RECOMMENDATIONS_REFINEMENTS';
-  export type FetchRecommendationsRefinements = Action<typeof FETCH_RECOMMENDATIONS_REFINEMENTS, string>;
 
   // response actions
   export const RECEIVE_MORE_REFINEMENTS = 'RECEIVE_MORE_REFINEMENTS';
