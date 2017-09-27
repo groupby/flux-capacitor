@@ -318,6 +318,55 @@ suite('products saga', ({ expect, spy, stub }) => {
         expect(task.next().value).to.eql(effects.put(receiveProductsAction));
         expect(receiveProducts.getCall(0).args[0]).to.eql({ availableNavigation: sortedNavigations });
       });
+      it('should call pinNavigations and pinRefinements navigations received', () => {
+        const receiveRecommendationsNavigationsAction: any = { c: 'd' };
+        const record: any = { g: 'h' };
+        const receiveRecommendationsNavigations = spy(() => receiveRecommendationsNavigationsAction);
+        const products = { id: 2 };
+        const receiveProductsAction: any = { c: 'd' };
+        const receiveProducts = spy(() => receiveProductsAction);
+        const pinNavigations = stub(RecommendationsAdapter, 'pinNavigations').returnsArg(0);
+        const pinRefinements = stub(RecommendationsAdapter, 'pinRefinements').returnsArg(0);
+        const flux: any = { actions: { receiveRecommendationsNavigations, receiveProducts },
+          config: {
+            search: {
+              redirectSingleResult: false
+            },
+            recommendations: {
+              iNav: {
+                navigations: {
+                  sort: false,
+                  pinned: ['1', '2', '3', '4'],
+                },
+                refinements: {
+                  sort: false,
+                  pinned: {
+                    1: ['1']
+                  }
+                }
+              }
+            },
+          },
+          emit: () => undefined,
+          saveState: () => undefined
+                          };
+
+        const sortArray: any = [
+          { name: 'cat-1', values: singleRefinement},
+          { name: 'cat0', values: singleRefinement},
+          { name: 'cat1', values: singleRefinement},
+          { name: 'test1', values: singleRefinement},
+        ];
+
+        let task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
+        task.next();
+        expect(task.next([{ availableNavigation }, sortArray ]).value)
+          .to.eql(effects.put(receiveRecommendationsNavigationsAction));
+        expect(task.next().value).to.eql(effects.put(receiveProductsAction));
+        expect(receiveProducts.getCall(0).args[0]).to.eql({ availableNavigation });
+        expect(pinNavigations).to.be.calledWith(availableNavigation, flux.config);
+        expect(pinRefinements).to.be.calledWith(availableNavigation, flux.config);
+      });
     });
 
     describe('fetchProducts()', () => {

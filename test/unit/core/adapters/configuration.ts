@@ -150,6 +150,34 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     });
   });
 
+  describe('extractNavigationsPinned()', () => {
+    it('should return pinned navigations', () => {
+      const pinned = 'nav';
+
+      expect(Adapter.extractNavigationsPinned(<any>{ recommendations: {
+        iNav: {
+          navigations: {
+            pinned
+          }
+        }
+      }})).to.eq(pinned);
+    });
+  });
+
+  describe('extractRefinementsPinned()', () => {
+    it('should return pinned refinements', () => {
+      const pinned = 'nav';
+
+      expect(Adapter.extractRefinementsPinned(<any>{ recommendations: {
+        iNav: {
+          refinements: {
+            pinned
+          }
+        }
+      }})).to.eq(pinned);
+    });
+  });
+
   describe('extractIndexedState()', () => {
     it('should return indexed state', () => {
       const collectionDefault = 'Im a collection';
