@@ -86,7 +86,12 @@ export function createActions(flux: FluxCapacitor) {
             validators.isRangeRefinement,
             validators.isValidRange,
             validators.isValueRefinement,
-            validators.isRefinementDeselectedByValue
+            validators.isRefinementDeselectedByValue,
+            {
+              // tslint:disable-next-line max-line-length
+              func: ({ range }, state) => range ? !(Selectors.rangeHighest(state, field) === high && Selectors.rangeLowest === valueOrLow) : true,
+              msg: 'range must not be full bucket'
+            }
           ]
         })
       ],

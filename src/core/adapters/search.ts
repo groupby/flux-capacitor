@@ -79,8 +79,6 @@ namespace Adapter {
 
   // tslint:disable-next-line max-line-length
   export const combineNavigations = ({ availableNavigation: available, selectedNavigation: selected }: Results): Store.Navigation[] => {
-    console.log('byeeee');
-    console.log(available);
     const navigations = available.reduce((map, navigation) =>
       Object.assign(map, { [navigation.name]: Adapter.extractNavigation(navigation) }), {});
 
@@ -97,7 +95,6 @@ namespace Adapter {
       }
     });
     const aaa = Object.keys(navigations).reduce((navs, key) => navs.concat(navigations[key]), []);
-    console.log(aaa);
     return aaa;
     // return Object.keys(navigations).reduce((navs, key) => navs.concat(navigations[key]), []);
   };

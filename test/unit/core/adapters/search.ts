@@ -87,6 +87,8 @@ suite('Search Adapter', ({ expect, stub }) => {
         more: true,
         or: true,
         range: false,
+        rangeHighest: undefined,
+        rangeLowest: undefined,
         refinements: ['x', 'x'],
         selected: [],
         sort,
