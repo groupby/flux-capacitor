@@ -12,7 +12,6 @@ import { Tasks as productDetailsTasks } from './product-details';
 
 export namespace Tasks {
   export function* fetchProductsAndNavigations(flux: FluxCapacitor, action: Actions.FetchProducts) {
-    // RecommendationsAdapter.pinNavigations(<any>{}, flux.config);
     try {
       const [products, navigations]: [Results, Store.Recommendations.Navigation[]] = yield effects.all([
         effects.call(fetchProducts, flux, action),
