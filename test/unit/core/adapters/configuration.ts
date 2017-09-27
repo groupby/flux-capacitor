@@ -150,6 +150,69 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     });
   });
 
+  describe('extractPageSizes()', () => {
+    it('should do nothing if state is not an object', () => {
+      const pageSize = false;
+      const defaultValue = 0;
+
+      expect(Adapter.extractPageSizes(<any>{
+        search: {
+          pageSize
+        }
+      }, defaultValue)).to.eql({ selected: 0, items: [defaultValue] });
+    });
+    it('should default items to defaultValue', () => {
+      const pageSize = {};
+      const defaultValue = 0;
+
+      expect(Adapter.extractPageSizes(<any>{
+        search: {
+          pageSize
+        }
+      }, defaultValue)).to.eql({ selected: 0, items: [defaultValue] });
+    });
+  });
+
+  describe('extractSorts()', () => {
+    it('should do nothing if state does not contain default or options', () => {
+      const sort = {};
+
+      expect(Adapter.extractSorts(<any>{
+        search: {
+          sort
+        }
+      })).to.eql({ selected: 0, items: [sort] });
+    });
+    it('should default selected to empty object', () => {
+      const sort = {
+        options: false
+      };
+
+      expect(Adapter.extractSorts(<any>{
+        search: {
+          sort
+        }
+      })).to.eql({ selected: 0, items: [] });
+    });
+    it('should return selected sorts', () => {
+      const sort = {
+        default: false,
+        options: [
+          { field: true,
+            descending: true
+          },
+          {}
+        ]
+      };
+
+      expect(Adapter.extractSorts(<any>{
+        search: {
+          sort
+        }
+      })).to.eql({ selected: 1, items: sort.options });
+    });
+  });
+
   describe('extractNavigationsPinned()', () => {
     it('should return pinned navigations', () => {
       const pinned = 'nav';

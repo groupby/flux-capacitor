@@ -215,6 +215,14 @@ suite('Observer', ({ expect, spy, stub }) => {
       });
 
       describe('autocomplete()', () => {
+        it('should not emit update if state identical to old state', () => {
+          const state = 'state';
+
+          observers.data.present.autocomplete(<any>state, <any>state, path);
+
+          expect(emit.notCalled).to.be.true;
+        });
+
         it('should emit AUTOCOMPLETE_SUGGESTIONS_UPDATED event when suggestions differ', () => {
           const oldState = { suggestions: 'idk' };
           const newState = { suggestions: 'im different o wow' };
@@ -461,6 +469,11 @@ suite('Observer', ({ expect, spy, stub }) => {
 
         expect(emit).to.be.calledWith(Events.APP_KILLED, false);
       });
+      it('should emit nothing if neither value passed is true', () => {
+        observers.isRunning(false, false);
+
+        expect(emit.notCalled).to.be.true;
+      });
     });
   });
 
@@ -521,6 +534,23 @@ suite('Observer', ({ expect, spy, stub }) => {
       observers.ui({}, OBJ);
 
       expect(emit).to.be.calledWith(`${Events.UI_UPDATED}:${tagName}:${id}`, OBJ[tagName][id]);
+    });
+    it('should emit nothing if states same', () => {
+      observers.ui(false, false);
+
+      expect(emit.notCalled).to.be.true;
+    });
+    it('should not emit UI_UPDATED event if oldTagState and newTagState same', () => {
+      const tagName = 'Main';
+      const id = 'brand';
+      const OBJ = {
+        [tagName]: {
+          [id]: true
+        }
+      };
+      observers.ui({ [tagName]: { [id]: true } }, OBJ);
+
+      expect(emit).to.not.be.calledWith(`${Events.UI_UPDATED}:${tagName}:${id}`, OBJ[tagName][id]);
     });
   });
 });
