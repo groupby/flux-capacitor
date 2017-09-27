@@ -94,9 +94,7 @@ namespace Adapter {
         navigations[selectedNav.name] = navigation;
       }
     });
-    const aaa = Object.keys(navigations).reduce((navs, key) => navs.concat(navigations[key]), []);
-    return aaa;
-    // return Object.keys(navigations).reduce((navs, key) => navs.concat(navigations[key]), []);
+    return Object.keys(navigations).reduce((navs, key) => navs.concat(navigations[key]), []);
   };
 
   export const extractZone = (zone: Zone): Store.Zone => {
