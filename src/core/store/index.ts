@@ -231,8 +231,8 @@ namespace Store {
     label: string; // post
     more?: boolean; // post
     range?: boolean; // post
-    rangeHighest?: number;
-    rangeLowest?: number;
+    max?: number;
+    min?: number;
     or?: boolean; // post
     selected: number[]; // pre
     refinements: Refinement[]; // post

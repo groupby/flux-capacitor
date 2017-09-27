@@ -33,45 +33,21 @@ suite('selectors', ({ expect, stub }) => {
       expect(Selectors.isRefinementDeselected(<any>{}, 'my navigation', 4)).to.be.true;
     });
   });
-  describe('rangeLowest()', () => {
-    it('should return the rangeLowest', () => {
-      const rangeLowest = 4;
+  describe('rangeNavigationMin()', () => {
+    it('should return the min', () => {
+      const min = 4;
       const id = 'hello';
-      const state: any = {
-        data: {
-          present: {
-            navigations: {
-              byId: {
-                [id]: {
-                  rangeLowest
-                }
-              }
-            }
-          }
-        }
-      };
-      expect(Selectors.rangeLowest(state, id)).to.be.eq(rangeLowest + 0);
+      const state: any = { data: { present: { navigations: { byId: { [id]: { min }}}}}};
+      expect(Selectors.rangeNavigationMin(state, id)).to.be.eq(min + 0);
     });
   });
 
-  describe('rangeHighest()', () => {
-    it('should return the rangeHighest', () => {
-      const rangeHighest = 4;
+  describe('rangeNavigationMax()', () => {
+    it('should return the max', () => {
+      const max = 4;
       const id = 'hello';
-      const state: any = {
-        data: {
-          present: {
-            navigations: {
-              byId: {
-                [id]: {
-                  rangeHighest
-                }
-              }
-            }
-          }
-        }
-      };
-      expect(Selectors.rangeHighest(state, id)).to.be.eq(rangeHighest + 0);
+      const state: any = { data: { present: { navigations: { byId: { [id]: { max }}}}}};
+      expect(Selectors.rangeNavigationMax(state, id)).to.be.eq(max + 0);
     });
   });
 

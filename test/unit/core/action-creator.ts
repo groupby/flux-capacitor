@@ -320,8 +320,8 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const low = 2;
         const high = 8;
         const field = 'hello';
-        const rangeHighest = stub(Selectors, 'rangeHighest').returns(high);
-        const rangeLowest = stub(Selectors, 'rangeLowest').returns(low);
+        const rangeNavigationMax = stub(Selectors, 'rangeNavigationMax').returns(high);
+        const rangeNavigationMin = stub(Selectors, 'rangeNavigationMin').returns(low);
         stub(utils, 'refinementPayload').returns(rangeRefinement);
 
         expectAction(() => actions.addRefinement(field, low + 1, high)[1], Actions.ADD_REFINEMENT, rangeRefinement,
@@ -332,8 +332,8 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
         const low = 4;
         const high = 8;
         const field = 'hello';
-        const rangeHighest = stub(Selectors, 'rangeHighest').returns(high);
-        const rangeLowest = stub(Selectors, 'rangeLowest').returns(low);
+        const rangeNavigationMax = stub(Selectors, 'rangeNavigationMax').returns(high);
+        const rangeNavigationMin = stub(Selectors, 'rangeNavigationMin').returns(low);
         stub(utils, 'refinementPayload').returns(rangeRefinement);
 
         expectAction(() => actions.addRefinement(field, low, high)[1], Actions.ADD_REFINEMENT, rangeRefinement,
