@@ -10,7 +10,6 @@ export type Action = Actions.ResetRefinements
   | Actions.DeselectRefinement
   | Actions.ReceiveMoreRefinements
   | Actions.ReceiveRecommendationsNavigations;
-
 export type State = Store.AvailableNavigations;
 
 export const DEFAULTS: State = {

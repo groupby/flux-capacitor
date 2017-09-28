@@ -56,7 +56,7 @@ export const shouldResetRefinements =  ({ low, high, value, navigationId, range,
 // tslint:disable-next-line max-line-length
 export const sortBasedOn = function<T,S>(toBeSorted: T[], basisArray: S[], callback?: (sorted: T, unsorted: S) => boolean): T[] {
   const output: T[] = [];
-  const ids = toBeSorted.concat();
+  const ids = [...toBeSorted];
   basisArray.forEach((basis) => {
     const index = ids.findIndex((sortElement) => callback
       ? callback(sortElement, basis)

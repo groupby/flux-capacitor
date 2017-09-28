@@ -15,12 +15,10 @@ namespace Recommendations {
     body: JSON.stringify(body)
   });
 
-  // tslint:disable-next-line max-line-length
-  export const sortNavigations = (results: Navigation[], navigations: Store.Recommendations.Navigation[]): Navigation[] =>
+  export const sortNavigations = ({ results, navigations }: Navigations): Navigation[] =>
     sortBasedOn(results, navigations, (unsorted, sorted) => unsorted.name === sorted.name);
 
-  // tslint:disable-next-line max-line-length
-  export const sortRefinements = (results: Navigation[], navigations: Store.Recommendations.Navigation[]): Navigation[] => {
+  export const sortRefinements = ({ results, navigations }: Navigations): Navigation[] => {
     const newNavigations = [];
     results.forEach((product) => {
       const index = navigations.findIndex(({ name }) => product.name === name);
@@ -37,14 +35,15 @@ namespace Recommendations {
     return newNavigations;
   };
 
-  export const pinNavigations = (results: Navigation[], config: Configuration): Navigation[] => {
+  export const pinNavigations = ({ results, config }: NavigationsAndConfig): Navigation[] => {
     const pinnedArray = ConfigurationAdapter.extractNavigationsPinned(config);
     return sortBasedOn(results, pinnedArray, (unsorted, pinnedName) => unsorted.name === pinnedName);
   };
 
-  export const pinRefinements = (results: Navigation[], config: Configuration): Navigation[] => {
+  export const pinRefinements = ({ results, config }: NavigationsAndConfig): Navigation[] => {
     const newNavigations = [];
-    const pinnedRefinements: Configuration.Pinned = ConfigurationAdapter.extractRefinementsPinned(config);
+    const pinnedRefinements: Configuration.Recommendations.Pinned =
+      ConfigurationAdapter.extractRefinementsPinned(config);
     const pinnedRefinementsNavigationsArray: Store.Recommendations.Navigation[] = [];
     Object.keys(pinnedRefinements).forEach((key) =>
       pinnedRefinementsNavigationsArray.push({
@@ -54,7 +53,21 @@ namespace Recommendations {
           count: -1
         }))
       }));
-    return sortRefinements(results, pinnedRefinementsNavigationsArray);
+    return sortRefinements({ results, navigations: pinnedRefinementsNavigationsArray });
+  };
+
+  // tslint:disable-next-line max-line-length
+  export const transformNavigations = (availableNavigations: Navigation[], navigations: Store.Recommendations.Navigation[], config: Configuration): Navigation[] => {
+    const iNav = config.recommendations.iNav;
+    const noop = ((x) => x.results);
+    const transformations = [
+      iNav.navigations.sort ? sortNavigations : noop,
+      Array.isArray(iNav.navigations.pinned) ? pinNavigations : noop,
+      iNav.refinements.sort ? sortRefinements : noop,
+      iNav.refinements.pinned ? pinRefinements : noop
+    ];
+    return transformations.reduce(
+      (results, transform: any) => transform({ results, navigations, config }), availableNavigations);
   };
 
   export interface RecommendationsBody {
@@ -62,6 +75,16 @@ namespace Recommendations {
     window?: string;
     type?: string;
     target?: string;
+  }
+
+  export interface NavigationsAndConfig {
+    results: Navigation[];
+    config: Configuration;
+  }
+
+  export interface Navigations {
+    results: Navigation[];
+    navigations: Store.Recommendations.Navigation[];
   }
 }
 

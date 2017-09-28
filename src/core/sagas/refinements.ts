@@ -17,16 +17,9 @@ export namespace Tasks {
         Requests.search(state, flux.config),
         action.payload
       );
-      const refinementsConfig = flux.config.recommendations.iNav.refinements;
-      if (refinementsConfig.sort) {
-        res.navigation =
-          RecommendationsAdapter.sortRefinements(
-            [res.navigation], Selectors.navigationSortOrder(flux.store.getState()))[0];
-      }
-      if (refinementsConfig.pinned) {
-        // tslint:disable-next-line max-line-length
-        res.navigation = RecommendationsAdapter.pinRefinements([res.navigation], flux.config)[0];
-      }
+      res.navigation = RecommendationsAdapter.transformNavigations([res.navigation],
+                                                                   Selectors.navigationSortOrder(flux.store.getState()),
+                                                                   flux.config);
       const { navigationId, refinements, selected } = Adapter.mergeRefinements(res, state);
       yield effects.put(flux.actions.receiveMoreRefinements(navigationId, refinements, selected));
     } catch (e) {

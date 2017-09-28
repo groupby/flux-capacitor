@@ -218,7 +218,7 @@ namespace Configuration {
 
   export interface Recommendations {
     productSuggestions: Configuration.ProductSuggestions;
-    iNav: Configuration.RecommendationsINav;
+    iNav: Configuration.Recommendations.INav;
   }
 
   export interface ProductSuggestions {
@@ -236,23 +236,26 @@ namespace Configuration {
     mode: Configuration.RecommendationMode;
   }
 
-  export interface RecommendationsINav {
-    navigations: Configuration.RecommendationsNavigations;
-    refinements: Configuration.RecommendationsRefinements;
-  }
+  export namespace Recommendations {
+    // tslint:disable-next-line interface-name
+    export interface INav {
+      navigations: Navigations;
+      refinements: Refinements;
+    }
 
-  export interface RecommendationsNavigations {
-    sort: boolean;
-    pinned?: string[];
-  }
+    export interface Navigations {
+      sort: boolean;
+      pinned?: string[];
+    }
 
-  export interface RecommendationsRefinements {
-    sort: boolean;
-    pinned?: Configuration.Pinned;
-  }
+    export interface Refinements {
+      sort: boolean;
+      pinned?: Configuration.Recommendations.Pinned;
+    }
 
-  export interface Pinned {
-    [id: string]: string[];
+    export interface Pinned {
+      [id: string]: string[];
+    }
   }
 
   export type ValueOptions<T> = T | { options: T[], default: T };
