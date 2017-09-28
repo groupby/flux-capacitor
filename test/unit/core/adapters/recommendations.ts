@@ -29,15 +29,16 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
       const sortRefinements = stub(RecommendationsAdapter, 'sortRefinements');
       const pinRefinements = stub(RecommendationsAdapter, 'pinRefinements');
 
-      stub(ConfigurationAdapter, 'extractINav').returns({ navigations: {
-        sort: true,
-        pinned: []
-      },
-      refinements: {
-        sort: true,
-        pinned: true
-      }
-    });
+      stub(ConfigurationAdapter, 'extractINav').returns({
+        navigations: {
+          sort: true,
+          pinned: []
+        },
+        refinements: {
+          sort: true,
+          pinned: true
+        }
+      });
       RecommendationsAdapter.sortAndPinNavigations([], [], <any>undefined);
 
       expect(sortNavigations).to.be.calledOnce;
@@ -52,15 +53,16 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
       const sortRefinements = stub(RecommendationsAdapter, 'sortRefinements');
       const pinRefinements = stub(RecommendationsAdapter, 'pinRefinements');
 
-      stub(ConfigurationAdapter, 'extractINav').returns({ navigations: {
-        sort: false,
-        pinned: 3
-      },
-      refinements: {
-        sort: false,
-        pinned: false
-      }
-    });
+      stub(ConfigurationAdapter, 'extractINav').returns({
+        navigations: {
+          sort: false,
+          pinned: 3
+        },
+        refinements: {
+          sort: false,
+          pinned: false
+        }
+      });
 
       RecommendationsAdapter.sortAndPinNavigations([], [], <any>undefined);
 
