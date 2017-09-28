@@ -19,14 +19,14 @@ suite('products saga', ({ expect, spy, stub }) => {
       const saga = sagaCreator(flux)();
 
       // tslint:disable-next-line max-line-length
-      expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_PRODUCTS, Tasks.fetchProductsAndNavigations, flux));
+      expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_PRODUCTS, Tasks.fetchProducts, flux));
       expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_MORE_PRODUCTS, Tasks.fetchMoreProducts, flux));
       saga.next();
     });
   });
 
   describe('Tasks', () => {
-    describe('fetchProductsAndNavigations()', () => {
+    describe('fetchProducts()', () => {
       const singleRefinement = [{ value: 'test1', type: 'Value', count: 2},
                                 { value: 'test3', type: 'Value', count: 4},
                                 { value: 'test8', type: 'Value', count: 8}];
@@ -45,7 +45,7 @@ suite('products saga', ({ expect, spy, stub }) => {
             receiveProducts
           }
         };
-        const task = Tasks.fetchProductsAndNavigations(flux, <any>{});
+        const task = Tasks.fetchProducts(flux, <any>{});
         const error = new Error();
         task.next();
         expect(task.throw(error).value).to.eql(effects.put(receiveProductsAction));
@@ -71,10 +71,10 @@ suite('products saga', ({ expect, spy, stub }) => {
         // tslint:disable-next-line max-line-length
         const flux: any = { emit, saveState, clients: { bridge }, actions: { receiveProducts, receiveRecommendationsNavigations }, config };
 
-        const task = Tasks.fetchProductsAndNavigations(flux, action);
+        const task = Tasks.fetchProducts(flux, action);
 
         expect(task.next().value).to.eql(effects.all(([
-          effects.call(Tasks.fetchProducts, flux, action),
+          effects.call(Tasks.fetchProductsRequest, flux, action),
           effects.call(Tasks.fetchNavigations, flux, action)
         ])));
         expect(task.next([response, undefined]).value).to.eql(effects.put(receiveProductsAction));
@@ -100,7 +100,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           saveState: () => undefined
         };
 
-        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ hello: 'hello' });
+        const task = Tasks.fetchProducts(<any> flux, <any>{ hello: 'hello' });
         task.next();
         task.next([{ redirect: true }, undefined]);
         task.next();
@@ -123,7 +123,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           saveState: () => undefined
         };
 
-        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
+        const task = Tasks.fetchProducts(<any> flux, <any>{ });
         task.next();
         expect(task.next([{ redirect: false, totalRecordCount: 1, records: [record] }, undefined]).value)
           .to.eql(effects.call(productDetailsTasks.receiveDetailsProduct, flux, record));
@@ -145,7 +145,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           saveState: () => undefined
         };
 
-        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
+        const task = Tasks.fetchProducts(<any> flux, <any>{ });
         task.next();
         expect(task.next([products, new Error()]).value).to.eql(effects.put(receiveProductsAction));
       });
@@ -195,7 +195,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           { name: 'other', refinements: singleRefinement},
         ];
 
-        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
+        const task = Tasks.fetchProducts(<any> flux, <any>{ });
         task.next();
         expect(task.next([{ availableNavigation }, sortArray ]).value)
           .to.eql(effects.put(receiveRecommendationsNavigationsAction));
@@ -255,7 +255,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           { name: 'other', refinements: singleRefinement},
         ];
 
-        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
+        const task = Tasks.fetchProducts(<any> flux, <any>{ });
         task.next();
         expect(task.next([{ availableNavigation: avail }, sortArray]).value)
           .to.eql(effects.put(receiveRecommendationsNavigationsAction));
@@ -315,7 +315,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           { name: 'other', refinements: singleRefinement},
         ];
 
-        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
+        const task = Tasks.fetchProducts(<any> flux, <any>{ });
         task.next();
         expect(task.next([{ availableNavigation: avail }, sortArray]).value).
           to.eql(effects.put(receiveRecommendationsNavigationsAction));
@@ -363,7 +363,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           { name: 'test1', values: singleRefinement},
         ];
 
-        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
+        const task = Tasks.fetchProducts(<any> flux, <any>{ });
         task.next();
         expect(task.next([{ availableNavigation }, sortArray ]).value)
           .to.eql(effects.put(receiveRecommendationsNavigationsAction));
@@ -374,7 +374,7 @@ suite('products saga', ({ expect, spy, stub }) => {
       });
     });
 
-    describe('fetchProducts()', () => {
+    describe('fetchProductsRequest()', () => {
       it('should return products', () => {
         const id = '1459';
         const config: any = { e: 'f', search: { redirectSingleResult: false } };
@@ -390,7 +390,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         const receiveProducts = spy(() => receiveProductsAction);
         const flux: any = { emit, saveState, clients: { bridge }, actions: { receiveProducts }, config };
 
-        const task = Tasks.fetchProducts(flux, action);
+        const task = Tasks.fetchProductsRequest(flux, action);
 
         expect(task.next().value).to.eql(effects.select(Requests.search, config));
         const ret = effects.call([bridge, search], request);
@@ -409,7 +409,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           actions: { receiveProducts }
         };
 
-        const task = Tasks.fetchProducts(flux, <any>{});
+        const task = Tasks.fetchProductsRequest(flux, <any>{});
 
         expect(task.throw(error)).to.throw;
       });
