@@ -529,15 +529,18 @@ suite('Observer', ({ expect, spy, stub }) => {
 
       expect(emit).to.be.calledWith(`${Events.UI_UPDATED}:${tagName}:${id}`, testObject[tagName][id]);
     });
+
     it('should emit nothing if states same', () => {
       observers.ui(false, false);
 
       expect(emit).to.not.be.called;
     });
+
     it('should not emit UI_UPDATED event if oldTagState and newTagState same', () => {
       const tagName = 'Main';
       const id = 'brand';
       const testObject = { [tagName]: { [id]: true } };
+
       observers.ui({ [tagName]: { [id]: true } }, testObject);
 
       expect(emit).to.not.be.calledWith(`${Events.UI_UPDATED}:${tagName}:${id}`, testObject[tagName][id]);

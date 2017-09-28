@@ -51,8 +51,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         expect(task.throw(error).value).to.eql(effects.put(receiveProductsAction));
         expect(receiveProducts).to.be.calledWith(error);
         task.next();
-      }
-      );
+      });
 
       it('should fetch products and navigations', () => {
         const id = '1459';
@@ -101,12 +100,13 @@ suite('products saga', ({ expect, spy, stub }) => {
           saveState: () => undefined
         };
 
-        let task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ hello: 'hello' });
+        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ hello: 'hello' });
         task.next();
         task.next([{ redirect: true }, undefined]);
         task.next();
         expect(receiveRedirect).to.be.calledOnce;
       });
+
       it('should call receiveDetailsProduct when only a single result', () => {
         const receiveProductsAction: any = { c: 'd' };
         const receiveNavigationsAction: any = { e: 'f' };
@@ -123,12 +123,13 @@ suite('products saga', ({ expect, spy, stub }) => {
           saveState: () => undefined
         };
 
-        let task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
+        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
         task.next();
         expect(task.next([{ redirect: false, totalRecordCount: 1, records: [record] }, undefined]).value)
           .to.eql(effects.call(productDetailsTasks.receiveDetailsProduct, flux, record));
         task.next();
       });
+
       it('should not sort navigations if navigations is an error', () => {
         const receiveProductsAction: any = { c: 'd' };
         const record: any = { g: 'h' };
@@ -144,10 +145,11 @@ suite('products saga', ({ expect, spy, stub }) => {
           saveState: () => undefined
         };
 
-        let task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
+        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
         task.next();
         expect(task.next([products, new Error()]).value).to.eql(effects.put(receiveProductsAction));
       });
+
       it('should sort navigations if navigations received', () => {
         const receiveRecommendationsNavigationsAction: any = { c: 'd' };
         const record: any = { g: 'h' };
@@ -193,13 +195,14 @@ suite('products saga', ({ expect, spy, stub }) => {
           { name: 'other', refinements: singleRefinement},
         ];
 
-        let task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
+        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
         task.next();
         expect(task.next([{ availableNavigation }, sortArray ]).value)
           .to.eql(effects.put(receiveRecommendationsNavigationsAction));
         expect(task.next().value).to.eql(effects.put(receiveProductsAction));
         expect(receiveProducts.getCall(0).args[0]).to.eql({ availableNavigation: sortedNavigations });
       });
+
       it('should sort refinements if navigations received', () => {
         const receiveRecommendationsNavigationsAction: any = { c: 'd' };
         const record: any = { g: 'h' };
@@ -252,13 +255,14 @@ suite('products saga', ({ expect, spy, stub }) => {
           { name: 'other', refinements: singleRefinement},
         ];
 
-        let task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
+        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
         task.next();
         expect(task.next([{ availableNavigation: avail }, sortArray]).value)
           .to.eql(effects.put(receiveRecommendationsNavigationsAction));
         expect(task.next().value).to.eql(effects.put(receiveProductsAction));
         expect(receiveProducts.getCall(0).args[0]).to.eql({ availableNavigation: sortedNavigations });
       });
+
       it('should sort navigations and refinements if navigations received', () => {
         const receiveRecommendationsNavigationsAction: any = { c: 'd' };
         const record: any = { g: 'h' };
@@ -311,13 +315,14 @@ suite('products saga', ({ expect, spy, stub }) => {
           { name: 'other', refinements: singleRefinement},
         ];
 
-        let task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
+        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
         task.next();
         expect(task.next([{ availableNavigation: avail }, sortArray]).value).
           to.eql(effects.put(receiveRecommendationsNavigationsAction));
         expect(task.next().value).to.eql(effects.put(receiveProductsAction));
         expect(receiveProducts.getCall(0).args[0]).to.eql({ availableNavigation: sortedNavigations });
       });
+
       it('should call pinNavigations and pinRefinements navigations received', () => {
         const receiveRecommendationsNavigationsAction: any = { c: 'd' };
         const record: any = { g: 'h' };
@@ -358,7 +363,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           { name: 'test1', values: singleRefinement},
         ];
 
-        let task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
+        const task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
         task.next();
         expect(task.next([{ availableNavigation }, sortArray ]).value)
           .to.eql(effects.put(receiveRecommendationsNavigationsAction));
@@ -391,57 +396,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         const ret = effects.call([bridge, search], request);
         expect(task.next(request).value).to.eql(ret);
         expect(task.next(request).value).to.eql(request);
-        // expect(task.next(response).value).to.eql(effects.put(receiveProductsAction));
-        // expect(emit).to.be.calledWithExactly(Events.BEACON_SEARCH, id);
-        // expect(receiveProducts).to.be.calledWithExactly(response);
-
-        // task.next();
-        // expect(saveState).to.be.calledWith(utils.Routes.SEARCH);
       });
-
-      // it('should call receiveDetailsProduct if redirectSingleResult true and single record', () => {
-      //   const id = '1459';
-      //   const config: any = { e: 'f', search: { redirectSingleResult: true } };
-      //   const emit = spy();
-      //   const saveState = spy();
-      //   const search = () => null;
-      //   const bridge = { search };
-      //   const payload = { a: 'b' };
-      //   const action: any = { payload };
-      //   const receiveProductsAction: any = { c: 'd' };
-      //   const request = { e: 'f' };
-      //   const response = { id, totalRecordCount: 1, records: [{}] };
-      //   const receiveProducts = spy(() => receiveProductsAction);
-      //   const flux: any = { emit, saveState, clients: { bridge }, actions: { receiveProducts }, config };
-
-      //   const task = Tasks.fetchProducts(flux, action);
-
-      //   task.next();
-      //   task.next();
-
-      //   expect(task.next(response).value).to.eql(
-      //     effects.call(productDetailsTasks.receiveDetailsProduct, flux, response.records[0])
-      //   );
-      // });
-
-      // it('should handle redirect', () => {
-      //   const redirect = '/somewhere.html';
-      //   const payload = { a: 'b' };
-      //   const receiveRedirectAction: any = { g: 'h' };
-      //   const receiveRedirect = spy(() => receiveRedirectAction);
-      //   const flux: any = {
-      //     clients: { bridge: { search: () => null } },
-      //     actions: { receiveRedirect, receiveProducts: () => ({}) }
-      //   };
-
-      //   const task = Tasks.fetchProducts(flux, <any>{ payload });
-
-      //   task.next().value;
-      //   task.next().value;
-      //   expect(task.next({ redirect }).value).to.eql(effects.put(receiveRedirectAction));
-      //   expect(receiveRedirect).to.be.calledWith(redirect);
-      //   task.next();
-      // });
 
       it('should handle request failure', () => {
         const error = new Error();
