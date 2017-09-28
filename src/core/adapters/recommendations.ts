@@ -44,21 +44,21 @@ namespace Recommendations {
     const newNavigations = [];
     const pinnedRefinements: Configuration.Recommendations.Pinned =
       ConfigurationAdapter.extractRefinementsPinned(config);
-    const pinnedRefinementsNavigationsArray: Store.Recommendations.Navigation[] = [];
-    Object.keys(pinnedRefinements).forEach((key) =>
-      pinnedRefinementsNavigationsArray.push({
-        name: key,
-        values: pinnedRefinements[key].map((value) => ({
-          value,
-          count: -1
-        }))
-      }));
+    const pinnedRefinementsNavigationsArray: Store.Recommendations.Navigation[] =
+      Object.keys(pinnedRefinements).map((key) =>
+        ({
+          name: key,
+          values: pinnedRefinements[key].map((value) => ({
+            value,
+            count: -1
+          }))
+        }));
     return sortRefinements({ results, navigations: pinnedRefinementsNavigationsArray });
   };
 
   // tslint:disable-next-line max-line-length
   export const transformNavigations = (availableNavigations: Navigation[], navigations: Store.Recommendations.Navigation[], config: Configuration): Navigation[] => {
-    const iNav = config.recommendations.iNav;
+    const iNav = ConfigurationAdapter.extractINav(config);
     const noop = ((x) => x.results);
     const transformations = [
       iNav.navigations.sort ? sortNavigations : noop,

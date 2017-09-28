@@ -130,6 +130,9 @@ namespace Adapter {
     return config.autocomplete.navigations;
   };
 
+  export const extractINav = (config: Configuration) =>
+    config.recommendations.iNav;
+
   export const extractNavigationsPinned = (config: Configuration) =>
     config.recommendations.iNav.navigations.pinned;
 
