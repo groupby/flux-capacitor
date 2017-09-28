@@ -2,7 +2,7 @@ import Actions from '../../actions';
 import Store from '../../store';
 
 export type Action = Actions.ReceiveRecommendationsProducts;
-export type State = Store.Recommendations;
+export type State = Store.Recommendations['suggested'];
 
 export const DEFAULTS: State = {
   products: [],

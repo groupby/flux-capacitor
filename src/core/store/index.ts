@@ -215,7 +215,13 @@ namespace Store {
   }
 
   export interface Recommendations {
-    products: Product[];
+    // products: Product[];
+    suggested: {
+      products: Product[];
+    };
+    pastPurchases: {
+      products: Product[];
+    };
   }
 
   export type AvailableNavigations = Indexed<Navigation> & {

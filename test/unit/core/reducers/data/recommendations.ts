@@ -3,7 +3,7 @@ import recommendations from '../../../../../src/core/reducers/data/recommendatio
 import suite from '../../../_suite';
 
 suite('recommendations', ({ expect }) => {
-  const state: Store.Recommendations = {
+  const state: Store.Recommendations['suggested'] = {
     products: <any[]>['c', 'd', 'e']
   };
 
