@@ -311,33 +311,10 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
             validators.isRangeRefinement,
             validators.isValidRange,
             validators.isValueRefinement,
-            validators.isRefinementDeselectedByValue
+            validators.isRefinementDeselectedByValue,
+            validators.isNotFullRange
           ]
         });
-      });
-
-      it('should validate range if non full bucket', () => {
-        const low = 2;
-        const high = 8;
-        const field = 'hello';
-        const rangeNavigationMax = stub(Selectors, 'rangeNavigationMax').returns(high);
-        const rangeNavigationMin = stub(Selectors, 'rangeNavigationMin').returns(low);
-        stub(utils, 'refinementPayload').returns(rangeRefinement);
-
-        expectAction(() => actions.addRefinement(field, low + 1, high)[1], Actions.ADD_REFINEMENT, rangeRefinement,
-          (meta) => expect(meta.validator.payload[4].func(rangeRefinement)).to.be.true);
-      });
-
-      it('should invalidate range if full bucket', () => {
-        const low = 4;
-        const high = 8;
-        const field = 'hello';
-        const rangeNavigationMax = stub(Selectors, 'rangeNavigationMax').returns(high);
-        const rangeNavigationMin = stub(Selectors, 'rangeNavigationMin').returns(low);
-        stub(utils, 'refinementPayload').returns(rangeRefinement);
-
-        expectAction(() => actions.addRefinement(field, low, high)[1], Actions.ADD_REFINEMENT, rangeRefinement,
-          (meta) => expect(meta.validator.payload[4].func(rangeRefinement)).to.be.false);
       });
     });
 
