@@ -47,7 +47,7 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         const store = {
           getState: () => 1
         };
-        const results = { o: 'p' };
+        const results = { navigation: { sort: false, pinned: false }};
         const flux: any = { clients: { bridge }, actions: { receiveMoreRefinements }, config, store };
         const searchRequest = stub(Requests, 'search').returns(request);
         const mergeRefinements = stub(Adapter, 'mergeRefinements').returns({
@@ -58,6 +58,7 @@ suite('refinements saga', ({ expect, spy, stub }) => {
 
         const task = Tasks.fetchMoreRefinements(flux, <any>{ payload: navigationId });
         stub(Selectors, 'navigationSortOrder').returns([]);
+        stub(RecommendationsAdapter, 'sortAndPinNavigations').returns(results);
 
         expect(task.next().value).to.eql(effects.select());
         expect(task.next(state).value).to.eql(effects.call([bridge, refinements], request, navigationId));
@@ -88,8 +89,7 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         const bridge = { refinements };
         const receiveMoreRefinementsAction: any = { c: 'd' };
         const receiveMoreRefinements = spy(() => receiveMoreRefinementsAction);
-        const sortRefinements = stub(RecommendationsAdapter, 'sortRefinements').returnsArg(0);
-        const pinRefinements = stub(RecommendationsAdapter, 'pinRefinements').returnsArg(0);
+        const sortAndPinNavigations = stub(RecommendationsAdapter, 'sortAndPinNavigations').returnsArg(0);
         const request = { g: 'h' };
         const state = { i: 'j'};
         const store = {
@@ -106,13 +106,13 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         });
 
         const task = Tasks.fetchMoreRefinements(flux, <any>{ payload: navigationId });
-        const sortOrder = stub(Selectors, 'navigationSortOrder').returns([]);
+        const sortOrder = 1234;
+        const navigationSortOrder = stub(Selectors, 'navigationSortOrder').returns(sortOrder);
 
         task.next();
         task.next(state);
         task.next(results);
-        expect(sortRefinements).to.be.calledWith([navigation], []);
-        expect(pinRefinements).to.be.calledWith([navigation], config);
+        expect(sortAndPinNavigations).to.be.calledWith([navigation], sortOrder, config);
         task.next();
       });
 

@@ -25,7 +25,7 @@ export namespace Tasks {
       } else {
         flux.emit(Events.BEACON_SEARCH, (<any>products).id);
         if (navigations && !(navigations instanceof Error)) {
-          products.availableNavigation = RecommendationsAdapter.transformNavigations(products.availableNavigation,
+          products.availableNavigation = RecommendationsAdapter.sortAndPinNavigations(products.availableNavigation,
                                                                                      navigations, flux.config);
           yield effects.put(<any>flux.actions.receiveRecommendationsNavigations(navigations));
         }

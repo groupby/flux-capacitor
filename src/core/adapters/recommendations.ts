@@ -53,7 +53,7 @@ namespace Recommendations {
   };
 
   // tslint:disable-next-line max-line-length
-  export const transformNavigations = (availableNavigations: Navigation[], navigations: Store.Recommendations.Navigation[], config: Configuration): Navigation[] => {
+  export const sortAndPinNavigations = (availableNavigations: Navigation[], navigations: Store.Recommendations.Navigation[], config: Configuration): Navigation[] => {
     const iNav = ConfigurationAdapter.extractINav(config);
     const noop = ((x) => x.results);
     const transformations = [

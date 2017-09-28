@@ -330,8 +330,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         const products = { id: 2 };
         const receiveProductsAction: any = { c: 'd' };
         const receiveProducts = spy(() => receiveProductsAction);
-        const pinNavigations = stub(RecommendationsAdapter, 'pinNavigations').returnsArg(0);
-        const pinRefinements = stub(RecommendationsAdapter, 'pinRefinements').returnsArg(0);
+        const sortAndPinNavigations = stub(RecommendationsAdapter, 'sortAndPinNavigations').returnsArg(0);
         const flux: any = { actions: { receiveRecommendationsNavigations, receiveProducts },
           config: {
             search: {
@@ -369,8 +368,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           .to.eql(effects.put(receiveRecommendationsNavigationsAction));
         expect(task.next().value).to.eql(effects.put(receiveProductsAction));
         expect(receiveProducts.getCall(0).args[0]).to.eql({ availableNavigation });
-        expect(pinNavigations).to.be.calledWith(availableNavigation, flux.config);
-        expect(pinRefinements).to.be.calledWith(availableNavigation, flux.config);
+        expect(sortAndPinNavigations).to.be.calledWith(availableNavigation, sortArray, flux.config);
       });
     });
 
@@ -576,7 +574,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         const fetch = stub(utils, 'fetch');
         const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
 
-        expect(task.next().value).to.eql(undefined);
+        expect(task.next().value).to.eql([]);
       });
       it('should not call any actions when both navigations and refinements sort are off', () => {
         const receiveRecommendationsNavigations = spy((val) => val);
