@@ -18,22 +18,18 @@ namespace Recommendations {
   export const sortNavigations = ({ results, navigations }: Navigations): Navigation[] =>
     sortBasedOn(results, navigations, (unsorted, sorted) => unsorted.name === sorted.name);
 
-  export const sortRefinements = ({ results, navigations }: Navigations): Navigation[] => {
-    const newNavigations = [];
-    results.forEach((product) => {
-      const index = navigations.findIndex(({ name }) => product.name === name);
+  export const sortRefinements = ({ results, navigations }: Navigations): Navigation[] =>
+    navigations.reduce((resultsAcc, navigation) => {
+      const index = resultsAcc.findIndex(({ name }) => navigation.name === name);
       if (index !== -1) {
-        newNavigations.push({
-          ...product,
-          refinements: sortBasedOn(product.refinements, navigations[index].values,
-            (unsorted: ValueRefinement, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase())
-        });
-      } else {
-        newNavigations.push({ ...product });
+        resultsAcc = [...resultsAcc.slice(0, index), {
+          ...resultsAcc[index], refinements:
+            sortBasedOn(resultsAcc[index].refinements, navigation.values,
+              (unsorted: ValueRefinement, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase())
+         }, ...resultsAcc.slice(index + 1)];
       }
-    });
-    return newNavigations;
-  };
+      return resultsAcc;
+    }, results);
 
   export const pinNavigations = ({ results, config }: NavigationsAndConfig): Navigation[] => {
     const pinnedArray = ConfigurationAdapter.extractNavigationsPinned(config);
