@@ -87,11 +87,7 @@ export function createActions(flux: FluxCapacitor) {
             validators.isValidRange,
             validators.isValueRefinement,
             validators.isRefinementDeselectedByValue,
-            {
-              // tslint:disable-next-line max-line-length
-              func: ({ range }, state) => range ? !(Selectors.max(state, field) === high && Selectors.min(state, field) === valueOrLow) : true,
-              msg: 'range must be smaller than full range'
-            }
+            validators.isNotFullRange
           ]
         })
       ],
