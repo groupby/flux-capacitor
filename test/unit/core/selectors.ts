@@ -38,6 +38,7 @@ suite('selectors', ({ expect, stub }) => {
       const min = 4;
       const id = 'hello';
       const state: any = { data: { present: { navigations: { byId: { [id]: { min }}}}}};
+
       expect(Selectors.rangeNavigationMin(state, id)).to.be.eq(min + 0);
     });
   });
@@ -47,6 +48,7 @@ suite('selectors', ({ expect, stub }) => {
       const max = 4;
       const id = 'hello';
       const state: any = { data: { present: { navigations: { byId: { [id]: { max }}}}}};
+
       expect(Selectors.rangeNavigationMax(state, id)).to.be.eq(max + 0);
     });
   });

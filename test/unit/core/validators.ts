@@ -340,15 +340,18 @@ suite('validators', ({ expect, spy, stub }) => {
       high
     };
     const state: any = { a: 'b' };
+
     it('should be valid if it is not full range', () => {
       stub(Selectors, 'rangeNavigationMax').returns(high);
       stub(Selectors, 'rangeNavigationMin').returns(low + 1);
+
       expect(validators.isNotFullRange.func(payload, state)).to.be.true;
     });
 
     it('should be invalid if it is full range', () => {
       stub(Selectors, 'rangeNavigationMax').returns(high);
       stub(Selectors, 'rangeNavigationMin').returns(low);
+
       expect(validators.isNotFullRange.func(payload, state)).to.be.false;
     });
   });

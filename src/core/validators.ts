@@ -45,7 +45,7 @@ export const isRefinementDeselectedByValue: Validator<Actions.Payload.Navigation
 
 export const isNotFullRange: Validator<Actions.Payload.Navigation.AddRefinement> = {
   // tslint:disable-next-line max-line-length
-  func: ({ navigationId, range, low, high }, state) => !range || Selectors.rangeNavigationMax(state, navigationId) !== high || Selectors.rangeNavigationMin(state, navigationId) !== low,
+  func: ({ navigationId, range, low, high }, state) => !range || !(Selectors.rangeNavigationMax(state, navigationId) === high && Selectors.rangeNavigationMin(state, navigationId) === low),
   msg: 'range must be smaller than full range'
 };
 
