@@ -126,7 +126,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         let task = Tasks.fetchProductsAndNavigations(<any> flux, <any>{ });
         task.next();
         expect(task.next([{ redirect: false, totalRecordCount: 1, records: [record] }, undefined]).value)
-          .to.be.eql(effects.call(productDetailsTasks.receiveDetailsProduct, flux, record));
+          .to.eql(effects.call(productDetailsTasks.receiveDetailsProduct, flux, record));
         task.next();
       });
       it('should not sort navigations if navigations is an error', () => {

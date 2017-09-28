@@ -16,8 +16,9 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
       const results: any = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
       const extractNavigationsPinned = stub(ConfigurationAdapter, 'extractNavigationsPinned')
         .returns(['b']);
+
       expect(RecommendationsAdapter.pinNavigations(results, <any>{}))
-        .to.be.eql([{ name: 'b' }, { name: 'a' }, { name: 'c' }]);
+        .to.eql([{ name: 'b' }, { name: 'a' }, { name: 'c' }]);
     });
   });
 
@@ -26,16 +27,16 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
       const results: any = [{
         name: 'a',
         refinements: [{ value: '1' }, { value: '2' }, { value: '3' }]
-      },
-      {
+      }, {
         name: 'b',
         refinements: [{ value: '1' }, { value: '2' }, { value: '3' }]
       }
       ];
       const extractRefinementsPinned = stub(ConfigurationAdapter, 'extractRefinementsPinned')
         .returns({ a: ['2', '3'] });
+
       expect(RecommendationsAdapter.pinRefinements(results, <any>{}))
-        .to.be.eql([{
+        .to.eql([{
           name: 'a',
           refinements: [{ value: '2' }, { value: '3' }, { value: '1' }]
         },

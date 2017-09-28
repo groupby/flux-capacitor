@@ -333,7 +333,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         const result = actions.switchRefinement(navigationId, value);
 
-        expect(result).to.be.eql([
+        expect(result).to.eql([
           resetPageReturn,
           resetRefinementsReturn,
           addRefinementReturn
@@ -368,7 +368,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         const result = actions.search(query);
 
-        expect(result).to.be.eql([
+        expect(result).to.eql([
           resetPageReturn,
           resetRefinementsReturn,
           updateReturn,
@@ -392,7 +392,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
         const result = actions.search();
 
-        expect(result).to.be.eql([
+        expect(result).to.eql([
           resetPageReturn,
           resetRefinementsReturn,
           updateReturn,

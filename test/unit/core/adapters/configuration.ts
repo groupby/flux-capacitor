@@ -151,25 +151,26 @@ suite('Configuration Adapter', ({ expect, stub }) => {
   });
 
   describe('extractPageSizes()', () => {
+    const defaultValue = 0;
+
     it('should do nothing if state is not an object', () => {
-      const pageSize = false;
-      const defaultValue = 0;
-
-      expect(Adapter.extractPageSizes(<any>{
+      const pageSizes = Adapter.extractPageSizes(<any>{
         search: {
-          pageSize
+          pageSize: false,
         }
-      }, defaultValue)).to.eql({ selected: 0, items: [defaultValue] });
+      }, defaultValue);
+
+      expect(pageSizes).to.eql({ selected: 0, items: [defaultValue] });
     });
-    it('should default items to defaultValue', () => {
-      const pageSize = {};
-      const defaultValue = 0;
 
-      expect(Adapter.extractPageSizes(<any>{
+    it('should default items to defaultValue', () => {
+      const pageSizes = Adapter.extractPageSizes(<any>{
         search: {
-          pageSize
+          pageSize: {},
         }
-      }, defaultValue)).to.eql({ selected: 0, items: [defaultValue] });
+      }, defaultValue);
+
+      expect(pageSizes).to.eql({ selected: 0, items: [defaultValue] });
     });
   });
 
@@ -177,23 +178,27 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     it('should do nothing if state does not contain default or options', () => {
       const sort = {};
 
-      expect(Adapter.extractSorts(<any>{
+      const sorts = Adapter.extractSorts(<any>{
         search: {
           sort
         }
-      })).to.eql({ selected: 0, items: [sort] });
-    });
-    it('should default selected to empty object', () => {
-      const sort = {
-        options: false
-      };
+      });
 
-      expect(Adapter.extractSorts(<any>{
-        search: {
-          sort
-        }
-      })).to.eql({ selected: 0, items: [] });
+      expect(sorts).to.eql({ selected: 0, items: [sort] });
     });
+
+    it('should default selected to empty object', () => {
+      const sorts = Adapter.extractSorts(<any>{
+        search: {
+          sort: {
+            options: false,
+          },
+        }
+      });
+
+      expect(sorts).to.eql({ selected: 0, items: [] });
+    });
+
     it('should return selected sorts', () => {
       const sort = {
         default: false,
