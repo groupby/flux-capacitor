@@ -464,6 +464,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         task.next();
       });
     });
+
     describe('fetchNavigations()', () => {
       it('should return two actions', () => {
         const customerId = 'id';

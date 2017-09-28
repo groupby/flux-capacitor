@@ -263,7 +263,7 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
         const config = { network: { errorHandler } };
         const bridge = { c: 'd' };
         const err = 'err';
-        const createBridge = stub(FluxCapacitor, 'createBridge').returns(bridge).callsArgWith(1, err);
+        stub(FluxCapacitor, 'createBridge').returns(bridge).callsArgWith(1, err);
         stub(FluxCapacitor, 'createSayt');
 
         const clients = FluxCapacitor.createClients(<any>{ config, emit });
@@ -277,7 +277,7 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
         const config = { network: { } };
         const bridge = { c: 'd' };
         const err = 'err';
-        const createBridge = stub(FluxCapacitor, 'createBridge').returns(bridge).callsArgWith(1, err);
+        stub(FluxCapacitor, 'createBridge').returns(bridge).callsArgWith(1, err);
         stub(FluxCapacitor, 'createSayt');
 
         const clients = FluxCapacitor.createClients(<any>{ config, emit });

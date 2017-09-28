@@ -14,11 +14,11 @@ namespace Recommendations {
     method: 'POST',
     body: JSON.stringify(body)
   });
+
   // tslint:disable-next-line max-line-length
-  export const sortNavigations = (results: Navigation[], navigations: Store.Recommendations.Navigation[]): Navigation[] => {
-    return sortBasedOn(results,
-      navigations, (unsorted: Navigation, sorted: Store.Recommendations.Navigation) => unsorted.name === sorted.name);
-  };
+  export const sortNavigations = (results: Navigation[], navigations: Store.Recommendations.Navigation[]): Navigation[] =>
+    sortBasedOn(results, navigations, (unsorted, sorted) => unsorted.name === sorted.name);
+
   // tslint:disable-next-line max-line-length
   export const sortRefinements = (results: Navigation[], navigations: Store.Recommendations.Navigation[]): Navigation[] => {
     const newNavigations = [];
@@ -38,7 +38,7 @@ namespace Recommendations {
   };
 
   export const pinNavigations = (results: Navigation[], config: Configuration): Navigation[] => {
-    const pinnedArray: string[] = ConfigurationAdapter.extractNavigationsPinned(config);
+    const pinnedArray = ConfigurationAdapter.extractNavigationsPinned(config);
     return sortBasedOn(results, pinnedArray, (unsorted, pinnedName) => unsorted.name === pinnedName);
   };
 
