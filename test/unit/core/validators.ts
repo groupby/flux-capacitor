@@ -341,14 +341,14 @@ suite('validators', ({ expect, spy, stub }) => {
     };
     const state: any = { a: 'b' };
     it('should be valid if it is not full range', () => {
-      const rangeNavigationMax = stub(Selectors, 'rangeNavigationMax').returns(high);
-      const rangeNavigationMin = stub(Selectors, 'rangeNavigationMin').returns(low + 1);
+      stub(Selectors, 'rangeNavigationMax').returns(high);
+      stub(Selectors, 'rangeNavigationMin').returns(low + 1);
       expect(validators.isNotFullRange.func(payload, state)).to.be.true;
     });
 
     it('should be invalid if it is full range', () => {
-      const rangeNavigationMax = stub(Selectors, 'rangeNavigationMax').returns(high);
-      const rangeNavigationMin = stub(Selectors, 'rangeNavigationMin').returns(low);
+      stub(Selectors, 'rangeNavigationMax').returns(high);
+      stub(Selectors, 'rangeNavigationMin').returns(low);
       expect(validators.isNotFullRange.func(payload, state)).to.be.false;
     });
   });
