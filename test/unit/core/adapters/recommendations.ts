@@ -22,6 +22,56 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
     });
   });
 
+  describe('sortAndPinNavigations() ', () => {
+    it('should sort and pin navigations and refinements if conditions are met', () => {
+      const sortNavigations = stub(RecommendationsAdapter, 'sortNavigations');
+      const pinNavigations = stub(RecommendationsAdapter, 'pinNavigations');
+      const sortRefinements = stub(RecommendationsAdapter, 'sortRefinements');
+      const pinRefinements = stub(RecommendationsAdapter, 'pinRefinements');
+
+      stub(ConfigurationAdapter, 'extractINav').returns({ navigations: {
+        sort: true,
+        pinned: []
+      },
+      refinements: {
+        sort: true,
+        pinned: true
+      }
+    });
+      RecommendationsAdapter.sortAndPinNavigations([], [], <any>undefined);
+
+      expect(sortNavigations).to.be.calledOnce;
+      expect(pinNavigations).to.be.calledOnce;
+      expect(sortRefinements).to.be.calledOnce;
+      expect(pinRefinements).to.be.calledOnce;
+    });
+
+    it('should not sort nor pin navigations and refinements if conditions are not met', () => {
+      const sortNavigations = stub(RecommendationsAdapter, 'sortNavigations');
+      const pinNavigations = stub(RecommendationsAdapter, 'pinNavigations');
+      const sortRefinements = stub(RecommendationsAdapter, 'sortRefinements');
+      const pinRefinements = stub(RecommendationsAdapter, 'pinRefinements');
+
+      stub(ConfigurationAdapter, 'extractINav').returns({ navigations: {
+        sort: false,
+        pinned: 3
+      },
+      refinements: {
+        sort: false,
+        pinned: false
+      }
+    });
+
+      RecommendationsAdapter.sortAndPinNavigations([], [], <any>undefined);
+
+      expect(sortNavigations).not.to.be.called;
+      expect(pinNavigations).not.to.be.called;
+      expect(sortRefinements).not.to.be.called;
+      expect(pinRefinements).not.to.be.called;
+    });
+
+  });
+
   describe('pinRefinements() ', () => {
     it('should pin refinements', () => {
       const results: any = [{

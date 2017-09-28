@@ -63,7 +63,7 @@ namespace Recommendations {
       iNav.refinements.pinned ? pinRefinements : noop
     ];
     return transformations.reduce(
-      (results, transform: any) => transform({ results, navigations, config }), availableNavigations);
+      (results, transform: Function) => transform({ results, navigations, config }), availableNavigations);
   };
 
   export interface RecommendationsBody {
