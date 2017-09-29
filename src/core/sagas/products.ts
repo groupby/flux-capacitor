@@ -50,6 +50,7 @@ export namespace Tasks {
 
   export function* fetchNavigations(flux: FluxCapacitor, action: Actions.FetchProducts) {
     try {
+      const query = yield effects.select(Selectors.query, flux.store.getState());
       const iNav = flux.config.recommendations.iNav;
       if (iNav.navigations.sort || iNav.refinements.sort) {
         const recommendationsUrl = RecommendationsAdapter.buildUrl(flux.config.customerId, 'refinements', 'Popular');
@@ -57,6 +58,9 @@ export namespace Tasks {
         const recommendationsResponse = yield effects.call(utils.fetch, recommendationsUrl, RecommendationsAdapter.buildBody({
           size: iNav.size,
           window: iNav.window,
+           matchPartial: {
+             and: [{ search: { query } }]
+           },
         }));
         const recommendations = yield recommendationsResponse.json();
         return recommendations.result

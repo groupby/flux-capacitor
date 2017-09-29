@@ -67,6 +67,7 @@ namespace Recommendations {
   export interface RecommendationsBody {
     size?: number;
     window?: string;
+    matchPartial?: object;
     type?: string;
     target?: string;
   }
