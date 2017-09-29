@@ -12,12 +12,12 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
-  describe('navigationSortOrder()', () => {
-    it('should select navigationSortOrder from the state', () => {
-      const sortOrder = { d: 'r' };
-      const state: any = { data: { present: { navigations: { sortOrder } } } };
+  describe('navigationSort()', () => {
+    it('should select navigationSort from the state', () => {
+      const sort = { d: 'r' };
+      const state: any = { data: { present: { navigations: { sort } } } };
 
-      expect(Selectors.navigationSortOrder(state)).to.eq(sortOrder);
+      expect(Selectors.navigationSort(state)).to.eq(sort);
     });
   });
 

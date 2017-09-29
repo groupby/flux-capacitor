@@ -37,7 +37,7 @@ suite('navigations', ({ expect }) => {
     ],
     metadata: {}
   };
-  const sortOrder = [{
+  const sort = [{
     name: 'Format',
     values: valueRef
   }, {
@@ -51,7 +51,7 @@ suite('navigations', ({ expect }) => {
       Format,
       Section,
     },
-    sortOrder
+    sort
   };
 
   describe('updateNavigations()', () => {
@@ -120,7 +120,7 @@ suite('navigations', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
-    it('should sort navigation state on RECEIVE_RECOMMENDATIONS_NAVIGATIONS', () => {
+    it('should sort navigation state on RECEIVE_NAVIGATION_SORT', () => {
       const nav = [{
         name: 'Section',
         values: [{
@@ -143,11 +143,11 @@ suite('navigations', ({ expect }) => {
 
       const newState = {
         ...state,
-        sortOrder: nav,
+        sort: nav,
       };
 
       const reducer = navigations({ ...state }, {
-        type: Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS,
+        type: Actions.RECEIVE_NAVIGATION_SORT,
         payload: nav,
       });
 

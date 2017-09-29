@@ -127,9 +127,9 @@ namespace Actions {
   export const RECEIVE_RECOMMENDATIONS_REFINEMENTS = 'RECEIVE_RECOMMENDATIONS_REFINEMENTS';
   // tslint:disable-next-line max-line-length
   export type ReceiveRecommendationsRefinements = Action<typeof RECEIVE_RECOMMENDATIONS_REFINEMENTS, Store.Recommendations.Navigation[]>;
-  export const RECEIVE_RECOMMENDATIONS_NAVIGATIONS = 'RECEIVE_RECOMMENDATIONS_NAVIGATIONS';
+  export const RECEIVE_NAVIGATION_SORT = 'RECEIVE_NAVIGATION_SORT';
   // tslint:disable-next-line max-line-length
-  export type ReceiveRecommendationsNavigations = Action<typeof RECEIVE_RECOMMENDATIONS_NAVIGATIONS, Store.Recommendations.Navigation[]>;
+  export type ReceiveNavigationSort = Action<typeof RECEIVE_NAVIGATION_SORT, Store.Recommendations.Navigation[]>;
 
   // ui
   export const CREATE_COMPONENT_STATE = 'CREATE_COMPONENT_STATE';

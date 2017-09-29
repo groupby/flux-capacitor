@@ -90,8 +90,8 @@ namespace Selectors {
   export const navigations = (state: Store.State) =>
     state.data.present.navigations.allIds.map<Store.Navigation>(Selectors.navigation.bind(null, state));
 
-  export const navigationSortOrder = (state: Store.State) =>
-    state.data.present.navigations.sortOrder;
+  export const navigationSort = (state: Store.State) =>
+    state.data.present.navigations.sort;
 
   export const isRefinementDeselected = (state: Store.State, navigationId: string, index: number) => {
     const nav = Selectors.navigation(state, navigationId);

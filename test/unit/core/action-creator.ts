@@ -815,12 +815,12 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
       });
     });
 
-    describe('receiveRecommendationsNavigations()', () => {
+    describe('ReceiveNavigationSort()', () => {
       it('should return an action', () => {
         const navigations: any[] = ['a', 'b', 'c'];
 
         // tslint:disable-next-line max-line-length
-        expectAction(() => actions.receiveRecommendationsNavigations(navigations), Actions.RECEIVE_RECOMMENDATIONS_NAVIGATIONS, navigations);
+        expectAction(() => actions.ReceiveNavigationSort(navigations), Actions.RECEIVE_NAVIGATION_SORT, navigations);
       });
     });
   });

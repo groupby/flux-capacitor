@@ -19,7 +19,7 @@ export namespace Tasks {
       );
       res.navigation = RecommendationsAdapter.sortAndPinNavigations(
         [res.navigation],
-        Selectors.navigationSortOrder(flux.store.getState()),
+        Selectors.navigationSort(flux.store.getState()),
         flux.config
       )[0];
       const { navigationId, refinements, selected } = Adapter.mergeRefinements(res, state);

@@ -219,7 +219,7 @@ namespace Store {
   }
 
   export type AvailableNavigations = Indexed<Navigation> & {
-    sortOrder: Recommendations.Navigation[];
+    sort: Recommendations.Navigation[];
   };
 
   export namespace Recommendations {

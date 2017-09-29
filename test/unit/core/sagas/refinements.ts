@@ -55,7 +55,7 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         });
 
         const task = Tasks.fetchMoreRefinements(flux, <any>{ payload: navigationId });
-        stub(Selectors, 'navigationSortOrder').returns([]);
+        stub(Selectors, 'navigationSort').returns([]);
         stub(RecommendationsAdapter, 'sortAndPinNavigations').returns(results);
 
         expect(task.next().value).to.eql(effects.select());
@@ -104,13 +104,13 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         });
 
         const task = Tasks.fetchMoreRefinements(flux, <any>{ payload: navigationId });
-        const sortOrder = 1234;
-        const navigationSortOrder = stub(Selectors, 'navigationSortOrder').returns(sortOrder);
+        const sort = 1234;
+        const navigationSort = stub(Selectors, 'navigationSort').returns(sort);
 
         task.next();
         task.next(state);
         task.next(results);
-        expect(sortAndPinNavigations).to.be.calledWith([navigation], sortOrder, config);
+        expect(sortAndPinNavigations).to.be.calledWith([navigation], sort, config);
         task.next();
       });
 
