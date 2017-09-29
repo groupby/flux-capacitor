@@ -1,7 +1,6 @@
 import Actions from '../../actions';
 import Adapter from '../../adapters/search';
 import Store from '../../store';
-import { sortBasedOn } from '../../utils';
 
 export type Action = Actions.ResetRefinements
   | Actions.AddRefinement

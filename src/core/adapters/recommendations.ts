@@ -37,33 +37,27 @@ namespace Recommendations {
   };
 
   export const pinRefinements = ({ results, config }: NavigationsAndConfig): Navigation[] => {
-    const newNavigations = [];
-    const pinnedRefinements: Configuration.Recommendations.Pinned =
-      ConfigurationAdapter.extractRefinementsPinned(config);
+    const pinnedRefinements = ConfigurationAdapter.extractRefinementsPinned(config);
     const pinnedRefinementsNavigationsArray: Store.Recommendations.Navigation[] =
-      Object.keys(pinnedRefinements).map((key) =>
-        ({
-          name: key,
-          values: pinnedRefinements[key].map((value) => ({
-            value,
-            count: -1
-          }))
-        }));
+      Object.keys(pinnedRefinements).map((key) => ({
+        name: key,
+        values: pinnedRefinements[key].map((value) => ({ value, count: -1 }))
+      }));
     return sortRefinements({ results, navigations: pinnedRefinementsNavigationsArray });
   };
 
   // tslint:disable-next-line max-line-length
   export const sortAndPinNavigations = (availableNavigations: Navigation[], navigations: Store.Recommendations.Navigation[], config: Configuration): Navigation[] => {
     const iNav = ConfigurationAdapter.extractINav(config);
-    const noop = ((x) => x.results);
+    const noTransform = ((x) => x.results);
     const transformations = [
-      iNav.navigations.sort ? sortNavigations : noop,
-      Array.isArray(iNav.navigations.pinned) ? pinNavigations : noop,
-      iNav.refinements.sort ? sortRefinements : noop,
-      iNav.refinements.pinned ? pinRefinements : noop
+      iNav.navigations.sort ? sortNavigations : noTransform,
+      iNav.navigations.pinned ? pinNavigations : noTransform,
+      iNav.refinements.sort ? sortRefinements : noTransform,
+      iNav.refinements.pinned ? pinRefinements : noTransform
     ];
-    return transformations.reduce(
-      (results, transform: Function) => transform({ results, navigations, config }), availableNavigations);
+    return transformations.reduce((results, transform: Function) =>
+      transform({ results, navigations, config }), availableNavigations);
   };
 
   export interface RecommendationsBody {

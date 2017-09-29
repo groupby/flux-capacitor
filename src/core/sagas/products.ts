@@ -24,16 +24,17 @@ export namespace Tasks {
         yield effects.call(productDetailsTasks.receiveDetailsProduct, flux, products.records[0]);
       } else {
         flux.emit(Events.BEACON_SEARCH, (<any>products).id);
-        console.log(products);
         if (navigations && !(navigations instanceof Error)) {
           yield effects.put(<any>flux.actions.receiveRecommendationsNavigations(navigations));
         } else {
           // if inav navigations is invalid then make it an empty array so it does not sort
           navigations = [];
         }
-        products.availableNavigation = RecommendationsAdapter.sortAndPinNavigations(products.availableNavigation,
-                                                                                     navigations, flux.config);
-        console.log(products);
+        products.availableNavigation = RecommendationsAdapter.sortAndPinNavigations(
+          products.availableNavigation,
+          navigations,
+          flux.config
+        );
         yield effects.put(<any>flux.actions.receiveProducts(products));
         flux.saveState(utils.Routes.SEARCH);
       }
