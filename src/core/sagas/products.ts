@@ -1,4 +1,4 @@
-import { Results, ValueRefinement } from 'groupby-api';
+import { Results } from 'groupby-api';
 import * as effects from 'redux-saga/effects';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';

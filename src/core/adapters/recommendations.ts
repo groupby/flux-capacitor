@@ -1,4 +1,4 @@
-import { Navigation, Results, ValueRefinement } from 'groupby-api';
+import { Navigation, ValueRefinement } from 'groupby-api';
 import * as effects from 'redux-saga/effects';
 import Configuration from '../configuration';
 import Store from '../store';
