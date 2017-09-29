@@ -18,12 +18,14 @@ namespace Recommendations {
   export const sortNavigations = ({ results, navigations }: Navigations): Navigation[] =>
     sortBasedOn(results, navigations, (unsorted, sorted) => unsorted.name === sorted.name);
 
-  export const sortRefinements = ({ results, navigations, config }: Navigations): Navigation[] =>
-    navigations.reduce((resultsAcc, navigation) => {
+  export const sortRefinements = ({ results, navigations, config }: Navigations): Navigation[] => {
+    const refinementSort = ConfigurationAdapter.extractRefinementsSort(config);
+    return (Array.isArray(refinementSort) ?
+      navigations.filter(({ name }) => refinementSort.find((nav) => nav === name)) : navigations)
+      .reduce((resultsAcc, navigation) => {
       const index = resultsAcc.findIndex(({ name }) => navigation.name === name);
       const sort = ConfigurationAdapter.extractRefinementsSort(config);
-      const sortFind = (name) => navigation.name === name;
-      if (index !== -1 && (!Array.isArray(sort) || sort.find(sortFind))) {
+      if (index !== -1) {
         resultsAcc = [...resultsAcc.slice(0, index), {
           ...resultsAcc[index], refinements:
           sortBasedOn(resultsAcc[index].refinements, navigation.values,
@@ -31,7 +33,8 @@ namespace Recommendations {
         }, ...resultsAcc.slice(index + 1)];
       }
       return resultsAcc;
-    }, results);
+     }, results);
+  };
 
   export const pinNavigations = ({ results, config }: Navigations): Navigation[] => {
     const pinnedArray = ConfigurationAdapter.extractNavigationsPinned(config);
