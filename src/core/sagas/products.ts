@@ -23,7 +23,7 @@ export namespace Tasks {
       if (flux.config.search.redirectSingleResult && products.totalRecordCount === 1) {
         yield effects.call(productDetailsTasks.receiveDetailsProduct, flux, products.records[0]);
       } else {
-        flux.emit(Events.BEACON_SEARCH, (<any>products).id);
+        flux.emit(Events.BEACON_SEARCH, products.id);
         if (navigations && !(navigations instanceof Error)) {
           yield effects.put(<any>flux.actions.receiveRecommendationsNavigations(navigations));
         } else {
