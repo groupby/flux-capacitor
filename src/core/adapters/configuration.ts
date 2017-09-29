@@ -138,6 +138,9 @@ namespace Adapter {
 
   export const extractRefinementsPinned = (config: Configuration) =>
     extractINav(config).refinements.pinned;
+
+  export const extractRefinementsSort = (config: Configuration) =>
+    extractINav(config).refinements.sort;
 }
 
 export default Adapter;

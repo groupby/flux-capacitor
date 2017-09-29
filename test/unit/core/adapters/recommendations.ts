@@ -74,7 +74,7 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
 
   });
 
-  describe('pinRefinements() ', () => {
+  describe('pinRefinements()', () => {
     it('should pin refinements', () => {
       const results: any = [{
         name: 'a',
@@ -85,6 +85,7 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
       }];
       const extractRefinementsPinned = stub(ConfigurationAdapter, 'extractRefinementsPinned')
         .returns({ a: ['2', '3'] });
+      stub(ConfigurationAdapter, 'extractRefinementsSort').returns(true);
 
       expect(RecommendationsAdapter.pinRefinements({ results, config: <any>{} }))
         .to.eql([{
@@ -94,6 +95,36 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
           name: 'b',
           refinements: [{ value: '1' }, { value: '2' }, { value: '3' }]
         }]);
+    });
+  });
+
+  describe('sortRefinements()', () => {
+    it('should sort refinements when sort is an array', () => {
+      const results: any = [{
+        name: 'a',
+        refinements: [{ value: '1' }, { value: '2' }, { value: '3' }]
+      }, {
+        name: 'b',
+        refinements: [{ value: '1' }, { value: '2' }, { value: '3' }]
+      }];
+      const navigations: any = [{
+        name: 'a',
+        values: [{ value: '3' }, { value: '1' }]
+      }, {
+        name: 'b',
+        values: [{ value: '3' }, { value: '2' }]
+      }];
+      stub(ConfigurationAdapter, 'extractRefinementsSort').returns(['a']);
+
+      expect(RecommendationsAdapter.sortRefinements(<any>{ results, navigations, config: 1 }))
+        .to.eql([{
+          name: 'a',
+          refinements: [{ value: '3' }, { value: '1' }, { value: '2' }]
+        }, {
+          name: 'b',
+          refinements: [{ value: '1' }, { value: '2' }, { value: '3' }]
+        }]
+        );
     });
   });
 });

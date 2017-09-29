@@ -18,25 +18,27 @@ namespace Recommendations {
   export const sortNavigations = ({ results, navigations }: Navigations): Navigation[] =>
     sortBasedOn(results, navigations, (unsorted, sorted) => unsorted.name === sorted.name);
 
-  export const sortRefinements = ({ results, navigations }: Navigations): Navigation[] =>
+  export const sortRefinements = ({ results, navigations, config }: Navigations): Navigation[] =>
     navigations.reduce((resultsAcc, navigation) => {
       const index = resultsAcc.findIndex(({ name }) => navigation.name === name);
-      if (index !== -1) {
+      const sort = ConfigurationAdapter.extractRefinementsSort(config);
+      const sortFind = (name) => navigation.name === name;
+      if (index !== -1 && (!Array.isArray(sort) || sort.find(sortFind))) {
         resultsAcc = [...resultsAcc.slice(0, index), {
           ...resultsAcc[index], refinements:
-            sortBasedOn(resultsAcc[index].refinements, navigation.values,
-              (unsorted: ValueRefinement, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase())
-         }, ...resultsAcc.slice(index + 1)];
+          sortBasedOn(resultsAcc[index].refinements, navigation.values,
+            (unsorted: ValueRefinement, sorted) => unsorted.value.toLowerCase() === sorted.value.toLowerCase())
+        }, ...resultsAcc.slice(index + 1)];
       }
       return resultsAcc;
     }, results);
 
-  export const pinNavigations = ({ results, config }: NavigationsAndConfig): Navigation[] => {
+  export const pinNavigations = ({ results, config }: Navigations): Navigation[] => {
     const pinnedArray = ConfigurationAdapter.extractNavigationsPinned(config);
     return sortBasedOn(results, pinnedArray, (unsorted, pinnedName) => unsorted.name === pinnedName);
   };
 
-  export const pinRefinements = ({ results, config }: NavigationsAndConfig): Navigation[] => {
+  export const pinRefinements = ({ results, config }: Navigations): Navigation[] => {
     const pinnedRefinements = ConfigurationAdapter.extractRefinementsPinned(config);
     const pinnedRefinementsNavigationsArray: Store.Recommendations.Navigation[] =
       Object.keys(pinnedRefinements).map((key) => ({
@@ -67,14 +69,10 @@ namespace Recommendations {
     target?: string;
   }
 
-  export interface NavigationsAndConfig {
-    results: Navigation[];
-    config: Configuration;
-  }
-
   export interface Navigations {
     results: Navigation[];
-    navigations: Store.Recommendations.Navigation[];
+    navigations?: Store.Recommendations.Navigation[];
+    config?: Configuration;
   }
 }
 

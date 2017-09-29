@@ -251,7 +251,7 @@ namespace Configuration {
     }
 
     export interface Refinements {
-      sort: boolean;
+      sort: boolean | string[];
       pinned?: Configuration.Recommendations.Pinned;
     }
 
