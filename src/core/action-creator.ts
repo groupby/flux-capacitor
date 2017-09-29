@@ -252,7 +252,7 @@ export function createActions(flux: FluxCapacitor) {
         action(Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, products),
 
       // tslint:disable-next-line max-line-length
-      ReceiveNavigationSort: (navigations: Store.Recommendations.Navigation[]): Actions.ReceiveNavigationSort =>
+      receiveNavigationSort: (navigations: Store.Recommendations.Navigation[]): Actions.ReceiveNavigationSort =>
         action(Actions.RECEIVE_NAVIGATION_SORT, navigations),
 
       // ui action creators

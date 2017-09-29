@@ -25,7 +25,7 @@ export default function updateNavigations(state: State = DEFAULTS, action: Actio
     case Actions.SELECT_REFINEMENT: return selectRefinement(state, action.payload);
     case Actions.DESELECT_REFINEMENT: return deselectRefinement(state, action.payload);
     case Actions.RECEIVE_MORE_REFINEMENTS: return receiveMoreRefinements(state, action.payload);
-    case Actions.RECEIVE_NAVIGATION_SORT: return ReceiveNavigationSort(state, action.payload);
+    case Actions.RECEIVE_NAVIGATION_SORT: return receiveNavigationSort(state, action.payload);
     default: return state;
   }
 }
@@ -171,7 +171,7 @@ export const receiveMoreRefinements = (state: State, { navigationId, refinements
 };
 
 // tslint:disable-next-line max-line-length
-export const ReceiveNavigationSort = (state: State, sort: Store.Recommendations.Navigation[]) => ({
+export const receiveNavigationSort = (state: State, sort: Store.Recommendations.Navigation[]) => ({
   ...state,
   sort
 });

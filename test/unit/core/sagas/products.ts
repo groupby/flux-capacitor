@@ -80,9 +80,9 @@ suite('products saga', ({ expect, spy, stub }) => {
         const request = { e: 'f' };
         const response = { id, totalRecordCount: 3 };
         const receiveProducts = spy(() => receiveProductsAction);
-        const ReceiveNavigationSort = spy(() => receiveNavigationsAction);
+        const receiveNavigationSort = spy(() => receiveNavigationsAction);
         // tslint:disable-next-line max-line-length
-        const flux: any = { emit, saveState, clients: { bridge }, actions: { receiveProducts, ReceiveNavigationSort }, config };
+        const flux: any = { emit, saveState, clients: { bridge }, actions: { receiveProducts, receiveNavigationSort }, config };
 
         const task = Tasks.fetchProducts(flux, action);
 
@@ -169,12 +169,12 @@ suite('products saga', ({ expect, spy, stub }) => {
       it('should sort navigations if navigations received', () => {
         const receiveRecommendationsNavigationsAction: any = { c: 'd' };
         const record: any = { g: 'h' };
-        const ReceiveNavigationSort = spy(() => receiveRecommendationsNavigationsAction);
+        const receiveNavigationSort = spy(() => receiveRecommendationsNavigationsAction);
         const products = { id: 2 };
         const receiveProductsAction: any = { c: 'd' };
         const receiveProducts = spy(() => receiveProductsAction);
         const flux: any = {
-          actions: { ReceiveNavigationSort, receiveProducts },
+          actions: { receiveNavigationSort, receiveProducts },
           config: {
             search: {
               redirectSingleResult: false
@@ -225,12 +225,12 @@ suite('products saga', ({ expect, spy, stub }) => {
       it('should sort refinements if navigations received', () => {
         const receiveRecommendationsNavigationsAction: any = { c: 'd' };
         const record: any = { g: 'h' };
-        const ReceiveNavigationSort = spy(() => receiveRecommendationsNavigationsAction);
+        const receiveNavigationSort = spy(() => receiveRecommendationsNavigationsAction);
         const products = { id: 2 };
         const receiveProductsAction: any = { c: 'd' };
         const receiveProducts = spy(() => receiveProductsAction);
         const flux: any = {
-          actions: { ReceiveNavigationSort, receiveProducts },
+          actions: { receiveNavigationSort, receiveProducts },
           config: {
             search: {
               redirectSingleResult: false
@@ -292,12 +292,12 @@ suite('products saga', ({ expect, spy, stub }) => {
       it('should sort navigations and refinements if navigations received', () => {
         const receiveRecommendationsNavigationsAction: any = { c: 'd' };
         const record: any = { g: 'h' };
-        const ReceiveNavigationSort = spy(() => receiveRecommendationsNavigationsAction);
+        const receiveNavigationSort = spy(() => receiveRecommendationsNavigationsAction);
         const products = { id: 2 };
         const receiveProductsAction: any = { c: 'd' };
         const receiveProducts = spy(() => receiveProductsAction);
         const flux: any = {
-          actions: { ReceiveNavigationSort, receiveProducts },
+          actions: { receiveNavigationSort, receiveProducts },
           config: {
             search: {
               redirectSingleResult: false
@@ -359,13 +359,13 @@ suite('products saga', ({ expect, spy, stub }) => {
       it('should call pinNavigations and pinRefinements navigations received', () => {
         const receiveRecommendationsNavigationsAction: any = { c: 'd' };
         const record: any = { g: 'h' };
-        const ReceiveNavigationSort = spy(() => receiveRecommendationsNavigationsAction);
+        const receiveNavigationSort = spy(() => receiveRecommendationsNavigationsAction);
         const products = { id: 2 };
         const receiveProductsAction: any = { c: 'd' };
         const receiveProducts = spy(() => receiveProductsAction);
         const sortAndPinNavigations = stub(RecommendationsAdapter, 'sortAndPinNavigations').returnsArg(0);
         const flux: any = {
-          actions: { ReceiveNavigationSort, receiveProducts },
+          actions: { receiveNavigationSort, receiveProducts },
           config: {
             search: {
               redirectSingleResult: false
@@ -624,7 +624,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         expect(task.next().value).to.eql([]);
       });
       it('should not call any actions when both navigations and refinements sort are off', () => {
-        const ReceiveNavigationSort = spy((val) => val);
+        const receiveNavigationSort = spy((val) => val);
         const receiveRecommendationsRefinements = spy((val) => val);
         const customerId = 'id';
         const flux: any = {
@@ -642,7 +642,7 @@ suite('products saga', ({ expect, spy, stub }) => {
             },
           },
           actions: {
-            ReceiveNavigationSort,
+            receiveNavigationSort,
             receiveRecommendationsRefinements
           }
         };
@@ -661,7 +661,7 @@ suite('products saga', ({ expect, spy, stub }) => {
 
         task.next();
         expect(receiveRecommendationsRefinements).to.not.be.called;
-        expect(ReceiveNavigationSort).to.not.be.called;
+        expect(receiveNavigationSort).to.not.be.called;
         task.next();
       });
 
@@ -669,7 +669,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         const error = new Error();
         const receiveRecommendationsNavigationsAction: any = { a: 'b' };
         const receiveRecommendationsRefinementsAction: any = { a: 'b' };
-        const ReceiveNavigationSort = spy(() => receiveRecommendationsNavigationsAction);
+        const receiveNavigationSort = spy(() => receiveRecommendationsNavigationsAction);
         const receiveRecommendationsRefinements = spy(() => receiveRecommendationsRefinementsAction);
         const flux: any = {
           config: {
@@ -684,7 +684,7 @@ suite('products saga', ({ expect, spy, stub }) => {
               }
             },
           }, actions: {
-            ReceiveNavigationSort, receiveRecommendationsRefinements
+            receiveNavigationSort, receiveRecommendationsRefinements
           }
         };
 

@@ -25,7 +25,7 @@ export namespace Tasks {
       } else {
         flux.emit(Events.BEACON_SEARCH, products.id);
         if (navigations && !(navigations instanceof Error)) {
-          yield effects.put(<any>flux.actions.ReceiveNavigationSort(navigations));
+          yield effects.put(<any>flux.actions.receiveNavigationSort(navigations));
         } else {
           // if inav navigations is invalid then make it an empty array so it does not sort
           navigations = [];
