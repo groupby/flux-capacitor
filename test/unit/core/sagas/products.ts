@@ -11,6 +11,16 @@ import * as utils from '../../../../src/core/utils';
 import suite from '../../_suite';
 
 suite('products saga', ({ expect, spy, stub }) => {
+  const iNavDefaults = {
+    navigations: {
+      sort: false
+    },
+    refinements: {
+      sort: false
+    },
+    size: 10,
+    window: 'day',
+  };
 
   describe('createSaga()', () => {
     it('should return a saga', () => {
@@ -27,14 +37,14 @@ suite('products saga', ({ expect, spy, stub }) => {
 
   describe('Tasks', () => {
     describe('fetchProducts()', () => {
-      const singleRefinement = [{ value: 'test1', type: 'Value', count: 2},
-                                { value: 'test3', type: 'Value', count: 4},
-                                { value: 'test8', type: 'Value', count: 8}];
+      const singleRefinement = [{ value: 'test1', type: 'Value', count: 2 },
+      { value: 'test3', type: 'Value', count: 4 },
+      { value: 'test8', type: 'Value', count: 8 }];
       const availableNavigation: any = [
-        { name: 'cat1', refinements: singleRefinement},
-        { name: 'cat0', refinements: singleRefinement},
-        { name: 'cat-1', refinements: singleRefinement},
-        { name: 'other', refinements: singleRefinement},
+        { name: 'cat1', refinements: singleRefinement },
+        { name: 'cat0', refinements: singleRefinement },
+        { name: 'cat-1', refinements: singleRefinement },
+        { name: 'other', refinements: singleRefinement },
       ];
 
       it('should handle error', () => {
@@ -55,7 +65,10 @@ suite('products saga', ({ expect, spy, stub }) => {
 
       it('should fetch products and navigations', () => {
         const id = '1459';
-        const config: any = { e: 'f', search: { redirectSingleResult: false } };
+        const config: any = {
+          recommendations: { iNav: iNavDefaults },
+          search: { redirectSingleResult: false }
+        };
         const emit = spy();
         const saveState = spy();
         const search = () => null;
@@ -90,7 +103,8 @@ suite('products saga', ({ expect, spy, stub }) => {
         const receiveNavigationsAction: any = { e: 'f' };
         const receiveRedirect = spy(() => receiveProductsAction);
         const receiveProducts = spy(() => receiveNavigationsAction);
-        const flux = { actions: { receiveProducts, receiveRedirect },
+        const flux = {
+          actions: { receiveProducts, receiveRedirect },
           config: {
             search: {
               redirectSingleResult: false
@@ -100,7 +114,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           saveState: () => undefined
         };
 
-        const task = Tasks.fetchProducts(<any> flux, <any>{ hello: 'hello' });
+        const task = Tasks.fetchProducts(<any>flux, <any>{ hello: 'hello' });
         task.next();
         task.next([{ redirect: true }, undefined]);
         task.next();
@@ -113,7 +127,8 @@ suite('products saga', ({ expect, spy, stub }) => {
         const record: any = { g: 'h' };
         const receiveRedirect = spy(() => receiveProductsAction);
         const receiveProducts = spy(() => receiveNavigationsAction);
-        const flux: any = { actions: { receiveProducts, receiveRedirect },
+        const flux: any = {
+          actions: { receiveProducts, receiveRedirect },
           config: {
             search: {
               redirectSingleResult: true
@@ -123,7 +138,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           saveState: () => undefined
         };
 
-        const task = Tasks.fetchProducts(<any> flux, <any>{ });
+        const task = Tasks.fetchProducts(<any>flux, <any>{});
         task.next();
         expect(task.next([{ redirect: false, totalRecordCount: 1, records: [record] }, undefined]).value)
           .to.eql(effects.call(productDetailsTasks.receiveDetailsProduct, flux, record));
@@ -135,7 +150,8 @@ suite('products saga', ({ expect, spy, stub }) => {
         const record: any = { g: 'h' };
         const receiveProducts = spy(() => receiveProductsAction);
         const products = { id: 2 };
-        const flux: any = { actions: { receiveProducts },
+        const flux: any = {
+          actions: { receiveProducts },
           config: {
             search: {
               redirectSingleResult: false
@@ -145,7 +161,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           saveState: () => undefined
         };
 
-        const task = Tasks.fetchProducts(<any> flux, <any>{ });
+        const task = Tasks.fetchProducts(<any>flux, <any>{});
         task.next();
         expect(task.next([products, new Error()]).value).to.eql(effects.put(receiveProductsAction));
       });
@@ -157,7 +173,8 @@ suite('products saga', ({ expect, spy, stub }) => {
         const products = { id: 2 };
         const receiveProductsAction: any = { c: 'd' };
         const receiveProducts = spy(() => receiveProductsAction);
-        const flux: any = { actions: { receiveRecommendationsNavigations, receiveProducts },
+        const flux: any = {
+          actions: { receiveRecommendationsNavigations, receiveProducts },
           config: {
             search: {
               redirectSingleResult: false
@@ -177,27 +194,29 @@ suite('products saga', ({ expect, spy, stub }) => {
           },
           emit: () => undefined,
           saveState: () => undefined
-                          };
+        };
 
         const sortArray: any = [
-          { name: 'cat-1', values: [{ value: 'test1', type: 'Value', count: 2},
-                                    { value: 'test8', type: 'Value', count: 8},
-                                    { value: 'test3', type: 'Value', count: 4}],},
-          { name: 'cat0', values: singleRefinement},
-          { name: 'cat1', values: singleRefinement},
-          { name: 'test1', values: singleRefinement},
+          {
+            name: 'cat-1', values: [{ value: 'test1', type: 'Value', count: 2 },
+            { value: 'test8', type: 'Value', count: 8 },
+            { value: 'test3', type: 'Value', count: 4 }],
+          },
+          { name: 'cat0', values: singleRefinement },
+          { name: 'cat1', values: singleRefinement },
+          { name: 'test1', values: singleRefinement },
         ];
 
         const sortedNavigations: any = [
-          { name: 'cat-1', refinements: singleRefinement},
-          { name: 'cat0', refinements: singleRefinement},
-          { name: 'cat1', refinements: singleRefinement},
-          { name: 'other', refinements: singleRefinement},
+          { name: 'cat-1', refinements: singleRefinement },
+          { name: 'cat0', refinements: singleRefinement },
+          { name: 'cat1', refinements: singleRefinement },
+          { name: 'other', refinements: singleRefinement },
         ];
 
-        const task = Tasks.fetchProducts(<any> flux, <any>{ });
+        const task = Tasks.fetchProducts(<any>flux, <any>{});
         task.next();
-        expect(task.next([{ availableNavigation }, sortArray ]).value)
+        expect(task.next([{ availableNavigation }, sortArray]).value)
           .to.eql(effects.put(receiveRecommendationsNavigationsAction));
         expect(task.next().value).to.eql(effects.put(receiveProductsAction));
         expect(receiveProducts.getCall(0).args[0]).to.eql({ availableNavigation: sortedNavigations });
@@ -210,52 +229,59 @@ suite('products saga', ({ expect, spy, stub }) => {
         const products = { id: 2 };
         const receiveProductsAction: any = { c: 'd' };
         const receiveProducts = spy(() => receiveProductsAction);
-        const flux: any = { actions: { receiveRecommendationsNavigations, receiveProducts },
-                            config: {
-                              search: {
-                                redirectSingleResult: false
-                              },
-                              recommendations: {
-                                iNav: {
-                                  navigations: {
-                                    sort: false,
-                                    pinned: undefined,
-                                  },
-                                  refinements: {
-                                    sort: true,
-                                    pinned: undefined,
-                                  }
-                                }
-                              },
-                            },
-                            emit: () => undefined,
-                            saveState: () => undefined
-                          };
+        const flux: any = {
+          actions: { receiveRecommendationsNavigations, receiveProducts },
+          config: {
+            search: {
+              redirectSingleResult: false
+            },
+            recommendations: {
+              iNav: {
+                navigations: {
+                  sort: false,
+                  pinned: undefined,
+                },
+                refinements: {
+                  sort: true,
+                  pinned: undefined,
+                }
+              }
+            },
+          },
+          emit: () => undefined,
+          saveState: () => undefined
+        };
 
         const avail = [...availableNavigation];
-        avail[2] = { ...availableNavigation[2], refinements: [...availableNavigation[2].refinements,
-                                                          { value: 'otherRef', type: 'Value', count: 9 }]};
+        avail[2] = {
+          ...availableNavigation[2], refinements: [...availableNavigation[2].refinements,
+          { value: 'otherRef', type: 'Value', count: 9 }]
+        };
 
         const sortArray: any = [
-          { name: 'cat-1', values: [{ value: 'test1', type: 'Value', count: 2 },
-                                    { value: 'test8', type: 'Value', count: 8 },
-                                    { value: 'test3', type: 'Value', count: 4 }], },
+          {
+            name: 'cat-1', values: [{ value: 'test1', type: 'Value', count: 2 },
+            { value: 'test8', type: 'Value', count: 8 },
+            { value: 'test3', type: 'Value', count: 4 }],
+          },
           { name: 'cat0', values: singleRefinement },
           { name: 'cat1', values: singleRefinement },
           { name: 'test1', values: singleRefinement },
         ];
 
         const sortedNavigations: any = [
-          { name: 'cat1', refinements: singleRefinement},
-          { name: 'cat0', refinements: singleRefinement},
-          { name: 'cat-1', refinements: [{ value: 'test1', type: 'Value', count: 2 },
-                                         { value: 'test8', type: 'Value', count: 8 },
-                                         { value: 'test3', type: 'Value', count: 4 },
-                                         { value: 'otherRef', type: 'Value', count: 9 }]},
-          { name: 'other', refinements: singleRefinement},
+          { name: 'cat1', refinements: singleRefinement },
+          { name: 'cat0', refinements: singleRefinement },
+          {
+            name: 'cat-1', refinements: [{ value: 'test1', type: 'Value', count: 2 },
+            { value: 'test8', type: 'Value', count: 8 },
+            { value: 'test3', type: 'Value', count: 4 },
+            { value: 'otherRef', type: 'Value', count: 9 }]
+          },
+          { name: 'other', refinements: singleRefinement },
         ];
 
-        const task = Tasks.fetchProducts(<any> flux, <any>{ });
+        const task = Tasks.fetchProducts(<any>flux, <any>{});
         task.next();
         expect(task.next([{ availableNavigation: avail }, sortArray]).value)
           .to.eql(effects.put(receiveRecommendationsNavigationsAction));
@@ -270,52 +296,59 @@ suite('products saga', ({ expect, spy, stub }) => {
         const products = { id: 2 };
         const receiveProductsAction: any = { c: 'd' };
         const receiveProducts = spy(() => receiveProductsAction);
-        const flux: any = { actions: { receiveRecommendationsNavigations, receiveProducts },
-                            config: {
-                              search: {
-                                redirectSingleResult: false
-                              },
-                              recommendations: {
-                                iNav: {
-                                  navigations: {
-                                    sort: true,
-                                    pinned: undefined,
-                                  },
-                                  refinements: {
-                                    sort: true,
-                                    pinned: undefined,
-                                  }
-                                }
-                              },
-                            },
-                            emit: () => undefined,
-                            saveState: () => undefined
-                          };
+        const flux: any = {
+          actions: { receiveRecommendationsNavigations, receiveProducts },
+          config: {
+            search: {
+              redirectSingleResult: false
+            },
+            recommendations: {
+              iNav: {
+                navigations: {
+                  sort: true,
+                  pinned: undefined,
+                },
+                refinements: {
+                  sort: true,
+                  pinned: undefined,
+                }
+              }
+            },
+          },
+          emit: () => undefined,
+          saveState: () => undefined
+        };
 
         const avail = [...availableNavigation];
-        avail[2] = { ...availableNavigation[2], refinements: [...availableNavigation[2].refinements,
-                                                          { value: 'otherRef', type: 'Value', count: 9 }]};
+        avail[2] = {
+          ...availableNavigation[2], refinements: [...availableNavigation[2].refinements,
+          { value: 'otherRef', type: 'Value', count: 9 }]
+        };
 
         const sortArray: any = [
-          { name: 'cat-1', values: [{ value: 'test1', type: 'Value', count: 2 },
-                                    { value: 'test8', type: 'Value', count: 8 },
-                                    { value: 'test3', type: 'Value', count: 4 }], },
+          {
+            name: 'cat-1', values: [{ value: 'test1', type: 'Value', count: 2 },
+            { value: 'test8', type: 'Value', count: 8 },
+            { value: 'test3', type: 'Value', count: 4 }],
+          },
           { name: 'cat0', values: singleRefinement },
           { name: 'cat1', values: singleRefinement },
           { name: 'test1', values: singleRefinement },
         ];
 
         const sortedNavigations: any = [
-          { name: 'cat-1', refinements: [{ value: 'test1', type: 'Value', count: 2 },
-                                         { value: 'test8', type: 'Value', count: 8 },
-                                         { value: 'test3', type: 'Value', count: 4 },
-                                         { value: 'otherRef', type: 'Value', count: 9 }]},
-          { name: 'cat0', refinements: singleRefinement},
-          { name: 'cat1', refinements: singleRefinement},
-          { name: 'other', refinements: singleRefinement},
+          {
+            name: 'cat-1', refinements: [{ value: 'test1', type: 'Value', count: 2 },
+            { value: 'test8', type: 'Value', count: 8 },
+            { value: 'test3', type: 'Value', count: 4 },
+            { value: 'otherRef', type: 'Value', count: 9 }]
+          },
+          { name: 'cat0', refinements: singleRefinement },
+          { name: 'cat1', refinements: singleRefinement },
+          { name: 'other', refinements: singleRefinement },
         ];
 
-        const task = Tasks.fetchProducts(<any> flux, <any>{ });
+        const task = Tasks.fetchProducts(<any>flux, <any>{});
         task.next();
         expect(task.next([{ availableNavigation: avail }, sortArray]).value).
           to.eql(effects.put(receiveRecommendationsNavigationsAction));
@@ -331,7 +364,8 @@ suite('products saga', ({ expect, spy, stub }) => {
         const receiveProductsAction: any = { c: 'd' };
         const receiveProducts = spy(() => receiveProductsAction);
         const sortAndPinNavigations = stub(RecommendationsAdapter, 'sortAndPinNavigations').returnsArg(0);
-        const flux: any = { actions: { receiveRecommendationsNavigations, receiveProducts },
+        const flux: any = {
+          actions: { receiveRecommendationsNavigations, receiveProducts },
           config: {
             search: {
               redirectSingleResult: false
@@ -353,18 +387,18 @@ suite('products saga', ({ expect, spy, stub }) => {
           },
           emit: () => undefined,
           saveState: () => undefined
-                          };
+        };
 
         const sortArray: any = [
-          { name: 'cat-1', values: singleRefinement},
-          { name: 'cat0', values: singleRefinement},
-          { name: 'cat1', values: singleRefinement},
-          { name: 'test1', values: singleRefinement},
+          { name: 'cat-1', values: singleRefinement },
+          { name: 'cat0', values: singleRefinement },
+          { name: 'cat1', values: singleRefinement },
+          { name: 'test1', values: singleRefinement },
         ];
 
-        const task = Tasks.fetchProducts(<any> flux, <any>{ });
+        const task = Tasks.fetchProducts(<any>flux, <any>{});
         task.next();
-        expect(task.next([{ availableNavigation }, sortArray ]).value)
+        expect(task.next([{ availableNavigation }, sortArray]).value)
           .to.eql(effects.put(receiveRecommendationsNavigationsAction));
         expect(task.next().value).to.eql(effects.put(receiveProductsAction));
         expect(receiveProducts.getCall(0).args[0]).to.eql({ availableNavigation });
@@ -415,6 +449,15 @@ suite('products saga', ({ expect, spy, stub }) => {
 
     describe('fetchMoreProducts()', () => {
       it('should return more products', () => {
+        const iNav = {
+          ...iNavDefaults,
+          navigations: {
+            sort: true
+          },
+          refinements: {
+            sort: true
+          }
+        };
         const id = '41892';
         const pageSize = 14;
         const emit = spy();
@@ -464,16 +507,6 @@ suite('products saga', ({ expect, spy, stub }) => {
     });
 
     describe('fetchNavigations()', () => {
-      const iNavDefaults = {
-        navigations: {
-          sort: true
-        },
-        refinements: {
-          sort: true
-        },
-        size: 10,
-        window: 'day',
-      };
       it('should return two actions', () => {
         const customerId = 'id';
         const flux: any = {

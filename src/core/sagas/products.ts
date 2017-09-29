@@ -13,7 +13,7 @@ import { Tasks as productDetailsTasks } from './product-details';
 export namespace Tasks {
   export function* fetchProducts(flux: FluxCapacitor, action: Actions.FetchProducts) {
     try {
-      const [products, navigations]: [Results, Store.Recommendations.Navigation[]] = yield effects.all([
+      let [products, navigations]: [Results, Store.Recommendations.Navigation[]] = yield effects.all([
         effects.call(fetchProductsRequest, flux, action),
         effects.call(fetchNavigations, flux, action)
       ]);
@@ -24,11 +24,16 @@ export namespace Tasks {
         yield effects.call(productDetailsTasks.receiveDetailsProduct, flux, products.records[0]);
       } else {
         flux.emit(Events.BEACON_SEARCH, (<any>products).id);
+        console.log(products);
         if (navigations && !(navigations instanceof Error)) {
-          products.availableNavigation = RecommendationsAdapter.sortAndPinNavigations(products.availableNavigation,
-                                                                                     navigations, flux.config);
           yield effects.put(<any>flux.actions.receiveRecommendationsNavigations(navigations));
+        } else {
+          // if inav navigations is invalid then make it an empty array so it does not sort
+          navigations = [];
         }
+        products.availableNavigation = RecommendationsAdapter.sortAndPinNavigations(products.availableNavigation,
+                                                                                     navigations, flux.config);
+        console.log(products);
         yield effects.put(<any>flux.actions.receiveProducts(products));
         flux.saveState(utils.Routes.SEARCH);
       }
