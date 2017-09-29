@@ -134,10 +134,10 @@ namespace Adapter {
     config.recommendations.iNav;
 
   export const extractNavigationsPinned = (config: Configuration) =>
-    config.recommendations.iNav.navigations.pinned;
+    extractINav(config).navigations.pinned;
 
   export const extractRefinementsPinned = (config: Configuration) =>
-    config.recommendations.iNav.refinements.pinned;
+    extractINav(config).refinements.pinned;
 }
 
 export default Adapter;

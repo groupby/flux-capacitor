@@ -42,6 +42,7 @@ export namespace Tasks {
       yield effects.put(<any>flux.actions.receiveProducts(e));
     }
   }
+
   export function* fetchProductsRequest(flux: FluxCapacitor, action: Actions.FetchProducts) {
     const request = yield effects.select(Requests.search, flux.config);
     return yield effects.call([flux.clients.bridge, flux.clients.bridge.search], request);
