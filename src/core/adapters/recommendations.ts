@@ -19,12 +19,11 @@ namespace Recommendations {
     sortBasedOn(results, navigations, (unsorted, sorted) => unsorted.name === sorted.name);
 
   export const sortRefinements = ({ results, navigations, config }: Navigations): Navigation[] => {
-    const refinementSort = ConfigurationAdapter.extractRefinementsSort(config);
+    const refinementSort = config && ConfigurationAdapter.extractRefinementsSort(config);
     return (Array.isArray(refinementSort) ?
       navigations.filter(({ name }) => refinementSort.find((nav) => nav === name)) : navigations)
       .reduce((resultsAcc, navigation) => {
       const index = resultsAcc.findIndex(({ name }) => navigation.name === name);
-      const sort = ConfigurationAdapter.extractRefinementsSort(config);
       if (index !== -1) {
         resultsAcc = [...resultsAcc.slice(0, index), {
           ...resultsAcc[index], refinements:
