@@ -48,8 +48,8 @@ export namespace Tasks {
         const recommendationsUrl = RecommendationsAdapter.buildUrl(flux.config.customerId, 'refinements', 'Popular');
         // tslint:disable-next-line max-line-length
         const recommendationsResponse = yield effects.call(utils.fetch, recommendationsUrl, RecommendationsAdapter.buildBody({
-          size: 10,
-          window: 'day',
+          size: iNav.size,
+          window: iNav.window,
         }));
         const recommendations = yield recommendationsResponse.json();
         return recommendations.result

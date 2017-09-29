@@ -464,6 +464,16 @@ suite('products saga', ({ expect, spy, stub }) => {
     });
 
     describe('fetchNavigations()', () => {
+      const iNavDefaults = {
+        navigations: {
+          sort: true
+        },
+        refinements: {
+          sort: true
+        },
+        size: 10,
+        window: 'day',
+      };
       it('should return two actions', () => {
         const customerId = 'id';
         const flux: any = {
@@ -471,6 +481,7 @@ suite('products saga', ({ expect, spy, stub }) => {
             customerId,
             recommendations: {
               iNav: {
+                ...iNavDefaults,
                 navigations: {
                   sort: true
                 },
@@ -511,6 +522,7 @@ suite('products saga', ({ expect, spy, stub }) => {
             customerId,
             recommendations: {
               iNav: {
+                ...iNavDefaults,
                 navigations: {
                   sort: true
                 },

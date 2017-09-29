@@ -241,6 +241,8 @@ namespace Configuration {
     export interface INav {
       navigations: Navigations;
       refinements: Refinements;
+      size: number;
+      window: 'day' | 'week' | 'month';
     }
 
     export interface Navigations {
