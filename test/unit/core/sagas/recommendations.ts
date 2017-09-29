@@ -28,7 +28,6 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const productCount = 8;
         const idField = 'myId';
         const productSuggestions = { productCount, idField };
-        // const config = { customerId, recommendations };
         const config = { customerId, recommendations: { productSuggestions } };
         const state = { c: 'd' };
         const search = () => null;
@@ -119,6 +118,5 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         task.next();
       });
     });
-
   });
 });

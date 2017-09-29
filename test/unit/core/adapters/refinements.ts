@@ -31,6 +31,7 @@ suite('Refinements Adapter', ({ expect, stub }) => {
       expect(refinementsMatch).to.have.callCount(4)
         .and.calledWith('x', 'h', 'Value');
     });
+
     it('should not select non-matching refinements', () => {
       const name = 'brand';
       const refinements = ['a', 'b', 'c', 'd'];
@@ -56,6 +57,7 @@ suite('Refinements Adapter', ({ expect, stub }) => {
       expect(refinementsMatch).to.have.callCount(8)
         .and.calledWith('x', 'h', 'Value');
     });
+
     it('should merge range refinements', () => {
       const name = 'brand';
       const refinements = ['a', 'b', 'c', 'd'];

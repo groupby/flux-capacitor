@@ -40,8 +40,7 @@ suite('navigations', ({ expect }) => {
   const sortOrder = [{
     name: 'Format',
     values: valueRef
-  },
-  {
+  }, {
     name: 'Section',
     values: [valueRef[0]]
   }];

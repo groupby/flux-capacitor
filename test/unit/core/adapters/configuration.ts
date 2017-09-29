@@ -178,11 +178,7 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     it('should do nothing if state does not contain default or options', () => {
       const sort = {};
 
-      const sorts = Adapter.extractSorts(<any>{
-        search: {
-          sort
-        }
-      });
+      const sorts = Adapter.extractSorts(<any>{ search: { sort } });
 
       expect(sorts).to.eql({ selected: 0, items: [sort] });
     });

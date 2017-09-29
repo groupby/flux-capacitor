@@ -548,6 +548,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         expect(task.next(recommendations).value).to.eql(returnVal);
         task.next();
       });
+
       it('should call receive navigations only when refinements sort is false', () => {
         const customerId = 'id';
         const flux: any = {
@@ -589,6 +590,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         expect(task.next(recommendations).value).to.eql(returnVal);
         task.next();
       });
+
       it('should return nothing when navigations sort is off', () => {
         const customerId = 'id';
         const flux: any = {

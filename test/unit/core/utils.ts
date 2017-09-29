@@ -3,7 +3,6 @@ import Selectors from '../../../src/core/selectors';
 import * as utils from '../../../src/core/utils';
 import suite from '../_suite';
 
-
 const ACTION = 'MY_ACTION';
 
 suite('utils', ({ expect, spy, stub }) => {
@@ -85,7 +84,6 @@ suite('utils', ({ expect, spy, stub }) => {
       stub(Selectors, 'selectedRefinements').returns(['hello']);
       stub(SearchAdapter, 'refinementsMatch').returns(true);
 
-      // undefined is falsy
       expect(utils.shouldResetRefinements({ navigationId: undefined }, null)).to.be.true;
     });
 
@@ -102,6 +100,7 @@ suite('utils', ({ expect, spy, stub }) => {
 
       expect(utils.shouldResetRefinements({ navigationId: 'truthy', range: true }, null)).to.be.false;
     });
+
     it('should look up refinement from index if index passed', () => {
       const crumb = stub(Selectors, 'isRefinementSelected').returns(false);
       stub(Selectors, 'selectedRefinements').returns([{ value: 'hello' }]);

@@ -44,9 +44,7 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         const receiveMoreRefinements = spy(() => receiveMoreRefinementsAction);
         const request = { g: 'h' };
         const state = { i: 'j'};
-        const store = {
-          getState: () => 1
-        };
+        const store = { getState: () => 1 };
         const results = { navigation: { sort: false, pinned: false }};
         const flux: any = { clients: { bridge }, actions: { receiveMoreRefinements }, config, store };
         const searchRequest = stub(Requests, 'search').returns(request);
