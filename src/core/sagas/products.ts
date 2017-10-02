@@ -54,14 +54,20 @@ export namespace Tasks {
       if (iNav.navigations.sort || iNav.refinements.sort) {
         const query = yield effects.select(Selectors.query, flux.store.getState());
         const recommendationsUrl = RecommendationsAdapter.buildUrl(flux.config.customerId, 'refinements', 'Popular');
+        const sizeAndWindow = { size: iNav.size, window: iNav.window };
         // tslint:disable-next-line max-line-length
         const recommendationsResponse = yield effects.call(utils.fetch, recommendationsUrl, RecommendationsAdapter.buildBody({
-          size: iNav.size,
-          window: iNav.window,
-          matchPartial: {
-            and: [{ search: { query } }]
-          },
-        }));
+          minSize: iNav.minSize || iNav.size,
+          sequence: [
+            { ...sizeAndWindow,
+              matchPartial: {
+                and: [{ search: { query } }]
+              },
+            },
+            {
+              ...sizeAndWindow,
+            }
+          ]}));
         const recommendations = yield recommendationsResponse.json();
         return recommendations.result
           .filter(({ values }) => values); // assumes no values key will be empty

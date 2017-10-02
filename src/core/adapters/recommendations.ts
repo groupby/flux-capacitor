@@ -10,7 +10,7 @@ namespace Recommendations {
   export const buildUrl = (customerId: string, endpoint: string, mode: string) =>
     `https://${customerId}.groupbycloud.com/wisdom/v2/public/recommendations/${endpoint}/_get${mode}`;
 
-  export const buildBody = (body: RecommendationsBody) => ({
+  export const buildBody = (body: RecommendationsBody | RecommendationsRequest) => ({
     method: 'POST',
     body: JSON.stringify(body)
   });
@@ -64,12 +64,17 @@ namespace Recommendations {
       transform({ results, navigations, config }), availableNavigations);
   };
 
-  export interface RecommendationsBody {
+  export interface RecommendationsRequest {
     size?: number;
     window?: string;
     matchPartial?: object;
     type?: string;
     target?: string;
+  }
+
+  export interface RecommendationsBody {
+    minSize: number;
+    sequence: RecommendationsRequest[];
   }
 
   export interface Navigations {
