@@ -18,6 +18,7 @@ suite('products saga', ({ expect, spy, stub }) => {
     refinements: {
       sort: false
     },
+    minSize: 15,
     size: 10,
     window: 'day',
   };
@@ -547,9 +548,16 @@ suite('products saga', ({ expect, spy, stub }) => {
         expect(buildUrl).to.be.calledWith(customerId, 'refinements', 'Popular');
         expect(task.next({ json: () => jsonResult }).value).to.eql(jsonResult);
         expect(buildBody).to.be.calledWith({
-          size: 10,
-          window: 'day',
-          matchPartial: { and: [{ search: { query: queryReturn } }] }
+          minSize: iNavDefaults.minSize,
+          sequence: [{
+            size: iNavDefaults.size,
+            window: iNavDefaults.window,
+            matchPartial: { and: [{ search: { query: queryReturn } }] }
+          },
+          {
+            size: iNavDefaults.size,
+            window: iNavDefaults.window,
+          }]
         });
         expect(task.next(recommendations).value).to.eql(returnVal);
         task.next();
@@ -564,6 +572,7 @@ suite('products saga', ({ expect, spy, stub }) => {
             recommendations: {
               iNav: {
                 ...iNavDefaults,
+                minSize: undefined,
                 navigations: {
                   sort: true
                 },
@@ -594,9 +603,16 @@ suite('products saga', ({ expect, spy, stub }) => {
         expect(buildUrl).to.be.calledWith(customerId, 'refinements', 'Popular');
         expect(task.next({ json: () => jsonResult }).value).to.eql(jsonResult);
         expect(buildBody).to.be.calledWith({
-          size: 10,
-          window: 'day',
-          matchPartial: { and: [{ search: { query: queryReturn } }] }
+          minSize: iNavDefaults.size,
+          sequence: [{
+            size: iNavDefaults.size,
+            window: iNavDefaults.window,
+            matchPartial: { and: [{ search: { query: queryReturn } }] }
+          },
+          {
+            size: iNavDefaults.size,
+            window: iNavDefaults.window,
+          }]
         });
         expect(task.next(recommendations).value).to.eql(returnVal);
         task.next();

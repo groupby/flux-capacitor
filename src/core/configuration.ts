@@ -241,7 +241,7 @@ namespace Configuration {
     export interface INav {
       navigations: Navigations;
       refinements: Refinements;
-      minSize: number;
+      minSize?: number;
       size: number;
       window: 'day' | 'week' | 'month';
     }
