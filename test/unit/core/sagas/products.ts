@@ -511,9 +511,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         const customerId = 'id';
         const state = 1;
         const flux: any = {
-          store: {
-            getState: () => state
-          },
+          store: { getState: () => state },
           config: {
             customerId,
             recommendations: {
@@ -541,7 +539,6 @@ suite('products saga', ({ expect, spy, stub }) => {
         const buildBody = stub(RecommendationsAdapter, 'buildBody').returns(body);
         const fetch = stub(utils, 'fetch');
         const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
-        // stub(effects, 'select')
         const query = stub(Selectors, 'query');
         const queryReturn = 2;
 
@@ -561,9 +558,7 @@ suite('products saga', ({ expect, spy, stub }) => {
       it('should call receive navigations only when refinements sort is false', () => {
         const customerId = 'id';
         const flux: any = {
-          store: {
-            getState: () => 1
-          },
+          store: { getState: () => 1 },
           config: {
             customerId,
             recommendations: {
@@ -593,6 +588,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
         const queryReturn = 2;
         const query = stub(Selectors, 'query');
+
         task.next();
         expect(task.next(queryReturn).value).to.eql(effects.call(fetch, url, body));
         expect(buildUrl).to.be.calledWith(customerId, 'refinements', 'Popular');
@@ -609,9 +605,7 @@ suite('products saga', ({ expect, spy, stub }) => {
       it('should return nothing when navigations sort is off', () => {
         const customerId = 'id';
         const flux: any = {
-          store: {
-            getState: () => 1
-          },
+          store: { getState: () => 1 },
           config: {
             customerId,
             recommendations: {
