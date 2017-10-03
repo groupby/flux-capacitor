@@ -104,6 +104,19 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(task.next().value).to.eql(effects.call(fetch, url, request));
       });
 
+      it('should not return past purchases for 0 productCount', () => {
+        const customerId = 'myCustomer';
+        const productCount = 0;
+        const productSuggestions = { productCount };
+        const config = { customerId, recommendations: { productSuggestions } };
+        const flux: any = { config };
+
+        const task = Tasks.fetchProducts(flux, <any>{ payload: {} });
+
+        task.next();
+        expect(task.next().value).to.eql([]);
+      });
+
       it('should handle request failure', () => {
         const error = new Error();
         const receiveRecommendationsProductsAction: any = { a: 'b' };

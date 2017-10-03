@@ -14,33 +14,36 @@ export namespace Tasks {
     try {
       const state = yield effects.select();
       const config = flux.config.recommendations.productSuggestions;
-      // fall back to default mode "popular" if not provided
-      // "popular" default will likely provide the most consistently strong data
-      const mode = Configuration.RECOMMENDATION_MODES[config.mode || 'popular'];
-      // tslint:disable-next-line max-line-length
-      const recommendationsUrl = Adapter.buildUrl(flux.config.customerId, 'products', mode);
-      const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({
-        size: config.productCount,
-        type: 'viewProduct',
-        target: config.idField
-      }));
-      const recommendations = yield recommendationsResponse.json();
-      // tslint:disable-next-line max-line-length
-      const refinements = recommendations.result
+      const productCount = config.productCount;
+      if (productCount > 0) {
+        // fall back to default mode "popular" if not provided
+        // "popular" default will likely provide the most consistently strong data
+        const mode = Configuration.RECOMMENDATION_MODES[config.mode || 'popular'];
+        const recommendationsUrl = Adapter.buildUrl(flux.config.customerId, 'products', mode);
+        const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({
+          size: config.productCount,
+          type: 'viewProduct',
+          target: config.idField
+        }));
+        const recommendations = yield recommendationsResponse.json();
+        // tslint:disable-next-line max-line-length
+        const refinements = recommendations.result
         .filter(({ productId }) => productId)
         .map(({ productId }) => ({ navigationName: config.idField, type: 'Value', value: productId }));
-      const { records } = yield effects.call(
-        [flux.clients.bridge, flux.clients.bridge.search],
-        {
-          ...Requests.search(state, flux.config),
-          pageSize: config.productCount,
-          includedNavigations: [],
-          skip: 0,
-          refinements
-        }
-      );
+        const { records } = yield effects.call(
+          [flux.clients.bridge, flux.clients.bridge.search],
+          {
+            ...Requests.search(state, flux.config),
+            pageSize: config.productCount,
+            includedNavigations: [],
+            skip: 0,
+            refinements
+          }
+        );
 
-      yield effects.put(flux.actions.receiveRecommendationsProducts(records.map(SearchAdapter.extractProduct)));
+        yield effects.put(flux.actions.receiveRecommendationsProducts(records.map(SearchAdapter.extractProduct)));
+      }
+      return [];
     } catch (e) {
       yield effects.put(flux.actions.receiveRecommendationsProducts(e));
     }
