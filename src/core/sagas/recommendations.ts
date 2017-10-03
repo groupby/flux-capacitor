@@ -45,8 +45,30 @@ export namespace Tasks {
       yield effects.put(flux.actions.receiveRecommendationsProducts(e));
     }
   }
+
+  export function* fetchPastPurchases(flux: FluxCapacitor, action: Actions.FetchPastPurchases) {
+    try {
+      const config = flux.config.recommendations.pastPurchases;
+      const productCount = config.productCount;
+      if (productCount > 0) {
+        const recommendationsUrl = Adapter.buildUrl(flux.config.customerId, 'pastPurchases', 'idk');
+        // TODO: change to be the real/right request
+        const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({
+          size: productCount
+        }));
+        const recommendations = yield recommendationsResponse.json();
+        // TODO: modify data so it's in the right form?
+
+        yield effects.put(flux.actions.receivePastPurchases(recommendations));
+      }
+      return [];
+    } catch (e) {
+      return effects.put(flux.actions.receivePastPurchases(e));
+    }
+  }
 }
 
 export default (flux: FluxCapacitor) => function* recommendationsSaga() {
   yield effects.takeLatest(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, Tasks.fetchProducts, flux);
+  yield effects.takeLatest(Actions.FETCH_PAST_PURCHASES, Tasks.fetchPastPurchases, flux);
 };

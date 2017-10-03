@@ -220,7 +220,7 @@ namespace Store {
       products: Product[];
     };
     pastPurchases: {
-      products: Product[];
+      products: Recommendations.PastPurchases[];
     };
   }
 
@@ -239,6 +239,10 @@ namespace Store {
     export interface RecommendationRefinement {
       value: string;
       count: number;
+    }
+
+    export interface PastPurchases {
+      id: string;
     }
   }
 
