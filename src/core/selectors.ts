@@ -153,6 +153,9 @@ namespace Selectors {
   export const navigations = (state: Store.State) =>
     state.data.present.navigations.allIds.map<Store.Navigation>(Selectors.navigation.bind(null, state));
 
+  /**
+   * Returns the navigation sort.
+   */
   export const navigationSort = (state: Store.State) =>
     state.data.present.navigations.sort;
 
