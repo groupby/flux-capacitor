@@ -142,7 +142,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const receivePastPurchasesAction: any = { a: 'b' };
         const receivePastPurchases = spy(() => receivePastPurchasesAction);
         const flux: any = { config, actions: { receivePastPurchases } };
-        const url = `https://${customerId}.groupbycloud.com/wisdom/v2/public/recommendations/pastPurchases/_getidk`;
+        const url = `http://${customerId}.groupbycloud.com/orders/public/skus/popular`;
 
         const fetch = stub(utils, 'fetch');
         const request = {
@@ -152,7 +152,9 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
           })
         };
         const promise = Promise.resolve();
-        const response = [{ id: '12314' }, { id: '0932' }, { id: '19235' }];
+        const response = {
+          result: [{ sku: '12314', quantity: 1 }, { sku: '0932', quantity: 2 }, { sku: '19235', quantity: 1 }]
+        };
 
         const task = Tasks.fetchPastPurchases(flux, <any>{ payload: {} });
 
@@ -160,7 +162,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(task.next().value).to.eql(effects.call(fetch, url, request));
         expect(task.next({ json: () => promise }).value).to.eql(promise);
         expect(task.next(response).value).to.eql(effects.put(receivePastPurchasesAction));
-        expect(receivePastPurchases).to.be.calledWithExactly(response);
+        expect(receivePastPurchases).to.be.calledWithExactly(response.result);
         task.next();
       });
 

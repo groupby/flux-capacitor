@@ -215,12 +215,11 @@ namespace Store {
   }
 
   export interface Recommendations {
-    // products: Product[];
     suggested: {
       products: Product[];
     };
     pastPurchases: {
-      products: Recommendations.PastPurchases[];
+      products: Recommendations.PastPurchase[];
     };
   }
 
@@ -241,8 +240,9 @@ namespace Store {
       count: number;
     }
 
-    export interface PastPurchases {
-      id: string;
+    export interface PastPurchase {
+      sku: string;
+      quantity: number;
     }
   }
 

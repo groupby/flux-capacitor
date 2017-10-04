@@ -254,7 +254,7 @@ export function createActions(flux: FluxCapacitor) {
       receiveRecommendationsProducts: (products: Store.Product[]) =>
         action(Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, products),
 
-      receivePastPurchases: (products: Store.Recommendations.PastPurchases[]) =>
+      receivePastPurchases: (products: Store.Recommendations.PastPurchase[]) =>
         action(Actions.RECEIVE_PAST_PURCHASES, products),
 
       // tslint:disable-next-line max-line-length

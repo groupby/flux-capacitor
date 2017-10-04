@@ -9,6 +9,7 @@ suite('recommendations', ({ expect }) => {
         products: <any[]>['c', 'd', 'e']
       }
     };
+
     it('should update state on RECEIVE_RECOMMENDATIONS_PRODUCTS', () => {
       const payload: any[] = ['a', 'b', 'c'];
       const newState = {
@@ -32,11 +33,12 @@ suite('recommendations', ({ expect }) => {
   describe('updatePastPurchases()', () => {
     const state: Store.Recommendations = <any>{
       pastPurchases: {
-        products: [{ id: '123' }, { id: '0923821' }, { id: '2874' }]
+        products: [{ sku: '123', quantity: 3 }, { sku: '0923821', quantity: 2 }, { sku: '2874', quantity: 2 }]
       }
     };
+
     it('should update state on RECEIVE_PAST_PURCHASES', () => {
-      const payload = [{ id: '274' }];
+      const payload = [{ sku: '274', quantity: 1 }];
       const newState = {
         products: payload
       };

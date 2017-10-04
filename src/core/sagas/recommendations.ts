@@ -26,7 +26,6 @@ export namespace Tasks {
           target: config.idField
         }));
         const recommendations = yield recommendationsResponse.json();
-        // tslint:disable-next-line max-line-length
         const refinements = recommendations.result
         .filter(({ productId }) => productId)
         .map(({ productId }) => ({ navigationName: config.idField, type: 'Value', value: productId }));
@@ -54,15 +53,15 @@ export namespace Tasks {
       const config = flux.config.recommendations.pastPurchases;
       const productCount = config.productCount;
       if (productCount > 0) {
-        const recommendationsUrl = Adapter.buildUrl(flux.config.customerId, 'pastPurchases', 'idk');
+        const url = `http://${flux.config.customerId}.groupbycloud.com/orders/public/skus/popular`;
         // TODO: change to be the real/right request
-        const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, Adapter.buildBody({
+        const response = yield effects.call(fetch, url, Adapter.buildBody({
           size: productCount
         }));
-        const recommendations = yield recommendationsResponse.json();
+        const result = yield response.json();
         // TODO: modify data so it's in the right form?
 
-        yield effects.put(flux.actions.receivePastPurchases(recommendations));
+        yield effects.put(flux.actions.receivePastPurchases(result.result));
       }
       return [];
     } catch (e) {

@@ -823,7 +823,7 @@ suite('ActionCreator', ({ expect, spy, stub }) => {
 
     describe('receivePastPurchases()', () => {
       it('should return an action', () => {
-        const products = [{ id: '59384' }, { id: '239' }];
+        const products = [{ sku: '59384', quantity: 3 }, { sku: '239', quantity: 1 }];
 
         expectAction(() => actions.receivePastPurchases(products), Actions.RECEIVE_PAST_PURCHASES, products);
       });
