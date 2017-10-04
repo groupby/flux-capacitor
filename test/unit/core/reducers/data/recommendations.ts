@@ -40,10 +40,14 @@ suite('recommendations', ({ expect }) => {
     it('should update state on RECEIVE_PAST_PURCHASES', () => {
       const payload = [{ sku: '274', quantity: 1 }];
       const newState = {
-        products: payload
+        pastPurchases: {
+          products: payload
+        }
       };
 
       const reducer = recommendations(state, { type: Actions.RECEIVE_PAST_PURCHASES, payload });
+
+      expect(reducer).to.eql(newState);
     });
 
     it('should return state on default', () => {
