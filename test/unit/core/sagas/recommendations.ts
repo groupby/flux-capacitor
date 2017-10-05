@@ -158,7 +158,6 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
 
         const task = Tasks.fetchPastPurchases(flux, <any>{ payload: {} });
 
-        // task.next();
         expect(task.next().value).to.eql(effects.call(fetch, url, request));
         expect(task.next({ json: () => promise }).value).to.eql(promise);
         expect(task.next(response).value).to.eql(effects.put(receivePastPurchasesAction));
