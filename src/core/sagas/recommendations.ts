@@ -26,7 +26,7 @@ export namespace Tasks {
           target: config.idField
         });
         recommendationsRequestBody = {
-          minSize: flux.config.recommendations.location.minSize || 1,
+          minSize: flux.config.recommendations.location.minSize,
           sequence: [
             Adapter.addLocationMatchExact(recommendationsRequestBody, state, flux.config),
             recommendationsRequestBody

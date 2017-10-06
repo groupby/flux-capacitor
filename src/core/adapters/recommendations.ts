@@ -67,8 +67,9 @@ namespace Recommendations {
 
   // tODO: RENAME THIS NON MUTATING FUNCTION
   export const addLocationMatchExact = (request, state, config: Configuration) => {
+    const locationConfig = ConfigurationAdapter.extractLocation(config);
     const location = Selectors.location(state);
-    if (location) {
+    if (locationConfig.enabled && location) {
       return {
         ...request,
         matchExact: {
@@ -78,7 +79,7 @@ namespace Recommendations {
               generated: {
                 geo: {
                   location: {
-                    distance: config.recommendations.location.distance,
+                    distance: locationConfig.distance,
                     center: {
                       lat: location.latitude,
                       lon: location.longitude

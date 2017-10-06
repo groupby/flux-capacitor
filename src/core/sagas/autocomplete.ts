@@ -36,12 +36,14 @@ export namespace Tasks {
           }]
         }
       };
-      if (flux.config.recommendations.location.enabled) {
-        trendingBody = RecommendationsAdapter.addLocationMatchExact(trendingBody, state, flux.config);
-      }
       const trendingRequest = effects.call(fetch, trendingUrl, {
         method: 'POST',
-        body: JSON.stringify(trendingBody)
+        body: JSON.stringify({
+          minSize: flux.config.recommendations.location.minSize,
+          sequence: [
+            RecommendationsAdapter.addLocationMatchExact(trendingBody, state, flux.config),
+            trendingBody
+          ]})
       });
       const requests = [suggestionsRequest];
       if (config.suggestionCount > 0) {
