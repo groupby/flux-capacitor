@@ -65,7 +65,6 @@ namespace Recommendations {
       transform({ results, navigations, config }), availableNavigations);
   };
 
-  // tODO: RENAME THIS NON MUTATING FUNCTION
   export const addLocationMatchExact = (request, state, config: Configuration) => {
     const locationConfig = ConfigurationAdapter.extractLocation(config);
     const location = Selectors.location(state);

@@ -1,5 +1,6 @@
 import ConfigurationAdapter from '../../../../src/core/adapters/configuration';
 import RecommendationsAdapter from '../../../../src/core/adapters/recommendations';
+import Selectors from '../../../../src/core/selectors';
 import suite from '../../_suite';
 
 suite('Recommendations Adapter', ({ expect, stub }) => {
@@ -125,6 +126,56 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
           refinements: [{ value: '1' }, { value: '2' }, { value: '3' }]
         }]
         );
+    });
+  });
+
+  describe('addLocationMatchExact()', () => {
+    it('should add matchExact if location enabled and a location is present', () => {
+      const config = { enabled: true, distance: '1km' };
+      const configAdapter = stub(ConfigurationAdapter, 'extractLocation').returns(config);
+      const latitude = 30.401;
+      const longitude = -132.140;
+      const location = { latitude, longitude };
+      const locationSelector = stub(Selectors, 'location').returns(location);
+      const request = { a: 1, b: 2, c: 3 };
+      const returned = {
+        ...request,
+        matchExact: {
+          and: [{
+            visit: {
+              generated: {
+                geo: {
+                  location: {
+                    distance: config.distance,
+                    center: {
+                      lat: latitude,
+                      lon: longitude
+                    }
+                  }
+                }
+              }
+            }
+          }]
+        }
+      };
+      const state = { d: 4 };
+      const added = RecommendationsAdapter.addLocationMatchExact(request, state, <any>config);
+      expect(added).to.eql(returned);
+      expect(configAdapter).to.be.calledWithExactly(config);
+      expect(locationSelector).to.be.calledWithExactly(state);
+    });
+
+    it('should return original request if location is not present', () => {
+      const config = { enabled: true, distance: '1km' };
+      const configAdapter = stub(ConfigurationAdapter, 'extractLocation').returns(config);
+      const latitude = 30.401;
+      const longitude = -132.140;
+      const location = { latitude, longitude };
+      const locationSelector = stub(Selectors, 'location').returns(undefined);
+      const request = { a: 1, b: 2, c: 3 };
+      const state = { d: 4 };
+      const added = RecommendationsAdapter.addLocationMatchExact(request, state, <any>config);
+      expect(added).to.eql(request);
     });
   });
 });
