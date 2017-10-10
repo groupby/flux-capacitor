@@ -111,6 +111,22 @@ namespace Selectors {
     state.data.present.products;
 
   /**
+   * Returns the current products extended with metadata
+   */
+  export const productsWithMetadata = (state: Store.State) => {
+    const pastPurchases = Selectors.pastPurchaseProductsBySku(state);
+    return state.data.present.products.map((data) => {
+      const meta: any = {};
+
+      if (data.id in pastPurchases) {
+        meta.pastPurchase = true;
+      }
+
+      return { data, meta };
+    });
+  };
+
+  /**
    * Returns the current details object.
    */
   export const details = (state: Store.State) =>
@@ -254,6 +270,13 @@ namespace Selectors {
    */
   export const recommendationsProducts = (state: Store.State) =>
     state.data.present.recommendations.suggested.products;
+
+  /**
+   * Returns the SKUs of previously purchased products.
+   */
+  export const pastPurchaseProductsBySku = (state: Store.State) =>
+    state.data.present.recommendations.pastPurchases.products
+      .reduce((products, product) => Object.assign(products, { [product.sku]: product.quantity }), {});
 
   /**
    * Returns the ui state for the all of the tags with the given tagName.
