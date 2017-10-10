@@ -115,7 +115,7 @@ namespace Selectors {
    */
   export const productsWithMetadata = (state: Store.State) => {
     const pastPurchases = Selectors.pastPurchaseProductsBySku(state);
-    return state.data.present.products.map((data) => {
+    return Selectors.products(state).map((data) => {
       const meta: any = {};
 
       if (data.id in pastPurchases) {
