@@ -113,12 +113,12 @@ namespace Selectors {
   /**
    * Returns the current products extended with metadata
    */
-  export const productsWithMetadata = (state: Store.State) => {
+  export const productsWithMetadata = (state: Store.State, idField: string) => {
     const pastPurchases = Selectors.pastPurchaseProductsBySku(state);
     return Selectors.products(state).map((data) => {
       const meta: any = {};
 
-      if (data.id in pastPurchases) {
+      if (data[idField] in pastPurchases) {
         meta.pastPurchase = true;
       }
 

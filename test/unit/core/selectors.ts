@@ -274,13 +274,25 @@ suite('selectors', ({ expect, stub }) => {
       const pastPurchaseProductsBySku = stub(Selectors, 'pastPurchaseProductsBySku').returns({ a: {}, c: {} });
       const products = stub(Selectors, 'products').returns([{ id: 'a' }, { id: 'b' }, { id: 'c' }]);
 
-      expect(Selectors.productsWithMetadata(state)).to.eql([
+      expect(Selectors.productsWithMetadata(state, 'id')).to.eql([
         { data: { id: 'a' }, meta: { pastPurchase: true } },
         { data: { id: 'b' }, meta: {} },
         { data: { id: 'c' }, meta: { pastPurchase: true } },
       ]);
       expect(pastPurchaseProductsBySku).to.be.calledWithExactly(state);
       expect(products).to.be.calledWithExactly(state);
+    });
+
+    it('should use provided id field', () => {
+      const state: any = { a: 'b' };
+      stub(Selectors, 'pastPurchaseProductsBySku').returns({ a: {}, c: {} });
+      stub(Selectors, 'products').returns([{ sku: 'a' }, { sku: 'b' }, { sku: 'c' }]);
+
+      expect(Selectors.productsWithMetadata(state, 'sku')).to.eql([
+        { data: { sku: 'a' }, meta: { pastPurchase: true } },
+        { data: { sku: 'b' }, meta: {} },
+        { data: { sku: 'c' }, meta: { pastPurchase: true } },
+      ]);
     });
   });
 
