@@ -38,6 +38,11 @@ namespace Events {
    * Returns the products.
    */
   export const PRODUCTS_UPDATED = 'products_updated'; // mixed
+  /**
+   * Triggered when more products are added to the products array.
+   * Returns the new products.
+   */
+  export const MORE_PRODUCTS_ADDED = 'more_products_added'; // post
 
   // collection events
   /**
