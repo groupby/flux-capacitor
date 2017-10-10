@@ -8,6 +8,9 @@ import * as utils from '../utils';
 
 export const HISTORY_UPDATE_ACTIONS = [
   Actions.RECEIVE_PRODUCTS,
+  Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS,
+  Actions.RECEIVE_PAST_PURCHASES,
+  Actions.RECEIVE_NAVIGATION_SORT,
   Actions.RECEIVE_COLLECTION_COUNT,
   Actions.RECEIVE_MORE_REFINEMENTS
 ];
@@ -29,7 +32,7 @@ export const SEARCH_CHANGE_ACTIONS = [
 ];
 
 export const BATCH_MIDDLEWARE_CREATORS = [
-  historyUpdateAnalyzer
+  saveStateAnalyzer
 ];
 
 export const MIDDLEWARE_CREATORS = [
@@ -60,16 +63,15 @@ export function errorHandler(flux: FluxCapacitor) {
   };
 }
 
-export function historyUpdateAnalyzer() {
+export function saveStateAnalyzer() {
   return () => (next) => (batchAction) => {
     const actions = utils.rayify(batchAction);
     if (actions.some((action) => HISTORY_UPDATE_ACTIONS.includes(action.type))) {
-      console.log('bananada', actions)
-      return next([...actions, { type: Actions.UPDATE_HISTORY }]);
+      return next([...actions, { type: Actions.SAVE_STATE }]);
     } else {
       return next(actions);
     }
-  }
+  };
 }
 
 export default (middleware: Array<(flux: FluxCapacitor) => Middleware>, flux: FluxCapacitor) =>

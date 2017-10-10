@@ -2,7 +2,7 @@ import { ActionCreators } from 'redux-undo';
 import * as sinon from 'sinon';
 import Actions from '../../../../src/core/actions';
 import Events from '../../../../src/core/events';
-import createMiddleware, { errorHandler, idGenerator } from '../../../../src/core/store/middleware';
+import createMiddleware, { errorHandler, idGenerator, saveStateAnalyzer } from '../../../../src/core/store/middleware';
 import suite from '../../_suite';
 
 suite('store middleware', ({ expect, spy, stub }) => {
@@ -84,6 +84,26 @@ suite('store middleware', ({ expect, spy, stub }) => {
       errorHandler(<any>{})(null)(next)(action);
 
       expect(next).to.be.calledWith(undoAction);
+    });
+  });
+
+  describe('saveStateAnalyzer()', () => {
+    it('should add SAVE_STATE action if match found', () => {
+      const batchAction = [{ type: 'a' }, { type: Actions.RECEIVE_PRODUCTS }];
+      const next = spy();
+
+      saveStateAnalyzer()(null)(next)(batchAction);
+
+      expect(next).to.be.calledWithExactly([...batchAction, { type: Actions.SAVE_STATE }]);
+    });
+
+    it('should not add SAVE_STATE action if no match found', () => {
+      const batchAction = [{ type: 'a' }, { type: 'b' }];
+      const next = spy();
+
+      saveStateAnalyzer()(null)(next)(batchAction);
+
+      expect(next).to.be.calledWithExactly(batchAction);
     });
   });
 });

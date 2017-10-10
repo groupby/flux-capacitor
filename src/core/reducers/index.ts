@@ -14,7 +14,7 @@ export const rootReducer = redux.combineReducers<Store.State>({
   session,
   data: undoable(data, {
     limit: 5,
-    filter: ({ type }) => type === Actions.UPDATE_HISTORY
+    filter: ({ type }) => type === Actions.SAVE_STATE
   }),
   ui,
 });

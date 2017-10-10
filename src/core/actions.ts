@@ -52,7 +52,6 @@ namespace Actions {
   export type ResetPage = Action<typeof RESET_PAGE, undefined>;
   export const ADD_REFINEMENT = 'ADD_REFINEMENT';
   export type AddRefinement = Action<typeof ADD_REFINEMENT, Actions.Payload.Navigation.AddRefinement>;
-  export const UPDATE_HISTORY = 'UPDATE_HISTORY';
 
   // batch actions
   // tslint:disable-next-line max-line-length
@@ -150,6 +149,8 @@ namespace Actions {
   export type ShutdownApp = Action<typeof SHUTDOWN_APP>;
   export const REFRESH_STATE = 'REFRESH_STATE';
   export type RefreshState = Action<typeof REFRESH_STATE, any>;
+  // added automatically by middleware to interact with redux-undo
+  export const SAVE_STATE = 'SAVE_STATE';
 
   export namespace Payload {
     export namespace Component {
