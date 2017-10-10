@@ -30,8 +30,8 @@ suite('Store', ({ expect, spy, stub }) => {
       const createSagaMiddleware = stub(reduxSaga, 'default').returns(sagaMiddleware);
       const createMiddleware = stub(customMiddleware, 'default');
       const createSagas = stub(sagas, 'default').returns(['m', 'n', 'o']);
-      createMiddleware.withArgs(customMiddleware.MIDDLEWARE_CREATORS).returns(['p', 'q'])
-      createMiddleware.withArgs(customMiddleware.BATCH_MIDDLEWARE_CREATORS).returns(['r', 's'])
+      createMiddleware.withArgs(customMiddleware.MIDDLEWARE_CREATORS).returns(['p', 'q']);
+      createMiddleware.withArgs(customMiddleware.BATCH_MIDDLEWARE_CREATORS).returns(['r', 's']);
 
       const store = Store.create(flux);
 
