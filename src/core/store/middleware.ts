@@ -4,6 +4,13 @@ import { ActionCreators } from 'redux-undo';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import Events from '../events';
+import * as utils from '../utils';
+
+export const HISTORY_UPDATE_ACTIONS = [
+  Actions.RECEIVE_PRODUCTS,
+  Actions.RECEIVE_COLLECTION_COUNT,
+  Actions.RECEIVE_MORE_REFINEMENTS
+];
 
 export const RECALL_CHANGE_ACTIONS = [
   Actions.RESET_REFINEMENTS,
@@ -21,6 +28,10 @@ export const SEARCH_CHANGE_ACTIONS = [
   Actions.UPDATE_CURRENT_PAGE,
 ];
 
+export const BATCH_MIDDLEWARE_CREATORS = [
+  historyUpdateAnalyzer
+];
+
 export const MIDDLEWARE_CREATORS = [
   idGenerator('recallId', RECALL_CHANGE_ACTIONS),
   idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
@@ -28,14 +39,14 @@ export const MIDDLEWARE_CREATORS = [
 ];
 
 export function idGenerator(key: string, actions: string[]) {
-  return (flux) => (store) => (next) => (action) =>
+  return (flux) => () => (next) => (action) =>
     actions.includes(action.type)
       ? next({ ...action, meta: { ...action.meta, [key]: cuid() } })
       : next(action);
 }
 
 export function errorHandler(flux: FluxCapacitor) {
-  return (store) => (next) => (action) => {
+  return () => (next) => (action) => {
     if (action.error) {
       switch (action.type) {
         case Actions.RECEIVE_PRODUCTS: return next(ActionCreators.undo());
@@ -47,6 +58,18 @@ export function errorHandler(flux: FluxCapacitor) {
       return next(action);
     }
   };
+}
+
+export function historyUpdateAnalyzer() {
+  return () => (next) => (batchAction) => {
+    const actions = utils.rayify(batchAction);
+    if (actions.some((action) => HISTORY_UPDATE_ACTIONS.includes(action.type))) {
+      console.log('bananada', actions)
+      return next([...actions, { type: Actions.UPDATE_HISTORY }]);
+    } else {
+      return next(actions);
+    }
+  }
 }
 
 export default (middleware: Array<(flux: FluxCapacitor) => Middleware>, flux: FluxCapacitor) =>
