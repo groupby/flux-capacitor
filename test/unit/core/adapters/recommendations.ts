@@ -159,6 +159,7 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
         }
       };
       const state = { d: 4 };
+
       const added = RecommendationsAdapter.addLocationMatchExact(request, state, <any>config);
 
       expect(added).to.eql(returned);
@@ -173,6 +174,7 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
       const locationSelector = stub(Selectors, 'location').returns(undefined);
       const request = { a: 1, b: 2, c: 3 };
       const state = { d: 4 };
+
       const added = RecommendationsAdapter.addLocationMatchExact(request, state, <any>config);
 
       expect(added).to.eql(request);
