@@ -160,6 +160,7 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
       };
       const state = { d: 4 };
       const added = RecommendationsAdapter.addLocationMatchExact(request, state, <any>config);
+
       expect(added).to.eql(returned);
       expect(configAdapter).to.be.calledWithExactly(config);
       expect(locationSelector).to.be.calledWithExactly(state);
@@ -168,13 +169,12 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
     it('should return original request if location is not present', () => {
       const config = { enabled: true, distance: '1km' };
       const configAdapter = stub(ConfigurationAdapter, 'extractLocation').returns(config);
-      const latitude = 30.401;
-      const longitude = -132.140;
-      const location = { latitude, longitude };
+      const location = { latitude: 30.401, longitude: -132.140 };
       const locationSelector = stub(Selectors, 'location').returns(undefined);
       const request = { a: 1, b: 2, c: 3 };
       const state = { d: 4 };
       const added = RecommendationsAdapter.addLocationMatchExact(request, state, <any>config);
+
       expect(added).to.eql(request);
     });
   });

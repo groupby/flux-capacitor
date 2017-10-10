@@ -196,23 +196,6 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
           }
         };
 
-            //         matchExact: {
-            //   and: [{
-            //     visit: {
-            //       generated: {
-            //         geo: {
-            //           location: {
-            //             distance: '100km',
-            //             center: {
-            //               lat: latitude,
-            //               lon: longitude
-            //             }
-            //           }
-            //         }
-            //       }
-            //     }
-            //   }]
-        // }
         const matchExact = 'match exact';
         const postRequest = {
           method: 'POST',

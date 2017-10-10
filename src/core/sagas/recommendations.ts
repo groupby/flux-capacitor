@@ -20,21 +20,21 @@ export namespace Tasks {
         // "popular" default will likely provide the most consistently strong data
         const mode = Configuration.RECOMMENDATION_MODES[config.mode || 'popular'];
         const recommendationsUrl = Adapter.buildUrl(flux.config.customerId, 'products', mode);
-        let recommendationsRequestBody: any = {
+        const recommendationsRequestBody: any = {
           size: config.productCount,
           type: 'viewProduct',
           target: config.idField
         };
-
-        recommendationsRequestBody = {
+        const requestWithLocation = {
           minSize: flux.config.recommendations.location.minSize,
           sequence: [
             Adapter.addLocationMatchExact(recommendationsRequestBody, state, flux.config),
             recommendationsRequestBody
           ]};
+
         const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, {
           method: 'POST',
-          body: JSON.stringify(recommendationsRequestBody)
+          body: JSON.stringify(requestWithLocation)
         });
         const recommendations = yield recommendationsResponse.json();
         const refinements = recommendations.result

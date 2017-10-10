@@ -28,7 +28,7 @@ export namespace Tasks {
       const suggestionMode = Configuration.RECOMMENDATION_MODES[config.suggestionMode || 'popular'];
       // tslint:disable-next-line max-line-length
       const trendingUrl = RecommendationsAdapter.buildUrl(flux.config.customerId, 'searches', suggestionMode);
-      let trendingBody: any = {
+      const trendingBody: any = {
         size: config.suggestionCount,
         matchPartial: {
           and: [{
