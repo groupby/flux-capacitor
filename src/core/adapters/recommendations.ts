@@ -65,31 +65,37 @@ namespace Recommendations {
       transform({ results, navigations, config }), availableNavigations);
   };
 
-  export const addLocationMatchExact = (request, state, config: Configuration) => {
+  export const addLocationToRequest = (request, state, config: Configuration):
+  RecommendationsBody | RecommendationsRequest => {
     const locationConfig = ConfigurationAdapter.extractLocation(config);
     const location = Selectors.location(state);
-    if (locationConfig.enabled && location) {
+    if (locationConfig && location) {
       return {
-        ...request,
-        matchExact: {
-          ...(request.matchExact || {}),
-          and: [{
-            visit: {
-              generated: {
-                geo: {
-                  location: {
-                    distance: locationConfig.distance,
-                    center: {
-                      lat: location.latitude,
-                      lon: location.longitude
+        minSize: locationConfig.minSize,
+        sequence: [
+          {
+          ...request,
+          matchExact: {
+            ...(request.matchExact || {}),
+            and: [{
+              visit: {
+                generated: {
+                  geo: {
+                    location: {
+                      distance: locationConfig.distance,
+                      center: {
+                        lat: location.latitude,
+                        lon: location.longitude
+                      }
                     }
                   }
                 }
               }
-            }
-          }]
-        }
-      };
+            }]
+          }
+        },
+          request,
+        ]};
     } else {
       return request;
     }

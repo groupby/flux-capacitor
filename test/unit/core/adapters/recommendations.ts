@@ -129,9 +129,9 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
     });
   });
 
-  describe('addLocationMatchExact()', () => {
+  describe('addLocationToRequest()', () => {
     it('should add matchExact if location enabled and a location is present', () => {
-      const config = { enabled: true, distance: '1km' };
+      const config = { minSize: 10, distance: '1km' };
       const configAdapter = stub(ConfigurationAdapter, 'extractLocation').returns(config);
       const latitude = 30.401;
       const longitude = -132.140;
@@ -139,28 +139,34 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
       const locationSelector = stub(Selectors, 'location').returns(location);
       const request = { a: 1, b: 2, c: 3 };
       const returned = {
-        ...request,
-        matchExact: {
-          and: [{
-            visit: {
-              generated: {
-                geo: {
-                  location: {
-                    distance: config.distance,
-                    center: {
-                      lat: latitude,
-                      lon: longitude
+        minSize: config.minSize,
+        sequence: [
+          {
+          ...request,
+          matchExact: {
+            and: [{
+              visit: {
+                generated: {
+                  geo: {
+                    location: {
+                      distance: config.distance,
+                      center: {
+                        lat: latitude,
+                        lon: longitude
+                      }
                     }
                   }
                 }
               }
-            }
-          }]
-        }
+            }]
+          }
+        },
+          request,
+        ]
       };
       const state = { d: 4 };
 
-      const added = RecommendationsAdapter.addLocationMatchExact(request, state, <any>config);
+      const added = RecommendationsAdapter.addLocationToRequest(request, state, <any>config);
 
       expect(added).to.eql(returned);
       expect(configAdapter).to.be.calledWithExactly(config);
@@ -175,7 +181,7 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
       const request = { a: 1, b: 2, c: 3 };
       const state = { d: 4 };
 
-      const added = RecommendationsAdapter.addLocationMatchExact(request, state, <any>config);
+      const added = RecommendationsAdapter.addLocationToRequest(request, state, <any>config);
 
       expect(added).to.eql(request);
     });

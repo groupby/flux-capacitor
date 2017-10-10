@@ -216,7 +216,7 @@ namespace Configuration {
     /**
      * set object to enable location-specific autocomplete recommendations
      */
-    location: Configuration.Recommendations.Location;
+    location?: Configuration.Recommendations.Location;
     productSuggestions: Configuration.Recommendations.ProductSuggestions;
     iNav: Configuration.Recommendations.INav;
     pastPurchases: Configuration.Recommendations.PastPurchases;
@@ -225,7 +225,6 @@ namespace Configuration {
   export namespace Recommendations {
     export interface Location {
       minSize: number;
-      enabled: boolean;
       distance: string;
     }
 

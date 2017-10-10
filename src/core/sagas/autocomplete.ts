@@ -38,12 +38,8 @@ export namespace Tasks {
       };
       const trendingRequest = effects.call(fetch, trendingUrl, {
         method: 'POST',
-        body: JSON.stringify({
-          minSize: flux.config.recommendations.location.minSize,
-          sequence: [
-            RecommendationsAdapter.addLocationMatchExact(trendingBody, state, flux.config),
-            trendingBody
-          ]})
+        body: JSON.stringify(
+          RecommendationsAdapter.addLocationToRequest(trendingBody, state, flux.config))
       });
       const requests = [suggestionsRequest];
       if (config.suggestionCount > 0) {

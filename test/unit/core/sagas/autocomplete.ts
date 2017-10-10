@@ -69,16 +69,10 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         const matchExact = 'match exact';
         const postRequest = {
           method: 'POST',
-          body: JSON.stringify({
-            minSize: location.minSize,
-            sequence: [
-              matchExact,
-              originalBody
-            ]
-          })
+          body: JSON.stringify(matchExact)
         };
         const task = Tasks.fetchSuggestions(flux, <any>{ payload: query });
-        stub(RecommendationsAdapter, 'addLocationMatchExact').returns(matchExact);
+        stub(RecommendationsAdapter, 'addLocationToRequest').returns(matchExact);
 
         expect(task.next().value).to.eql(effects.select());
         // tslint:disable-next-line max-line-length
@@ -148,19 +142,13 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         const matchExact = 'match exact';
         const postRequest = {
           method: 'POST',
-          body: JSON.stringify({
-            minSize: location.minSize,
-            sequence: [
-              matchExact,
-              originalBody
-            ]
-          })
+          body: JSON.stringify(matchExact)
         };
         const fetch = stub(utils, 'fetch');
         stub(Requests, 'autocompleteSuggestions').returns(request);
         stub(Selectors, 'location');
         stub(Selectors, 'autocompleteCategoryField');
-        stub(RecommendationsAdapter, 'addLocationMatchExact').returns(matchExact);
+        stub(RecommendationsAdapter, 'addLocationToRequest').returns(matchExact);
 
         const task = Tasks.fetchSuggestions(flux, <any>{ payload: query });
 
@@ -199,16 +187,10 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         const matchExact = 'match exact';
         const postRequest = {
           method: 'POST',
-          body: JSON.stringify({
-            minSize: locationConfig.minSize,
-            sequence: [
-              matchExact,
-              originalBody
-            ]
-          })
+          body: JSON.stringify(matchExact)
         };
         const fetch = stub(utils, 'fetch');
-        const addLocationMatchExact = stub(RecommendationsAdapter, 'addLocationMatchExact').returns(matchExact);
+        const addLocationToRequest = stub(RecommendationsAdapter, 'addLocationToRequest').returns(matchExact);
         stub(Requests, 'autocompleteSuggestions').returns(request);
         stub(Selectors, 'location').returns(location);
         stub(Selectors, 'autocompleteCategoryField');
@@ -220,7 +202,7 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         task.next();
         // tslint:disable-next-line max-line-length
         expect(task.next().value).to.eql(effects.all([effects.call([sayt, autocomplete], query, request), effects.call(fetch, trendingUrl, postRequest)]));
-        expect(addLocationMatchExact).to.be.calledWith(originalBody);
+        expect(addLocationToRequest).to.be.calledWith(originalBody);
         task.next();
         task.next();
         task.next();

@@ -52,22 +52,16 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         };
         const request = {
           method: 'POST',
-          body: JSON.stringify({
-            minSize: location.minSize,
-            sequence: [
-              matchExact,
-              originalBody,
-            ]
-          })
+          body: JSON.stringify(matchExact)
         };
         const records = ['a', 'b', 'c'];
 
         const task = Tasks.fetchProducts(flux, <any>{ payload: {} });
-        const addLocationMatchExact = stub(RecommendationsAdapter, 'addLocationMatchExact').returns(matchExact);
+        const addLocationToRequest = stub(RecommendationsAdapter, 'addLocationToRequest').returns(matchExact);
 
         expect(task.next().value).to.eql(effects.select());
         expect(task.next(state).value).to.eql(effects.call(fetch, url, request));
-        expect(addLocationMatchExact).to.be.calledWith(originalBody);
+        expect(addLocationToRequest).to.be.calledWith(originalBody);
         expect(task.next({ json: () => recommendationsPromise }).value).to.eql(recommendationsPromise);
         expect(task.next(recommendationsResponse).value).to.eql(effects.call(
           [bridge, search],
@@ -104,21 +98,11 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const matchExact = 'match exact';
         const request = {
           method: 'POST',
-          body: JSON.stringify({
-            minSize: location.minSize,
-            sequence: [
-              matchExact,
-              {
-                size: productCount,
-                type: 'viewProduct',
-                target: idField
-              }
-            ]
-          })
+          body: JSON.stringify(matchExact)
         };
         const records = ['a', 'b', 'c'];
         const fetch = stub(utils, 'fetch');
-        stub(RecommendationsAdapter, 'addLocationMatchExact').returns(matchExact);
+        stub(RecommendationsAdapter, 'addLocationToRequest').returns(matchExact);
 
         const task = Tasks.fetchProducts(flux, <any>{ payload: {} });
 
