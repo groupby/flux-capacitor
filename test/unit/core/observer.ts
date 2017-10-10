@@ -375,13 +375,6 @@ suite('Observer', ({ expect, spy, stub }) => {
 
           expect(emit).to.be.calledWith(Events.PRODUCTS_UPDATED, newProducts);
         });
-
-        it('should emit PRODUCTS_UPDATED event', () => {
-          const newProducts = ['a', 'b'];
-          observers.data.present.products(['a'], newProducts);
-
-          expect(emit).to.be.calledWith(Events.MORE_PRODUCTS_ADDED, ['b']);
-        });
       });
 
       describe('query', () => {

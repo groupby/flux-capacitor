@@ -118,15 +118,7 @@ namespace Observer {
             sizes: emit(Events.PAGE_SIZE_UPDATED)
           }),
 
-          products: ((emitMoreProductsAdded: Observer, emitProductsUpdated: Observer) =>
-            (oldState: Store.Product[], newState: Store.Product[], path: string) => {
-              const oldLength = oldState.length;
-              if (oldLength < newState.length && oldState[0] === newState[0]) {
-                emitMoreProductsAdded(oldState, newState.slice(oldLength), path);
-              } else {
-                emitProductsUpdated(oldState, newState, path);
-              }
-            })(emit(Events.MORE_PRODUCTS_ADDED), emit(Events.PRODUCTS_UPDATED)),
+          products: emit(Events.PRODUCTS_UPDATED),
 
           query: {
             corrected: emit(Events.CORRECTED_QUERY_UPDATED),

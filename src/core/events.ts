@@ -31,7 +31,6 @@ namespace Events {
    * Triggered when products are updated.
    */
   export const PRODUCTS_UPDATED = 'products_updated'; // mixed
-  export const MORE_PRODUCTS_ADDED = 'more_products_added'; // post
 
   // collection events
   /**
