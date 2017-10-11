@@ -1,6 +1,6 @@
 import { reduxBatch } from '@manaflair/redux-batch';
 import * as cuid from 'cuid';
-import { applyMiddleware, compose, createStore, Middleware } from 'redux';
+import { applyMiddleware, compose, createStore, Middleware as ReduxMiddleware } from 'redux';
 import { ActionCreators } from 'redux-undo';
 import * as validatorMiddleware from 'redux-validator';
 import FluxCapacitor from '../../flux-capacitor';
@@ -33,55 +33,59 @@ export const SEARCH_CHANGE_ACTIONS = [
   Actions.UPDATE_CURRENT_PAGE,
 ];
 
-export function idGenerator(key: string, actions: string[]) {
-  return () => (next) => (action) =>
-    actions.includes(action.type)
-      ? next({ ...action, meta: { ...action.meta, [key]: cuid() } })
-      : next(action);
-}
+export namespace Middleware {
+  export const validator = validatorMiddleware;
 
-export function errorHandler(flux: FluxCapacitor) {
-  return () => (next) => (action) => {
-    if (action.error) {
-      switch (action.type) {
-        case Actions.RECEIVE_PRODUCTS: return next(ActionCreators.undo());
-        default:
-          flux.emit(Events.ERROR_FETCH_ACTION, action.payload);
-          return action.payload;
-      }
-    } else {
-      return next(action);
-    }
-  };
-}
-
-export function saveStateAnalyzer() {
-  return (next) => (batchAction) => {
-    const actions = utils.rayify(batchAction);
-    if (actions.some((action) => HISTORY_UPDATE_ACTIONS.includes(action.type))) {
-      return next([...actions, { type: Actions.SAVE_STATE }]);
-    } else {
-      return next(actions);
-    }
-  };
-}
-
-export default (sagaMiddleware: any, flux: FluxCapacitor): any => {
-  const middleware = [
-    validatorMiddleware(),
-    idGenerator('recallId', RECALL_CHANGE_ACTIONS),
-    idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
-    errorHandler(flux),
-    sagaMiddleware,
-    saveStateAnalyzer,
-  ];
-
-  // tslint:disable-next-line max-line-length
-  if (process.env.NODE_ENV === 'development' && ((((<any>flux.config).services || {}).logging || {}).debug || {}).flux) {
-    const logger = require('redux-logger').default;
-
-    middleware.push(logger);
+  export function idGenerator(key: string, actions: string[]): ReduxMiddleware {
+    return () => (next) => (action) =>
+      actions.includes(action.type)
+        ? next({ ...action, meta: { ...action.meta, [key]: cuid() } })
+        : next(action);
   }
 
-  return compose(reduxBatch, applyMiddleware(...middleware), reduxBatch);
+  export function errorHandler(flux: FluxCapacitor): ReduxMiddleware {
+    return () => (next) => (action) => {
+      if (action.error) {
+        switch (action.type) {
+          case Actions.RECEIVE_PRODUCTS: return next(ActionCreators.undo());
+          default:
+            flux.emit(Events.ERROR_FETCH_ACTION, action.payload);
+            return action.payload;
+        }
+      } else {
+        return next(action);
+      }
+    };
+  }
+
+  export function saveStateAnalyzer() {
+    return (next) => (batchAction) => {
+      const actions = utils.rayify(batchAction);
+      if (actions.some((action) => HISTORY_UPDATE_ACTIONS.includes(action.type))) {
+        return next([...actions, { type: Actions.SAVE_STATE }]);
+      } else {
+        return next(actions);
+      }
+    };
+  }
+
+  export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
+    const middleware = [
+      Middleware.validator(),
+      Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS),
+      Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
+      Middleware.errorHandler(flux),
+      sagaMiddleware,
+      Middleware.saveStateAnalyzer,
+    ];
+
+    // tslint:disable-next-line max-line-length
+    if (process.env.NODE_ENV === 'development' && ((((<any>flux.config).services || {}).logging || {}).debug || {}).flux) {
+      middleware.push(require('redux-logger').default);
+    }
+
+    return compose(reduxBatch, applyMiddleware(...middleware), reduxBatch);
+  }
 }
+
+export default Middleware;

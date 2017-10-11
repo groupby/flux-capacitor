@@ -7,7 +7,7 @@ import Actions from '../actions';
 import Adapter from '../adapters/configuration';
 import reducer from '../reducers';
 import createSagas, { SAGA_CREATORS } from '../sagas';
-import createMiddleware from './middleware';
+import Middleware from './middleware';
 
 export { ReduxStore };
 
@@ -16,11 +16,11 @@ namespace Store {
   // tslint:disable-next-line max-line-length
   export function create(flux: FluxCapacitor, listener?: (store: ReduxStore<State>) => () => void): ReduxStore<State> {
     const sagaMiddleware = createSagaMiddleware();
-    const middleware = createMiddleware(sagaMiddleware, flux);
+    const middleware = Middleware.create(sagaMiddleware, flux);
 
     const store = createStore<State>(
       reducer,
-      <any>Adapter.initialState(flux.config),
+      <State>Adapter.initialState(flux.config),
       middleware,
     );
 
