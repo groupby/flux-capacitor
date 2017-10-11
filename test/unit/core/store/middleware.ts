@@ -22,7 +22,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
     afterEach(() => delete process.env.NODE_ENV);
 
     it('should return composed middleware', () => {
-      const flux: any = { c: 'd' };
+      const flux: any = { config: {} };
       const composed = ['e', 'f'];
       const applied = ['k', 'l'];
       const idGenerator = stub(Middleware, 'idGenerator').returns(idGeneratorMiddleware);
