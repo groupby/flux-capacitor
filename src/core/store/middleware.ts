@@ -1,6 +1,8 @@
+import { reduxBatch } from '@manaflair/redux-batch';
 import * as cuid from 'cuid';
-import { Middleware } from 'redux';
+import { applyMiddleware, compose, createStore, Middleware } from 'redux';
 import { ActionCreators } from 'redux-undo';
+import * as validatorMiddleware from 'redux-validator';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import Events from '../events';
@@ -31,18 +33,8 @@ export const SEARCH_CHANGE_ACTIONS = [
   Actions.UPDATE_CURRENT_PAGE,
 ];
 
-export const BATCH_MIDDLEWARE_CREATORS = [
-  saveStateAnalyzer
-];
-
-export const MIDDLEWARE_CREATORS = [
-  idGenerator('recallId', RECALL_CHANGE_ACTIONS),
-  idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
-  errorHandler
-];
-
 export function idGenerator(key: string, actions: string[]) {
-  return (flux) => () => (next) => (action) =>
+  return () => (next) => (action) =>
     actions.includes(action.type)
       ? next({ ...action, meta: { ...action.meta, [key]: cuid() } })
       : next(action);
@@ -64,7 +56,7 @@ export function errorHandler(flux: FluxCapacitor) {
 }
 
 export function saveStateAnalyzer() {
-  return () => (next) => (batchAction) => {
+  return (next) => (batchAction) => {
     const actions = utils.rayify(batchAction);
     if (actions.some((action) => HISTORY_UPDATE_ACTIONS.includes(action.type))) {
       return next([...actions, { type: Actions.SAVE_STATE }]);
@@ -74,5 +66,22 @@ export function saveStateAnalyzer() {
   };
 }
 
-export default (middleware: Array<(flux: FluxCapacitor) => Middleware>, flux: FluxCapacitor) =>
-  middleware.map((handler) => handler(flux));
+export default (sagaMiddleware: any, flux: FluxCapacitor): any => {
+  const middleware = [
+    validatorMiddleware(),
+    idGenerator('recallId', RECALL_CHANGE_ACTIONS),
+    idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
+    errorHandler(flux),
+    sagaMiddleware,
+    saveStateAnalyzer,
+  ];
+
+  // tslint:disable-next-line max-line-length
+  if (process.env.NODE_ENV === 'development' && ((((<any>flux.config).services || {}).logging || {}).debug || {}).flux) {
+    const logger = require('redux-logger').default;
+
+    middleware.push(logger);
+  }
+
+  return compose(reduxBatch, applyMiddleware(...middleware), reduxBatch);
+}
