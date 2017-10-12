@@ -191,7 +191,7 @@ namespace ActionCreators {
   /**
    * Removes all refinements for a given navigation field and adds the given
    * refinement to the search.
-   * @param  {string}                   field      - The field name for the refinement.
+   * @param  {string}                   field      - The field name for the navigation.
    * @param  {any}                      valueOrLow - Either the value for a value
    * refinement, or the low for a range refinement.
    * @param  {any=null}                 high       - Either the high for a range
@@ -250,12 +250,7 @@ namespace ActionCreators {
   }
 
   /**
-   * [resetRecall description]
-   * @param  {string =      null}        query     [description]
-   * @param  {[type]}    {field [description]
-   * @param  {string}    index} [description]
-   * @param  {number       =             <any>{}}} index         [description]
-   * @return {[type]}           [description]
+   * TODO
    */
   // tslint:disable-next-line max-line-length
   export function resetRecall(query: string = null, { field, index }: { field: string, index: number } = <any>{}) {
@@ -269,6 +264,14 @@ namespace ActionCreators {
     };
   }
 
+  /**
+   * Selects a given refinement based on navigationId and index.
+   * @param  {string}                               navigationId - The navigationId for
+   * the navigation to fetch more refinements against.
+   * @param  {number}                               index        - The index of the refinement
+   * intended to be selected.
+   * @return {Actions.ResetPageAndSelectRefinement}              - Actions with relevant data.
+   */
   export function selectRefinement(navigationId: string, index: number): Actions.ResetPageAndSelectRefinement {
     return [
       ActionCreators.resetPage(),
@@ -278,6 +281,14 @@ namespace ActionCreators {
     ];
   }
 
+  /**
+   * Removes a given refinement based on navigationId and index.
+   * @param  {string}                                 navigationId - The navigationId for
+   * the navigation to fetch more refinements against.
+   * @param  {number}                                 index        - The index of the refinement
+   * intended to be selected.
+   * @return {Actions.ResetPageAndDeselectRefinement}              - Actions with relevant data.
+   */
   export function deselectRefinement(navigationId: string, index: number): Actions.ResetPageAndDeselectRefinement {
     return [
       ActionCreators.resetPage(),
@@ -287,34 +298,67 @@ namespace ActionCreators {
     ];
   }
 
+  /**
+   * Selects a given collection based on id.
+   * @param  {string}                   id - The id of the selected collection.
+   * @return {Actions.SelectCollection}    - Action with id.
+   */
   export function selectCollection(id: string): Actions.SelectCollection {
     return createAction(Actions.SELECT_COLLECTION, id, {
       payload: validators.isCollectionDeselected
     });
   }
 
+  /**
+   * Selects a given sort based on index.
+   * @param  {number}             index - The index of the selected sort.
+   * @return {Actions.SelectSort}       - Action with index.
+   */
   export function selectSort(index: number): Actions.SelectSort {
     return createAction(Actions.SELECT_SORT, index, {
       payload: validators.isSortDeselected
     });
   }
 
+  /**
+   * Updates the page size to given size.
+   * @param  {number}                 size - The size the page is updated to.
+   * Must correspond to a size in the pageSize in the store.
+   * @return {Actions.UpdatePageSize}      - Action with size.
+   */
   export function updatePageSize(size: number): Actions.UpdatePageSize {
     return createAction(Actions.UPDATE_PAGE_SIZE, size, {
       payload: validators.isDifferentPageSize
     });
   }
 
+  /**
+   * Updates the current page to the given page.
+   * @param  {number}                    page - The page to switch to.
+   * @return {Actions.UpdateCurrentPage}      - Action with page.
+   */
   export function updateCurrentPage(page: number): Actions.UpdateCurrentPage {
     return createAction(Actions.UPDATE_CURRENT_PAGE, page, {
       payload: validators.isOnDifferentPage
     });
   }
 
+  /**
+   * Updates the details product in the store.
+   * @param  {Store.Product}         product - The product to use as the details
+   * product.
+   * @return {Actions.UpdateDetails}         - Action with product.
+   */
   export function updateDetails(product: Store.Product): Actions.UpdateDetails {
     return createAction(Actions.UPDATE_DETAILS, product);
   }
 
+  /**
+   * Updates the autocomplete query with the given term.
+   * @param  {string}                          query - The search term to update
+   * the autocomplete query to and get suggestions based on.
+   * @return {Actions.UpdateAutocompleteQuery}       - Action with query.
+   */
   export function updateAutocompleteQuery(query: string): Actions.UpdateAutocompleteQuery {
     return createAction(Actions.UPDATE_AUTOCOMPLETE_QUERY, query, {
       payload: validators.isDifferentAutocompleteQuery
@@ -322,10 +366,20 @@ namespace ActionCreators {
   }
 
   // response action creators
+  /**
+   * The query object to receive and update state with.
+   * @param  {Actions.Payload.Query} query - Query object.
+   * @return {Actions.ReceiveQuery}        - Action with query object.
+   */
   export function receiveQuery(query: Actions.Payload.Query): Actions.ReceiveQuery {
     return createAction(Actions.RECEIVE_QUERY, query);
   }
 
+  /**
+   * The response to receive and update state with.
+   * @param  {Results} res - Response object, as returned by the request.
+   * @return {[type]}      - Actions with relevant data.
+   */
   export function receiveProducts(res: Results) {
     return (state: Store.State): Actions.Action<string, any>[] | Actions.ReceiveProducts => {
       const receiveProductsAction = createAction(Actions.RECEIVE_PRODUCTS, res);
@@ -350,48 +404,115 @@ namespace ActionCreators {
     };
   }
 
+  /**
+   * The products to receive and update the state with.
+   * @param  {Store.Product[]}               products - Products that will be
+   * received and updated to in the state.
+   * @return {Actions.ReceiveProductRecords}          - Action with products.
+   */
   export function receiveProductRecords(products: Store.Product[]): Actions.ReceiveProductRecords {
     return createAction(Actions.RECEIVE_PRODUCT_RECORDS, products);
   }
 
+  /**
+   * The collection count to receive and update the state with.
+   * @param  {Actions.Payload.Collection.Count} count - The count to update the
+   * collection count to.
+   * @return {Actions.ReceiveCollectionCount}         - Action with count.
+   */
   export function receiveCollectionCount(count: Actions.Payload.Collection.Count): Actions.ReceiveCollectionCount {
     return createAction(Actions.RECEIVE_COLLECTION_COUNT, count);
   }
 
+  /**
+   * The navigations to receive and update state with.
+   * @param  {Store.Navigation[]}         navigations - The navigations that
+   * state will update to.
+   * @return {Actions.ReceiveNavigations}             - Action with navigations.
+   */
   export function receiveNavigations(navigations: Store.Navigation[]): Actions.ReceiveNavigations {
     return createAction(Actions.RECEIVE_NAVIGATIONS, navigations);
   }
 
+  /**
+   * The page to receive and update state with.
+   * @param  {Actions.Payload.Page} page - The page object state will update to.
+   * @return {Actions.ReceivePage}       - Action with page.
+   */
   export function receivePage(page: Actions.Payload.Page): Actions.ReceivePage {
     return createAction(Actions.RECEIVE_PAGE, page);
   }
 
+  /**
+   * The template to receive and update state with.
+   * @param  {Store.Template}          template - The template state will update
+   * to.
+   * @return {Actions.ReceiveTemplate}          - Action with template.
+   */
   export function receiveTemplate(template: Store.Template): Actions.ReceiveTemplate {
     return createAction(Actions.RECEIVE_TEMPLATE, template);
   }
 
+  /**
+   * The record count to receive and update state with.
+   * @param  {number}                     recordCount - The record count state
+   * will update to.
+   * @return {Actions.ReceiveRecordCount}             - Action with recordCount.
+   */
   export function receiveRecordCount(recordCount: number): Actions.ReceiveRecordCount {
     return createAction(Actions.RECEIVE_RECORD_COUNT, recordCount);
   }
 
+  /**
+   * The redirect to receive and update state with.
+   * @param  {string}                  redirect - The redirect state will update
+   * to.
+   * @return {Actions.ReceiveRedirect}          - Action with redirect.
+   */
   export function receiveRedirect(redirect: string): Actions.ReceiveRedirect {
     return createAction(Actions.RECEIVE_REDIRECT, redirect);
   }
 
+  /**
+   * The more refinements to receive and update state with.
+   * @param  {string}                         navigationId - The navigation the
+   * more refinements correspond to.
+   * @param  {Store.Refinement[]}             refinements  - The more refinements.
+   * @param  {number[]}                       selected     - The selected array,
+   * indicating which indexes of the refinements are set to selected.
+   * @return {Actions.ReceiveMoreRefinements}              - Action with navigationId, refinements, and selected.
+   */
   // tslint:disable-next-line max-line-length
   export function receiveMoreRefinements(navigationId: string, refinements: Store.Refinement[], selected: number[]): Actions.ReceiveMoreRefinements {
     return createAction(Actions.RECEIVE_MORE_REFINEMENTS, { navigationId, refinements, selected });
   }
 
+  /**
+   * The autocomplete suggestions to receive and update state with.
+   * @param  {Actions.Payload.Autocomplete.Suggestions} suggestions - The suggestions
+   * to update the state to.
+   * @return {Actions.ReceiveAutocompleteSuggestions}               - Action with suggestions.
+   */
   // tslint:disable-next-line max-line-length
   export function receiveAutocompleteSuggestions(suggestions: Actions.Payload.Autocomplete.Suggestions): Actions.ReceiveAutocompleteSuggestions {
     return createAction(Actions.RECEIVE_AUTOCOMPLETE_SUGGESTIONS, suggestions);
   }
 
+  /**
+   * The more products to receive and update state with. Products will be added on
+   * to the products array in the store.
+   * @param  {Store.Product[]}             products - The products to add to the state.
+   * @return {Actions.ReceiveMoreProducts}          - Action with products.
+   */
   export function receiveMoreProducts(products: Store.Product[]): Actions.ReceiveMoreProducts {
     return createAction(Actions.RECEIVE_MORE_PRODUCTS, products);
   }
 
+  /**
+   * The autocomplete response to receive and update state with.
+   * @param  {Results}                             res - Response object, as returned in the request.
+   * @return {Actions.ReceiveAutocompleteProducts}     - Action and res.
+   */
   export function receiveAutocompleteProducts(res: Results): Actions.ReceiveAutocompleteProducts {
     const receiveProductsAction = createAction(Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, res);
 
@@ -402,47 +523,101 @@ namespace ActionCreators {
     ]);
   }
 
+  /**
+   * The autocomplete products to receive and update state with.
+   * @param  {Store.Product[]}                           products - The products to add to the
+   * autocomplete state.
+   * @return {Actions.ReceiveAutocompleteProductRecords}          - Action with products.
+   */
   // tslint:disable-next-line max-line-length
   export function receiveAutocompleteProductRecords(products: Store.Product[]): Actions.ReceiveAutocompleteProductRecords {
     return createAction(Actions.RECEIVE_AUTOCOMPLETE_PRODUCT_RECORDS, products);
   }
 
+  /**
+   * The autocomplete template to receive and update state with.
+   * @param  {Store.Template}                      template - The template to add to the
+   * autocomplete state.
+   * @return {Actions.ReceiveAutocompleteTemplate}          - Action with template.
+   */
   export function receiveAutocompleteTemplate(template: Store.Template): Actions.ReceiveAutocompleteTemplate {
     return createAction(Actions.RECEIVE_AUTOCOMPLETE_TEMPLATE, template);
   }
 
+  /**
+   * The details product to receive and update state with.
+   * @param  {Store.Product}                 product - The product to add to the details state.
+   * @return {Actions.ReceiveDetailsProduct}         - Action with product.
+   */
   export function receiveDetailsProduct(product: Store.Product): Actions.ReceiveDetailsProduct {
     return createAction(Actions.RECEIVE_DETAILS_PRODUCT, product);
   }
 
-  export function receiveRecommendationsProducts(products: Store.Product[]) {
+  /**
+   * The recommendations products to receive and update state with.
+   * @param  {Store.Product[]}                         products - The products to add to the recommendations state.
+   * @return {Actions.ReceiveRecommendationsProducts}           - Action with products.
+   */
+  export function receiveRecommendationsProducts(products: Store.Product[]): Actions.ReceiveRecommendationsProducts {
     return createAction(Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, products);
   }
 
-  export function receivePastPurchases(products: Store.Recommendations.PastPurchase[]) {
+  /**
+   * The past purchases to receive and update state with.
+   * @param  {Store.Recommendations.PastPurchase[]} products - The products to add to the past purchase state.
+   * @return {Actions.ReceivePastPurchases}                  - Action with products.
+   */
+  export function receivePastPurchases(products: Store.Recommendations.PastPurchase[]): Actions.ReceivePastPurchases {
     return createAction(Actions.RECEIVE_PAST_PURCHASES, products);
   }
 
+  /**
+   * The navigation sort to receive and update navigation sort state with.
+   * @param  {Store.Recommendations.Navigation[]} navigations - The navigations to be sorted and order of sort.
+   * @return {Actions.ReceiveNavigationSort}                  - Action with navigations.
+   */
   // tslint:disable-next-line max-line-length
   export function receiveNavigationSort(navigations: Store.Recommendations.Navigation[]): Actions.ReceiveNavigationSort {
     return createAction(Actions.RECEIVE_NAVIGATION_SORT, navigations);
   }
 
   // ui action creators
+  /**
+   * Adds state for a given tag to the store.
+   * @param  {string}                       tagName - The name of the tag.
+   * @param  {string}                       id      - The id of the tag.
+   * @param  {any={}}                       state   - The state to add in the store.
+   * @return {Actions.CreateComponentState}         - Action with tagName, id, and state.
+   */
   export function createComponentState(tagName: string, id: string, state: any = {}): Actions.CreateComponentState {
     return createAction(Actions.CREATE_COMPONENT_STATE, { tagName, id, state });
   }
 
+  /**
+   * Removes state for a given tag from the store.
+   * @param  {string}                       tagName - The name of the tag.
+   * @param  {string}                       id      - The id of the tag.
+   * @return {Actions.RemoveComponentState}         Action with tagName and id.
+   */
   export function removeComponentState(tagName: string, id: string): Actions.RemoveComponentState {
     return createAction(Actions.REMOVE_COMPONENT_STATE, { tagName, id });
   }
 
   // session action creators
+  /**
+   * Updates the location in the store to the given location.
+   * @param  {Store.Geolocation}      location - The location to update to.
+   * @return {Actions.UpdateLocation}          - Action with location.
+   */
   export function updateLocation(location: Store.Geolocation): Actions.UpdateLocation {
     return createAction(Actions.UPDATE_LOCATION, location);
   }
 
   // app action creators
+  /**
+   * Fires the START_APP action.
+   * @return {Actions.StartApp} - Action with undefined.
+   */
   export function startApp(): Actions.StartApp {
     return createAction(Actions.START_APP, undefined);
   }
