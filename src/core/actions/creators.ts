@@ -58,10 +58,12 @@ namespace ActionCreators {
 
   /**
    * Makes a request for autocomplete products.
-   * @param  {string}                                       query - Search term
+   * @param  {string}                                       query         - Search term
    * to fetch autocomplete products against.
-   * @param  {Actions.Payload.Autocomplete.Refinement[] =     []}          refinements - The applied refinements.
-   * @return {Actions.FetchAutocompleteProducts}                  - Action with query and refinements.
+   * @param  {Actions.Payload.Autocomplete.Refinement[]=[]} refinements   - The applied
+   * refinements.
+   * @return {Actions.FetchAutocompleteProducts}                          - Action with
+   * query and refinements.
    */
    // tslint:disable-next-line max-line-length
   export function fetchAutocompleteProducts(query: string, refinements: Actions.Payload.Autocomplete.Refinement[] = []): Actions.FetchAutocompleteProducts {
@@ -70,23 +72,46 @@ namespace ActionCreators {
     });
   }
 
+  /**
+   * Makes a request for the collection count for a given collection.
+   * @param  {string}                       collection - Collection name.
+   * @return {Actions.FetchCollectionCount}            - Action with collection.
+   */
   export function fetchCollectionCount(collection: string): Actions.FetchCollectionCount {
     return createAction(Actions.FETCH_COLLECTION_COUNT, collection);
   }
 
+  /**
+   * Makes a request for the details for a given product.
+   * @param  {string}                      id - The id for a specific product.
+   * @return {Actions.FetchProductDetails}    - Action with product id.
+   */
   export function fetchProductDetails(id: string): Actions.FetchProductDetails {
     return createAction(Actions.FETCH_PRODUCT_DETAILS, id);
   }
 
-  export function fetchRecommendationsProducts() {
+  /**
+   * Makes a request for recommendations products.
+   * @return {Actions.FetchRecommendationsProducts} - Action with null.
+   */
+  export function fetchRecommendationsProducts(): Actions.FetchRecommendationsProducts {
     return createAction(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, null);
   }
 
-  export function fetchPastPurchases() {
+  /**
+   * Makes a request for past purchases.
+   * @return {Actions.FetchPastPurchases} - Action with null.
+   */
+  export function fetchPastPurchases(): Actions.FetchPastPurchases {
     return createAction(Actions.FETCH_PAST_PURCHASES, null);
   }
 
   // request action creators
+  /**
+   * Updates the search with given parameters.
+   * @param  {Actions.Payload.Search} search                - Search object for requested search.
+   * @return {Actions.UpdateSearch}                         - Actions with relevant data.
+   */
   export function updateSearch(search: Actions.Payload.Search) {
     return (state: Store.State): Actions.UpdateSearch => {
       const searchActions: Actions.UpdateSearch = [ActionCreators.resetPage()];
@@ -111,6 +136,11 @@ namespace ActionCreators {
     };
   }
 
+  /**
+   * Updates the search query.
+   * @param  {string}                          query - Search term to use.
+   * @return {Actions.ResetPageAndUpdateQuery}       - Actions with relevant data.
+   */
   export function updateQuery(query: string): Actions.ResetPageAndUpdateQuery {
     return [
       ActionCreators.resetPage(),
@@ -123,10 +153,24 @@ namespace ActionCreators {
     ];
   }
 
+  /**
+   * Clears the query.
+   * @return {Actions.ResetPageAndUpdateQuery} - Actions with relevant data.
+   */
   export function resetQuery(): Actions.ResetPageAndUpdateQuery {
     return ActionCreators.updateQuery(null);
   }
 
+  /**
+   * Adds a given refinement to the search.
+   * @param  {string}                            field      - The field name for
+   * the refinement.
+   * @param  {any}                               valueOrLow - Either the value
+   * for a value refinement, or the low for a range refinement.
+   * @param  {any=null}                          high       - Either the high
+   * for a range refinement, or left out for a value refinement.
+   * @return {Actions.ResetPageAndAddRefinement}            - Actions with relevant data.
+   */
   // tslint:disable-next-line max-line-length
   export function addRefinement(field: string, valueOrLow: any, high: any = null): Actions.ResetPageAndAddRefinement {
     return [
@@ -144,6 +188,16 @@ namespace ActionCreators {
     ];
   }
 
+  /**
+   * Removes all refinements for a given navigation field and adds the given
+   * refinement to the search.
+   * @param  {string}                   field      - The field name for the refinement.
+   * @param  {any}                      valueOrLow - Either the value for a value
+   * refinement, or the low for a range refinement.
+   * @param  {any=null}                 high       - Either the high for a range
+   * refinement, or left out for a value refinement.
+   * @return {Actions.SwitchRefinement}            - Actions with relevant data.
+   */
   export function switchRefinement(field: string, valueOrLow: any, high: any = null): Actions.SwitchRefinement {
     return <any>[
       ActionCreators.resetPage(),
@@ -152,6 +206,12 @@ namespace ActionCreators {
     ];
   }
 
+  /**
+   * Removes the selected refinements from the search.
+   * @param  {boolean|string}                   field - true to reset all refinements,
+   * or navigationId to reset all refinements on a specific navigation.
+   * @return {Actions.ResetPageAndResetRefinements}   - Actions with relevant data.
+   */
   export function resetRefinements(field?: boolean | string): Actions.ResetPageAndResetRefinements {
     return [
       ActionCreators.resetPage(),
@@ -165,12 +225,22 @@ namespace ActionCreators {
     ];
   }
 
+  /**
+   * Sets the current page in the store to page 1, but does not update the search.
+   * @return {Actions.ResetPage} - Action with undefined.
+   */
   export function resetPage(): Actions.ResetPage {
     return createAction(Actions.RESET_PAGE, undefined, {
       payload: validators.notOnFirstPage
     });
   }
 
+  /**
+   * Performs search with query, removes current refinements.
+   * @param  {string} query - Search term to perform search with. If not supplied,
+   * search with current query is performed, removing current refinements.
+   * @return {[type]}       - Actions with relevant data.
+   */
   export function search(query?: string) {
     return (state: Store.State): Actions.Search => <any>[
       ActionCreators.resetPage(),
@@ -179,6 +249,14 @@ namespace ActionCreators {
     ];
   }
 
+  /**
+   * [resetRecall description]
+   * @param  {string =      null}        query     [description]
+   * @param  {[type]}    {field [description]
+   * @param  {string}    index} [description]
+   * @param  {number       =             <any>{}}} index         [description]
+   * @return {[type]}           [description]
+   */
   // tslint:disable-next-line max-line-length
   export function resetRecall(query: string = null, { field, index }: { field: string, index: number } = <any>{}) {
     return (state: Store.State): Actions.ResetRecall => {
