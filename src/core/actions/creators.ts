@@ -7,30 +7,63 @@ import { createAction, handleError, refinementPayload, shouldResetRefinements } 
 import * as validators from './validators';
 
 namespace ActionCreators {
+  /**
+   * Updates state with given state.
+   * @param  {any}                  state - The state to use.
+   * @return {Actions.RefreshState}       - Action with state.
+   */
   export function refreshState(state: any): Actions.RefreshState {
     return createAction(Actions.REFRESH_STATE, state);
   }
 
   // fetch action creators
+  /**
+   * Makes a request for more refinements for given navigation.
+   * @param  {string}                       navigationId - The navigationId for
+   * the navigation to fetch more refinements against.
+   * @return {Actions.FetchMoreRefinements}              - Action with navigationId.
+   */
   export function fetchMoreRefinements(navigationId: string): Actions.FetchMoreRefinements {
     return createAction(Actions.FETCH_MORE_REFINEMENTS, navigationId);
   }
 
+  /**
+   * Makes a request for products.
+   * @return {Actions.FetchProducts} - Action with null.
+   */
   export function fetchProducts(): Actions.FetchProducts {
     return createAction(Actions.FETCH_PRODUCTS, null);
   }
 
+  /**
+   * Makes a request for additional products beyond currently requested products.
+   * @param  {number}                    amount - Amount of more products to fetch.
+   * @return {Actions.FetchMoreProducts}        - Action with amount.
+   */
   export function fetchMoreProducts(amount: number): Actions.FetchMoreProducts {
     return createAction(Actions.FETCH_MORE_PRODUCTS, amount);
   }
 
+  /**
+   * Makes a request for autocomplete suggestions.
+   * @param  {string}                               query - Search term to fetch
+   * autocomplete suggestions against.
+   * @return {Actions.FetchAutocompleteSuggestions}       - Action with query.
+   */
   export function fetchAutocompleteSuggestions(query: string): Actions.FetchAutocompleteSuggestions {
     return createAction(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, query, {
       payload: validators.isString,
     });
   }
 
-  // tslint:disable-next-line max-line-length
+  /**
+   * Makes a request for autocomplete products.
+   * @param  {string}                                       query - Search term
+   * to fetch autocomplete products against.
+   * @param  {Actions.Payload.Autocomplete.Refinement[] =     []}          refinements - The applied refinements.
+   * @return {Actions.FetchAutocompleteProducts}                  - Action with query and refinements.
+   */
+   // tslint:disable-next-line max-line-length
   export function fetchAutocompleteProducts(query: string, refinements: Actions.Payload.Autocomplete.Refinement[] = []): Actions.FetchAutocompleteProducts {
     return createAction(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { query, refinements }, {
       query: validators.isString,
