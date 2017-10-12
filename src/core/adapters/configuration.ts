@@ -28,6 +28,9 @@ namespace Adapter {
             sizes: Adapter.extractPageSizes(config, PageReducer.DEFAULT_PAGE_SIZE)
           }
         }
+      },
+      session: {
+        config
       }
     });
 
