@@ -26,7 +26,7 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
 
       expect(creator).to.be.calledWith(flux);
       expect(instance).to.be.calledWith(sinon.match.func);
-      expect(flux.actions).to.eq(primedInstance);
+      expect(flux.actions).to.be.eq(primedInstance);
     });
 
     it('should create API clients', () => {
