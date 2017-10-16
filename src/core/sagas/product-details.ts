@@ -3,13 +3,15 @@ import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import Events from '../events';
 import Requests from '../requests';
+import Selectors from '../selectors';
 import Store from '../store';
 import * as utils from '../utils';
 
 export namespace Tasks {
   export function* fetchProductDetails(flux: FluxCapacitor, { payload: id }: Actions.FetchProductDetails) {
     try {
-      const request = yield effects.select(Requests.search, flux.config);
+      const config = yield effects.select(Selectors.config);
+      const request = yield effects.select(Requests.search, config);
       const { records } = yield effects.call(
         [flux.clients.bridge, flux.clients.bridge.search],
         {

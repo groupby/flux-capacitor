@@ -118,15 +118,16 @@ class FluxCapacitor extends EventEmitter {
    * create instances of all clients used to contact microservices
    */
   static createClients(flux: FluxCapacitor) {
+    const config = Selectors.config(flux.store.getState());
     return {
-      bridge: FluxCapacitor.createBridge(flux.config, (err) => {
-        const networkConfig = flux.config.network;
+      bridge: FluxCapacitor.createBridge(config, (err) => {
+        const networkConfig = config.network;
         flux.emit(Events.ERROR_BRIDGE, err);
         if (networkConfig.errorHandler) {
           networkConfig.errorHandler(err);
         }
       }),
-      sayt: FluxCapacitor.createSayt(flux.config)
+      sayt: FluxCapacitor.createSayt(config)
     };
   }
 
