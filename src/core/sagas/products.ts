@@ -57,7 +57,7 @@ export namespace Tasks {
       const config = yield effects.select(Selectors.config);
       const iNav = config.recommendations.iNav;
       if (iNav.navigations.sort || iNav.refinements.sort) {
-        const query = yield effects.select(Selectors.query, flux.store.getState());
+        const query = yield effects.select(Selectors.query);
         const recommendationsUrl = RecommendationsAdapter.buildUrl(config.customerId, 'refinements', 'Popular');
         const sizeAndWindow = { size: iNav.size, window: iNav.window };
         // tslint:disable-next-line max-line-length

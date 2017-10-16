@@ -16,7 +16,7 @@ export namespace Tasks {
   export function* fetchSuggestions(flux: FluxCapacitor, { payload: query }: Actions.FetchAutocompleteSuggestions) {
     try {
       const state = yield effects.select();
-      const config = Selectors.config(state);
+      const config = yield effects.select(Selectors.config);
       const field = Selectors.autocompleteCategoryField(state);
       const suggestionsRequest = effects.call(
         [flux.clients.sayt, flux.clients.sayt.autocomplete],
