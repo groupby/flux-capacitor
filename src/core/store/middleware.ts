@@ -1,6 +1,6 @@
 import { reduxBatch } from '@manaflair/redux-batch';
 import * as cuid from 'cuid';
-import { applyMiddleware, compose, createStore, Middleware as ReduxMiddleware } from 'redux';
+import { applyMiddleware, compose, createStore, Middleware as ReduxMiddleware, Store } from 'redux';
 import { ActionCreators } from 'redux-undo';
 import * as validatorMiddleware from 'redux-validator';
 import FluxCapacitor from '../../flux-capacitor';
@@ -69,6 +69,16 @@ export namespace Middleware {
     };
   }
 
+  export function thunkEvaluator(store: Store<any>) {
+    return (next) => (thunkAction) => {
+      if (typeof thunkAction === 'function') {
+        return next(thunkAction(() => store.getState()));
+      } else {
+        return next(thunkAction);
+      }
+    };
+  }
+
   export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
     const middleware = [
       Middleware.validator(),
@@ -76,7 +86,8 @@ export namespace Middleware {
       Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
       Middleware.errorHandler(flux),
       sagaMiddleware,
-      Middleware.saveStateAnalyzer,
+      thunkEvaluator,
+      saveStateAnalyzer,
     ];
 
     // tslint:disable-next-line max-line-length
@@ -84,7 +95,13 @@ export namespace Middleware {
       middleware.push(require('redux-logger').default);
     }
 
-    return compose(reduxBatch, applyMiddleware(...middleware), reduxBatch);
+    return compose(
+      thunkEvaluator,
+      saveStateAnalyzer,
+      reduxBatch,
+      applyMiddleware(...middleware),
+      reduxBatch
+    );
   }
 }
 

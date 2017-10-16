@@ -43,9 +43,16 @@ suite('Middleware', ({ expect, spy, stub }) => {
         idGeneratorMiddleware,
         errorHandlerMiddleware,
         sagaMiddleware,
+        Middleware.thunkEvaluator,
         Middleware.saveStateAnalyzer
       );
-      expect(compose).to.be.calledWithExactly(reduxBatch, applied, reduxBatch);
+      expect(compose).to.be.calledWithExactly(
+        Middleware.thunkEvaluator,
+        Middleware.saveStateAnalyzer,
+        reduxBatch,
+        applied,
+        reduxBatch
+      );
       expect(middleware).to.eql(composed);
     });
 
@@ -66,6 +73,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
         idGeneratorMiddleware,
         errorHandlerMiddleware,
         sagaMiddleware,
+        Middleware.thunkEvaluator,
         Middleware.saveStateAnalyzer,
         reduxLogger
       );
@@ -88,6 +96,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
         idGeneratorMiddleware,
         errorHandlerMiddleware,
         sagaMiddleware,
+        Middleware.thunkEvaluator,
         Middleware.saveStateAnalyzer
       );
     });
@@ -174,6 +183,30 @@ suite('Middleware', ({ expect, spy, stub }) => {
       Middleware.saveStateAnalyzer()(next)(batchAction);
 
       expect(next).to.be.calledWithExactly(batchAction);
+    });
+  });
+
+  describe('thunkEvaluator()', () => {
+    it('should pass forward a plain object action', () => {
+      const action = { a: 'b' };
+      const next = spy();
+
+      Middleware.thunkEvaluator(null)(next)(action);
+
+      expect(next).to.be.calledWithExactly(action);
+    });
+
+    it('should evaluate and pass forward a synchonous thunk action', () => {
+      const action = { a: 'b' };
+      const state = { c: 'd' };
+      const next = spy();
+      const thunk = spy(() => action);
+      const getState = () => state;
+
+      Middleware.thunkEvaluator(<any>{ getState })(next)(thunk);
+
+      expect(next).to.be.calledWithExactly(action);
+      expect(thunk).to.be.calledWithExactly(sinon.match((cb) => expect(cb()).to.eq(state)));
     });
   });
 });
