@@ -28,7 +28,7 @@ suite('Action Utils', ({ expect, spy, stub }) => {
     it('should build an FSA complaint action with payload when payload is null', () => {
       const payload = null;
 
-      expect(utils.createAction(ACTION, payload)).to.eql({ type: ACTION, payload, meta: {} });
+      expect(utils.createAction(ACTION, payload)).to.eql({ type: ACTION, payload, meta: { validator: {} } });
     });
 
     it('should add error flag if payload is an Error', () => {

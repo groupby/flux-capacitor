@@ -16,8 +16,8 @@ declare module 'redux' {
   export interface Dispatch<S> {
     <A extends ReduxAction>(action: A): A;
     <A extends ReduxAction>(action: A[]): A[];
-    <A extends ReduxAction>(action: (getState: () => Store.State) => A): A;
-    <A extends ReduxAction>(action: (getState: () => Store.State) => A[]): A[];
+    <A extends ReduxAction>(action: (state: Store.State) => A): A;
+    <A extends ReduxAction>(action: (state: Store.State) => A[]): A[];
   }
 }
 

@@ -206,7 +206,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
       Middleware.thunkEvaluator(<any>{ getState })(next)(thunk);
 
       expect(next).to.be.calledWithExactly(action);
-      expect(thunk).to.be.calledWithExactly(sinon.match((cb) => expect(cb()).to.eq(state)));
+      expect(thunk).to.be.calledWithExactly(state);
     });
   });
 });

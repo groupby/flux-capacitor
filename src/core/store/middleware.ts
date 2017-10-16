@@ -72,7 +72,7 @@ export namespace Middleware {
   export function thunkEvaluator(store: Store<any>) {
     return (next) => (thunkAction) => {
       if (typeof thunkAction === 'function') {
-        return next(thunkAction(() => store.getState()));
+        return next(thunkAction(store.getState()));
       } else {
         return next(thunkAction);
       }

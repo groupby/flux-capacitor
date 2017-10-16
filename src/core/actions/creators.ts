@@ -55,13 +55,13 @@ namespace ActionCreators {
 
   // request action creators
   export function updateSearch(search: Actions.Payload.Search) {
-    return (getState: () => Store.State): Actions.UpdateSearch => {
+    return (state: Store.State): Actions.UpdateSearch => {
       const searchActions: Actions.UpdateSearch = [ActionCreators.resetPage()];
 
       if ('query' in search) {
         searchActions.push(...ActionCreators.updateQuery(search.query));
       }
-      if ('clear' in search && shouldResetRefinements(search, getState())) {
+      if ('clear' in search && shouldResetRefinements(search, state)) {
         searchActions.push(...ActionCreators.resetRefinements(search.clear));
       }
       if ('navigationId' in search) {
@@ -139,17 +139,17 @@ namespace ActionCreators {
   }
 
   export function search(query?: string) {
-    return (getState: () => Store.State): Actions.Search => <any>[
+    return (state: Store.State): Actions.Search => <any>[
       ActionCreators.resetPage(),
       ...ActionCreators.resetRefinements(true),
-      ...ActionCreators.updateQuery(query || Selectors.query(getState()))
+      ...ActionCreators.updateQuery(query || Selectors.query(state))
     ];
   }
 
   // tslint:disable-next-line max-line-length
   export function resetRecall(query: string = null, { field, index }: { field: string, index: number } = <any>{}) {
-    return (getState: () => Store.State): Actions.ResetRecall => {
-      const resetActions: any[] = ActionCreators.search()(getState);
+    return (state: Store.State): Actions.ResetRecall => {
+      const resetActions: any[] = ActionCreators.search()(state);
       if (field) {
         resetActions.push(...ActionCreators.selectRefinement(field, index));
       }
@@ -216,11 +216,10 @@ namespace ActionCreators {
   }
 
   export function receiveProducts(res: Results) {
-    return (getState: () => Store.State): Actions.Action<string, any>[] | Actions.ReceiveProducts => {
+    return (state: Store.State): Actions.Action<string, any>[] | Actions.ReceiveProducts => {
       const receiveProductsAction = createAction(Actions.RECEIVE_PRODUCTS, res);
 
       return handleError(receiveProductsAction, () => {
-        const state = getState();
         const recordCount = SearchAdapter.extractRecordCount(res);
 
         return [

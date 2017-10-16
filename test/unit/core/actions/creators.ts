@@ -85,6 +85,12 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         expectAction(action, Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, query);
       });
+
+      it('should apply validators to FETCH_AUTOCOMPLETE_SUGGESTIONS', () => {
+        expectValidators(ActionCreators.fetchAutocompleteSuggestions(''), Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, {
+          payload: validators.isString
+        });
+      });
     });
 
     describe('fetchAutocompleteProducts()', () => {
@@ -101,6 +107,12 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         // tslint:disable-next-line max-line-length
         expectAction(ActionCreators.fetchAutocompleteProducts(query), Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { query, refinements: [] });
+      });
+
+      it('should apply validators to FETCH_AUTOCOMPLETE_PRODUCTS', () => {
+        expectValidators(ActionCreators.fetchAutocompleteProducts(''), Actions.FETCH_AUTOCOMPLETE_PRODUCTS, {
+          query: validators.isString
+        });
       });
     });
 
@@ -140,7 +152,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       beforeEach(() => stub(ActionCreators, 'resetPage').returns(resetPageAction));
 
       it('should return a bulk action', () => {
-        const batchAction = ActionCreators.updateSearch({})(() => null);
+        const batchAction = ActionCreators.updateSearch({})(null);
 
         expect(batchAction).to.eql([resetPageAction]);
       });
@@ -149,7 +161,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const query = 'q';
         const updateQuery = stub(ActionCreators, 'updateQuery').returns([ACTION]);
 
-        const batchAction = ActionCreators.updateSearch({ query })(() => null);
+        const batchAction = ActionCreators.updateSearch({ query })(null);
 
         expect(batchAction).to.eql([resetPageAction, ACTION]);
         expect(updateQuery).to.be.calledWithExactly(query);
@@ -157,13 +169,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
       it('should return a bulk action with RESET_REFINEMENTS', () => {
         const clear = 'q';
+        const state: any = { a: 'b' };
         const shouldResetRefinements = stub(utils, 'shouldResetRefinements').returns(true);
         const resetRefinements = stub(ActionCreators, 'resetRefinements').returns([ACTION]);
 
-        const batchAction = ActionCreators.updateSearch({ clear })(() => null);
+        const batchAction = ActionCreators.updateSearch({ clear })(state);
 
         expect(batchAction).to.eql([resetPageAction, ACTION]);
-        expect(shouldResetRefinements).to.be.calledWithExactly({ clear }, null);
+        expect(shouldResetRefinements).to.be.calledWithExactly({ clear }, state);
       });
 
       it('should return a bulk action with SELECT_REFINEMENT', () => {
@@ -171,7 +184,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const index = 4;
         const selectRefinement = stub(ActionCreators, 'selectRefinement').returns([ACTION]);
 
-        const batchAction = ActionCreators.updateSearch({ navigationId, index })(() => null);
+        const batchAction = ActionCreators.updateSearch({ navigationId, index })(null);
 
         expect(batchAction).to.eql([resetPageAction, ACTION]);
         expect(selectRefinement).to.be.calledWithExactly(navigationId, index);
@@ -182,7 +195,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const value = 'blue';
         const addRefinement = stub(ActionCreators, 'addRefinement').returns([ACTION]);
 
-        const batchAction = ActionCreators.updateSearch({ navigationId, value })(() => null);
+        const batchAction = ActionCreators.updateSearch({ navigationId, value })(null);
 
         expect(batchAction).to.eql([resetPageAction, ACTION]);
         expect(addRefinement).to.be.calledWithExactly(navigationId, value);
@@ -195,14 +208,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const high = 2;
         const addRefinement = stub(ActionCreators, 'addRefinement').returns([ACTION]);
 
-        const batchAction = ActionCreators.updateSearch({ navigationId, range, low, high })(() => null);
+        const batchAction = ActionCreators.updateSearch({ navigationId, range, low, high })(null);
 
         expect(batchAction).to.eql([resetPageAction, ACTION]);
         expect(addRefinement).to.be.calledWithExactly(navigationId, low, high);
       });
 
       it('should return a bulk action without ADD_REFINEMENT', () => {
-        const batchAction = ActionCreators.updateSearch({ navigationId: 'truthy' })(() => null);
+        const batchAction = ActionCreators.updateSearch({ navigationId: 'truthy' })(null);
 
         expect(batchAction).to.eql([resetPageAction]);
       });
@@ -361,7 +374,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const updateQuery = stub(ActionCreators, 'updateQuery').returns(updateReturn);
         stub(ActionCreators, 'resetPage').returns(resetPageReturn);
 
-        const result = ActionCreators.search(query)(() => null);
+        const result = ActionCreators.search(query)(null);
 
         expect(result).to.eql([
           resetPageReturn,
@@ -384,7 +397,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const queryStub = stub(Selectors, 'query').returns(query);
         stub(ActionCreators, 'resetPage').returns(resetPageReturn);
 
-        const result = ActionCreators.search()(() => null);
+        const result = ActionCreators.search()(null);
 
         expect(result).to.eql([
           resetPageReturn,
@@ -400,17 +413,17 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const resetPageAction = { a: 'b' };
       const resetRefinementsAction = { c: 'd' };
       const updateQueryAction = { e: 'f' };
-      const getState = () => null;
+      const state: any = { g: 'h' };
 
       it('should call search() if field not provided and return result of search()', () => {
         const searchAction = ['1'];
         const searchThunk = spy(() => searchAction);
         const search = stub(ActionCreators, 'search').returns(searchThunk);
 
-        const batchAction = ActionCreators.resetRecall()(getState);
+        const batchAction = ActionCreators.resetRecall()(state);
 
         expect(batchAction).to.eql(searchAction);
-        expect(searchThunk).to.be.calledWithExactly(getState);
+        expect(searchThunk).to.be.calledWithExactly(state);
         expect(search).to.be.calledOnce;
       });
 
@@ -426,7 +439,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         ]);
         stub(ActionCreators, 'search').returns(searchThunk);
 
-        const batchAction = ActionCreators.resetRecall('', { field, index })(getState);
+        const batchAction = ActionCreators.resetRecall('', { field, index })(state);
 
         expect(batchAction).to.eql([
           resetPageAction,
@@ -434,7 +447,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
           updateQueryAction,
           selectRefinementAction
         ]);
-        expect(searchThunk).to.be.calledWithExactly(getState);
+        expect(searchThunk).to.be.calledWithExactly(state);
         expect(selectRefinement).to.be.calledWithExactly(field, index);
       });
     });
@@ -597,7 +610,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const extractQuery = stub(SearchAdapter, 'extractQuery').returns(query);
         const extractPage = stub(SearchAdapter, 'extractPage').returns(page);
 
-        const batchAction = ActionCreators.receiveProducts(results)(() => state);
+        const batchAction = ActionCreators.receiveProducts(results)(state);
 
         expect(createAction).to.be.calledWith(Actions.RECEIVE_PRODUCTS, results);
         expect(receiveQuery).to.be.calledWith(query);
@@ -631,7 +644,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const action = { error: true };
         createAction.returns(action);
 
-        const batchAction = ActionCreators.receiveProducts(results)(() => null);
+        const batchAction = ActionCreators.receiveProducts(results)(null);
 
         expect(createAction).to.be.calledWith(Actions.RECEIVE_PRODUCTS, results);
         expect(batchAction).to.eql(action);
