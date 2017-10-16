@@ -1,4 +1,9 @@
 tslint:
   enabled: true
-  config_file:
+  config_file: tslint.json
+  exclude:
+    - "test/**"
+  config_file: test/tslint.json
+  exclude:
+    - "src/**"
 fail_on_violations: true
