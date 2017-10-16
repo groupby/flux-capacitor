@@ -93,7 +93,6 @@ suite('products saga', ({ expect, spy, stub }) => {
         ])));
         expect(task.next([response, undefined]).value).to.eql(effects.select(Selectors.config));
         expect(task.next(config).value).to.eql(effects.put(<any>[receiveProductsAction]));
-        // expect(task.next().value).to.eql(effects.put(receiveNavigationsAction));
         expect(emit).to.be.calledWithExactly(Events.BEACON_SEARCH, id);
         expect(receiveProducts).to.be.calledWithExactly(response);
         task.next();
@@ -119,6 +118,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         const task = Tasks.fetchProducts(<any>flux, <any>{ hello: 'hello' });
         task.next();
         task.next([{ redirect: true }, undefined]);
+        task.next();
         task.next();
         expect(receiveRedirect).to.be.calledOnce;
       });
