@@ -29,13 +29,13 @@ export function createActions(flux: FluxCapacitor) {
 
       fetchAutocompleteSuggestions: (query: string): Actions.FetchAutocompleteSuggestions =>
         action(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, query, {
-          payload: validators.isString
+          payload: validators.isString,
         }),
 
       // tslint:disable-next-line max-line-length
       fetchAutocompleteProducts: (query: string, refinements: Actions.Payload.Autocomplete.Refinement[] = []): Actions.FetchAutocompleteProducts =>
         action(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { query, refinements }, {
-          query: validators.isString
+          query: validators.isString,
         }),
 
       fetchCollectionCount: (collection: string): Actions.FetchCollectionCount =>
