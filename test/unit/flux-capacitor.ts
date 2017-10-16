@@ -48,12 +48,12 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
       const observer = () => null;
       const create = stub(Store, 'create').returns(instance);
       const listener = stub(Observer, 'listener').returns(observer);
-      stub(FluxCapacitor, 'createClients');
+      stub(FluxCapacitor, 'createClients').returns(undefined);
       stub(core, 'createActions');
 
       const flux = new FluxCapacitor(config);
 
-      expect(flux.store).to.eq(instance);
+      expect(flux.store).to.eq(instance); 
       expect(create).to.be.calledWith(flux, observer);
       expect(listener).to.be.calledWith(flux);
     });
