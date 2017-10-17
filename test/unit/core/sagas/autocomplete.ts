@@ -249,8 +249,7 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
 
         const task = Tasks.fetchProducts(flux, action);
 
-        expect(task.next().value).to.eql(effects.select(Selectors.config));
-        expect(task.next(config).value).to.eql(effects.select(Requests.autocompleteProducts));
+        expect(task.next().value).to.eql(effects.select(Requests.autocompleteProducts));
         expect(task.next(request).value).to.eql(effects.call([bridge, search], {
           ...request,
           query,

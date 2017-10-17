@@ -428,8 +428,7 @@ suite('products saga', ({ expect, spy, stub }) => {
 
         const task = Tasks.fetchProductsRequest(flux, action);
 
-        expect(task.next().value).to.eql(effects.select(Selectors.config));
-        expect(task.next(config).value).to.eql(effects.select(Requests.search));
+        expect(task.next().value).to.eql(effects.select(Requests.search));
         const ret = effects.call([bridge, search], request);
         expect(task.next(request).value).to.eql(ret);
         expect(task.next(request).value).to.eql(request);
