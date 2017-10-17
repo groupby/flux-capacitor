@@ -59,7 +59,7 @@ namespace Requests {
       area: Autocomplete.extractProductArea(config),
       pageSize: Configuration.extractAutocompleteProductCount(config)
     }, config.autocomplete.overrides.products);
-  }
+  };
 
   export const chain = (...objs: Array<object | ((obj: object) => object)>) =>
     objs.reduce((final, obj) => {
