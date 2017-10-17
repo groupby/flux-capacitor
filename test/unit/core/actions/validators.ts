@@ -316,10 +316,10 @@ suite('validators', ({ expect, spy, stub }) => {
       expect(validators.isValidPage.func(page)).to.be.true;
     });
 
-    it('should be invalid if number is in range', () => {
+    it('should be invalid if number is out of range', () => {
       stub(Selectors, 'pageAmount').returns(55);
 
-      expect(validators.isValidPage.func(page)).to.be.true;
+      expect(validators.isValidPage.func(300)).to.be.false;
     });
 
     it('should be invalid if page is null', () => {
