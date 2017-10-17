@@ -35,6 +35,7 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
 
       expect(createClients.calledWith(flux)).to.be.true;
       expect(flux.clients).to.eq(clients);
+      5 + 6;
     });
 
     it('should initialize state store and observe changes', () => {
