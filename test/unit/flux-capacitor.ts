@@ -25,6 +25,21 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
       expect(flux.actions).to.eq(ActionCreators);
     });
 
+    it('should have a config getter', () => {
+      const state = 'state';
+      const getState = spy(() => state);
+      stub(FluxCapacitor, 'createClients');
+      stub(Observer, 'listen');
+      stub(Store, 'create');
+
+      const flux = new FluxCapacitor(<any>{});
+      const selector = stub(flux.selectors, 'config');
+      flux.store = <any>{ getState };
+      flux.config;
+      expect(selector).to.be.calledWithExactly(state);
+      expect(getState).to.be.calledWithExactly();
+    });
+
     it('should create API clients', () => {
       const clients = { a: 'b' };
       const createClients = stub(FluxCapacitor, 'createClients').returns(clients);
