@@ -30,7 +30,7 @@ export namespace Tasks {
 
         const recommendationsResponse = yield effects.call(fetch, recommendationsUrl, {
           method: 'POST',
-          body: JSON.stringify(Adapter.addLocationToRequest(recommendationsRequestBody, state, config))
+          body: JSON.stringify(Adapter.addLocationToRequest(recommendationsRequestBody, state))
         });
         const recommendations = yield recommendationsResponse.json();
         const refinements = recommendations.result

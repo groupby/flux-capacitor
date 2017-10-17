@@ -40,7 +40,7 @@ export namespace Tasks {
       const trendingRequest = effects.call(fetch, trendingUrl, {
         method: 'POST',
         body: JSON.stringify(
-          RecommendationsAdapter.addLocationToRequest(trendingBody, state, config))
+          RecommendationsAdapter.addLocationToRequest(trendingBody, state))
       });
       const requests = [suggestionsRequest];
       if (recommendationsConfig.suggestionCount > 0) {
