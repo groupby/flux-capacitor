@@ -304,9 +304,26 @@ suite('validators', ({ expect, spy, stub }) => {
 
       expect(validators.isOnDifferentPage.func(page)).to.be.false;
     });
+  });
+
+  describe('isValidPage', () => {
+    const page = 10;
+    const state = { a: 1 };
+
+    it('should be valid if number is in range', () => {
+      stub(Selectors, 'pageAmount').returns(55);
+
+      expect(validators.isValidPage.func(page)).to.be.true;
+    });
+
+    it('should be invalid if number is in range', () => {
+      stub(Selectors, 'pageAmount').returns(55);
+
+      expect(validators.isValidPage.func(page)).to.be.true;
+    });
 
     it('should be invalid if page is null', () => {
-      expect(validators.isOnDifferentPage.func(null)).to.be.false;
+      expect(validators.isValidPage.func(null)).to.be.false;
     });
   });
 
