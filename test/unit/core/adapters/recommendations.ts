@@ -219,8 +219,8 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
         ]
       };
       const state = { d: 4 };
-
-      const added = RecommendationsAdapter.addLocationToRequest(request, state, <any>config);
+      stub(Selectors,'config').returns(config);
+      const added = RecommendationsAdapter.addLocationToRequest(request, state);
 
       expect(added).to.eql(returned);
       expect(configAdapter).to.be.calledWithExactly(config);
@@ -233,9 +233,10 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
       const location = { latitude: 30.401, longitude: -132.140 };
       const locationSelector = stub(Selectors, 'location').returns(undefined);
       const request = { a: 1, b: 2, c: 3 };
-      const state = { d: 4 };
+      const state = { d: 4};
+      stub(Selectors,'config').returns(config);
 
-      const added = RecommendationsAdapter.addLocationToRequest(request, state, <any>config);
+      const added = RecommendationsAdapter.addLocationToRequest(request, state);
 
       expect(added).to.eql(request);
     });
