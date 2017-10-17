@@ -70,7 +70,7 @@ suite('requests', ({ expect, stub }) => {
       const request = Requests.search(state);
 
       expect(request.biasing).to.eq(biasing);
-      expect(pastPurchaseBiasing).to.be.calledWithExactly(state, config);
+      expect(pastPurchaseBiasing).to.be.calledWithExactly(state);
     });
 
     it('should apply defaults', () => {

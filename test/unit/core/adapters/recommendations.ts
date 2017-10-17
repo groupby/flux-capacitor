@@ -151,6 +151,7 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
           pastPurchases: { biasStrength, biasInfluence, biasCount: 10 }
         }
       };
+      stub(Selectors, 'config').returns(config);
 
       const biasing = RecommendationsAdapter.pastPurchaseBiasing(state);
 
@@ -173,6 +174,7 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
           pastPurchases: { biasStrength, biasInfluence, biasCount: 2 }
         }
       };
+      stub(Selectors, 'config').returns(config);
 
       const biasing = RecommendationsAdapter.pastPurchaseBiasing(state);
 
