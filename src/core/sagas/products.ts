@@ -48,7 +48,7 @@ export namespace Tasks {
 
   export function* fetchProductsRequest(flux: FluxCapacitor, action: Actions.FetchProducts) {
     const config = yield effects.select(Selectors.config);
-    const request = yield effects.select(Requests.search, config);
+    const request = yield effects.select(Requests.search);
     return yield effects.call([flux.clients.bridge, flux.clients.bridge.search], request);
   }
 
@@ -91,7 +91,7 @@ export namespace Tasks {
       const { records: products, id } = yield effects.call(
         [flux.clients.bridge, flux.clients.bridge.search],
         {
-          ...Requests.search(state, config),
+          ...Requests.search(state),
           pageSize: action.payload,
           skip: Selectors.products(state).length
         }

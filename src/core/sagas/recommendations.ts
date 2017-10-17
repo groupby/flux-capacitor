@@ -39,7 +39,7 @@ export namespace Tasks {
         const { records } = yield effects.call(
           [flux.clients.bridge, flux.clients.bridge.search],
           {
-            ...Requests.search(state, config),
+            ...Requests.search(state),
             pageSize: productConfig.productCount,
             includedNavigations: [],
             skip: 0,

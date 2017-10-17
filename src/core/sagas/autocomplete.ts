@@ -67,7 +67,7 @@ export namespace Tasks {
   export function* fetchProducts(flux: FluxCapacitor, { payload: { query, refinements } }: Actions.FetchAutocompleteProducts) {
     try {
       const config = yield effects.select(Selectors.config);
-      const request = yield effects.select(Requests.autocompleteProducts, config);
+      const request = yield effects.select(Requests.autocompleteProducts);
       const res = yield effects.call(
         [flux.clients.bridge, flux.clients.bridge.search],
         {

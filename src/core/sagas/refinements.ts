@@ -16,7 +16,7 @@ export namespace Tasks {
       const config = yield effects.select(Selectors.config);
       const res = yield effects.call(
         [flux.clients.bridge, flux.clients.bridge.refinements],
-        Requests.search(state, config),
+        Requests.search(state),
         action.payload
       );
       flux.emit(Events.BEACON_MORE_REFINEMENTS, action.payload);
