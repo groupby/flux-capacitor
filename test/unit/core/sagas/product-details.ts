@@ -34,8 +34,7 @@ suite('product details saga', ({ expect, spy, stub }) => {
 
         const task = Tasks.fetchProductDetails(flux, <any>{ payload: id });
 
-        expect(task.next().value).to.eql(effects.select(Selectors.config));
-        expect(task.next(config).value).to.eql(effects.select(Requests.search, config));
+        expect(task.next().value).to.eql(effects.select(Requests.search));
         expect(task.next(request).value).to.eql(effects.call([bridge, search], {
           g: 'h',
           query: null,
@@ -60,7 +59,6 @@ suite('product details saga', ({ expect, spy, stub }) => {
 
         const task = Tasks.fetchProductDetails(flux, <any>{});
 
-        task.next();
         task.next();
         task.next();
         expect(task.next({ records: [] }).value).to.eql(effects.put(receiveDetailsProductAction));

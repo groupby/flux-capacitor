@@ -77,7 +77,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
           }
         ));
         expect(task.next({ records }).value).to.eql(effects.put(receiveRecommendationsProductsAction));
-        expect(searchRequestSelector).to.be.calledWithExactly(state, config);
+        expect(searchRequestSelector).to.be.calledWithExactly(state);
         expect(receiveRecommendationsProducts).to.be.calledWithExactly(['x', 'x', 'x']);
         expect(extractProduct).to.be.calledThrice
           .and.calledWith('a')

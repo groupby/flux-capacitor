@@ -64,7 +64,7 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         expect(task.next(state).value).to.eql(effects.select(Selectors.config));
         expect(task.next(config).value).to.eql(effects.call([bridge, refinements], request, navigationId));
         expect(task.next(results).value).to.eql(effects.put(receiveMoreRefinementsAction));
-        expect(searchRequest).to.be.calledWithExactly(state, config);
+        expect(searchRequest).to.be.calledWithExactly(state);
         expect(mergeRefinements).to.be.calledWithExactly(results, state);
         expect(receiveMoreRefinements).to.be.calledWithExactly(navigationId, mergedRefinements, selected);
         expect(flux.emit).to.be.calledWithExactly(Events.BEACON_MORE_REFINEMENTS, navigationId);
