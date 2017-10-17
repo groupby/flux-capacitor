@@ -33,7 +33,7 @@ namespace Requests {
       request.sort = <any>SearchAdapter.requestSort(sort);
     }
     if (Configuration.shouldAddPastPurchaseBias(config)) {
-      request.biasing = RecommendationsAdapter.pastPurchaseBiasing(state, config);
+      request.biasing = RecommendationsAdapter.pastPurchaseBiasing(state);
     }
 
     return <Request>Requests.chain(config.search.defaults, request, config.search.overrides);

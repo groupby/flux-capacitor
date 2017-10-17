@@ -8,7 +8,6 @@ import Selectors from '../selectors';
 export namespace Tasks {
   export function* fetchCount(flux: FluxCapacitor, { payload: collection }: Actions.FetchCollectionCount) {
     try {
-      const config = yield effects.select(Selectors.config);
       const request = yield effects.select(Requests.search);
       const res = yield effects.call([flux.clients.bridge, flux.clients.bridge.search], {
         ...request,

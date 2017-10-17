@@ -10,7 +10,6 @@ import * as utils from '../utils';
 export namespace Tasks {
   export function* fetchProductDetails(flux: FluxCapacitor, { payload: id }: Actions.FetchProductDetails) {
     try {
-      const config = yield effects.select(Selectors.config);
       const request = yield effects.select(Requests.search);
       const { records } = yield effects.call(
         [flux.clients.bridge, flux.clients.bridge.search],

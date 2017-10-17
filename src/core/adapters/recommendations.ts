@@ -102,7 +102,8 @@ namespace Recommendations {
   };
 
   // tslint:disable-next-line max-line-length
-  export const pastPurchaseBiasing = (state: Store.State, { recommendations: { idField, pastPurchases } }: Configuration) => {
+  export const pastPurchaseBiasing = (state: Store.State) => {
+    const { recommendations: { idField, pastPurchases } } = Selectors.config(state);
     return {
       bringToTop: [],
       augmentBiases: true,
