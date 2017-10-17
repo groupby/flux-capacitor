@@ -254,7 +254,7 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
   describe('static', () => {
     describe('createClients()', () => {
       it('should call createBridge()', () => {
-        // tslint:disable-next-line typedef
+        // tslint:disable-next-line variable-name
         const __config = { a: 'b' };
         const bridge = { c: 'd' };
         const createBridge = stub(FluxCapacitor, 'createBridge').returns(bridge);
@@ -269,7 +269,7 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
       it('should return error callback that emits an ERROR_BRIDGE and calls error handler', () => {
         const errorHandler = spy(() => null);
         const emit = spy(() => null);
-        // tslint:disable-next-line typedef
+        // tslint:disable-next-line variable-name
         const __config = { network: { errorHandler } };
         const bridge = { c: 'd' };
         const err = 'err';
@@ -284,7 +284,7 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
 
       it('should return error callback that does not call error handler if not present', () => {
         const emit = spy(() => null);
-        // tslint:disable-next-line typedef
+        // tslint:disable-next-line variable-name
         const __config = { network: { } };
         const bridge = { c: 'd' };
         const err = 'err';
@@ -297,7 +297,7 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
       });
 
       it('should call createSayt()', () => {
-        // tslint:disable-next-line typedef
+        // tslint:disable-next-line variable-name
         const __config = { a: 'b' };
         const sayt = { c: 'd' };
         const createSayt = stub(FluxCapacitor, 'createSayt').returns(sayt);

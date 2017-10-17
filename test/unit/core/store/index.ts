@@ -11,7 +11,7 @@ import suite from '../../_suite';
 suite('Store', ({ expect, spy, stub }) => {
   describe('create()', () => {
     it('should create a store using middleware and initialState', () => {
-      // tslint:disable-next-line typedef
+      // tslint:disable-next-line variable-name
       const __config = { a: 'b' };
       const flux: any = { __config };
       const state = { c: 'd' };
