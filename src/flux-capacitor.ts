@@ -39,9 +39,17 @@ class FluxCapacitor extends EventEmitter {
    * instance of the state store
    */
   store: ReduxStore<Store.State> = Store.create(this, Observer.listener(this));
+  /**
+   * storefront config
+   */
+  get config(): Configuration {
+    return this.selectors.config(this.store.getState());
+  }
 
-  constructor(public config: Configuration) {
+  // tslint:disable-next-line typedef variable-name
+  constructor(public __config: Configuration) {
     super();
+    delete this.__config;
   }
 
   saveState(route: string) {
@@ -118,7 +126,7 @@ class FluxCapacitor extends EventEmitter {
    * create instances of all clients used to contact microservices
    */
   static createClients(flux: FluxCapacitor) {
-    const config = flux.config; // store not defined yet
+    const config = flux.__config; // store not defined yet
     return {
       bridge: FluxCapacitor.createBridge(config, (err) => {
         const networkConfig = config.network;

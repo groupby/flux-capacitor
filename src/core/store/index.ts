@@ -21,7 +21,7 @@ namespace Store {
 
     const store = createStore<State>(
       reducer,
-      <State>Adapter.initialState(flux.config),
+      <State>Adapter.initialState(flux.__config),
       middleware,
     );
 
