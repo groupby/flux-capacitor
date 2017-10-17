@@ -152,7 +152,7 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
         }
       };
 
-      const biasing = RecommendationsAdapter.pastPurchaseBiasing(state, config);
+      const biasing = RecommendationsAdapter.pastPurchaseBiasing(state);
 
       expect(biasing).to.eql({
         bringToTop: [],
@@ -174,7 +174,7 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
         }
       };
 
-      const biasing = RecommendationsAdapter.pastPurchaseBiasing(state, config);
+      const biasing = RecommendationsAdapter.pastPurchaseBiasing(state);
 
       expect(biasing.biases).to.eql([
         { name: idField, content: 'a', strength: biasStrength },
