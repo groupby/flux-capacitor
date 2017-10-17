@@ -308,7 +308,6 @@ suite('validators', ({ expect, spy, stub }) => {
 
   describe('isValidPage', () => {
     const page = 10;
-    const state = { a: 1 };
 
     it('should be valid if number is in range', () => {
       stub(Selectors, 'pageAmount').returns(55);
