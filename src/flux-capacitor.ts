@@ -2,7 +2,6 @@ import { EventEmitter } from 'eventemitter3';
 import { BrowserBridge, Results } from 'groupby-api';
 import { Action as ReduxAction, Store as ReduxStore } from 'redux';
 import { Sayt } from 'sayt';
-import wrapActionCreators from './core/actions';
 import Actions from './core/actions';
 import ActionCreators from './core/actions/creators';
 import Adapter from './core/adapters/configuration';
