@@ -36,6 +36,7 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
       const selector = stub(flux.selectors, 'config');
       flux.store = <any>{ getState };
       flux.config;
+
       expect(selector).to.be.calledWithExactly(state);
       expect(getState).to.be.calledWithExactly();
     });
