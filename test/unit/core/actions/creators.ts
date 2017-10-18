@@ -427,6 +427,19 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         expect(search).to.be.calledOnce;
       });
 
+      it('should call search() with query', () => {
+        const query = 'test';
+        const searchAction = ['1'];
+        const searchThunk = spy(() => searchAction);
+        const search = stub(ActionCreators, 'search').returns(searchThunk);
+
+        const batchAction = ActionCreators.resetRecall(query)(state);
+
+        expect(batchAction).to.eql(searchAction);
+        expect(searchThunk).to.be.calledWithExactly(state);
+        expect(search).to.be.calledWithExactly(query);
+      });
+
       it('should return bulk action with SELECT_REFINEMENT if field and index provided', () => {
         const field = 'color';
         const index = 8;
