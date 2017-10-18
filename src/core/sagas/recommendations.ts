@@ -69,7 +69,7 @@ export namespace Tasks {
         const result = yield response.json();
         // TODO: modify data so it's in the right form?
 
-        yield effects.put(flux.actions.receivePastPurchases(result.result1));
+        yield effects.put(flux.actions.receivePastPurchases(result.result));
       }
       return [];
     } catch (e) {
