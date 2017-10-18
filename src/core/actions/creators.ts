@@ -250,7 +250,11 @@ namespace ActionCreators {
   }
 
   /**
-   * TODO
+   * Performs a new search with query or selected refinement, and resets recallId.
+   * @param  {string=null}        query - The query to use in the search.
+   * @param  {[type]}             field - The navigation for the refinement to select.
+   * @param  {number}             index - The index for the refinement.
+   * @return {Actions.ResetRecall}      - Actions with relevant data.
    */
   // tslint:disable-next-line max-line-length
   export function resetRecall(query: string = null, { field, index }: { field: string, index: number } = <any>{}) {
