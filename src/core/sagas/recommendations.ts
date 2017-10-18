@@ -55,20 +55,21 @@ export namespace Tasks {
     }
   }
 
-  export function* fetchPastPurchases(flux: FluxCapacitor, action: Actions.FetchPastPurchases) {
+  export function* fetchPastPurchases(flux: FluxCapacitor, { payload }: Actions.FetchPastPurchases) {
     try {
       const config = yield effects.select(Selectors.config);
       const productCount = config.recommendations.pastPurchases.productCount;
       if (productCount > 0) {
         const url = `http://${config.customerId}.groupbycloud.com/orders/public/skus/popular`;
         // TODO: change to be the real/right request
-        const response = yield effects.call(fetch, url, Adapter.buildBody({
-          size: productCount
+        const response = yield effects.call(fetch, url, Adapter.buildBody(<any>{
+          size: productCount,
+          query: payload && undefined
         }));
         const result = yield response.json();
         // TODO: modify data so it's in the right form?
 
-        yield effects.put(flux.actions.receivePastPurchases(result.result));
+        yield effects.put(flux.actions.receivePastPurchases(result.result1));
       }
       return [];
     } catch (e) {

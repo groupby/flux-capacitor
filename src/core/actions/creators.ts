@@ -102,8 +102,8 @@ namespace ActionCreators {
    * Makes a request for past purchases.
    * @return {Actions.FetchPastPurchases} - Action with null.
    */
-  export function fetchPastPurchases(): Actions.FetchPastPurchases {
-    return createAction(Actions.FETCH_PAST_PURCHASES, null);
+  export function fetchPastPurchases(query: string = null): Actions.FetchPastPurchases {
+    return createAction(Actions.FETCH_PAST_PURCHASES, query);
   }
 
   // request action creators
