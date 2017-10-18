@@ -310,13 +310,13 @@ suite('validators', ({ expect, spy, stub }) => {
     const page = 10;
 
     it('should be valid if number is in range', () => {
-      stub(Selectors, 'pageAmount').returns(55);
+      stub(Selectors, 'totalPages').returns(55);
 
       expect(validators.isValidPage.func(page)).to.be.true;
     });
 
     it('should be invalid if number is out of range', () => {
-      stub(Selectors, 'pageAmount').returns(55);
+      stub(Selectors, 'totalPages').returns(55);
 
       expect(validators.isValidPage.func(300)).to.be.false;
     });

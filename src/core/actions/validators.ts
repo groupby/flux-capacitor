@@ -106,7 +106,7 @@ export const isOnDifferentPage: Validator<number> = {
 };
 
 export const isValidPage: Validator<number> = {
-  func: (page, state) => typeof page === 'number' && Selectors.pageAmount(state) >= page && page >= 1,
+  func: (page, state) => typeof page === 'number' && Selectors.totalPages(state) >= page && page >= 1,
   msg: 'page size is invalid'
 };
 

@@ -81,7 +81,7 @@ namespace Selectors {
   /**
    * Returns the last page index, ie number of pages
    */
-  export const pageAmount = (state: Store.State) =>
+  export const totalPages = (state: Store.State) =>
     state.data.present.page.last;
   /**
    * Returns the sorts object.

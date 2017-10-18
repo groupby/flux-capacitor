@@ -220,11 +220,11 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
-  describe('pageAmount()', () => {
+  describe('totalPages()', () => {
     it('should return last page', () => {
       const last = 555;
 
-      expect(Selectors.pageAmount(<any>{ data: { present: { page: { last } } } })).to.eq(last);
+      expect(Selectors.totalPages(<any>{ data: { present: { page: { last } } } })).to.eq(last);
     });
   });
 
