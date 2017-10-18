@@ -10,6 +10,22 @@ namespace Adapter {
     ({
       data: <any>{
         present: {
+          fakenews: {
+            results: [
+              {
+                sku: '2470734',
+                quantity: 1
+              },
+              {
+                sku: '1652791',
+                quantity: 1
+              },
+              {
+                sku: '1658063',
+                quantity: 1
+              }
+            ]
+          },
           area: Adapter.extractArea(config, AreaReducer.DEFAULT_AREA),
           autocomplete: {
             suggestions: [],
