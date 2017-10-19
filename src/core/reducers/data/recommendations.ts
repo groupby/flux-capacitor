@@ -35,3 +35,9 @@ export const updatePastPurchases = (state: State, { payload }: Actions.ReceivePa
       products: payload
     }
   });
+
+export const updateQueryPastPurchases = (state: State, { payload }: Actions.ReceiveQueryPastPurchases) =>
+({
+  ...state,
+  queryPastPurchases: payload
+});

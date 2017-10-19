@@ -588,6 +588,11 @@ namespace ActionCreators {
     return createAction(Actions.RECEIVE_NAVIGATION_SORT, navigations);
   }
 
+  // wip fix types
+  export function receiveQueryPastPurchases(products: any[]) {
+    return createAction(Actions.RECEIVE_QUERY_PAST_PURCHASES, products);
+  }
+
   // ui action creators
   /**
    * Adds state for a given tag to the store.
