@@ -10,22 +10,6 @@ namespace Adapter {
     ({
       data: <any>{
         present: {
-          fakenews: {
-            results: [
-              {
-                sku: '2470734',
-                quantity: 1
-              },
-              {
-                sku: '1652791',
-                quantity: 1
-              },
-              {
-                sku: '1658063',
-                quantity: 1
-              }
-            ]
-          },
           area: Adapter.extractArea(config, AreaReducer.DEFAULT_AREA),
           autocomplete: {
             suggestions: [],
@@ -34,7 +18,25 @@ namespace Adapter {
             category: {
               field: Adapter.extractSaytCategoryField(config),
               values: []
-            }
+            },
+          },
+          recommendations: {
+            suggested: { products: [] },
+            pastPurchases: { products: [] },
+            queryPastPurchases: [
+              {
+              sku: '2470734',
+              quantity: 1
+            },
+              {
+              sku: '1652791',
+              quantity: 1
+            },
+              {
+              sku: '1658063',
+              quantity: 1
+            },
+            ],
           },
           fields: Adapter.extractFields(config),
           collections: Adapter.extractCollections(config, CollectionsReducer.DEFAULT_COLLECTION),

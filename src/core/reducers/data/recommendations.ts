@@ -10,7 +10,8 @@ export const DEFAULTS: State = {
   },
   pastPurchases: {
     products: []
-  }
+  },
+  queryPastPurchases: []
 };
 
 export default function updateRecommendations(state: State = DEFAULTS, action: Action): State {
