@@ -212,7 +212,7 @@ namespace Store {
     pastPurchases: {
       products: Recommendations.PastPurchase[];
     };
-    queryPastPurchases: Recommendations.PastPurchase[];
+    queryPastPurchases: Product[];
   }
 
   export type AvailableNavigations = Indexed<Navigation> & {
