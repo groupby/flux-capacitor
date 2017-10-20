@@ -115,6 +115,11 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const productCount = 0;
         const productSuggestions = { productCount };
         const config = { customerId, recommendations: { productSuggestions } };
+<<<<<<< HEAD
+=======
+        const flux: any = { config, store: { getState: () => 1 } };
+        stub(Selectors, 'pastPurchases').returns([]);
+>>>>>>> Add tests
 
         const task = Tasks.fetchProducts(<any>{}, <any>{ payload: {} });
 
@@ -176,6 +181,11 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const productCount = 0;
         const pastPurchases = { productCount };
         const config = { customerId, recommendations: { pastPurchases } };
+<<<<<<< HEAD
+=======
+        const flux: any = { config, store: { getState: () => 1 } };
+        stub(Selectors, 'pastPurchases').returns([]);
+>>>>>>> Add tests
 
         const task = Tasks.fetchPastPurchases(<any>{}, <any>{ payload: {} });
 

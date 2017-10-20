@@ -1,7 +1,8 @@
 import Actions from '../../actions';
 import Store from '../../store';
 
-export type Action = Actions.ReceiveRecommendationsProducts | Actions.ReceivePastPurchases;
+export type Action = Actions.ReceiveRecommendationsProducts | Actions.ReceivePastPurchases |
+  Actions.ReceiveQueryPastPurchases;
 export type State = Store.Recommendations;
 
 export const DEFAULTS: State = {
@@ -18,6 +19,7 @@ export default function updateRecommendations(state: State = DEFAULTS, action: A
   switch (action.type) {
     case Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS: return updateProducts(state, action);
     case Actions.RECEIVE_PAST_PURCHASES: return updatePastPurchases(state, action);
+    case Actions.RECEIVE_QUERY_PAST_PURCHASES: return updateQueryPastPurchases(state, action);
     default: return state;
   }
 }

@@ -43,6 +43,11 @@ suite('Configuration Adapter', ({ expect, stub }) => {
                 }
               }
             },
+            recommendations: {
+              suggested: { products: [] },
+              pastPurchases: { products: [] },
+              queryPastPurchases: [],
+            },
             sorts: {
               selected: 0,
               items: [sort]
@@ -104,6 +109,11 @@ suite('Configuration Adapter', ({ expect, stub }) => {
               }
             },
             fields,
+            recommendations: {
+              suggested: { products: [] },
+              pastPurchases: { products: [] },
+              queryPastPurchases: [],
+            },
             collections: {
               selected: collection.default,
               allIds: collection.options,

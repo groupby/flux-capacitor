@@ -140,6 +140,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
     describe('fetchPastPurchases()', () => {
       it('should return an action', () => {
+        expectAction(ActionCreators.fetchPastPurchases('query'), Actions.FETCH_PAST_PURCHASES, 'query');
+      });
+
+      it('should return an action when query is null', () => {
         expectAction(ActionCreators.fetchPastPurchases(), Actions.FETCH_PAST_PURCHASES, null);
       });
     });
@@ -833,6 +837,15 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const products = [{ sku: '59384', quantity: 3 }, { sku: '239', quantity: 1 }];
 
         expectAction(ActionCreators.receivePastPurchases(products), Actions.RECEIVE_PAST_PURCHASES, products);
+      });
+    });
+
+    describe('receiveQueryPastPurchases()', () => {
+      it('should return an action', () => {
+        const products = [{ sku: '59384', quantity: 3 }, { sku: '239', quantity: 1 }];
+
+        // tslint:disable-next-line max-line-length
+        expectAction(ActionCreators.receiveQueryPastPurchases(products), Actions.RECEIVE_QUERY_PAST_PURCHASES, products);
       });
     });
 
