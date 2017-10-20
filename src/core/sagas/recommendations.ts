@@ -71,11 +71,13 @@ export namespace Tasks {
 
         yield effects.put(flux.actions.receivePastPurchases(result.result));
       }
-      return [];
+      // TODO: don't use fake data
+      return Selectors.pastPurchases(flux.store.getState());
     } catch (e) {
       return effects.put(flux.actions.receivePastPurchases(e));
     }
   }
+
 }
 
 export default (flux: FluxCapacitor) => function* recommendationsSaga() {

@@ -225,7 +225,6 @@ namespace Configuration {
     productSuggestions: Configuration.Recommendations.ProductSuggestions;
     iNav: Configuration.Recommendations.INav;
     pastPurchases: Configuration.Recommendations.PastPurchases;
-    queryPastPurchases: any[];
   }
 
   export namespace Recommendations {
