@@ -63,16 +63,19 @@ export namespace Tasks {
         const url = `http://${config.customerId}.groupbycloud.com/orders/public/skus/popular`;
         // TODO: change to be the real/right request
         const response = yield effects.call(fetch, url, Adapter.buildBody(<any>{
-          size: productCount,
-          query: payload && undefined
+          cartType: 'online',
+          // Pagination stuff
+          skip: 0,
+          pageSize: productCount,
+          // Slide 9 of Past Purchase Epic? May be for skus only though
+          keyword: payload && undefined
         }));
         const result = yield response.json();
         // TODO: modify data so it's in the right form?
 
         yield effects.put(flux.actions.receivePastPurchases(result.result));
       }
-      // TODO: don't use fake data
-      return Selectors.pastPurchases(flux.store.getState());
+      return [];
     } catch (e) {
       return effects.put(flux.actions.receivePastPurchases(e));
     }
