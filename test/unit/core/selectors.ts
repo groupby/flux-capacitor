@@ -482,6 +482,24 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
+  describe('pastPurchases()', () => {
+    it('should return pastPurchases', () => {
+      const pastPurchases = [{ a: 1}];
+      Selectors.fakePastPurchases = <any> pastPurchases;
+
+      expect(Selectors.pastPurchases(<any>{ })).to.eql(pastPurchases);
+    });
+  });
+
+  describe('QueryPastPurchases()', () => {
+    it('should return QueryPastPurchases', () => {
+      const queryPastPurchases = [{ a: 1}];
+      Selectors.fakeQueryPastPurchases = <any> queryPastPurchases;
+
+      expect(Selectors.queryPastPurchases(<any>{ })).to.eql(queryPastPurchases);
+    });
+  });
+
   describe('uiTagName()', () => {
     it('should return ui tagName state', () => {
       const tagName = 'gb-navigation';
