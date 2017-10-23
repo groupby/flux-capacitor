@@ -484,19 +484,19 @@ suite('selectors', ({ expect, stub }) => {
 
   describe('pastPurchases()', () => {
     it('should return pastPurchases', () => {
-      const pastPurchases = [{ a: 1}];
-      Selectors.fakePastPurchases = <any> pastPurchases;
+      const pastPurchases = { products: [{ a: 1 }]};
+      const state = { data: { present: { recommendations: { pastPurchases } } } };
 
-      expect(Selectors.pastPurchases(<any>{ })).to.eql(pastPurchases);
+      expect(Selectors.pastPurchases(<any>state)).to.eql([{ a: 1 }]);
     });
   });
 
   describe('QueryPastPurchases()', () => {
     it('should return QueryPastPurchases', () => {
-      const queryPastPurchases = [{ a: 1}];
-      Selectors.fakeQueryPastPurchases = <any> queryPastPurchases;
+      const queryPastPurchases = [{ a: 1 }];
+      const state = { data: { present: { recommendations: { queryPastPurchases } } } };
 
-      expect(Selectors.queryPastPurchases(<any>{ })).to.eql(queryPastPurchases);
+      expect(Selectors.queryPastPurchases(<any>state)).to.eql([{ a: 1 }]);
     });
   });
 

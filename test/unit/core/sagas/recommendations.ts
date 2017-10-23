@@ -149,13 +149,15 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const receivePastPurchasesAction: any = { a: 'b' };
         const receivePastPurchases = spy(() => receivePastPurchasesAction);
         const flux: any = { config, actions: { receivePastPurchases } };
-        const url = `http://${customerId}.groupbycloud.com/orders/public/skus/popular`;
+        const url = `http://${customerId}.groupbycloud.com/orders/public/_search`;
 
         const fetch = stub(utils, 'fetch');
         const request = {
           method: 'POST',
           body: JSON.stringify({
-            size: productCount
+            cartType: 'online',
+            skip: 0,
+            pageSize: productCount,
           })
         };
         const promise = Promise.resolve();
