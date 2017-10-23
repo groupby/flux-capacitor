@@ -144,8 +144,8 @@ namespace Adapter {
     };
   };
 
-  export const extractProducts = (results: Results) =>
-    results.records.map(Adapter.extractProduct);
+  export const extractProducts = (products: any) =>
+    products.map(Adapter.extractProduct);
 
   export const extractProduct = ({ allMeta }) => allMeta;
 

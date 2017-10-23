@@ -397,7 +397,7 @@ namespace ActionCreators {
         return [
           receiveProductsAction,
           ActionCreators.receiveQuery(SearchAdapter.extractQuery(res)),
-          ActionCreators.receiveProductRecords(SearchAdapter.extractProducts(res)),
+          ActionCreators.receiveProductRecords(SearchAdapter.extractProducts(res.records)),
           ActionCreators.receiveNavigations(SearchAdapter.combineNavigations(res)),
           ActionCreators.receiveRecordCount(recordCount),
           ActionCreators.receiveCollectionCount({
@@ -512,7 +512,7 @@ namespace ActionCreators {
    * @return {Actions.ReceiveMoreProducts}          - Action with products.
    */
   export function receiveMoreProducts(products: Store.Product[]): Actions.ReceiveMoreProducts {
-    return createAction(Actions.RECEIVE_MORE_PRODUCTS, products);
+    return createAction(Actions.RECEIVE_MORE_PRODUCTS, SearchAdapter.extractProducts(products));
   }
 
   /**
@@ -525,7 +525,7 @@ namespace ActionCreators {
 
     return handleError(receiveProductsAction, () => [
       receiveProductsAction,
-      ActionCreators.receiveAutocompleteProductRecords(SearchAdapter.extractProducts(res)),
+      ActionCreators.receiveAutocompleteProductRecords(SearchAdapter.extractProducts(res.records)),
       ActionCreators.receiveAutocompleteTemplate(SearchAdapter.extractTemplate(res.template)),
     ]);
   }
