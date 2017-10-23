@@ -491,6 +491,15 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
+  describe('orderHistory()', () => {
+    it('should return orderHistory', () => {
+      const orderHistory = [{ a: 1 }];
+      const state = { data: { present: { recommendations: { orderHistory } } } };
+
+      expect(Selectors.orderHistory(<any>state)).to.eql([{ a: 1 }]);
+    });
+  });
+
   describe('QueryPastPurchases()', () => {
     it('should return QueryPastPurchases', () => {
       const queryPastPurchases = [{ a: 1 }];

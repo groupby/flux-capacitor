@@ -106,6 +106,10 @@ namespace ActionCreators {
     return createAction(Actions.FETCH_PAST_PURCHASES, query);
   }
 
+  export function fetchOrderHistory() {
+    return createAction(Actions.FETCH_ORDER_HISTORY, null);
+  }
+
   // request action creators
   /**
    * Updates the search with given parameters.
