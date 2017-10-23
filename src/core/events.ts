@@ -168,6 +168,12 @@ namespace Events {
    */
   export const PAST_PURCHASES_UPDATED = 'past_purchases_updated';
 
+  /**
+   * Triggered when order history is updated
+   * Returns the order history products array
+   */
+  export const ORDER_HISTORY_UPDATED = 'order_history_updated';
+
   // error events
   /**
    * Triggered when a bridge error occurs.

@@ -60,19 +60,14 @@ export namespace Tasks {
       const config = yield effects.select(Selectors.config);
       const productCount = config.recommendations.pastPurchases.productCount;
       if (productCount > 0) {
-        const url = `http://${config.customerId}.groupbycloud.com/orders/public/skus/popular`;
+        const url = `http://${config.customerId}.groupbycloud.com/orders/public/skus/_search`;
         // TODO: change to be the real/right request
         const response = yield effects.call(fetch, url, Adapter.buildBody(<any>{
-          cartType: 'online',
-          // Pagination stuff
-          skip: 0,
-          pageSize: productCount,
-          // Slide 9 of Past Purchase Epic? May be for skus only though
+          // slide 9 of Past Purchase Epic?
           keyword: payload && undefined
         }));
         const result = yield response.json();
         // TODO: modify data so it's in the right form?
-
         yield effects.put(flux.actions.receivePastPurchases(result.result));
       }
       return [];
@@ -81,9 +76,29 @@ export namespace Tasks {
     }
   }
 
+  export function* fetchOrderHistory(flux: FluxCapacitor, action: Actions.FetchOrderHistory) {
+    try {
+      const url = `http://${flux.config.customerId}.groupbycloud.com/orders/public/_search`;
+      const response = yield effects.call(fetch, url, Adapter.buildBody(<any>{
+        // slide 18 of Past Purchase Epic?
+        cartType: 'online',
+        // pagination stuff
+        skip: 0,
+        pageSize: 100,
+      }));
+      const result = yield response.json();
+      // TODO: modify data so it's in the right form?
+      yield effects.put(flux.actions.receiveOrderHistory(result.result[0].items));
+
+      return [];
+    } catch (e) {
+      return effects.put(flux.actions.receiveOrderHistory(e));
+    }
+  }
 }
 
 export default (flux: FluxCapacitor) => function* recommendationsSaga() {
   yield effects.takeLatest(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, Tasks.fetchProducts, flux);
   yield effects.takeLatest(Actions.FETCH_PAST_PURCHASES, Tasks.fetchPastPurchases, flux);
+  yield effects.takeLatest(Actions.FETCH_ORDER_HISTORY, Tasks.fetchOrderHistory, flux);
 };

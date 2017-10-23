@@ -24,6 +24,7 @@ namespace Adapter {
             suggested: { products: [] },
             pastPurchases: { products: []},
             queryPastPurchases: [],
+            orderHistory: []
           },
           fields: Adapter.extractFields(config),
           collections: Adapter.extractCollections(config, CollectionsReducer.DEFAULT_COLLECTION),

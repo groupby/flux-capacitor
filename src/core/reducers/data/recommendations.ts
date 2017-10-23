@@ -2,7 +2,7 @@ import Actions from '../../actions';
 import Store from '../../store';
 
 export type Action = Actions.ReceiveRecommendationsProducts | Actions.ReceivePastPurchases |
-  Actions.ReceiveQueryPastPurchases;
+  Actions.ReceiveQueryPastPurchases | Actions.ReceiveOrderHistory;
 export type State = Store.Recommendations;
 
 export const DEFAULTS: State = {
@@ -12,7 +12,8 @@ export const DEFAULTS: State = {
   pastPurchases: {
     products: []
   },
-  queryPastPurchases: []
+  queryPastPurchases: [],
+  orderHistory: []
 };
 
 export default function updateRecommendations(state: State = DEFAULTS, action: Action): State {
@@ -20,6 +21,7 @@ export default function updateRecommendations(state: State = DEFAULTS, action: A
     case Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS: return updateProducts(state, action);
     case Actions.RECEIVE_PAST_PURCHASES: return updatePastPurchases(state, action);
     case Actions.RECEIVE_QUERY_PAST_PURCHASES: return updateQueryPastPurchases(state, action);
+    case Actions.RECEIVE_ORDER_HISTORY: return updateOrderHistory(state, action);
     default: return state;
   }
 }
@@ -42,4 +44,10 @@ export const updateQueryPastPurchases = (state: State, { payload }: Actions.Rece
 ({
   ...state,
   queryPastPurchases: payload
+});
+
+export const updateOrderHistory = (state: State, { payload }: Actions.ReceiveOrderHistory) =>
+({
+  ...state,
+  orderHistory: payload
 });

@@ -138,7 +138,8 @@ namespace Observer {
 
           recommendations: {
             products: emit(Events.RECOMMENDATIONS_PRODUCTS_UPDATED),
-            pastPurchases: emit(Events.PAST_PURCHASES_UPDATED)
+            pastPurchases: emit(Events.PAST_PURCHASES_UPDATED),
+            orderHistory: emit(Events.ORDER_HISTORY_UPDATED)
           },
 
           recordCount: emit(Events.RECORD_COUNT_UPDATED),
