@@ -222,6 +222,7 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
       };
       const state: any = { d: 4 };
       stub(Selectors,'config').returns(config);
+
       const added = RecommendationsAdapter.addLocationToRequest(request, state);
 
       expect(added).to.eql(returned);
