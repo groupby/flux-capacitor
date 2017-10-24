@@ -625,7 +625,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         expect(receivePage).to.be.calledWith(page);
         expect(extractRecordCount).to.be.calledWith(results);
         expect(extractQuery).to.be.calledWith(results);
-        expect(extractProducts).to.be.calledWith(results);
+        expect(extractProducts).to.be.calledWith(results.records);
         expect(combineNavigations).to.be.calledWith(results);
         expect(selectCollection).to.be.calledWith(state);
         expect(extractPage).to.be.calledWith(state);
@@ -748,9 +748,11 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
     describe('receiveMoreProducts()', () => {
       it('should return an action', () => {
-        const products: any[] = ['a', 'b'];
+        const initialProducts: any[] = ['a', 'b'];
+        const products = ['c', 'd'];
+        const extractProducts = stub(SearchAdapter, 'extractProducts').returns(products);
 
-        expectAction(ActionCreators.receiveMoreProducts(products), Actions.RECEIVE_MORE_PRODUCTS, products);
+        expectAction(ActionCreators.receiveMoreProducts(initialProducts), Actions.RECEIVE_MORE_PRODUCTS, products);
       });
     });
 

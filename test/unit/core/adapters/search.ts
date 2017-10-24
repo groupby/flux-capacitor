@@ -348,7 +348,7 @@ suite('Search Adapter', ({ expect, stub }) => {
         ]
       };
 
-      expect(Adapter.extractProducts(results)).to.eql([allMeta1, allMeta2, allMeta3]);
+      expect(Adapter.extractProducts(results.records)).to.eql([allMeta1, allMeta2, allMeta3]);
     });
   });
 
