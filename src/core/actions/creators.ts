@@ -511,8 +511,14 @@ namespace ActionCreators {
    * @param  {Store.Product[]}             products - The products to add to the state.
    * @return {Actions.ReceiveMoreProducts}          - Action with products.
    */
-  export function receiveMoreProducts(products: Store.Product[]): Actions.ReceiveMoreProducts {
-    return createAction(Actions.RECEIVE_MORE_PRODUCTS, SearchAdapter.extractProducts(products));
+  export function receiveMoreProducts(products: Store.Product[]) {
+    return (state: Store.State): Actions.ReceiveMoreProductsAndPage => [
+      createAction(Actions.RECEIVE_MORE_PRODUCTS, SearchAdapter.extractProducts(products)),
+      ActionCreators.receivePage({
+        ...SearchAdapter.extractPage(state, Selectors.recordCount(state)),
+        current: Selectors.page(state) + 1,
+      }),
+    ];
   }
 
   /**

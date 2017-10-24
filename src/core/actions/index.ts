@@ -72,6 +72,7 @@ namespace Actions {
   export type ResetPageAndAddRefinement = [Actions.ResetPage, Actions.AddRefinement];
   export type CheckAndResetRefinements = ResetPageAndResetRefinements | Action<any>[];
   export type ResetPageAndUpdateQuery = [Actions.ResetPage, Actions.UpdateQuery];
+  export type ReceiveMoreProductsAndPage = [Actions.ReceiveMoreProducts, Actions.ReceivePage];
 
   // fetch actions
   export const FETCH_MORE_REFINEMENTS = 'FETCH_MORE_REFINEMENTS';
@@ -238,6 +239,7 @@ namespace Actions {
       last: number;
       from: number;
       to: number;
+      current?: number;
     }
   }
 }

@@ -92,9 +92,9 @@ export namespace Tasks {
       );
 
       flux.emit(Events.BEACON_SEARCH, id);
-      yield effects.put(flux.actions.receiveMoreProducts(products));
+      yield effects.put(<any>flux.actions.receiveMoreProducts(products));
     } catch (e) {
-      yield effects.put(flux.actions.receiveMoreProducts(e));
+      yield effects.put(<any>flux.actions.receiveMoreProducts(e));
     }
   }
 }
