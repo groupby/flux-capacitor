@@ -29,9 +29,7 @@ namespace Adapter {
           }
         }
       },
-      session: {
-        config
-      }
+      session: { config }
     });
 
   export const extractArea = (config: Configuration, defaultValue?: string) =>

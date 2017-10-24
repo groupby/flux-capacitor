@@ -29,7 +29,7 @@ export namespace Tasks {
       const suggestionMode = Configuration.RECOMMENDATION_MODES[recommendationsConfig.suggestionMode || 'popular'];
       // tslint:disable-next-line max-line-length
       const trendingUrl = RecommendationsAdapter.buildUrl(config.customerId, 'searches', suggestionMode);
-      const trendingBody: any = {
+      const trendingBody = {
         size: recommendationsConfig.suggestionCount,
         matchPartial: {
           and: [{

@@ -66,7 +66,7 @@ namespace Recommendations {
   };
 
   // tslint:disable-next-line max-line-length
-  export const addLocationToRequest = (request, state): RecommendationsBody | RecommendationsRequest => {
+  export const addLocationToRequest = (request: RecommendationsRequest, state: Store.State): RecommendationsBody | RecommendationsRequest => {
     const locationConfig = ConfigurationAdapter.extractLocation(Selectors.config(state));
     const location = Selectors.location(state);
     if (locationConfig && location) {
@@ -118,6 +118,7 @@ namespace Recommendations {
     size?: number;
     window?: string;
     matchPartial?: object;
+    matchExact?: object;
     type?: string;
     target?: string;
   }
