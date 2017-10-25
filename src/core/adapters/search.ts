@@ -128,9 +128,9 @@ namespace Adapter {
   export const extractRecordCount = (results: Results) =>
     Math.min(results.totalRecordCount, MAX_RECORDS);
 
-  export const extractPage = (state: Store.State, totalRecords: number): Actions.Payload.Page => {
+  export const extractPage = (state: Store.State, totalRecords: number, current?: number): Actions.Payload.Page => {
     const pageSize = Selectors.pageSize(state);
-    const currentPage = Selectors.page(state);
+    const currentPage = current || Selectors.page(state);
     const last = Page.finalPage(pageSize, totalRecords);
     const from = Page.fromResult(currentPage, pageSize);
     const to = Page.toResult(currentPage, pageSize, totalRecords);
@@ -141,6 +141,7 @@ namespace Adapter {
       next: Page.nextPage(currentPage, last),
       previous: Page.previousPage(currentPage),
       to,
+      current: currentPage,
     };
   };
 

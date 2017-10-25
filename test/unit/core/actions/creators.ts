@@ -747,12 +747,20 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
 
     describe('receiveMoreProducts()', () => {
-      it('should return an action', () => {
-        const initialProducts: any[] = ['a', 'b'];
-        const products = ['c', 'd'];
-        const extractProducts = stub(SearchAdapter, 'extractProducts').returns(products);
-
-        expectAction(ActionCreators.receiveMoreProducts(initialProducts), Actions.RECEIVE_MORE_PRODUCTS, products);
+      it('should return a batch action', () => {
+        // const initialProducts: any[] = ['a', 'b'];
+        // const state: any = { g: 'h' };
+        // const products = ['c', 'd'];
+        // const page = { to: 30, from: 20, last: 10, next:   }
+        // const extractProducts = stub(SearchAdapter, 'extractProducts').returns(products);
+        // const recordCount = stub(Selectors, 'recordCount').returns(300);
+        // const currentPage = stub(Selectors, 'page').returns(1);
+        // const extractedProducts = stub(SearchAdapter, 'extractedProducts').returns(products);
+        // const extractedPage = stub(SearchAdapter, 'extractPage').returns()
+        // const batchAction = ActionCreators.receiveMoreProducts(initialProducts)(state);
+        //
+        // // expectAction(ActionCreators.receiveMoreProducts(initialProducts), Actions.RECEIVE_MORE_PRODUCTS, products);
+        // expect(batchAction)
       });
     });
 

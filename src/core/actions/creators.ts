@@ -512,13 +512,12 @@ namespace ActionCreators {
    * @return {Actions.ReceiveMoreProducts}          - Action with products.
    */
   export function receiveMoreProducts(products: Store.Product[]) {
-    return (state: Store.State): Actions.ReceiveMoreProductsAndPage => [
-      createAction(Actions.RECEIVE_MORE_PRODUCTS, SearchAdapter.extractProducts(products)),
-      ActionCreators.receivePage({
-        ...SearchAdapter.extractPage(state, Selectors.recordCount(state)),
-        current: Selectors.page(state) + 1,
-      }),
-    ];
+    // return (state: Store.State): Actions.ReceiveMoreProductsAndPage => [
+    //   createAction(Actions.RECEIVE_MORE_PRODUCTS, SearchAdapter.extractProducts(products)),
+    //   // tslint:disable-next-line max-line-length
+    //   ActionCreators.receivePage(SearchAdapter.extractPage(state, Selectors.recordCount(state), Selectors.page(state) + 1)),
+    // ];
+    return createAction(Actions.RECEIVE_MORE_PRODUCTS, SearchAdapter.extractProducts(products));
   }
 
   /**
