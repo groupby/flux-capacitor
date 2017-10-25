@@ -99,6 +99,6 @@ export namespace Tasks {
 
 export default (flux: FluxCapacitor) => function* recommendationsSaga() {
   yield effects.takeLatest(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, Tasks.fetchProducts, flux);
-  yield effects.takeLatest(Actions.FETCH_PAST_PURCHASES, Tasks.fetchPastPurchases, flux);
-  yield effects.takeLatest(Actions.FETCH_ORDER_HISTORY, Tasks.fetchOrderHistory, flux);
+  // yield effects.takeLatest(Actions.FETCH_PAST_PURCHASES, Tasks.fetchPastPurchases, flux);
+  // yield effects.takeLatest(Actions.FETCH_ORDER_HISTORY, Tasks.fetchOrderHistory, flux);
 };
