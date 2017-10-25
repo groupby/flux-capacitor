@@ -582,22 +582,11 @@ namespace ActionCreators {
     return createAction(Actions.RECEIVE_PAST_PURCHASES, products);
   }
 
-<<<<<<< HEAD
   /**
    * The navigation sort to receive and update navigation sort state with.
    * @param  {Store.Recommendations.Navigation[]} navigations - The navigations to be sorted and order of sort.
    * @return {Actions.ReceiveNavigationSort}                  - Action with navigations.
    */
-=======
-  export function receiveQueryPastPurchases(products: any[]) {
-    return createAction(Actions.RECEIVE_QUERY_PAST_PURCHASES, products);
-  }
-
-  export function receiveOrderHistory (products: Store.Recommendations.OrderHistoryProduct[]) {
-    return createAction(Actions.RECEIVE_ORDER_HISTORY, products);
-  }
-
->>>>>>> Add order history stuff
   // tslint:disable-next-line max-line-length
   export function receiveNavigationSort(navigations: Store.Recommendations.Navigation[]): Actions.ReceiveNavigationSort {
     return createAction(Actions.RECEIVE_NAVIGATION_SORT, navigations);
@@ -608,6 +597,9 @@ namespace ActionCreators {
     return createAction(Actions.RECEIVE_QUERY_PAST_PURCHASES, products);
   }
 
+  export function receiveOrderHistory (products: Store.Recommendations.OrderHistoryProduct[]) {
+    return createAction(Actions.RECEIVE_ORDER_HISTORY, products);
+  }
   // ui action creators
   /**
    * Adds state for a given tag to the store.
