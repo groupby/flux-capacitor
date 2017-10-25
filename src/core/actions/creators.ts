@@ -404,7 +404,7 @@ namespace ActionCreators {
             collection: Selectors.collection(state),
             count: recordCount
           }),
-          ActionCreators.receivePage(SearchAdapter.extractPage(state, recordCount)),
+          ActionCreators.receivePage(recordCount)(state),
           ActionCreators.receiveTemplate(SearchAdapter.extractTemplate(res.template)),
         ];
       });
@@ -446,8 +446,11 @@ namespace ActionCreators {
    * @param  {Actions.Payload.Page} page - The page object state will update to.
    * @return {Actions.ReceivePage}       - Action with page.
    */
-  export function receivePage(page: Actions.Payload.Page): Actions.ReceivePage {
-    return createAction(Actions.RECEIVE_PAGE, page);
+  export function receivePage(recordCount: number, current?: number) {
+    return (state: Store.State): Actions.ReceivePage => {
+      // console.log('extractedPage: ', SearchAdapter.extractPage(state, recordCount, current));
+      return createAction(Actions.RECEIVE_PAGE, SearchAdapter.extractPage(state, recordCount, current));
+    };
   }
 
   /**
