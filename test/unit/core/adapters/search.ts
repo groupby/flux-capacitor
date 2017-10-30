@@ -335,28 +335,48 @@ suite('Search Adapter', ({ expect, stub }) => {
     });
   });
 
+  describe('extractdata()', () => {
+    it('should return data', () => {
+      const prod1 = { a: 'b' };
+      const prod2 = { c: 'd' };
+      const prod3 = { e: 'f' };
+      const products: any = [
+        { id: 2, meta: {}, data: prod1 },
+        { id: 3, meta: {}, data: prod2 },
+        { id: 4, meta: {}, data: prod3 },
+      ];
+
+      expect(Adapter.extractData(products)).to.eql([prod1, prod2, prod3]);
+    });
+  });
+
   describe('extractProducts()', () => {
-    it('should return the products remapped using extractProduct()', () => {
+    it('should return the products remapped, with data, meta, and id', () => {
+      const purchase1 = 'idk';
+      const purchase2 = 'another one';
+      const purchases = { [purchase1]: {}, [purchase2]: {} };
       const allMeta1 = { a: 'b' };
-      const allMeta2 = { c: 'd' };
-      const allMeta3 = { e: 'f' };
+      const allMeta2 = { c: 'd', productId: purchase1 };
+      const allMeta3 = { e: 'f', productId: purchase2 };
+      const state: any = { session: { config: { recommendations: { idField: 'productId' } } } };
       const results: any = {
         records: [
           { allMeta: allMeta1 },
           { allMeta: allMeta2 },
           { allMeta: allMeta3 }
-        ]
+        ],
+        pageInfo: {
+          recordStart: 1,
+        }
       };
+      const extracted = [
+        { data: allMeta1, id: 1, meta: {} },
+        { data: allMeta2, id: 2, meta: { pastPurchase: true } },
+        { data: allMeta3, id: 3, meta: { pastPurchase: true } }
+      ];
+      const pastPurchases = stub(Selectors, 'pastPurchaseProductsBySku').returns(purchases);
 
-      expect(Adapter.extractProducts(results)).to.eql([allMeta1, allMeta2, allMeta3]);
-    });
-  });
-
-  describe('extractProduct()', () => {
-    it('should return the allMeta property', () => {
-      const allMeta = { a: 'b' };
-
-      expect(Adapter.extractProduct({ allMeta })).to.eq(allMeta);
+      expect(Adapter.extractProducts(state, results)).to.eql(extracted);
     });
   });
 

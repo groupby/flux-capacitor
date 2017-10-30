@@ -150,17 +150,17 @@ namespace Adapter {
   export const extractProducts = (state: Store.State, results: Results) => {
     const pastPurchases = Selectors.pastPurchaseProductsBySku(state);
     let startIndex = results.pageInfo.recordStart;
-    return results.records.map((record) => {
+    return results.records.map(({ allMeta }) => {
       const meta: any = {};
 
-      if (record[state.session.config.recommendations.idField] in pastPurchases) {
+      if (allMeta[state.session.config.recommendations.idField] in pastPurchases) {
         meta.pastPurchase = true;
       }
 
       return {
         meta,
         id: startIndex++,
-        data: record.allMeta,
+        data: allMeta,
       };
     });
   };
