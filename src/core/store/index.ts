@@ -254,8 +254,8 @@ namespace Store {
 
   export interface ProductWithMetadata {
     data: Product;
+    id: number; // record index
     meta: {
-      id: number; // record index
       pastPurchase?: boolean;
     };
   }

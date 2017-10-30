@@ -270,25 +270,23 @@ suite('selectors', ({ expect, stub }) => {
 
   describe('products()', () => {
     it('should return all products', () => {
-      const products = { a: 'b' };
+      const products = [{ data: { a: 'b' } }];
+      const extracted = [{ a: 'b' }];
 
-      expect(Selectors.products(<any>{ data: { present: { products } } })).to.eq(products);
+      expect(Selectors.products(<any>{ data: { present: { products } } })).to.eql(extracted);
     });
   });
 
   describe('productsWithMetadata()', () => {
-    it('should return products with pastPurchase metadata', () => {
-      const state: any = { a: 'b' };
-      const pastPurchaseProductsBySku = stub(Selectors, 'pastPurchaseProductsBySku').returns({ a: {}, c: {} });
-      const products = stub(Selectors, 'products').returns([{ id: 'a' }, { id: 'b' }, { id: 'c' }]);
-
-      expect(Selectors.productsWithMetadata(state, 'id')).to.eql([
+    it('should return products with metadata', () => {
+      const products = [
         { data: { id: 'a' }, meta: { pastPurchase: true } },
         { data: { id: 'b' }, meta: {} },
         { data: { id: 'c' }, meta: { pastPurchase: true } },
-      ]);
-      expect(pastPurchaseProductsBySku).to.be.calledWithExactly(state);
-      expect(products).to.be.calledWithExactly(state);
+      ];
+      const state: any = { a: 'b', data: { present: { products  } } };
+
+      expect(Selectors.productsWithMetadata(state)).to.eql(products);
     });
 
     it('should use provided id field', () => {
