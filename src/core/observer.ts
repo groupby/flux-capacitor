@@ -122,7 +122,10 @@ namespace Observer {
             (oldState: Store.Product[], newState: Store.Product[], path: string) => {
               const oldLength = oldState.length;
               if (oldLength < newState.length && oldState[0] === newState[0]) {
+                // TODO: Add appendProducts action
                 emitMoreProductsAdded(oldState, newState.slice(oldLength), path);
+              } else if (oldLength < newState.length && oldState[0] === newState[newState.length]) {
+                // TODO: Add prependProducts action
               } else {
                 emitProductsUpdated(oldState, newState, path);
               }

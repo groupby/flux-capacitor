@@ -40,8 +40,8 @@ namespace ActionCreators {
    * @param  {number}                    amount - Amount of more products to fetch.
    * @return {Actions.FetchMoreProducts}        - Action with amount.
    */
-  export function fetchMoreProducts(amount: number): Actions.FetchMoreProducts {
-    return createAction(Actions.FETCH_MORE_PRODUCTS, amount);
+  export function fetchMoreProducts(amount: number, forward: boolean = true): Actions.FetchMoreProducts {
+    return createAction(Actions.FETCH_MORE_PRODUCTS, { amount, forward });
   }
 
   /**
