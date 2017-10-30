@@ -113,23 +113,13 @@ namespace Selectors {
    * Returns the current products
    */
   export const products = (state: Store.State) =>
-    state.data.present.products;
+    Search.extractData(state.data.present.products);
 
   /**
    * Returns the current products extended with metadata
    */
-  export const productsWithMetadata = (state: Store.State, idField: string) => {
-    const pastPurchases = Selectors.pastPurchaseProductsBySku(state);
-    return Selectors.products(state).map((data) => {
-      const meta: any = {};
-
-      if (data[idField] in pastPurchases) {
-        meta.pastPurchase = true;
-      }
-
-      return { data, meta };
-    });
-  };
+  export const productsWithMetadata = (state: Store.State) =>
+    state.data.present.products;
 
   /**
    * Returns the current details object.
@@ -280,7 +270,7 @@ namespace Selectors {
    * Returns the current recommendations product suggestions.
    */
   export const recommendationsProducts = (state: Store.State) =>
-    state.data.present.recommendations.suggested.products;
+    Search.extractData(state.data.present.recommendations.suggested.products);
 
   /**
    * Returns the SKUs of previously purchased products.

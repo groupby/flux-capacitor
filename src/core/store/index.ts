@@ -51,7 +51,7 @@ namespace Store {
     query: Query; // mixed
 
     sorts: SelectableList<Sort>;
-    products: Product[]; // post
+    products: ProductWithMetadata[]; // post
     collections: Indexed.Selectable<Collection>; // mixed
     navigations: AvailableNavigations; // mixed
 
@@ -207,7 +207,7 @@ namespace Store {
 
   export interface Recommendations {
     suggested: {
-      products: Product[];
+      products: ProductWithMetadata[];
     };
     pastPurchases: {
       products: Recommendations.PastPurchase[];
@@ -255,6 +255,7 @@ namespace Store {
   export interface ProductWithMetadata {
     data: Product;
     meta: {
+      id: number; // record index
       pastPurchase?: boolean;
     };
   }
@@ -296,7 +297,7 @@ namespace Store {
     suggestions: Autocomplete.Suggestion[]; // post
     category: Autocomplete.Category; // static & post
     navigations: Autocomplete.Navigation[]; // post
-    products: Product[]; // post
+    products: ProductWithMetadata[]; // post
     template?: Template; // post
   }
 

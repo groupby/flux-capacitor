@@ -3,6 +3,7 @@ import * as effects from 'redux-saga/effects';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import RecommendationsAdapter from '../adapters/recommendations';
+import SearchAdapter from '../adapters/search';
 import Events from '../events';
 import Requests from '../requests';
 import Selectors from '../selectors';
@@ -13,28 +14,28 @@ import { Tasks as productDetailsTasks } from './product-details';
 export namespace Tasks {
   export function* fetchProducts(flux: FluxCapacitor, action: Actions.FetchProducts) {
     try {
-      let [products, navigations]: [Results, Store.Recommendations.Navigation[]] = yield effects.all([
+      let [results, navigations]: [Results, Store.Recommendations.Navigation[]] = yield effects.all([
         effects.call(fetchProductsRequest, flux, action),
         effects.call(fetchNavigations, flux, action)
       ]);
       const config = yield effects.select(Selectors.config);
 
-      if (products.redirect) {
-        yield effects.put(flux.actions.receiveRedirect(products.redirect));
+      if (results.redirect) {
+        yield effects.put(flux.actions.receiveRedirect(results.redirect));
       }
-      if (config.search.redirectSingleResult && products.totalRecordCount === 1) {
-        yield effects.call(productDetailsTasks.receiveDetailsProduct, flux, products.records[0]);
+      if (config.search.redirectSingleResult && results.totalRecordCount === 1) {
+        yield effects.call(productDetailsTasks.receiveDetailsProduct, flux, results.records[0]);
       } else {
-        flux.emit(Events.BEACON_SEARCH, products.id);
-        const actions: any[] = [flux.actions.receiveProducts(products)];
+        flux.emit(Events.BEACON_SEARCH, results.id);
+        const actions: any[] = [flux.actions.receiveProducts(results)];
         if (navigations && !(navigations instanceof Error)) {
           actions.unshift(flux.actions.receiveNavigationSort(navigations));
         } else {
           // if inav navigations is invalid then make it an empty array so it does not sort
           navigations = [];
         }
-        products.availableNavigation = RecommendationsAdapter.sortAndPinNavigations(
-          products.availableNavigation,
+        results.availableNavigation = RecommendationsAdapter.sortAndPinNavigations(
+          results.availableNavigation,
           navigations,
           config
         );
