@@ -75,7 +75,7 @@ namespace Observer {
                 }
                 if (oldState.products !== newState.products) {
                   // tslint:disable-next-line max-line-length
-                  emitProductsUpdated(oldState.products, SearchAdapter.extractData(newState.products), `${path}.products`);
+                  emitProductsUpdated(SearchAdapter.extractData(oldState.products), SearchAdapter.extractData(newState.products), `${path}.products`);
                 }
                 if (oldState.template !== newState.template) {
                   emitTemplateUpdated(oldState.template, newState.template, `${path}.template`);
@@ -126,7 +126,7 @@ namespace Observer {
               if (oldLength < newState.length && oldState[0] === newState[0]) {
                 emitMoreProductsAdded(oldState, newState.slice(oldLength), path);
               } else {
-                emitProductsUpdated(oldState, SearchAdapter.extractData(newState), path);
+                emitProductsUpdated(SearchAdapter.extractData(oldState), SearchAdapter.extractData(newState), path);
               }
             })(emit(Events.MORE_PRODUCTS_ADDED), emit(Events.PRODUCTS_UPDATED)),
 
@@ -140,7 +140,8 @@ namespace Observer {
 
           recommendations: {
             products: (oldState, newState, path) =>
-              emit(Events.RECOMMENDATIONS_PRODUCTS_UPDATED)(oldState, SearchAdapter.extractData(newState), path),
+              // tslint:disable-next-line max-line-length
+              emit(Events.RECOMMENDATIONS_PRODUCTS_UPDATED)(SearchAdapter.extractData(oldState), SearchAdapter.extractData(newState), path),
             pastPurchases: emit(Events.PAST_PURCHASES_UPDATED),
             orderHistory: emit(Events.ORDER_HISTORY_UPDATED)
           },
