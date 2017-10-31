@@ -512,7 +512,7 @@ namespace ActionCreators {
   /**
    * The more products to receive and update state with. Products will be added on
    * to the products array in the store.
-   * @param  {Store.Product[]}             products - The products to add to the state.
+   * @param  {Store.ProductWithMetadata[]}             products - The products to add to the state.
    * @return {Actions.ReceiveMoreProducts}          - Action with products.
    */
   export function receiveMoreProducts(products: Store.ProductWithMetadata[]): Actions.ReceiveMoreProducts {
@@ -538,7 +538,7 @@ namespace ActionCreators {
 
   /**
    * The autocomplete products to receive and update state with.
-   * @param  {Store.Product[]}                           products - The products to add to the
+   * @param  {Store.ProductWithMetadata[]}                           products - The products to add to the
    * autocomplete state.
    * @return {Actions.ReceiveAutocompleteProductRecords}          - Action with products.
    */
@@ -568,7 +568,7 @@ namespace ActionCreators {
 
   /**
    * The recommendations products to receive and update state with.
-   * @param  {Store.Product[]}                         products - The products to add to the recommendations state.
+   * @param  {Store.ProductWithMetadata[]}             products - The products to add to the recommendations state.
    * @return {Actions.ReceiveRecommendationsProducts}           - Action with products.
    */
   // tslint:disable-next-line max-line-length
