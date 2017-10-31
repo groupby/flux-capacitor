@@ -88,7 +88,7 @@ export namespace Tasks {
       const state: Store.State = yield effects.select();
       const config = yield effects.select(Selectors.config);
 
-      const { records: products, id } = yield effects.call(
+      const results = yield effects.call(
         [flux.clients.bridge, flux.clients.bridge.search],
         {
           ...Requests.search(state),
@@ -96,11 +96,12 @@ export namespace Tasks {
           skip: Selectors.products(state).length
         }
       );
+      console.log('results: ', results);
 
-      flux.emit(Events.BEACON_SEARCH, id);
-      yield effects.put(flux.actions.receiveMoreProducts(products));
+      flux.emit(Events.BEACON_SEARCH, results.id);
+      yield effects.put(<any>flux.actions.receiveMoreProducts(results));
     } catch (e) {
-      yield effects.put(flux.actions.receiveMoreProducts(e));
+      yield effects.put(<any>flux.actions.receiveMoreProducts(e));
     }
   }
 }

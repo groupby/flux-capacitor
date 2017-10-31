@@ -515,8 +515,10 @@ namespace ActionCreators {
    * @param  {Store.ProductWithMetadata[]}             products - The products to add to the state.
    * @return {Actions.ReceiveMoreProducts}          - Action with products.
    */
-  export function receiveMoreProducts(products: Store.ProductWithMetadata[]): Actions.ReceiveMoreProducts {
-    return createAction(Actions.RECEIVE_MORE_PRODUCTS, products);
+  export function receiveMoreProducts(res: Results) {
+    return (state: Store.State): Actions.ReceiveMoreProducts => {
+      return createAction(Actions.RECEIVE_MORE_PRODUCTS, SearchAdapter.extractProducts(state, res));
+    };
   }
 
   /**
