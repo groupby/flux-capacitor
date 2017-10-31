@@ -637,7 +637,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         expect(receivePage).to.be.calledWith(page);
         expect(extractRecordCount).to.be.calledWith(results);
         expect(extractQuery).to.be.calledWith(results);
-        expect(extractProducts).to.be.calledWith(results);
+        expect(extractProducts).to.be.calledWith(state, results);
         expect(combineNavigations).to.be.calledWith(results);
         expect(selectCollection).to.be.calledWith(state);
         expect(extractPage).to.be.calledWith(state);
@@ -779,7 +779,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const receiveAutocompleteProductRecords = stub(ActionCreators, 'receiveAutocompleteProductRecords').returns(receiveAutocompleteProductRecordsAction);
         const receiveAutocompleteTemplate = stub(ActionCreators, 'receiveAutocompleteTemplate').returns(receiveAutocompleteTemplateAction);
 
-        const batchAction = ActionCreators.receiveAutocompleteProducts(response);
+        const batchAction = ActionCreators.receiveAutocompleteProducts(response)(null);
 
         expect(createAction).to.be.calledWith(Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, response);
         expect(receiveAutocompleteProductRecords).to.be.calledWith(products);
@@ -796,7 +796,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const action = { a: 'b', error: true };
         createAction.returns(action);
 
-        const batchAction = ActionCreators.receiveAutocompleteProducts(results);
+        const batchAction = ActionCreators.receiveAutocompleteProducts(results)(null);
 
         expect(createAction).to.be.calledWith(Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, results);
         expect(batchAction).to.eql(action);

@@ -280,25 +280,13 @@ suite('selectors', ({ expect, stub }) => {
   describe('productsWithMetadata()', () => {
     it('should return products with metadata', () => {
       const products = [
-        { data: { id: 'a' }, meta: { pastPurchase: true } },
-        { data: { id: 'b' }, meta: {} },
-        { data: { id: 'c' }, meta: { pastPurchase: true } },
+        { data: { id: 'a' }, id: 1, meta: { pastPurchase: true } },
+        { data: { id: 'b' }, id: 2, meta: {} },
+        { data: { id: 'c' }, id: 3, meta: { pastPurchase: true } },
       ];
       const state: any = { a: 'b', data: { present: { products  } } };
 
       expect(Selectors.productsWithMetadata(state)).to.eql(products);
-    });
-
-    it('should use provided id field', () => {
-      const state: any = { a: 'b' };
-      stub(Selectors, 'pastPurchaseProductsBySku').returns({ a: {}, c: {} });
-      stub(Selectors, 'products').returns([{ sku: 'a' }, { sku: 'b' }, { sku: 'c' }]);
-
-      expect(Selectors.productsWithMetadata(state, 'sku')).to.eql([
-        { data: { sku: 'a' }, meta: { pastPurchase: true } },
-        { data: { sku: 'b' }, meta: {} },
-        { data: { sku: 'c' }, meta: { pastPurchase: true } },
-      ]);
     });
   });
 
@@ -451,10 +439,11 @@ suite('selectors', ({ expect, stub }) => {
   describe('recommendationsProducts()', () => {
     it('should return the currently recommended products', () => {
       const products = ['a', 'b', 'c'];
+      const givenProducts = [{ data: 'a' }, { data: 'b' }, { data: 'c' }];
 
       expect(Selectors.recommendationsProducts(<any>{
-        data: { present: { recommendations: { suggested: { products } } } }
-      })).to.eq(products);
+        data: { present: { recommendations: { suggested: { products: givenProducts } } } }
+      })).to.eql(products);
     });
   });
 
