@@ -14,28 +14,28 @@ import { Tasks as productDetailsTasks } from './product-details';
 export namespace Tasks {
   export function* fetchProducts(flux: FluxCapacitor, action: Actions.FetchProducts) {
     try {
-      let [results, navigations]: [Results, Store.Recommendations.Navigation[]] = yield effects.all([
+      let [result, navigations]: [Results, Store.Recommendations.Navigation[]] = yield effects.all([
         effects.call(fetchProductsRequest, flux, action),
         effects.call(fetchNavigations, flux, action)
       ]);
       const config = yield effects.select(Selectors.config);
 
-      if (results.redirect) {
-        yield effects.put(flux.actions.receiveRedirect(results.redirect));
+      if (result.redirect) {
+        yield effects.put(flux.actions.receiveRedirect(result.redirect));
       }
-      if (config.search.redirectSingleResult && results.totalRecordCount === 1) {
-        yield effects.call(productDetailsTasks.receiveDetailsProduct, flux, results.records[0]);
+      if (config.search.redirectSingleResult && result.totalRecordCount === 1) {
+        yield effects.call(productDetailsTasks.receiveDetailsProduct, flux, result.records[0]);
       } else {
-        flux.emit(Events.BEACON_SEARCH, results.id);
-        const actions: any[] = [flux.actions.receiveProducts(results)];
+        flux.emit(Events.BEACON_SEARCH, result.id);
+        const actions: any[] = [flux.actions.receiveProducts(result)];
         if (navigations && !(navigations instanceof Error)) {
           actions.unshift(flux.actions.receiveNavigationSort(navigations));
         } else {
           // if inav navigations is invalid then make it an empty array so it does not sort
           navigations = [];
         }
-        results.availableNavigation = RecommendationsAdapter.sortAndPinNavigations(
-          results.availableNavigation,
+        result.availableNavigation = RecommendationsAdapter.sortAndPinNavigations(
+          result.availableNavigation,
           navigations,
           config
         );
@@ -88,7 +88,7 @@ export namespace Tasks {
       const state: Store.State = yield effects.select();
       const config = yield effects.select(Selectors.config);
 
-      const results = yield effects.call(
+      const result = yield effects.call(
         [flux.clients.bridge, flux.clients.bridge.search],
         {
           ...Requests.search(state),
@@ -97,8 +97,8 @@ export namespace Tasks {
         }
       );
 
-      flux.emit(Events.BEACON_SEARCH, results.id);
-      yield effects.put(<any>flux.actions.receiveMoreProducts(results));
+      flux.emit(Events.BEACON_SEARCH, result.id);
+      yield effects.put(<any>flux.actions.receiveMoreProducts(result));
     } catch (e) {
       yield effects.put(<any>flux.actions.receiveMoreProducts(e));
     }

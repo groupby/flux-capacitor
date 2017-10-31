@@ -760,9 +760,12 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
     describe('receiveMoreProducts()', () => {
       it('should return an action', () => {
-        const products: any[] = ['a', 'b'];
+        const products: any = { a: 'b' };
+        const newProds = { c: 'd' };
+        const extractedProducts = stub(SearchAdapter, 'extractProducts').returns(newProds);
 
-        expectAction(ActionCreators.receiveMoreProducts(products), Actions.RECEIVE_MORE_PRODUCTS, products);
+        expectAction(ActionCreators.receiveMoreProducts(products)(null), Actions.RECEIVE_MORE_PRODUCTS, newProds);
+        expect(extractedProducts).to.be.calledWithExactly(null, products);
       });
     });
 
