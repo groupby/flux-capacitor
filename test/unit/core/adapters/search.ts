@@ -341,9 +341,9 @@ suite('Search Adapter', ({ expect, stub }) => {
       const prod2 = { c: 'd' };
       const prod3 = { e: 'f' };
       const products: any = [
-        { id: 2, meta: {}, data: prod1 },
-        { id: 3, meta: {}, data: prod2 },
-        { id: 4, meta: {}, data: prod3 },
+        { index: 2, meta: {}, data: prod1 },
+        { index: 3, meta: {}, data: prod2 },
+        { index: 4, meta: {}, data: prod3 },
       ];
 
       expect(Adapter.extractData(products)).to.eql([prod1, prod2, prod3]);
@@ -351,7 +351,7 @@ suite('Search Adapter', ({ expect, stub }) => {
   });
 
   describe('extractProducts()', () => {
-    it('should return the products remapped, with data, meta, and id', () => {
+    it('should return the products remapped, with data, meta, and index', () => {
       const purchase1 = 'idk';
       const purchase2 = 'another one';
       const purchases = { [purchase1]: {}, [purchase2]: {} };
@@ -370,9 +370,9 @@ suite('Search Adapter', ({ expect, stub }) => {
         }
       };
       const extracted = [
-        { data: allMeta1, id: 1, meta: {} },
-        { data: allMeta2, id: 2, meta: { pastPurchase: true } },
-        { data: allMeta3, id: 3, meta: { pastPurchase: true } }
+        { data: allMeta1, index: 1, meta: {} },
+        { data: allMeta2, index: 2, meta: { pastPurchase: true } },
+        { data: allMeta3, index: 3, meta: { pastPurchase: true } }
       ];
       const pastPurchases = stub(Selectors, 'pastPurchaseProductsBySku').returns(purchases);
 

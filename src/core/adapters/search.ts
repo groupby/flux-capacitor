@@ -159,7 +159,7 @@ namespace Adapter {
 
       return {
         meta,
-        id: startIndex++,
+        index: startIndex++,
         data: allMeta,
       };
     });
