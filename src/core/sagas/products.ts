@@ -96,7 +96,6 @@ export namespace Tasks {
           skip: Selectors.products(state).length
         }
       );
-      console.log('results: ', results);
 
       flux.emit(Events.BEACON_SEARCH, results.id);
       yield effects.put(<any>flux.actions.receiveMoreProducts(results));
