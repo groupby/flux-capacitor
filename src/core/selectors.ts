@@ -116,6 +116,24 @@ namespace Selectors {
     Search.extractData(state.data.present.products);
 
   /**
+   * Returns products with past purchases metadata.
+   * @param  {[type]} state - Store state.
+   * @return {[type]}       - The field for the past purchase key
+   */
+  export const productsWithPastPurchase = (state: Store.State, idField: string) => {
+    const pastPurchases = Selectors.pastPurchaseProductsBySku(state);
+    return Selectors.products(state).map((data) => {
+      const meta: any = {};
+
+      if (data[idField] in pastPurchases) {
+        meta.pastPurchase = true;
+      }
+
+      return { data, meta };
+    });
+  };
+
+  /**
    * Returns the current products extended with metadata
    */
   export const productsWithMetadata = (state: Store.State) =>

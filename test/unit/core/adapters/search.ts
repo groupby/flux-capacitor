@@ -335,7 +335,7 @@ suite('Search Adapter', ({ expect, stub }) => {
     });
   });
 
-  describe('extractdata()', () => {
+  describe('extractData()', () => {
     it('should return data', () => {
       const prod1 = { a: 'b' };
       const prod2 = { c: 'd' };
@@ -350,7 +350,7 @@ suite('Search Adapter', ({ expect, stub }) => {
     });
   });
 
-  describe('extractProducts()', () => {
+  describe('augmentProducts()', () => {
     it('should return the products remapped, with data, meta, and index', () => {
       const purchase1 = 'idk';
       const purchase2 = 'another one';
@@ -376,7 +376,7 @@ suite('Search Adapter', ({ expect, stub }) => {
       ];
       const pastPurchases = stub(Selectors, 'pastPurchaseProductsBySku').returns(purchases);
 
-      expect(Adapter.extractProducts(state, results)).to.eql(extracted);
+      expect(Adapter.augmentProducts(results)).to.eql(extracted);
     });
   });
 

@@ -147,15 +147,10 @@ namespace Adapter {
   export const extractData = (products: Store.ProductWithMetadata[]) =>
     products.map(({ data }) => data);
 
-  export const extractProducts = (state: Store.State, results: Results) => {
-    const pastPurchases = Selectors.pastPurchaseProductsBySku(state);
+  export const augmentProducts = (results: Results) => {
     let startIndex = results.pageInfo.recordStart;
     return results.records.map(({ allMeta }) => {
       const meta: any = {};
-
-      if (allMeta[state.session.config.recommendations.idField] in pastPurchases) {
-        meta.pastPurchase = true;
-      }
 
       return {
         meta,
