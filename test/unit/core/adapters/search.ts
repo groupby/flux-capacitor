@@ -354,11 +354,9 @@ suite('Search Adapter', ({ expect, stub }) => {
     it('should return the products remapped, with data, meta, and index', () => {
       const purchase1 = 'idk';
       const purchase2 = 'another one';
-      const purchases = { [purchase1]: {}, [purchase2]: {} };
       const allMeta1 = { a: 'b' };
-      const allMeta2 = { c: 'd', productId: purchase1 };
-      const allMeta3 = { e: 'f', productId: purchase2 };
-      const state: any = { session: { config: { recommendations: { idField: 'productId' } } } };
+      const allMeta2 = { c: 'd' };
+      const allMeta3 = { e: 'f' };
       const results: any = {
         records: [
           { allMeta: allMeta1 },
@@ -371,10 +369,9 @@ suite('Search Adapter', ({ expect, stub }) => {
       };
       const extracted = [
         { data: allMeta1, index: 1, meta: {} },
-        { data: allMeta2, index: 2, meta: { pastPurchase: true } },
-        { data: allMeta3, index: 3, meta: { pastPurchase: true } }
+        { data: allMeta2, index: 2, meta: {} },
+        { data: allMeta3, index: 3, meta: {} }
       ];
-      const pastPurchases = stub(Selectors, 'pastPurchaseProductsBySku').returns(purchases);
 
       expect(Adapter.augmentProducts(results)).to.eql(extracted);
     });
