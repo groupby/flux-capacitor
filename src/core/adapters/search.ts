@@ -148,13 +148,13 @@ namespace Adapter {
     products.map(({ data }) => data);
 
   export const augmentProducts = (results: Results) => {
-    let startIndex = results.pageInfo.recordStart;
-    return results.records.map(({ allMeta }) => {
+    const startIndex = results.pageInfo.recordStart;
+    return results.records.map(({ allMeta }, index) => {
       const meta: any = {};
 
       return {
         meta,
-        index: startIndex++,
+        index: startIndex + index,
         data: allMeta,
       };
     });
