@@ -47,7 +47,7 @@ export namespace Tasks {
           }
         );
 
-        yield effects.put(flux.actions.receiveRecommendationsProducts(SearchAdapter.augmentProducts(state, results)));
+        yield effects.put(flux.actions.receiveRecommendationsProducts(SearchAdapter.augmentProducts(results)));
       }
       return [];
     } catch (e) {
