@@ -256,7 +256,7 @@ namespace Store {
     data: Product;
     index: number; // record index
     meta: {
-      pastPurchase?: boolean;
+      collection: string;
     };
   }
 
