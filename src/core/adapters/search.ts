@@ -149,15 +149,12 @@ namespace Adapter {
 
   export const augmentProducts = (results: Results) => {
     const startIndex = results.pageInfo.recordStart;
-    return results.records.map(({ allMeta }, index) => {
-      const meta: any = {};
-
-      return {
-        meta,
+    return results.records.map(({ collection, allMeta }, index) =>
+      ({
+        meta: { collection },
         index: startIndex + index,
         data: allMeta,
-      };
-    });
+      }));
   };
 
   export const requestSort = ({ field, descending }: Store.Sort) =>
