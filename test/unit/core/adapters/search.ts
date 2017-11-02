@@ -357,20 +357,23 @@ suite('Search Adapter', ({ expect, stub }) => {
       const allMeta1 = { a: 'b' };
       const allMeta2 = { c: 'd' };
       const allMeta3 = { e: 'f' };
+      const collection1 = 'heyy';
+      const collection2 = 'heyyo';
+      const collection3 = 'heyyoeh';
       const results: any = {
         records: [
-          { allMeta: allMeta1 },
-          { allMeta: allMeta2 },
-          { allMeta: allMeta3 }
+          { allMeta: allMeta1, collection: collection1 },
+          { allMeta: allMeta2, collection: collection2 },
+          { allMeta: allMeta3, collection: collection3 },
         ],
         pageInfo: {
           recordStart: 1,
         }
       };
       const extracted = [
-        { data: allMeta1, index: 1, meta: {} },
-        { data: allMeta2, index: 2, meta: {} },
-        { data: allMeta3, index: 3, meta: {} }
+        { data: allMeta1, index: 1, meta: { collection: collection1 } },
+        { data: allMeta2, index: 2, meta: { collection: collection2 } },
+        { data: allMeta3, index: 3, meta: { collection: collection3 } },
       ];
 
       expect(Adapter.augmentProducts(results)).to.eql(extracted);
