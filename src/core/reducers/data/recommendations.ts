@@ -17,7 +17,6 @@ export const DEFAULTS: State = {
 };
 
 export default function updateRecommendations(state: State = DEFAULTS, action: Action): State {
-  console.log('from reducer, action', action);
   switch (action.type) {
     case Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS: return updateProducts(state, action);
     case Actions.RECEIVE_PAST_PURCHASES: return updatePastPurchases(state, action);
