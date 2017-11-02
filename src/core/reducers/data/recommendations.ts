@@ -27,27 +27,29 @@ export default function updateRecommendations(state: State = DEFAULTS, action: A
 }
 
 export const updateProducts = (state: State, { payload }: Actions.ReceiveRecommendationsProducts) =>
-  ({ ...state,
+  ({
+    ...state,
     suggested: {
       products: payload
     }
   });
 
 export const updatePastPurchases = (state: State, { payload }: Actions.ReceivePastPurchases) =>
-  ({ ...state,
+  ({
+    ...state,
     pastPurchases: {
       products: payload
     }
   });
 
 export const updateQueryPastPurchases = (state: State, { payload }: Actions.ReceiveQueryPastPurchases) =>
-({
-  ...state,
-  queryPastPurchases: payload
-});
+  ({
+    ...state,
+    queryPastPurchases: payload
+  });
 
 export const updateOrderHistory = (state: State, { payload }: Actions.ReceiveOrderHistory) =>
-({
-  ...state,
-  orderHistory: payload
-});
+  ({
+    ...state,
+    orderHistory: payload
+  });

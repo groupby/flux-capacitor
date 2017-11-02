@@ -59,7 +59,7 @@ suite('recommendations', ({ expect }) => {
 
   describe('updateOrderHistory()', () => {
     const state: Store.Recommendations = <any>{
-        orderHistory: [{ a: 1 }]
+      orderHistory: [{ a: 1 }]
     };
 
     it('should update state on RECEIVE_ORDER_HISTORY', () => {
@@ -82,7 +82,7 @@ suite('recommendations', ({ expect }) => {
 
   describe('updateQueryPastPurchases()', () => {
     const state: Store.Recommendations = <any>{
-        queryPastPurchases: [{ a: 1 }]
+      queryPastPurchases: [{ a: 1 }]
     };
 
     it('should update state on RECEIVE_QUERY_PAST_PURCHASES', () => {
