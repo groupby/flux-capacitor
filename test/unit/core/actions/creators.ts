@@ -825,14 +825,6 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       });
     });
 
-    describe('receiveDetailsProduct()', () => {
-      it('should return an action', () => {
-        const product: any = { a: 'b' };
-
-        expectAction(ActionCreators.receiveDetailsProduct(product), Actions.RECEIVE_DETAILS_PRODUCT, product);
-      });
-    });
-
     describe('receiveRecommendationsProducts()', () => {
       it('should return an action', () => {
         const products: any[] = ['a', 'b', 'c'];

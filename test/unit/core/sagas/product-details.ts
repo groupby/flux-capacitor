@@ -93,7 +93,7 @@ suite('product details saga', ({ expect, spy, stub }) => {
         const record = { allMeta: { e: 'f' }, id: '123' };
         const flux: any = { emit, saveState, actions: { receiveDetailsProduct } };
 
-        const task = Tasks.receiveDetailsProduct(flux, record);
+        const task = Tasks.receiveDetailsProduct(flux, <any>record);
 
         expect(task.next().value).to.eql(effects.put(receiveDetailsProductAction));
         expect(emit).to.be.calledWith(Events.BEACON_VIEW_PRODUCT, record);

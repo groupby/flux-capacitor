@@ -15,8 +15,7 @@ suite('details', ({ expect }) => {
     name: 'pajamas',
   };
   const state: Store.Details = {
-    data: product,
-    product,
+    data: product
   };
 
   describe('updateDetails()', () => {
@@ -30,17 +29,6 @@ suite('details', ({ expect }) => {
         type: Actions.UPDATE_DETAILS,
         payload: product2
       });
-
-      expect(reducer).to.eql(newState);
-    });
-
-    it('should update state on RECEIVE_DETAILS_PRODUCT', () => {
-      const newState = {
-        data: product,
-        product: product2,
-      };
-
-      const reducer = details(state, { type: Actions.RECEIVE_DETAILS_PRODUCT, payload: product2 });
 
       expect(reducer).to.eql(newState);
     });
