@@ -107,6 +107,7 @@ export namespace Tasks {
       );
 
       flux.emit(Events.BEACON_SEARCH, result.id);
+
       yield effects.put(<any>flux.actions.receiveMoreProducts(result));
     } catch (e) {
       yield effects.put(<any>flux.actions.receiveMoreProducts(e));
@@ -117,6 +118,6 @@ export namespace Tasks {
 export default (flux: FluxCapacitor) => {
   return function* saga() {
     yield effects.takeLatest(Actions.FETCH_PRODUCTS, Tasks.fetchProducts, flux);
-    yield effects.takeLatest(Actions.FETCH_MORE_PRODUCTS, Tasks.fetchMoreProducts, flux);
+    yield effects.takeEvery(Actions.FETCH_MORE_PRODUCTS, Tasks.fetchMoreProducts, flux);
   };
 };
