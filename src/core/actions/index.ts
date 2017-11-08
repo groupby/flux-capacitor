@@ -36,6 +36,8 @@ namespace Actions {
   export type UpdateAutocompleteQuery = Action<typeof UPDATE_AUTOCOMPLETE_QUERY, string>;
   export const UPDATE_DETAILS = 'UPDATE_DETAILS';
   export type UpdateDetails = Action<typeof UPDATE_DETAILS, Store.Product>;
+  export const SET_DETAILS = 'SET_DETAILS';
+  export type SetDetails = Action<typeof SET_DETAILS, Store.Product>;
   export const SELECT_REFINEMENT = 'SELECT_REFINEMENT';
   export type SelectRefinement = Action<typeof SELECT_REFINEMENT, Payload.Navigation.Refinement>;
   export const DESELECT_REFINEMENT = 'DESELECT_REFINEMENT';
