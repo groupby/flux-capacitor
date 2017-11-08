@@ -32,11 +32,10 @@ export namespace Tasks {
     }
   }
 
-  export function* receiveDetailsProduct(flux: FluxCapacitor, { payload: record }: Actions.SetDetails) {
-    let product = record;
-    if (record.allMeta) {
-      flux.emit(Events.BEACON_VIEW_PRODUCT, record);
-      product = record.allMeta;
+  export function* receiveDetailsProduct(flux: FluxCapacitor, { payload: product }: Actions.SetDetails) {
+    if (product.allMeta) {
+      flux.emit(Events.BEACON_VIEW_PRODUCT, product);
+      product = product.allMeta;
     }
     yield effects.put(flux.actions.updateDetails(product));
     flux.saveState(utils.Routes.DETAILS);
