@@ -119,7 +119,7 @@ namespace Selectors {
    * Returns the current products
    */
   export const productWithId = (state: Store.State, productId: string) =>
-    Search.extractData(state.data.present.products).find(({ id }) => id === productId);
+    Selectors.products(state).find(({ id }) => id === productId);
 
   /**
    * Returns products with past purchases metadata.

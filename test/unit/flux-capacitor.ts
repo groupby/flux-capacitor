@@ -195,6 +195,14 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
       });
     });
 
+    describe('detailsWithRouting()', () => {
+      it('should call setDetails() action', () => {
+        const product: any = { a: 'b' };
+
+        expectDispatch(() => flux.detailsWithRouting(product), 'setDetails', product);
+      });
+    });
+
     describe('switchCollection()', () => {
       it('should call selectCollection() action', () => {
         const collection = 'products';

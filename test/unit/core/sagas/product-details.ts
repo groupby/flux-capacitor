@@ -17,6 +17,7 @@ suite('product details saga', ({ expect, spy, stub }) => {
 
       // tslint:disable-next-line max-line-length
       expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_PRODUCT_DETAILS, Tasks.fetchProductDetails, flux));
+      expect(saga.next().value).to.eql(effects.takeLatest(Actions.SET_DETAILS, Tasks.receiveDetailsProduct, flux));
       saga.next();
     });
   });

@@ -575,6 +575,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       });
     });
 
+    describe('setDetails()', () => {
+      it('should return an action', () => {
+        const product: any = { a: 'b' };
+
+        expectAction(ActionCreators.setDetails(product), Actions.SET_DETAILS, product);
+      });
+    });
+
     describe('updateAutocompleteQuery()', () => {
       const query = 'pink elephant';
 

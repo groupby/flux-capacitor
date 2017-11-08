@@ -98,7 +98,7 @@ class FluxCapacitor extends EventEmitter {
     this.store.dispatch(this.actions.updateDetails(product));
   }
 
-  setDetails(product: Store.Product) {
+  detailsWithRouting(product: Store.Product) {
     this.store.dispatch(this.actions.setDetails(product));
   }
 
