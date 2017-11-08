@@ -280,9 +280,11 @@ suite('selectors', ({ expect, stub }) => {
   describe('productWithId()', () => {
     it('should find product with given id', () => {
       const products = [{ id: '3' }, { id: '4' }, { id: '7' }, { id: '2' }];
+      const state: any = { data: { present: { products } } };
       const productSelector = stub(Selectors, 'products').returns(products);
 
-      expect(Selectors.productWithId(<any>{ data: { present: { products } } }, '7')).to.eql(products[2]);
+      expect(Selectors.productWithId(state, '7')).to.eql(products[2]);
+      expect(productSelector).to.be.calledWith(state);
     });
   });
 
