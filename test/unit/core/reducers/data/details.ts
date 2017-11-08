@@ -22,7 +22,6 @@ suite('details', ({ expect }) => {
     it('should update state on UPDATE_DETAILS_ID', () => {
       const newState = {
         data: product2,
-        product,
       };
 
       const reducer = details(state, {
