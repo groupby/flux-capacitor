@@ -113,8 +113,6 @@ namespace Actions {
   export type ReceiveAutocompleteProductRecords = Action<typeof RECEIVE_AUTOCOMPLETE_PRODUCT_RECORDS, Store.ProductWithMetadata[]>;
   export const RECEIVE_AUTOCOMPLETE_TEMPLATE = 'RECEIVE_AUTOCOMPLETE_TEMPLATE';
   export type ReceiveAutocompleteTemplate = Action<typeof RECEIVE_AUTOCOMPLETE_TEMPLATE, Store.Template>;
-  export const RECEIVE_DETAILS_PRODUCT = 'RECEIVE_DETAILS_PRODUCT';
-  export type ReceiveDetailsProduct = Action<typeof RECEIVE_DETAILS_PRODUCT, Store.Product>;
   export const RECEIVE_QUERY = 'RECEIVE_QUERY';
   export type ReceiveQuery = Action<typeof RECEIVE_QUERY, Payload.Query>;
   export const RECEIVE_PRODUCT_RECORDS = 'RECEIVE_PRODUCT_RECORDS';

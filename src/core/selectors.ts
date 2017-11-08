@@ -116,6 +116,12 @@ namespace Selectors {
     Search.extractData(state.data.present.products);
 
   /**
+   * Returns the current products
+   */
+  export const productWithId = (state: Store.State, productId: string) =>
+    Search.extractData(state.data.present.products).find(({ id }) => id === productId);
+
+  /**
    * Returns products with past purchases metadata.
    * @param  {[type]} state - Store state.
    * @return {[type]}       - The field for the past purchase key

@@ -559,15 +559,6 @@ namespace ActionCreators {
   }
 
   /**
-   * The details product to receive and update state with.
-   * @param  {Store.Product}                 product - The product to add to the details state.
-   * @return {Actions.ReceiveDetailsProduct}         - Action with product.
-   */
-  export function receiveDetailsProduct(product: Store.Product): Actions.ReceiveDetailsProduct {
-    return createAction(Actions.RECEIVE_DETAILS_PRODUCT, product);
-  }
-
-  /**
    * The recommendations products to receive and update state with.
    * @param  {Store.ProductWithMetadata[]}             products - The products to add to the recommendations state.
    * @return {Actions.ReceiveRecommendationsProducts}           - Action with products.
