@@ -9,7 +9,6 @@ import Requests from '../requests';
 import Selectors from '../selectors';
 import Store from '../store';
 import * as utils from '../utils';
-import { Tasks as productDetailsTasks } from './product-details';
 
 export namespace Tasks {
   export function* fetchProducts(flux: FluxCapacitor, action: Actions.FetchProducts) {

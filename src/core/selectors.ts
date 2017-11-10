@@ -116,9 +116,9 @@ namespace Selectors {
     Search.extractData(state.data.present.products);
 
   /**
-   * Returns the current products
+   * Returns the product with the given id
    */
-  export const productWithId = (state: Store.State, productId: string) =>
+  export const findProduct = (state: Store.State, productId: string) =>
     Selectors.products(state).find(({ id }) => id === productId);
 
   /**
