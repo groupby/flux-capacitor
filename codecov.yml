@@ -1,2 +1,2 @@
 fixes:
-  - 'root/flux-capacitor/src/::src/'
+  - 'root/project/::'
