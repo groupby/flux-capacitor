@@ -1,2 +1,2 @@
 fixes:
-  - 'root/project/src/::'
+  - 'root/project/src/::src/'
