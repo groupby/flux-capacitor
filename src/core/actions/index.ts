@@ -175,6 +175,7 @@ namespace Actions {
 
       export interface State extends Identifier {
         state: object;
+        persist: boolean;
       }
     }
 
