@@ -78,7 +78,7 @@ namespace Store {
   export interface UI {
     [tagName: string]: {
       global?: any;
-      [tagId: string]: {
+      [tagId: number]: {
         persist: boolean;
         data: any;
       };
