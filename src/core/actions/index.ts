@@ -171,6 +171,10 @@ namespace Actions {
   // added automatically by middleware to interact with redux-undo
   export const SAVE_STATE = 'SAVE_STATE';
 
+  // create
+  export const CREATE_CART = 'CREATE_CART';
+  export type CreateCart = Action<typeof CREATE_CART, { loginId: string, sessionId: string, visitorId: string }>;
+
   export namespace Payload {
     export namespace Personalization {
       export interface Biasing {
