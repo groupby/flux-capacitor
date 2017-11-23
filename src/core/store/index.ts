@@ -65,6 +65,8 @@ namespace Store {
 
     recommendations: Recommendations; // mixed
 
+    infiniteScroll: InfiniteScroll;
+
     recordCount: number; // post
 
     redirect?: string; // post
@@ -78,7 +80,10 @@ namespace Store {
   export interface UI {
     [tagName: string]: {
       global?: any;
-      [tagId: string]: any;
+      [tagId: number]: {
+        persist: boolean;
+        data: any;
+      };
     };
   }
 
@@ -244,6 +249,11 @@ namespace Store {
       collection: string;
       metadata: object;
     }
+  }
+
+  export interface InfiniteScroll {
+    isFetchingForward: boolean;
+    isFetchingBackward: boolean;
   }
 
   export interface Product {

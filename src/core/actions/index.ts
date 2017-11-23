@@ -74,6 +74,7 @@ namespace Actions {
   export type ResetPageAndAddRefinement = [Actions.ResetPage, Actions.AddRefinement];
   export type CheckAndResetRefinements = ResetPageAndResetRefinements | Action<any>[];
   export type ResetPageAndUpdateQuery = [Actions.ResetPage, Actions.UpdateQuery];
+  export type ReceiveMoreProductsAndPage = [Actions.ReceiveMoreProducts, Actions.ReceivePage];
 
   // fetch actions
   export const FETCH_MORE_REFINEMENTS = 'FETCH_MORE_REFINEMENTS';
@@ -81,7 +82,7 @@ namespace Actions {
   export const FETCH_PRODUCTS = 'FETCH_PRODUCTS';
   export type FetchProducts = Action<typeof FETCH_PRODUCTS>;
   export const FETCH_MORE_PRODUCTS = 'FETCH_MORE_PRODUCTS';
-  export type FetchMoreProducts = Action<typeof FETCH_MORE_PRODUCTS, number>;
+  export type FetchMoreProducts = Action<typeof FETCH_MORE_PRODUCTS, { amount: number, forward: boolean }>;
   export const FETCH_AUTOCOMPLETE_SUGGESTIONS = 'FETCH_AUTOCOMPLETE_SUGGESTIONS';
   export type FetchAutocompleteSuggestions = Action<typeof FETCH_AUTOCOMPLETE_SUGGESTIONS, string>;
   export const FETCH_AUTOCOMPLETE_PRODUCTS = 'FETCH_AUTOCOMPLETE_PRODUCTS';
@@ -144,6 +145,8 @@ namespace Actions {
   export const RECEIVE_NAVIGATION_SORT = 'RECEIVE_NAVIGATION_SORT';
   // tslint:disable-next-line max-line-length
   export type ReceiveNavigationSort = Action<typeof RECEIVE_NAVIGATION_SORT, Store.Recommendations.Navigation[]>;
+  export const RECEIVE_INFINITE_SCROLL = 'RECEIVE_INFINITE_SCROLL';
+  export type ReceiveInfiniteScroll = Action<typeof RECEIVE_INFINITE_SCROLL, Store.InfiniteScroll>;
 
   // ui
   export const CREATE_COMPONENT_STATE = 'CREATE_COMPONENT_STATE';
@@ -174,6 +177,7 @@ namespace Actions {
 
       export interface State extends Identifier {
         state: object;
+        persist: boolean;
       }
     }
 
@@ -247,6 +251,7 @@ namespace Actions {
       last: number;
       from: number;
       to: number;
+      current?: number;
     }
   }
 }
