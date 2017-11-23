@@ -41,7 +41,9 @@ namespace ActionCreators {
    * @return {Actions.FetchMoreProducts}        - Action with amount.
    */
   export function fetchMoreProducts(amount: number, forward: boolean = true): Actions.FetchMoreProducts {
-    return createAction(Actions.FETCH_MORE_PRODUCTS, { amount, forward });
+    return createAction(Actions.FETCH_MORE_PRODUCTS, { amount, forward }, {
+      forward: validators.isNotFetching,
+    });
   }
 
   /**
@@ -374,6 +376,13 @@ namespace ActionCreators {
     return createAction(Actions.UPDATE_AUTOCOMPLETE_QUERY, query, {
       payload: validators.isDifferentAutocompleteQuery
     });
+  }
+
+  /**
+   *
+   */
+  export function receiveInfiniteScroll({ isFetchingForward, isFetchingBackward }): Actions.ReceiveInfiniteScroll {
+    return createAction(Actions.RECEIVE_INFINITE_SCROLL, { isFetchingForward, isFetchingBackward });
   }
 
   // response action creators

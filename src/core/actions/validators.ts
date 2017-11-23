@@ -114,3 +114,10 @@ export const isDifferentAutocompleteQuery: Validator<string> = {
   func: (query, state) => Selectors.autocompleteQuery(state) !== query,
   msg: 'suggestions for query have already been requested'
 };
+
+export const isNotFetching: Validator<boolean> = {
+  func: (forward) => forward ?
+    Selectors.infiniteScroll(state).isFetchingForward :
+    Selectors.infiniteScroll(state).isFetchingBackward;
+  msg: 'is already fetching'
+};
