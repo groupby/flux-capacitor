@@ -273,6 +273,11 @@ namespace Selectors {
     Selectors.autocomplete(state).navigations;
 
   /**
+   * Returns the current autocomplete products.
+   */
+  export const autocompleteProducts = (state: Store.State) => Selectors.autocomplete(state).products;
+
+  /**
    * Returns the current session location.
    */
   export const location = (state: Store.State) =>
