@@ -431,6 +431,17 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
+  describe('autocompleteProducts()', () => {
+    it('should return the current autocomplete products', () => {
+      const state: any = { a: 'b' };
+      const products = ['c', 'd'];
+      const autocompleteSelector = stub(Selectors, 'autocomplete').returns({ products });
+
+      expect(Selectors.autocompleteProducts(state)).to.eq(products);
+      expect(autocompleteSelector).to.be.calledWith(state);
+    });
+  });
+
   describe('refinementCrumb()', () => {
     it('should convert refinement to breadcrumb', () => {
       const field = 'brand';
