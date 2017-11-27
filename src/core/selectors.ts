@@ -79,6 +79,11 @@ namespace Selectors {
     state.data.present.page.current;
 
   /**
+   * Returns the last page index, ie number of pages
+   */
+  export const totalPages = (state: Store.State) =>
+    state.data.present.page.last;
+  /**
    * Returns the sorts object.
    */
   export const sorts = (state: Store.State) =>
@@ -108,12 +113,20 @@ namespace Selectors {
    * Returns the current products
    */
   export const products = (state: Store.State) =>
-    state.data.present.products;
+    Search.extractData(state.data.present.products);
 
   /**
-   * Returns the current products extended with metadata
+   * Returns the product with the given id
    */
-  export const productsWithMetadata = (state: Store.State, idField: string) => {
+  export const findProduct = (state: Store.State, productId: string) =>
+    Selectors.products(state).find(({ id }) => id === productId);
+
+  /**
+   * Returns products with past purchases metadata.
+   * @param  {[type]} state - Store state.
+   * @return {[type]}       - The field for the past purchase key
+   */
+  export const productsWithPastPurchase = (state: Store.State, idField: string) => {
     const pastPurchases = Selectors.pastPurchaseProductsBySku(state);
     return Selectors.products(state).map((data) => {
       const meta: any = {};
@@ -125,6 +138,12 @@ namespace Selectors {
       return { data, meta };
     });
   };
+
+  /**
+   * Returns the current products extended with metadata
+   */
+  export const productsWithMetadata = (state: Store.State) =>
+    state.data.present.products;
 
   /**
    * Returns the current details object.
@@ -266,10 +285,16 @@ namespace Selectors {
     state.session.location;
 
   /**
+   * Returns the current session config
+   */
+  export const config = (state: Store.State) =>
+    state.session.config;
+
+  /**
    * Returns the current recommendations product suggestions.
    */
   export const recommendationsProducts = (state: Store.State) =>
-    state.data.present.recommendations.suggested.products;
+    Search.extractData(state.data.present.recommendations.suggested.products);
 
   /**
    * Returns the SKUs of previously purchased products.
@@ -278,6 +303,14 @@ namespace Selectors {
     state.data.present.recommendations.pastPurchases.products
       .reduce((products, product) => Object.assign(products, { [product.sku]: product.quantity }), {});
 
+  export const pastPurchases = (state: Store.State) =>
+    state.data.present.recommendations.pastPurchases.products;
+
+  export const queryPastPurchases = (state: Store.State) =>
+    state.data.present.recommendations.queryPastPurchases;
+
+  export const orderHistory = (state: Store.State) =>
+    state.data.present.recommendations.orderHistory;
   /**
    * Returns the ui state for the all of the tags with the given tagName.
    */

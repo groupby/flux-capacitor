@@ -105,11 +105,6 @@ namespace Events {
    * Returns the details data.
    */
   export const DETAILS_UPDATED = 'details_updated'; // pre
-  /**
-   * Triggered when details product is updated.
-   * Returns the details products.
-   */
-  export const DETAILS_PRODUCT_UPDATED = 'details_product_updated'; // post
 
   // page events
   /**
@@ -161,6 +156,18 @@ namespace Events {
    * Returns the recommendations products object.
    */
   export const RECOMMENDATIONS_PRODUCTS_UPDATED = 'recommendations_products_updated';
+
+  /**
+   * Triggered when past purchases are updated
+   * Returns the past purchases products array
+   */
+  export const PAST_PURCHASES_UPDATED = 'past_purchases_updated';
+
+  /**
+   * Triggered when order history is updated
+   * Returns the order history products array
+   */
+  export const ORDER_HISTORY_UPDATED = 'order_history_updated';
 
   // error events
   /**
@@ -228,6 +235,10 @@ namespace Events {
    * Triggered when an order beacon is sent.
    */
   export const BEACON_ORDER = 'beacon:order';
+  /**
+   * Triggered when more refinements beacon is sent
+   */
+  export const BEACON_MORE_REFINEMENTS = 'beacon:more_refinements';
 
   // observer events
   /**

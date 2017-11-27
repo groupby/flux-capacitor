@@ -36,6 +36,8 @@ namespace Actions {
   export type UpdateAutocompleteQuery = Action<typeof UPDATE_AUTOCOMPLETE_QUERY, string>;
   export const UPDATE_DETAILS = 'UPDATE_DETAILS';
   export type UpdateDetails = Action<typeof UPDATE_DETAILS, Store.Product>;
+  export const SET_DETAILS = 'SET_DETAILS';
+  export type SetDetails = Action<typeof SET_DETAILS, Store.Product>;
   export const SELECT_REFINEMENT = 'SELECT_REFINEMENT';
   export type SelectRefinement = Action<typeof SELECT_REFINEMENT, Payload.Navigation.Refinement>;
   export const DESELECT_REFINEMENT = 'DESELECT_REFINEMENT';
@@ -93,6 +95,8 @@ namespace Actions {
   export type FetchRecommendationsProducts = Action<typeof FETCH_RECOMMENDATIONS_PRODUCTS, string>;
   export const FETCH_PAST_PURCHASES = 'FETCH_PAST_PURCHASES';
   export type FetchPastPurchases = Action<typeof FETCH_PAST_PURCHASES, string>;
+  export const FETCH_ORDER_HISTORY = 'FETCH_ORDER_HISTORY';
+  export type FetchOrderHistory = Action<typeof FETCH_ORDER_HISTORY>;
 
   // response actions
   export const RECEIVE_MORE_REFINEMENTS = 'RECEIVE_MORE_REFINEMENTS';
@@ -100,22 +104,21 @@ namespace Actions {
   export const RECEIVE_PRODUCTS = 'RECEIVE_PRODUCTS';
   export type ReceiveProducts = Action<typeof RECEIVE_PRODUCTS, Results>;
   export const RECEIVE_MORE_PRODUCTS = 'RECEIVE_MORE_PRODUCTS';
-  export type ReceiveMoreProducts = Action<typeof RECEIVE_MORE_PRODUCTS, Store.Product[]>;
+  export type ReceiveMoreProducts = Action<typeof RECEIVE_MORE_PRODUCTS, Store.ProductWithMetadata[]>;
   export const RECEIVE_AUTOCOMPLETE_SUGGESTIONS = 'RECEIVE_AUTOCOMPLETE_SUGGESTIONS';
   // tslint:disable-next-line max-line-length
   export type ReceiveAutocompleteSuggestions = Action<typeof RECEIVE_AUTOCOMPLETE_SUGGESTIONS, Payload.Autocomplete.Suggestions>;
   export const RECEIVE_AUTOCOMPLETE_PRODUCTS = 'RECEIVE_AUTOCOMPLETE_PRODUCTS';
-  export type ReceiveAutocompleteProducts = Action<typeof RECEIVE_AUTOCOMPLETE_PRODUCTS, Store.Product[]>;
+  export type ReceiveAutocompleteProducts = Action<typeof RECEIVE_AUTOCOMPLETE_PRODUCTS, Store.ProductWithMetadata[]>;
   export const RECEIVE_AUTOCOMPLETE_PRODUCT_RECORDS = 'RECEIVE_AUTOCOMPLETE_PRODUCT_RECORDS';
-  export type ReceiveAutocompleteProductRecords = Action<typeof RECEIVE_AUTOCOMPLETE_PRODUCT_RECORDS, Store.Product[]>;
+  // tslint:disable-next-line max-line-length
+  export type ReceiveAutocompleteProductRecords = Action<typeof RECEIVE_AUTOCOMPLETE_PRODUCT_RECORDS, Store.ProductWithMetadata[]>;
   export const RECEIVE_AUTOCOMPLETE_TEMPLATE = 'RECEIVE_AUTOCOMPLETE_TEMPLATE';
   export type ReceiveAutocompleteTemplate = Action<typeof RECEIVE_AUTOCOMPLETE_TEMPLATE, Store.Template>;
-  export const RECEIVE_DETAILS_PRODUCT = 'RECEIVE_DETAILS_PRODUCT';
-  export type ReceiveDetailsProduct = Action<typeof RECEIVE_DETAILS_PRODUCT, Store.Product>;
   export const RECEIVE_QUERY = 'RECEIVE_QUERY';
   export type ReceiveQuery = Action<typeof RECEIVE_QUERY, Payload.Query>;
   export const RECEIVE_PRODUCT_RECORDS = 'RECEIVE_PRODUCT_RECORDS';
-  export type ReceiveProductRecords = Action<typeof RECEIVE_PRODUCT_RECORDS, Store.Product[]>;
+  export type ReceiveProductRecords = Action<typeof RECEIVE_PRODUCT_RECORDS, Store.ProductWithMetadata[]>;
   export const RECEIVE_COLLECTION_COUNT = 'RECEIVE_COLLECTION_COUNT';
   export type ReceiveCollectionCount = Action<typeof RECEIVE_COLLECTION_COUNT, Payload.Collection.Count>;
   export const RECEIVE_NAVIGATIONS = 'RECEIVE_NAVIGATIONS';
@@ -129,9 +132,15 @@ namespace Actions {
   export const RECEIVE_REDIRECT = 'RECEIVE_REDIRECT';
   export type ReceiveRedirect = Action<typeof RECEIVE_REDIRECT, string>;
   export const RECEIVE_RECOMMENDATIONS_PRODUCTS = 'RECEIVE_RECOMMENDATIONS_PRODUCTS';
-  export type ReceiveRecommendationsProducts = Action<typeof RECEIVE_RECOMMENDATIONS_PRODUCTS, Store.Product[]>;
+  // tslint:disable-next-line max-line-length
+  export type ReceiveRecommendationsProducts = Action<typeof RECEIVE_RECOMMENDATIONS_PRODUCTS, Store.ProductWithMetadata[]>;
   export const RECEIVE_PAST_PURCHASES = 'RECEIVE_PAST_PURCHASES';
   export type ReceivePastPurchases = Action<typeof RECEIVE_PAST_PURCHASES, Store.Recommendations.PastPurchase[]>;
+  export const RECEIVE_ORDER_HISTORY = 'RECEIVE_ORDER_HISTORY';
+  export type ReceiveOrderHistory = Action<typeof RECEIVE_ORDER_HISTORY, Store.Recommendations.OrderHistoryProduct[]>;
+  export const RECEIVE_QUERY_PAST_PURCHASES = 'RECEIVE_QUERY_PAST_PURCHASES';
+  // tslint:disable-next-line max-line-length
+  export type ReceiveQueryPastPurchases = Action<typeof RECEIVE_QUERY_PAST_PURCHASES, Store.ProductWithMetadata[]>;
   export const RECEIVE_NAVIGATION_SORT = 'RECEIVE_NAVIGATION_SORT';
   // tslint:disable-next-line max-line-length
   export type ReceiveNavigationSort = Action<typeof RECEIVE_NAVIGATION_SORT, Store.Recommendations.Navigation[]>;
@@ -182,6 +191,7 @@ namespace Actions {
       rewrites: string[];
     }
 
+    // NOTE: Isn't getting the right type in generated doc for some reason
     export interface Search extends Partial<Navigation.Refinement>, Partial<Navigation.AddRefinement> {
       query?: string;
 

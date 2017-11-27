@@ -5,6 +5,7 @@ import * as validatorMiddleware from 'redux-validator';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import Adapter from '../adapters/configuration';
+import Configuration from '../configuration';
 import reducer from '../reducers';
 import createSagas, { SAGA_CREATORS } from '../sagas';
 import Middleware from './middleware';
@@ -20,7 +21,7 @@ namespace Store {
 
     const store = createStore<State>(
       reducer,
-      <State>Adapter.initialState(flux.config),
+      <State>Adapter.initialState(flux.__config),
       middleware,
     );
 
@@ -50,7 +51,7 @@ namespace Store {
     query: Query; // mixed
 
     sorts: SelectableList<Sort>;
-    products: Product[]; // post
+    products: ProductWithMetadata[]; // post
     collections: Indexed.Selectable<Collection>; // mixed
     navigations: AvailableNavigations; // mixed
 
@@ -154,6 +155,7 @@ namespace Store {
     searchId?: string;
     location?: Geolocation;
     origin?: Actions.Metadata.Tag;
+    config?: Configuration;
   }
 
   export interface IsFetching {
@@ -199,17 +201,18 @@ namespace Store {
   }
 
   export interface Details {
-    data?: Product; // pre
-    product?: Product; // post
+    data?: Product;
   }
 
   export interface Recommendations {
     suggested: {
-      products: Product[];
+      products: ProductWithMetadata[];
     };
     pastPurchases: {
       products: Recommendations.PastPurchase[];
     };
+    queryPastPurchases: ProductWithMetadata[];
+    orderHistory: any[];
   }
 
   export type AvailableNavigations = Indexed<Navigation> & {
@@ -233,6 +236,14 @@ namespace Store {
       sku: string;
       quantity: number;
     }
+
+    // slide 18 of epic
+    export interface OrderHistoryProduct {
+      sku: string;
+      quantity: number;
+      collection: string;
+      metadata: object;
+    }
   }
 
   export interface Product {
@@ -242,8 +253,9 @@ namespace Store {
 
   export interface ProductWithMetadata {
     data: Product;
+    index: number; // record index
     meta: {
-      pastPurchase?: boolean;
+      collection: string;
     };
   }
 
@@ -284,7 +296,7 @@ namespace Store {
     suggestions: Autocomplete.Suggestion[]; // post
     category: Autocomplete.Category; // static & post
     navigations: Autocomplete.Navigation[]; // post
-    products: Product[]; // post
+    products: ProductWithMetadata[]; // post
     template?: Template; // post
   }
 

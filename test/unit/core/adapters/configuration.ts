@@ -43,6 +43,12 @@ suite('Configuration Adapter', ({ expect, stub }) => {
                 }
               }
             },
+            recommendations: {
+              suggested: { products: [] },
+              pastPurchases: { products: [] },
+              queryPastPurchases: [],
+              orderHistory: [],
+            },
             sorts: {
               selected: 0,
               items: [sort]
@@ -55,6 +61,9 @@ suite('Configuration Adapter', ({ expect, stub }) => {
               }
             }
           }
+        },
+        session: {
+          config
         }
       });
     });
@@ -101,6 +110,12 @@ suite('Configuration Adapter', ({ expect, stub }) => {
               }
             },
             fields,
+            recommendations: {
+              suggested: { products: [] },
+              pastPurchases: { products: [] },
+              queryPastPurchases: [],
+              orderHistory: [],
+            },
             collections: {
               selected: collection.default,
               allIds: collection.options,
@@ -125,6 +140,9 @@ suite('Configuration Adapter', ({ expect, stub }) => {
               }
             }
           }
+        },
+        session: {
+          config
         }
       };
 

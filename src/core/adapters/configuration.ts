@@ -18,7 +18,13 @@ namespace Adapter {
             category: {
               field: Adapter.extractSaytCategoryField(config),
               values: []
-            }
+            },
+          },
+          recommendations: {
+            suggested: { products: [] },
+            pastPurchases: { products: []},
+            queryPastPurchases: [],
+            orderHistory: []
           },
           fields: Adapter.extractFields(config),
           collections: Adapter.extractCollections(config, CollectionsReducer.DEFAULT_COLLECTION),
@@ -28,7 +34,8 @@ namespace Adapter {
             sizes: Adapter.extractPageSizes(config, PageReducer.DEFAULT_PAGE_SIZE)
           }
         }
-      }
+      },
+      session: { config }
     });
 
   export const extractArea = (config: Configuration, defaultValue?: string) =>

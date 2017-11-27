@@ -8,7 +8,7 @@ import Store from '../store';
 export const createAction = <T extends string, P>(type: T, payload?: P, validator?: object): Actions.Action<T, P> => {
   const builtAction: Actions.Action<T, P> = { type, meta: { validator: validator || {} } };
 
-  if (payload != null) {
+  if (payload !== undefined) {
     builtAction.payload = payload;
     if (payload instanceof Error) {
       builtAction.error = true;

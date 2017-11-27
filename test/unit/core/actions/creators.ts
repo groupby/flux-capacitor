@@ -85,6 +85,12 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         expectAction(action, Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, query);
       });
+
+      it('should apply validators to FETCH_AUTOCOMPLETE_SUGGESTIONS', () => {
+        expectValidators(ActionCreators.fetchAutocompleteSuggestions(''), Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, {
+          payload: validators.isString
+        });
+      });
     });
 
     describe('fetchAutocompleteProducts()', () => {
@@ -101,6 +107,12 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         // tslint:disable-next-line max-line-length
         expectAction(ActionCreators.fetchAutocompleteProducts(query), Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { query, refinements: [] });
+      });
+
+      it('should apply validators to FETCH_AUTOCOMPLETE_PRODUCTS', () => {
+        expectValidators(ActionCreators.fetchAutocompleteProducts(''), Actions.FETCH_AUTOCOMPLETE_PRODUCTS, {
+          query: validators.isValidQuery
+        });
       });
     });
 
@@ -128,7 +140,17 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
     describe('fetchPastPurchases()', () => {
       it('should return an action', () => {
+        expectAction(ActionCreators.fetchPastPurchases('query'), Actions.FETCH_PAST_PURCHASES, 'query');
+      });
+
+      it('should return an action when query is null', () => {
         expectAction(ActionCreators.fetchPastPurchases(), Actions.FETCH_PAST_PURCHASES, null);
+      });
+    });
+
+    describe('fetchOrderHistory()', () => {
+      it('should return an action', () => {
+        expectAction(ActionCreators.fetchOrderHistory(), Actions.FETCH_ORDER_HISTORY, null);
       });
     });
   });
@@ -140,7 +162,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       beforeEach(() => stub(ActionCreators, 'resetPage').returns(resetPageAction));
 
       it('should return a bulk action', () => {
-        const batchAction = ActionCreators.updateSearch({})(() => null);
+        const batchAction = ActionCreators.updateSearch({})(null);
 
         expect(batchAction).to.eql([resetPageAction]);
       });
@@ -149,7 +171,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const query = 'q';
         const updateQuery = stub(ActionCreators, 'updateQuery').returns([ACTION]);
 
-        const batchAction = ActionCreators.updateSearch({ query })(() => null);
+        const batchAction = ActionCreators.updateSearch({ query })(null);
 
         expect(batchAction).to.eql([resetPageAction, ACTION]);
         expect(updateQuery).to.be.calledWithExactly(query);
@@ -157,13 +179,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
       it('should return a bulk action with RESET_REFINEMENTS', () => {
         const clear = 'q';
+        const state: any = { a: 'b' };
         const shouldResetRefinements = stub(utils, 'shouldResetRefinements').returns(true);
         const resetRefinements = stub(ActionCreators, 'resetRefinements').returns([ACTION]);
 
-        const batchAction = ActionCreators.updateSearch({ clear })(() => null);
+        const batchAction = ActionCreators.updateSearch({ clear })(state);
 
         expect(batchAction).to.eql([resetPageAction, ACTION]);
-        expect(shouldResetRefinements).to.be.calledWithExactly({ clear }, null);
+        expect(shouldResetRefinements).to.be.calledWithExactly({ clear }, state);
       });
 
       it('should return a bulk action with SELECT_REFINEMENT', () => {
@@ -171,7 +194,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const index = 4;
         const selectRefinement = stub(ActionCreators, 'selectRefinement').returns([ACTION]);
 
-        const batchAction = ActionCreators.updateSearch({ navigationId, index })(() => null);
+        const batchAction = ActionCreators.updateSearch({ navigationId, index })(null);
 
         expect(batchAction).to.eql([resetPageAction, ACTION]);
         expect(selectRefinement).to.be.calledWithExactly(navigationId, index);
@@ -182,7 +205,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const value = 'blue';
         const addRefinement = stub(ActionCreators, 'addRefinement').returns([ACTION]);
 
-        const batchAction = ActionCreators.updateSearch({ navigationId, value })(() => null);
+        const batchAction = ActionCreators.updateSearch({ navigationId, value })(null);
 
         expect(batchAction).to.eql([resetPageAction, ACTION]);
         expect(addRefinement).to.be.calledWithExactly(navigationId, value);
@@ -195,14 +218,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const high = 2;
         const addRefinement = stub(ActionCreators, 'addRefinement').returns([ACTION]);
 
-        const batchAction = ActionCreators.updateSearch({ navigationId, range, low, high })(() => null);
+        const batchAction = ActionCreators.updateSearch({ navigationId, range, low, high })(null);
 
         expect(batchAction).to.eql([resetPageAction, ACTION]);
         expect(addRefinement).to.be.calledWithExactly(navigationId, low, high);
       });
 
       it('should return a bulk action without ADD_REFINEMENT', () => {
-        const batchAction = ActionCreators.updateSearch({ navigationId: 'truthy' })(() => null);
+        const batchAction = ActionCreators.updateSearch({ navigationId: 'truthy' })(null);
 
         expect(batchAction).to.eql([resetPageAction]);
       });
@@ -361,7 +384,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const updateQuery = stub(ActionCreators, 'updateQuery').returns(updateReturn);
         stub(ActionCreators, 'resetPage').returns(resetPageReturn);
 
-        const result = ActionCreators.search(query)(() => null);
+        const result = ActionCreators.search(query)(null);
 
         expect(result).to.eql([
           resetPageReturn,
@@ -384,7 +407,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const queryStub = stub(Selectors, 'query').returns(query);
         stub(ActionCreators, 'resetPage').returns(resetPageReturn);
 
-        const result = ActionCreators.search()(() => null);
+        const result = ActionCreators.search()(null);
 
         expect(result).to.eql([
           resetPageReturn,
@@ -400,17 +423,17 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const resetPageAction = { a: 'b' };
       const resetRefinementsAction = { c: 'd' };
       const updateQueryAction = { e: 'f' };
-      const getState = () => null;
+      const state: any = { g: 'h' };
 
       it('should call search() if field not provided and return result of search()', () => {
         const searchAction = ['1'];
         const searchThunk = spy(() => searchAction);
         const search = stub(ActionCreators, 'search').returns(searchThunk);
 
-        const batchAction = ActionCreators.resetRecall()(getState);
+        const batchAction = ActionCreators.resetRecall()(state);
 
         expect(batchAction).to.eql(searchAction);
-        expect(searchThunk).to.be.calledWithExactly(getState);
+        expect(searchThunk).to.be.calledWithExactly(state);
         expect(search).to.be.calledOnce;
       });
 
@@ -424,9 +447,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
           resetRefinementsAction,
           updateQueryAction,
         ]);
-        stub(ActionCreators, 'search').returns(searchThunk);
+        const search = stub(ActionCreators, 'search').returns(searchThunk);
+        const query = '';
 
-        const batchAction = ActionCreators.resetRecall('', { field, index })(getState);
+        const batchAction = ActionCreators.resetRecall(query, { field, index })(state);
 
         expect(batchAction).to.eql([
           resetPageAction,
@@ -434,8 +458,9 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
           updateQueryAction,
           selectRefinementAction
         ]);
-        expect(searchThunk).to.be.calledWithExactly(getState);
+        expect(searchThunk).to.be.calledWithExactly(state);
         expect(selectRefinement).to.be.calledWithExactly(field, index);
+        expect(search).to.be.calledWithExactly(query);
       });
     });
 
@@ -534,7 +559,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
       it('should apply validators to UPDATE_CURRENT_PAGE', () => {
         expectValidators(ActionCreators.updateCurrentPage(page), Actions.UPDATE_CURRENT_PAGE, {
-          payload: validators.isOnDifferentPage
+          payload: [
+            validators.isValidPage,
+            validators.isOnDifferentPage
+          ]
         });
       });
     });
@@ -544,6 +572,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const product: any = { a: 'b' };
 
         expectAction(ActionCreators.updateDetails(product), Actions.UPDATE_DETAILS, product);
+      });
+    });
+
+    describe('setDetails()', () => {
+      it('should return an action', () => {
+        const product: any = { a: 'b' };
+
+        expectAction(ActionCreators.setDetails(product), Actions.SET_DETAILS, product);
       });
     });
 
@@ -592,12 +628,12 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const receiveQuery = stub(ActionCreators, 'receiveQuery').returns(receiveQueryAction);
         const receivePage = stub(ActionCreators, 'receivePage').returns(receivePageAction);
         const extractTemplate = stub(SearchAdapter, 'extractTemplate').returns(template);
-        const extractProducts = stub(SearchAdapter, 'extractProducts').returns(products);
+        const augmentProducts = stub(SearchAdapter, 'augmentProducts').returns(products);
         const selectCollection = stub(Selectors, 'collection').returns(collection);
         const extractQuery = stub(SearchAdapter, 'extractQuery').returns(query);
         const extractPage = stub(SearchAdapter, 'extractPage').returns(page);
 
-        const batchAction = ActionCreators.receiveProducts(results)(() => state);
+        const batchAction = ActionCreators.receiveProducts(results)(state);
 
         expect(createAction).to.be.calledWith(Actions.RECEIVE_PRODUCTS, results);
         expect(receiveQuery).to.be.calledWith(query);
@@ -609,7 +645,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         expect(receivePage).to.be.calledWith(page);
         expect(extractRecordCount).to.be.calledWith(results);
         expect(extractQuery).to.be.calledWith(results);
-        expect(extractProducts).to.be.calledWith(results);
+        expect(augmentProducts).to.be.calledWith(results);
         expect(combineNavigations).to.be.calledWith(results);
         expect(selectCollection).to.be.calledWith(state);
         expect(extractPage).to.be.calledWith(state);
@@ -631,7 +667,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const action = { error: true };
         createAction.returns(action);
 
-        const batchAction = ActionCreators.receiveProducts(results)(() => null);
+        const batchAction = ActionCreators.receiveProducts(results)(null);
 
         expect(createAction).to.be.calledWith(Actions.RECEIVE_PRODUCTS, results);
         expect(batchAction).to.eql(action);
@@ -732,9 +768,12 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
     describe('receiveMoreProducts()', () => {
       it('should return an action', () => {
-        const products: any[] = ['a', 'b'];
+        const products: any = { a: 'b' };
+        const newProds = { c: 'd' };
+        const augmentProducts = stub(SearchAdapter, 'augmentProducts').returns(newProds);
 
-        expectAction(ActionCreators.receiveMoreProducts(products), Actions.RECEIVE_MORE_PRODUCTS, products);
+        expectAction(ActionCreators.receiveMoreProducts(products)(null), Actions.RECEIVE_MORE_PRODUCTS, newProds);
+        expect(augmentProducts).to.be.calledWithExactly(products);
       });
     });
 
@@ -745,17 +784,18 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const products: any[] = ['c', 'd'];
         const receiveAutocompleteProductRecordsAction = { e: 'f' };
         const receiveAutocompleteTemplateAction = { g: 'h' };
-        const extractProducts = stub(SearchAdapter, 'extractProducts').returns(products);
+        const augmentProducts = stub(SearchAdapter, 'augmentProducts').returns(products);
         const extractTemplate = stub(SearchAdapter, 'extractTemplate').returns(template);
         // tslint:disable-next-line max-line-length
         const receiveAutocompleteProductRecords = stub(ActionCreators, 'receiveAutocompleteProductRecords').returns(receiveAutocompleteProductRecordsAction);
         const receiveAutocompleteTemplate = stub(ActionCreators, 'receiveAutocompleteTemplate').returns(receiveAutocompleteTemplateAction);
 
-        const batchAction = ActionCreators.receiveAutocompleteProducts(response);
+        const batchAction = ActionCreators.receiveAutocompleteProducts(response)(null);
 
         expect(createAction).to.be.calledWith(Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, response);
         expect(receiveAutocompleteProductRecords).to.be.calledWith(products);
         expect(receiveAutocompleteTemplate).to.be.calledWith(template);
+        expect(augmentProducts).to.be.calledWithExactly(response);
         expect(batchAction).to.eql([
           ACTION,
           receiveAutocompleteProductRecordsAction,
@@ -768,7 +808,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const action = { a: 'b', error: true };
         createAction.returns(action);
 
-        const batchAction = ActionCreators.receiveAutocompleteProducts(results);
+        const batchAction = ActionCreators.receiveAutocompleteProducts(results)(null);
 
         expect(createAction).to.be.calledWith(Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, results);
         expect(batchAction).to.eql(action);
@@ -793,14 +833,6 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       });
     });
 
-    describe('receiveDetailsProduct()', () => {
-      it('should return an action', () => {
-        const product: any = { a: 'b' };
-
-        expectAction(ActionCreators.receiveDetailsProduct(product), Actions.RECEIVE_DETAILS_PRODUCT, product);
-      });
-    });
-
     describe('receiveRecommendationsProducts()', () => {
       it('should return an action', () => {
         const products: any[] = ['a', 'b', 'c'];
@@ -815,6 +847,23 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const products = [{ sku: '59384', quantity: 3 }, { sku: '239', quantity: 1 }];
 
         expectAction(ActionCreators.receivePastPurchases(products), Actions.RECEIVE_PAST_PURCHASES, products);
+      });
+    });
+
+    describe('receiveOrderHistory()', () => {
+      it('should return an action', () => {
+        const products = [{ sku: '59384', quantity: 3 }, { sku: '239', quantity: 1 }];
+
+        expectAction(ActionCreators.receiveOrderHistory(<any>products), Actions.RECEIVE_ORDER_HISTORY, products);
+      });
+    });
+
+    describe('receiveQueryPastPurchases()', () => {
+      it('should return an action', () => {
+        const products = [{ sku: '59384', quantity: 3 }, { sku: '239', quantity: 1 }];
+
+        // tslint:disable-next-line max-line-length
+        expectAction(ActionCreators.receiveQueryPastPurchases(products), Actions.RECEIVE_QUERY_PAST_PURCHASES, products);
       });
     });
 

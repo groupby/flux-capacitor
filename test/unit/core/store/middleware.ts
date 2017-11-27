@@ -22,14 +22,19 @@ suite('Middleware', ({ expect, spy, stub }) => {
     afterEach(() => delete process.env.NODE_ENV);
 
     it('should return composed middleware', () => {
-      const flux: any = { config: {} };
+      const flux: any = { __config: {} };
       const composed = ['e', 'f'];
-      const applied = ['k', 'l'];
+      const simpleMiddleware = ['k', 'l'];
+      const batchMiddleware = ['k', 'l'];
+      const thunkMiddleware = ['k', 'l'];
       const idGenerator = stub(Middleware, 'idGenerator').returns(idGeneratorMiddleware);
       const errorHandler = stub(Middleware, 'errorHandler').returns(errorHandlerMiddleware);
       const compose = stub(redux, 'compose').returns(composed);
-      const applyMiddleware = stub(redux, 'applyMiddleware').returns(applied);
+      const applyMiddleware = stub(redux, 'applyMiddleware');
       stub(Middleware, 'validator').returns(validatorMiddleware);
+      applyMiddleware.withArgs().returns(batchMiddleware);
+      applyMiddleware.withArgs(Middleware.thunkEvaluator).returns(thunkMiddleware);
+      applyMiddleware.withArgs(Middleware.thunkEvaluator, Middleware.saveStateAnalyzer).returns(simpleMiddleware);
 
       const middleware = Middleware.create(sagaMiddleware, flux);
 
@@ -38,19 +43,28 @@ suite('Middleware', ({ expect, spy, stub }) => {
         .and.calledWithExactly('searchId', SEARCH_CHANGE_ACTIONS);
       expect(errorHandler).to.be.calledWithExactly(flux);
       expect(applyMiddleware).to.be.calledWithExactly(
+        Middleware.thunkEvaluator,
         validatorMiddleware,
         idGeneratorMiddleware,
         idGeneratorMiddleware,
         errorHandlerMiddleware,
         sagaMiddleware,
+        Middleware.thunkEvaluator,
         Middleware.saveStateAnalyzer
       );
-      expect(compose).to.be.calledWithExactly(reduxBatch, applied, reduxBatch);
+      expect(compose).to.be.calledWithExactly(
+        simpleMiddleware,
+        reduxBatch,
+        batchMiddleware,
+        reduxBatch,
+        thunkMiddleware,
+        reduxBatch,
+      );
       expect(middleware).to.eql(composed);
     });
 
     it('should include redux-logger when running in development and debug set', () => {
-      const flux: any = { config: { services: { logging: { debug: { flux: true } } } } };
+      const flux: any = { __config: { services: { logging: { debug: { flux: true } } } } };
       const applyMiddleware = stub(redux, 'applyMiddleware');
       stub(Middleware, 'idGenerator').returns(idGeneratorMiddleware);
       stub(Middleware, 'errorHandler').returns(errorHandlerMiddleware);
@@ -61,18 +75,20 @@ suite('Middleware', ({ expect, spy, stub }) => {
       Middleware.create(sagaMiddleware, flux);
 
       expect(applyMiddleware).to.be.calledWithExactly(
+        Middleware.thunkEvaluator,
         validatorMiddleware,
         idGeneratorMiddleware,
         idGeneratorMiddleware,
         errorHandlerMiddleware,
         sagaMiddleware,
+        Middleware.thunkEvaluator,
         Middleware.saveStateAnalyzer,
         reduxLogger
       );
     });
 
     it('should not include redux-logger when running in development and debug not set', () => {
-      const flux: any = { config: {} };
+      const flux: any = { __config: {} };
       const applyMiddleware = stub(redux, 'applyMiddleware');
       stub(Middleware, 'idGenerator').returns(idGeneratorMiddleware);
       stub(Middleware, 'errorHandler').returns(errorHandlerMiddleware);
@@ -83,11 +99,13 @@ suite('Middleware', ({ expect, spy, stub }) => {
       Middleware.create(sagaMiddleware, flux);
 
       expect(applyMiddleware).to.be.calledWithExactly(
+        Middleware.thunkEvaluator,
         validatorMiddleware,
         idGeneratorMiddleware,
         idGeneratorMiddleware,
         errorHandlerMiddleware,
         sagaMiddleware,
+        Middleware.thunkEvaluator,
         Middleware.saveStateAnalyzer
       );
     });
@@ -174,6 +192,30 @@ suite('Middleware', ({ expect, spy, stub }) => {
       Middleware.saveStateAnalyzer()(next)(batchAction);
 
       expect(next).to.be.calledWithExactly(batchAction);
+    });
+  });
+
+  describe('thunkEvaluator()', () => {
+    it('should pass forward a plain object action', () => {
+      const action = { a: 'b' };
+      const next = spy();
+
+      Middleware.thunkEvaluator(null)(next)(action);
+
+      expect(next).to.be.calledWithExactly(action);
+    });
+
+    it('should evaluate and pass forward a synchonous thunk action', () => {
+      const action = { a: 'b' };
+      const state = { c: 'd' };
+      const next = spy();
+      const thunk = spy(() => action);
+      const getState = () => state;
+
+      Middleware.thunkEvaluator(<any>{ getState })(next)(thunk);
+
+      expect(next).to.be.calledWithExactly(action);
+      expect(thunk).to.be.calledWithExactly(state);
     });
   });
 });

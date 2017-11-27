@@ -26,11 +26,11 @@ namespace Adapter {
     // tslint:disable-next-line max-line-length
     const categoryValues = hasCategory ? [{ matchAll: true }, ...Adapter.extractCategoryValues(searchTerms[0], category)] : [];
     if (hasCategory) {
-      searchTerms.shift();
+      searchTerms[0].disabled = true;
     }
     return {
       categoryValues,
-      suggestions: searchTerms.map(({ value }) => ({ value })),
+      suggestions: searchTerms.map(({ value, disabled }) => ({ value, disabled })),
       navigations: navigations.map(({ name: field, values: refinements }) =>
         ({ field, label: labels[field] || field, refinements }))
     };
@@ -39,8 +39,6 @@ namespace Adapter {
   // tslint:disable-next-line max-line-length
   export const extractCategoryValues = ({ additionalInfo }: { additionalInfo: object }, category: string) =>
     ((additionalInfo || {})[category] || []).map((value) => ({ value }));
-
-  export const extractProducts = ({ result: { products } }: any) => products.map(Search.extractProduct);
 
   export const mergeSuggestions = (suggestions: Array<{ value: string }>, recommendations: RecommendationsResponse) =>
     [...recommendations.result.map(({ query }) => ({ value: query, trending: true })), ...suggestions];

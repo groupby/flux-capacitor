@@ -1,6 +1,6 @@
 import { reduxBatch } from '@manaflair/redux-batch';
 import * as cuid from 'cuid';
-import { applyMiddleware, compose, createStore, Middleware as ReduxMiddleware } from 'redux';
+import { applyMiddleware, compose, createStore, Middleware as ReduxMiddleware, Store } from 'redux';
 import { ActionCreators } from 'redux-undo';
 import * as validatorMiddleware from 'redux-validator';
 import FluxCapacitor from '../../flux-capacitor';
@@ -12,6 +12,7 @@ export const HISTORY_UPDATE_ACTIONS = [
   Actions.RECEIVE_PRODUCTS,
   Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS,
   Actions.RECEIVE_PAST_PURCHASES,
+  Actions.RECEIVE_ORDER_HISTORY,
   Actions.RECEIVE_NAVIGATION_SORT,
   Actions.RECEIVE_COLLECTION_COUNT,
   Actions.RECEIVE_MORE_REFINEMENTS
@@ -69,22 +70,41 @@ export namespace Middleware {
     };
   }
 
+  export function thunkEvaluator(store: Store<any>) {
+    return (next) => (thunkAction) => {
+      if (typeof thunkAction === 'function') {
+        return next(thunkAction(store.getState()));
+      } else {
+        return next(thunkAction);
+      }
+    };
+  }
+
   export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
     const middleware = [
+      thunkEvaluator,
       Middleware.validator(),
       Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS),
       Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
       Middleware.errorHandler(flux),
       sagaMiddleware,
-      Middleware.saveStateAnalyzer,
+      thunkEvaluator,
+      saveStateAnalyzer,
     ];
 
     // tslint:disable-next-line max-line-length
-    if (process.env.NODE_ENV === 'development' && ((((<any>flux.config).services || {}).logging || {}).debug || {}).flux) {
+    if (process.env.NODE_ENV === 'development' && ((((<any>flux.__config).services || {}).logging || {}).debug || {}).flux) {
       middleware.push(require('redux-logger').default);
     }
 
-    return compose(reduxBatch, applyMiddleware(...middleware), reduxBatch);
+    return compose(
+      applyMiddleware(thunkEvaluator, saveStateAnalyzer),
+      reduxBatch,
+      applyMiddleware(...middleware),
+      reduxBatch,
+      applyMiddleware(thunkEvaluator),
+      reduxBatch,
+    );
   }
 }
 

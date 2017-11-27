@@ -220,6 +220,14 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
+  describe('totalPages()', () => {
+    it('should return last page', () => {
+      const last = 555;
+
+      expect(Selectors.totalPages(<any>{ data: { present: { page: { last } } } })).to.eq(last);
+    });
+  });
+
   describe('sorts()', () => {
     it('should return indexed sort data', () => {
       const sorts = { a: 'b' };
@@ -262,19 +270,31 @@ suite('selectors', ({ expect, stub }) => {
 
   describe('products()', () => {
     it('should return all products', () => {
-      const products = { a: 'b' };
+      const products = [{ data: { a: 'b' } }];
+      const extracted = [{ a: 'b' }];
 
-      expect(Selectors.products(<any>{ data: { present: { products } } })).to.eq(products);
+      expect(Selectors.products(<any>{ data: { present: { products } } })).to.eql(extracted);
     });
   });
 
-  describe('productsWithMetadata()', () => {
+  describe('findProduct()', () => {
+    it('should find product with given id', () => {
+      const products = [{ id: '3' }, { id: '4' }, { id: '7' }, { id: '2' }];
+      const state: any = { data: { present: { products } } };
+      const productSelector = stub(Selectors, 'products').returns(products);
+
+      expect(Selectors.findProduct(state, '7')).to.eql(products[2]);
+      expect(productSelector).to.be.calledWith(state);
+    });
+  });
+
+  describe('productsWithPastPurchase()', () => {
     it('should return products with pastPurchase metadata', () => {
       const state: any = { a: 'b' };
       const pastPurchaseProductsBySku = stub(Selectors, 'pastPurchaseProductsBySku').returns({ a: {}, c: {} });
       const products = stub(Selectors, 'products').returns([{ id: 'a' }, { id: 'b' }, { id: 'c' }]);
 
-      expect(Selectors.productsWithMetadata(state, 'id')).to.eql([
+      expect(Selectors.productsWithPastPurchase(state, 'id')).to.eql([
         { data: { id: 'a' }, meta: { pastPurchase: true } },
         { data: { id: 'b' }, meta: {} },
         { data: { id: 'c' }, meta: { pastPurchase: true } },
@@ -288,11 +308,24 @@ suite('selectors', ({ expect, stub }) => {
       stub(Selectors, 'pastPurchaseProductsBySku').returns({ a: {}, c: {} });
       stub(Selectors, 'products').returns([{ sku: 'a' }, { sku: 'b' }, { sku: 'c' }]);
 
-      expect(Selectors.productsWithMetadata(state, 'sku')).to.eql([
+      expect(Selectors.productsWithPastPurchase(state, 'sku')).to.eql([
         { data: { sku: 'a' }, meta: { pastPurchase: true } },
         { data: { sku: 'b' }, meta: {} },
         { data: { sku: 'c' }, meta: { pastPurchase: true } },
       ]);
+    });
+  });
+
+  describe('productsWithMetadata()', () => {
+    it('should return products with metadata', () => {
+      const products = [
+        { data: { id: 'a' }, id: 1, meta: { pastPurchase: true } },
+        { data: { id: 'b' }, id: 2, meta: {} },
+        { data: { id: 'c' }, id: 3, meta: { pastPurchase: true } },
+      ];
+      const state: any = { a: 'b', data: { present: { products  } } };
+
+      expect(Selectors.productsWithMetadata(state)).to.eql(products);
     });
   });
 
@@ -434,13 +467,22 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
+  describe('config()', () => {
+    it('should return the current session config', () => {
+      const config = { a: 'b' };
+
+      expect(Selectors.config(<any>{ session: { config } })).to.eq(config);
+    });
+  });
+
   describe('recommendationsProducts()', () => {
     it('should return the currently recommended products', () => {
       const products = ['a', 'b', 'c'];
+      const givenProducts = [{ data: 'a' }, { data: 'b' }, { data: 'c' }];
 
       expect(Selectors.recommendationsProducts(<any>{
-        data: { present: { recommendations: { suggested: { products } } } }
-      })).to.eq(products);
+        data: { present: { recommendations: { suggested: { products: givenProducts } } } }
+      })).to.eql(products);
     });
   });
 
@@ -463,6 +505,33 @@ suite('selectors', ({ expect, stub }) => {
       };
 
       expect(Selectors.pastPurchaseProductsBySku(state)).to.eql({ a: 4, b: 5, c: 8, });
+    });
+  });
+
+  describe('pastPurchases()', () => {
+    it('should return pastPurchases', () => {
+      const pastPurchases = { products: [{ a: 1 }]};
+      const state = { data: { present: { recommendations: { pastPurchases } } } };
+
+      expect(Selectors.pastPurchases(<any>state)).to.eql([{ a: 1 }]);
+    });
+  });
+
+  describe('orderHistory()', () => {
+    it('should return orderHistory', () => {
+      const orderHistory = [{ a: 1 }];
+      const state = { data: { present: { recommendations: { orderHistory } } } };
+
+      expect(Selectors.orderHistory(<any>state)).to.eql([{ a: 1 }]);
+    });
+  });
+
+  describe('QueryPastPurchases()', () => {
+    it('should return QueryPastPurchases', () => {
+      const queryPastPurchases = [{ a: 1 }];
+      const state = { data: { present: { recommendations: { queryPastPurchases } } } };
+
+      expect(Selectors.queryPastPurchases(<any>state)).to.eql([{ a: 1 }]);
     });
   });
 

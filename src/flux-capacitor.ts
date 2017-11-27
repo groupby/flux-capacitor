@@ -2,7 +2,6 @@ import { EventEmitter } from 'eventemitter3';
 import { BrowserBridge, Results } from 'groupby-api';
 import { Action as ReduxAction, Store as ReduxStore } from 'redux';
 import { Sayt } from 'sayt';
-import wrapActionCreators from './core/actions';
 import Actions from './core/actions';
 import ActionCreators from './core/actions/creators';
 import Adapter from './core/adapters/configuration';
@@ -16,8 +15,8 @@ declare module 'redux' {
   export interface Dispatch<S> {
     <A extends ReduxAction>(action: A): A;
     <A extends ReduxAction>(action: A[]): A[];
-    <A extends ReduxAction>(action: (getState: () => Store.State) => A): A;
-    <A extends ReduxAction>(action: (getState: () => Store.State) => A[]): A[];
+    <A extends ReduxAction>(action: (state: Store.State) => A): A;
+    <A extends ReduxAction>(action: (state: Store.State) => A[]): A[];
   }
 }
 
@@ -40,9 +39,17 @@ class FluxCapacitor extends EventEmitter {
    * instance of the state store
    */
   store: ReduxStore<Store.State> = Store.create(this, Observer.listener(this));
+  /**
+   * storefront config
+   */
+  get config(): Configuration {
+    return this.selectors.config(this.store.getState());
+  }
 
-  constructor(public config: Configuration) {
+  // tslint:disable-next-line typedef variable-name
+  constructor(public __config: Configuration) {
     super();
+    delete this.__config;
   }
 
   saveState(route: string) {
@@ -87,8 +94,8 @@ class FluxCapacitor extends EventEmitter {
     this.store.dispatch(this.actions.deselectRefinement(navigationName, index));
   }
 
-  details(product: Store.Product) {
-    this.store.dispatch(this.actions.updateDetails(product));
+  detailsWithRouting(product: Store.Product) {
+    this.store.dispatch(this.actions.setDetails(product));
   }
 
   switchCollection(collection: string) {
@@ -115,19 +122,29 @@ class FluxCapacitor extends EventEmitter {
     this.store.dispatch(this.actions.fetchAutocompleteProducts(query, refinements));
   }
 
+  saytPastPurchases(query: string) {
+    this.store.dispatch(this.actions.fetchPastPurchases(query));
+  }
+
+  pastPurchaseProducts() {
+    this.store.dispatch(this.actions.receiveAutocompleteProductRecords(
+      this.selectors.queryPastPurchases(this.store.getState())));
+  }
+
   /**
    * create instances of all clients used to contact microservices
    */
   static createClients(flux: FluxCapacitor) {
+    const config = flux.__config; // store not defined yet
     return {
-      bridge: FluxCapacitor.createBridge(flux.config, (err) => {
-        const networkConfig = flux.config.network;
+      bridge: FluxCapacitor.createBridge(config, (err) => {
+        const networkConfig = config.network;
         flux.emit(Events.ERROR_BRIDGE, err);
         if (networkConfig.errorHandler) {
           networkConfig.errorHandler(err);
         }
       }),
-      sayt: FluxCapacitor.createSayt(flux.config)
+      sayt: FluxCapacitor.createSayt(config)
     };
   }
 
