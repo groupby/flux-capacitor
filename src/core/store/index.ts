@@ -317,12 +317,7 @@ namespace Store {
       value: string;
       trending?: boolean;
     }
-
-    export interface Product {
-        // todo add type
-        id: string;
-      }
-    }
+  }
 
   export interface SelectableList<T> {
     items: T[];
