@@ -277,7 +277,7 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
-  describe.only('findProduct()', () => {
+  describe('findProduct()', () => {
     it('should find autocomplete product with given id', () => {
       const products = [{ id: '3' }, { id: '4' }, { id: '7' }, { id: '2' }];
       const state: any = { data: { present: { products } } };
