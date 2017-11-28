@@ -73,6 +73,7 @@ namespace Store {
     recommendations: Recommendations; // mixed
 
     personalization?: Personalization;
+    cart: Cart; // TODO
 
     recordCount: number; // post
 
@@ -253,6 +254,10 @@ namespace Store {
       collection: string;
       metadata: object;
     }
+  }
+
+  export interface Cart {
+    cartId: string;
   }
 
   export interface Product {
