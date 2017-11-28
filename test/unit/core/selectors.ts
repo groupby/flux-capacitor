@@ -277,14 +277,35 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
-  describe('findProduct()', () => {
+  describe.only('findProduct()', () => {
+    it('should find autocomplete product with given id', () => {
+      const products = [{ id: '3' }, { id: '4' }, { id: '7' }, { id: '2' }];
+      const state: any = { data: { present: { products } } };
+      const autocompleteSelector = stub(Selectors, 'autocompleteProducts').returns(products);
+
+      expect(Selectors.findProduct(state, '7')).to.eql(products[2]);
+      expect(autocompleteSelector).to.be.calledWith(state);
+    });
+
     it('should find product with given id', () => {
       const products = [{ id: '3' }, { id: '4' }, { id: '7' }, { id: '2' }];
       const state: any = { data: { present: { products } } };
+      const autocompleteSelector = stub(Selectors, 'autocompleteProducts').returns([{ id: 'asdfasdf' }]);
       const productSelector = stub(Selectors, 'products').returns(products);
 
       expect(Selectors.findProduct(state, '7')).to.eql(products[2]);
       expect(productSelector).to.be.calledWith(state);
+    });
+
+    it('should find recommendations product with given id', () => {
+      const products = [{ id: '3' }, { id: '4' }, { id: '7' }, { id: '2' }];
+      const state: any = { data: { present: { products } } };
+      const autocompleteSelector = stub(Selectors, 'autocompleteProducts').returns([{ id: 'asdfasdf' }]);
+      const productSelector = stub(Selectors, 'products').returns([{ id: 'fdfdf' }]);
+      const recommendations = stub(Selectors, 'recommendationsProducts').returns(products);
+
+      expect(Selectors.findProduct(state, '7')).to.eql(products[2]);
+      expect(recommendations).to.be.calledWith(state);
     });
   });
 
