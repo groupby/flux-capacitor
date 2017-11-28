@@ -312,7 +312,7 @@ suite('selectors', ({ expect, stub }) => {
         { data: { id: 'b' }, id: 2, meta: {} },
         { data: { id: 'c' }, id: 3, meta: { pastPurchase: true } },
       ];
-      const state: any = { a: 'b', data: { present: { products  } } };
+      const state: any = { a: 'b', data: { present: { products } } };
 
       expect(Selectors.productsWithMetadata(state)).to.eql(products);
     });
@@ -434,10 +434,10 @@ suite('selectors', ({ expect, stub }) => {
   describe('autocompleteProducts()', () => {
     it('should return the current autocomplete products', () => {
       const state: any = { a: 'b' };
-      const products = ['c', 'd'];
+      const products = [{ data: 'c' }, { data: 'd' }];
       const autocompleteSelector = stub(Selectors, 'autocomplete').returns({ products });
 
-      expect(Selectors.autocompleteProducts(state)).to.eq(products);
+      expect(Selectors.autocompleteProducts(state)).to.eql(['c', 'd']);
       expect(autocompleteSelector).to.be.calledWith(state);
     });
   });
@@ -510,7 +510,7 @@ suite('selectors', ({ expect, stub }) => {
 
   describe('pastPurchases()', () => {
     it('should return pastPurchases', () => {
-      const pastPurchases = { products: [{ a: 1 }]};
+      const pastPurchases = { products: [{ a: 1 }] };
       const state = { data: { present: { recommendations: { pastPurchases } } } };
 
       expect(Selectors.pastPurchases(<any>state)).to.eql([{ a: 1 }]);

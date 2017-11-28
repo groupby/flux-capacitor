@@ -276,7 +276,7 @@ namespace Selectors {
    * Returns the current autocomplete products.
    */
   export const autocompleteProducts = (state: Store.State) =>
-    Selectors.autocomplete(state).products;
+    Search.extractData(Selectors.autocomplete(state).products);
 
   /**
    * Returns the current session location.
