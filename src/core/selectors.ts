@@ -123,7 +123,7 @@ namespace Selectors {
     return Selectors.autocompleteProducts(state).find(match) ||
       Selectors.products(state).find(match) ||
       Selectors.recommendationsProducts(state).find(match);
-  }
+  };
 
   /**
    * Returns products with past purchases metadata.
