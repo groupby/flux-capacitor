@@ -147,6 +147,12 @@ namespace Observer {
             orderHistory: emit(Events.ORDER_HISTORY_UPDATED)
           },
 
+          cart: {
+            items: (oldState, newState, path) => {
+              emit(Events.CART_UPDATED);
+            }
+          },
+
           recordCount: emit(Events.RECORD_COUNT_UPDATED),
 
           redirect: emit(Events.REDIRECT),
