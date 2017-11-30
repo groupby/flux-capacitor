@@ -271,7 +271,7 @@ namespace Configuration {
        */
       biasStrength: BiasStrength;
 
-      securedPayload?: Recommendations.SecuredPayload;
+      securedPayload?: Recommendations.SecuredPayload | Recommendations.Cookie;
 
       enabled: boolean;
 
@@ -291,6 +291,12 @@ namespace Configuration {
       initialValue?: string;
 
       messageAuthenticationCode?: string;
+    }
+
+    export interface Cookie {
+      cookie: object;
+
+      parser: Function;
     }
 
     // tslint:disable-next-line interface-name
