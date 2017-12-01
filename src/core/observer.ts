@@ -150,6 +150,8 @@ namespace Observer {
             orderHistory: emit(Events.ORDER_HISTORY_UPDATED)
           },
 
+          infiniteScroll: emit(Events.INFINITE_SCROLL_UPDATED),
+
           recordCount: emit(Events.RECORD_COUNT_UPDATED),
 
           redirect: emit(Events.REDIRECT),
