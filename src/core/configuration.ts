@@ -330,7 +330,7 @@ namespace Configuration {
       };
       strength: BiasStrength;
       maxBiases: number;
-      attributeDefaultBiases: number;
+      attributeMaxBiases: number;
       expiry: number;
     }
 

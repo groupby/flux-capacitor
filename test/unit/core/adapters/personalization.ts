@@ -392,7 +392,7 @@ suite('Personalization Adapter', ({ expect, stub }) => {
       ];
 
       const ret = Adapter.pruneBiases(arr, 'b', 2, <any>{
-        attributeDefaultBiases: 1,
+        attributeMaxBiases: 1,
         attributes: {
           b: {
           }
