@@ -116,9 +116,8 @@ export const isDifferentAutocompleteQuery: Validator<string> = {
 };
 
 export const isNotFetching: Validator<boolean> = {
-  // func: (forward) => forward ?
-  //   Selectors.infiniteScroll(state).isFetchingForward :
-  //   Selectors.infiniteScroll(state).isFetchingBackward;
-  func: (forward) => true,
+  func: (forward, state) => forward ?
+    !Selectors.infiniteScroll(state).isFetchingForward :
+    !Selectors.infiniteScroll(state).isFetchingBackward,
   msg: 'is already fetching'
 };
