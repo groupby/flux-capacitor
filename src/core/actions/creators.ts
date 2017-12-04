@@ -118,6 +118,10 @@ namespace ActionCreators {
     return createAction(Actions.FETCH_PAST_PURCHASE_PRODUCTS, query);
   }
 
+  export function fetchPastPurchaseRENAMETHIS(): Actions.FetchPastPurchaseRENAMETHIS {
+    return createAction(Actions.FETCH_PAST_PURCHASE_RENAME_THIS, null);
+  }
+
   export function fetchSaytPastPurchases(query: string): Actions.FetchSaytPastPurchases {
     return createAction(Actions.FETCH_SAYT_PAST_PURCHASES, query);
   }
@@ -635,8 +639,13 @@ namespace ActionCreators {
   }
 
   // tslint:disable-next-line max-line-length
-  export function receivePastPurchaseRecordCount(count: number): Actions.ReceivePastPurchaseRecordCount {
-    return createAction(Actions.RECEIVE_PAST_PURCHASE_RECORD_COUNT, count);
+  export function receivePastPurchaseAllRecordCount(count: number): Actions.ReceivePastPurchaseAllRecordCount {
+    return createAction(Actions.RECEIVE_PAST_PURCHASE_ALL_RECORD_COUNT, count);
+  }
+
+  // tslint:disable-next-line max-line-length
+  export function receivePastPurchaseCurrentRecordCount(count: number): Actions.ReceivePastPurchaseCurrentRecordCount {
+    return createAction(Actions.RECEIVE_PAST_PURCHASE_CURRENT_RECORD_COUNT, count);
   }
 
   // tslint:disable-next-line max-line-length
@@ -734,6 +743,10 @@ namespace ActionCreators {
       ...ActionCreators.resetPastPurchaseRefinements(true),
       createAction(Actions.UPDATE_PAST_PURCHASE_QUERY, query),
     ];
+  }
+
+  export function updatePastPurchaseDisplayQuery(query: string): Actions.UpdatePastPurchaseDisplayQuery {
+    return createAction(Actions.UPDATE_PAST_PURCHASE_DISPLAY_QUERY, query);
   }
 
   /**
