@@ -72,7 +72,7 @@ namespace ActionCreators {
    * @return {Actions.FetchAutocompleteProducts}                          - Action with
    * query and refinements.
    */
-   // tslint:disable-next-line max-line-length
+  // tslint:disable-next-line max-line-length
   export function fetchAutocompleteProducts(query: string, refinements: Actions.Payload.Autocomplete.Refinement[] = []): Actions.FetchAutocompleteProducts {
     return createAction(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { query, refinements }, {
       query: validators.isValidQuery,
@@ -404,8 +404,8 @@ namespace ActionCreators {
         ...payload,
         config: Selectors.config(state).personalization.realTimeBiasing,
       }, {
-        payload: validators.isValidBias
-      });
+          payload: validators.isValidBias
+        });
   }
 
   // response action creators
@@ -624,18 +624,22 @@ namespace ActionCreators {
     return createAction(Actions.RECEIVE_QUERY_PAST_PURCHASES, products);
   }
 
-  export function receiveOrderHistory (products: Store.Recommendations.OrderHistoryProduct[]) {
+  export function receiveOrderHistory(products: Store.Recommendations.OrderHistoryProduct[]) {
     return createAction(Actions.RECEIVE_ORDER_HISTORY, products);
   }
 
   // TODO; wip shopping cart (change type)
-  export function createCart (visitorId: string, sessionId: string) {
+  export function getTrackerInfo(visitorId: string, sessionId: string) {
+    console.log('getting it', visitorId)
+    return createAction(Actions.GET_TRACKER_INFO, { visitorId, sessionId });
+  }
+
+  export function createCart(visitorId: string, sessionId: string) {
     return createAction(Actions.CREATE_CART, { visitorId, sessionId });
   }
 
-  export function cartCreated (cartId: string) {
-    console.log('cart created in creator')
-    return createAction(Actions.CART_CREATED, { cartId })
+  export function cartCreated(cartId: string) {
+    return createAction(Actions.CART_CREATED, { cartId });
   }
 
   // ui action creators
