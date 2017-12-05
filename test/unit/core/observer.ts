@@ -185,7 +185,6 @@ suite('Observer', ({ expect, spy, stub }) => {
       expect(present.collections.selected).to.be.a('function');
       expect(present.details).to.be.an('object');
       expect(present.details.data).to.be.a('function');
-      expect(present.details.product).to.be.a('function');
       expect(present.navigations).to.be.a('function');
       expect(present.page).to.be.a('function');
       expect(present.page.current).to.be.a('function');
@@ -203,6 +202,7 @@ suite('Observer', ({ expect, spy, stub }) => {
       expect(present.redirect).to.be.a('function');
       expect(present.sorts).to.be.a('function');
       expect(present.template).to.be.a('function');
+      expect(present.personalization._persist.rehydrated).to.be.a('function');
     });
 
     describe('data', () => {
@@ -306,12 +306,6 @@ suite('Observer', ({ expect, spy, stub }) => {
           observers.data.present.details.data(undefined, testObject);
 
           expect(emit).to.be.calledWith(Events.DETAILS_UPDATED, testObject);
-        });
-
-        it('should emit DETAILS_PRODUCT_UPDATED event', () => {
-          observers.data.present.details.product(undefined, testObject);
-
-          expect(emit).to.be.calledWith(Events.DETAILS_PRODUCT_UPDATED, testObject);
         });
       });
 
@@ -455,6 +449,24 @@ suite('Observer', ({ expect, spy, stub }) => {
           observers.data.present.template(undefined, testObject);
 
           expect(emit).to.be.calledWith(Events.TEMPLATE_UPDATED, testObject);
+        });
+      });
+
+      describe('personalization', () => {
+        describe('_persist', () => {
+          describe('rehydrated', () => {
+            it('should emit PERSONALIZATION_BIASING_REHYDRATED if newState true', () => {
+              observers.data.present.personalization._persist.rehydrated(null, true);
+
+              expect(emit).to.be.calledWith(Events.PERSONALIZATION_BIASING_REHYDRATED, true);
+            });
+
+            it('should not emit PERSONALIZATION_BIASING_REHYDRATED if newState false', () => {
+              observers.data.present.personalization._persist.rehydrated(null, false);
+
+              expect(emit).to.not.be.called;
+            });
+          });
         });
       });
     });

@@ -105,11 +105,6 @@ namespace Events {
    * Returns the details data.
    */
   export const DETAILS_UPDATED = 'details_updated'; // pre
-  /**
-   * Triggered when details product is updated.
-   * Returns the details products.
-   */
-  export const DETAILS_PRODUCT_UPDATED = 'details_product_updated'; // post
 
   // page events
   /**
@@ -274,6 +269,13 @@ namespace Events {
    * Returns the url.
    */
   export const URL_UPDATED = 'url:updated';
+
+  // personalization events
+  /**
+   * Triggered when biasing is rehydrated
+   * returns true
+   */
+  export const PERSONALIZATION_BIASING_REHYDRATED = 'personalization:biasing_rehydrated';
 }
 
 export default Events;

@@ -37,11 +37,11 @@ export const updateState = (state: Store.State, { payload }: Actions.RefreshStat
       ],
       present: {
         ...payload.data.present,
+        personalization: {
+          ...payload.data.present.personalization,
+          biasing: state.data.present.personalization.biasing,
+        },
         autocomplete: state.data.present.autocomplete,
-        details: {
-          ...payload.data.present.details,
-          data: state.data.present.details.data
-        }
       },
       future: []
     }

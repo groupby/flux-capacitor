@@ -36,6 +36,13 @@ namespace ActionCreators {
   }
 
   /**
+   * Wrapper for fetchProducts, dispatches it within saga when store is rehydrated
+   * @return {Actions.FetchProductsWhenHydrated} - Action with null.
+   */
+  export function fetchProductsWhenHydrated(): Actions.fetchProductsWhenHydrated {
+    return createAction(Actions.FETCH_PRODUCTS_WHEN_HYDRATED, fetchProducts());
+  }
+  /**
    * Makes a request for additional products beyond currently requested products.
    * @param  {number}                    amount - Amount of more products to fetch.
    * @return {Actions.FetchMoreProducts}        - Action with amount.
@@ -365,6 +372,16 @@ namespace ActionCreators {
   }
 
   /**
+   * Sets the details product in the store, doing some additional emits and state changes.
+   * @param  {Store.Product}         product - The product to use as the details
+   * product.
+   * @return {Actions.SetDetails}         - Action with product.
+   */
+  export function setDetails(product: Store.Product): Actions.SetDetails {
+    return createAction(Actions.SET_DETAILS, product);
+  }
+
+  /**
    * Updates the autocomplete query with the given term.
    * @param  {string}                          query - The search term to update
    * the autocomplete query to and get suggestions based on.
@@ -374,6 +391,21 @@ namespace ActionCreators {
     return createAction(Actions.UPDATE_AUTOCOMPLETE_QUERY, query, {
       payload: validators.isDifferentAutocompleteQuery
     });
+  }
+
+  /**
+   * The biasing object to receive and update biasing with
+   * @param  {Actions.Payload.Personalization.Biasing} payload - Biasing object
+   * @return {Actions.UpdateBiasing}
+   */
+  export function updateBiasing(payload: Actions.Payload.Personalization.Biasing) {
+    return (state: Store.State): Actions.UpdateBiasing =>
+      createAction(Actions.UPDATE_BIASING, {
+        ...payload,
+        config: Selectors.config(state).personalization.realTimeBiasing,
+      }, {
+        payload: validators.isValidBias
+      });
   }
 
   // response action creators
@@ -556,15 +588,6 @@ namespace ActionCreators {
    */
   export function receiveAutocompleteTemplate(template: Store.Template): Actions.ReceiveAutocompleteTemplate {
     return createAction(Actions.RECEIVE_AUTOCOMPLETE_TEMPLATE, template);
-  }
-
-  /**
-   * The details product to receive and update state with.
-   * @param  {Store.Product}                 product - The product to add to the details state.
-   * @return {Actions.ReceiveDetailsProduct}         - Action with product.
-   */
-  export function receiveDetailsProduct(product: Store.Product): Actions.ReceiveDetailsProduct {
-    return createAction(Actions.RECEIVE_DETAILS_PRODUCT, product);
   }
 
   /**
