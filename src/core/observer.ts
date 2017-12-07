@@ -149,8 +149,10 @@ namespace Observer {
           },
 
           cart: {
-            cartId: emit(Events.CART_ID_UPDATED),
-            items: emit(Events.CART_UPDATED)
+            content: {
+              cartId: emit(Events.CART_ID_UPDATED),
+              items: emit(Events.CART_UPDATED)
+            }
           },
 
           recordCount: emit(Events.RECORD_COUNT_UPDATED),
