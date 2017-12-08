@@ -73,8 +73,6 @@ export namespace Middleware {
     return (next) => (action) => {
       // tslint:disable-next-line:max-line-length
       if (action.type === 'persist/REHYDRATE' && action.payload && action.payload.biasing) {
-        console.log('rehydrating biasing')
-
         return next({
           ...action,
           payload: {
@@ -83,7 +81,7 @@ export namespace Middleware {
           }
         });
       } else {
-       return next(action);
+        return next(action);
       }
 
       // if (action.type === 'persist/REHYDRATE' && action.payload && action.payload.content) {
@@ -97,6 +95,7 @@ export namespace Middleware {
       //     }
       //   });
       // } else {
+      //   console.log('action type', action)
       //   return next(action);
       // }
     };
@@ -144,7 +143,7 @@ export namespace Middleware {
   export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
     const middleware = [
       thunkEvaluator,
-      // Middleware.injectStateIntoRehydrate,
+      Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS),
       Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
