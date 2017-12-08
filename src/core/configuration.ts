@@ -49,7 +49,6 @@ interface Configuration {
   network?: Configuration.Bridge;
 
   personalization?: Configuration.Personalization;
-  cart?: Configuration.Cart;
 }
 
 namespace Configuration {
@@ -222,7 +221,7 @@ namespace Configuration {
     location?: Configuration.Recommendations.Location;
 
     /**
-     * Product ID field as used in recommendations.
+     * Product ID field as used in recommendations.`
      */
     idField: string;
     productSuggestions: Configuration.Recommendations.ProductSuggestions;
@@ -339,16 +338,6 @@ namespace Configuration {
       strength: BiasStrength;
       maxBiases: number;
     }
-  }
-
-  export interface Cart {
-    loginId: string;
-    sessionId: string;
-    visitorId: string;
-  }
-
-  export namespace Cart {
-
   }
 
   export type ValueOptions<T> = T | { options: T[], default: T };

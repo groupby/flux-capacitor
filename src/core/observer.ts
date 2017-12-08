@@ -69,7 +69,6 @@ namespace Observer {
                   || oldState.category !== newState.category
                   || oldState.navigations !== newState.navigations) {
                   emitSuggestionsUpdated(oldState, newState, path);
-                  console.log('emit', emitSuggestionsUpdated)
                 }
                 if (oldState.query !== newState.query) {
                   emitQueryUpdated(oldState.query, newState.query, `${path}.query`);
@@ -151,7 +150,7 @@ namespace Observer {
           cart: {
             content: {
               cartId: emit(Events.CART_ID_UPDATED),
-              items: emit(Events.CART_UPDATED)
+              // items: emit(Events.CART_UPDATED)
             }
           },
 

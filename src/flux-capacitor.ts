@@ -131,10 +131,6 @@ class FluxCapacitor extends EventEmitter {
       this.selectors.queryPastPurchases(this.store.getState())));
   }
 
-  createCart(visitorId: string, sessionId: string) {
-    this.store.dispatch(this.actions.createCart(visitorId, sessionId));
-  }
-
   /**
    * create instances of all clients used to contact microservices
    */
