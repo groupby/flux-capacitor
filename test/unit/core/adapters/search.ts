@@ -1,5 +1,5 @@
-import PageAdapter from '../../../../src/core/adapters/page';
 import ConfigAdapter from '../../../../src/core/adapters/configuration';
+import PageAdapter from '../../../../src/core/adapters/page';
 import Adapter, { MAX_RECORDS } from '../../../../src/core/adapters/search';
 import Selectors from '../../../../src/core/selectors';
 import suite from '../../_suite';
