@@ -82,7 +82,7 @@ namespace Adapter {
     const max = ConfigAdapter.extractMaxRefinements(Selectors.config(state));
     return max ? navigations.map((navigation) => ({
       ...navigation,
-      more: navigation.refinements.length > max ? true : navigation.more,
+      more: navigation.refinements.length > max || navigation.more,
       refinements: navigation.refinements.splice(0,max),
     })) : navigations;
   };

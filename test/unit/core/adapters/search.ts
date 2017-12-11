@@ -220,13 +220,13 @@ suite('Search Adapter', ({ expect, stub }) => {
     it('should do nothing if max not truthy', () => {
       const state: any = {};
       const conf = {};
-      const max = stub(ConfigAdapter, 'extractMaxRefinements');
-      const config = stub(Selectors, 'config').returns(conf);
       const navigations: any = [
         { name: 'A', refinements: [4] },
         { name: 'B', refinements: [6, 7, 4, 5, 6, 7] },
         { name: 'C', refinements: [8, 9], more: true }
       ];
+      stub(ConfigAdapter, 'extractMaxRefinements');
+      stub(Selectors, 'config').returns(conf);
 
       expect(Adapter.pruneRefinements(navigations, state)).to.eql(navigations);
     });
