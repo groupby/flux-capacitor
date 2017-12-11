@@ -79,7 +79,7 @@ namespace Adapter {
   };
 
   export const pruneRefinements = (navigations: Store.Navigation[], state: Store.State): Store.Navigation[] => {
-    const max = ConfigAdapter.extractMaxRefinments(Selectors.config(state));
+    const max = ConfigAdapter.extractMaxRefinements(Selectors.config(state));
     return max ? navigations.map((navigation) => ({
       ...navigation,
       more: navigation.refinements.length > max ? true : navigation.more,
