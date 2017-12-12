@@ -150,7 +150,7 @@ namespace Observer {
           cart: {
             content: {
               cartId: emit(Events.CART_ID_UPDATED),
-              // items: emit(Events.CART_UPDATED)
+              quantity: emit(Events.CART_UPDATED)
             }
           },
 
