@@ -124,7 +124,7 @@
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-2.3.2.tgz#1e1e99e67162d78e2db17816892bf93bf5209885"
 
-"@types/sinon@4.1.1":
+"@types/sinon@^4.1.1":
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-4.1.1.tgz#1adf3c8a9359bfa1750a4152cb538cfae4748118"
 
@@ -1300,7 +1300,7 @@ event-stream@^3.3.0:
     stream-combiner "~0.0.4"
     through "~2.3.1"
 
-eventemitter3@3.0.0:
+eventemitter3@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.0.0.tgz#fc29ecf233bd19fbd527bb4089bbf665dc90c1e3"
 
