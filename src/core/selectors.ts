@@ -53,6 +53,12 @@ namespace Selectors {
     Selectors.collections(state).allIds.indexOf(name);
 
   /**
+   * Returns the current page object.
+   */
+  export const pageObject = (state: Store.State) =>
+    state.data.present.page;
+
+  /**
    * Returns the page sizes object.
    */
   export const pageSizes = (state: Store.State) =>
@@ -73,7 +79,7 @@ namespace Selectors {
     Selectors.pageSizes(state).selected;
 
   /**
-   * Returns the current page.
+   * Returns the current page number.
    */
   export const page = (state: Store.State) =>
     state.data.present.page.current;
@@ -114,6 +120,12 @@ namespace Selectors {
    */
   export const products = (state: Store.State) =>
     Search.extractData(state.data.present.products);
+
+  /**
+   * Returns the current products
+   */
+  export const productsLoaded = (state: Store.State) =>
+    state.data.present.productsLoaded;
 
   /**
    * Returns the product with the given id
