@@ -27,6 +27,18 @@ namespace Selectors {
     state.data.present.query.original;
 
   /**
+   * Returns the didYouMean array
+   */
+  export const didYouMean = (state: Store.State) =>
+    state.data.present.query.didYouMean;
+
+  /**
+   * Returns the related queries array
+   */
+  export const relatedQueries = (state: Store.State) =>
+    state.data.present.query.related;
+
+  /**
    * Returns the corrected query if it exists, otherwise returns the original query.
    */
   export const currentQuery = (state: Store.State) => {

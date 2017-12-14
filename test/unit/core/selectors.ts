@@ -131,6 +131,22 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
+  describe('didYouMean()', () => {
+    it('should return the current didYouMean array', () => {
+      const didYouMean = ['giraffe', 'monkey'];
+
+      expect(Selectors.didYouMean(<any>{ data: { present: { query: { didYouMean } } } })).to.eq(didYouMean);
+    });
+  });
+
+  describe('relatedQueries()', () => {
+    it('should return the current related queries array', () => {
+      const related = ['giraffe', 'monkey'];
+
+      expect(Selectors.relatedQueries(<any>{ data: { present: { query: { related } } } })).to.eq(related);
+    });
+  });
+
   describe('query()', () => {
     it('should return the current query', () => {
       const query = 'pineapple';
