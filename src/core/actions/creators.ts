@@ -72,7 +72,7 @@ namespace ActionCreators {
    * @return {Actions.FetchAutocompleteProducts}                          - Action with
    * query and refinements.
    */
-   // tslint:disable-next-line max-line-length
+  // tslint:disable-next-line max-line-length
   export function fetchAutocompleteProducts(query: string, refinements: Actions.Payload.Autocomplete.Refinement[] = []): Actions.FetchAutocompleteProducts {
     return createAction(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { query, refinements }, {
       query: validators.isValidQuery,
@@ -404,8 +404,8 @@ namespace ActionCreators {
         ...payload,
         config: Selectors.config(state).personalization.realTimeBiasing,
       }, {
-        payload: validators.isValidBias
-      });
+          payload: validators.isValidBias
+        });
   }
 
   // response action creators
@@ -625,9 +625,23 @@ namespace ActionCreators {
     return createAction(Actions.RECEIVE_QUERY_PAST_PURCHASES, products);
   }
 
-  export function receiveOrderHistory (products: Store.Recommendations.OrderHistoryProduct[]) {
+  export function receiveOrderHistory(products: Store.Recommendations.OrderHistoryProduct[]) {
     return createAction(Actions.RECEIVE_ORDER_HISTORY, products);
   }
+
+  // todo: generate docs
+  export function getTrackerInfo(visitorId: string, sessionId: string): Actions.GetTrackerInfo {
+    return createAction(Actions.GET_TRACKER_INFO, { visitorId, sessionId });
+  }
+
+  export function addToCart(product: any, quantity: number) {
+    return createAction(Actions.ADD_TO_CART, { product, quantity });
+  }
+
+  export function cartCreated(cartId: string): Actions.CartCreated {
+    return createAction(Actions.CART_CREATED, cartId);
+  }
+
   // ui action creators
   /**
    * Adds state for a given tag to the store.

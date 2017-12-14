@@ -92,6 +92,23 @@ namespace Events {
    */
   export const AUTOCOMPLETE_TEMPLATE_UPDATED = 'autocomplete_template_updated'; // post
 
+  // cart evets
+  /**
+   * Triggered when cart created.
+   * Returns cart id.
+   */
+  export const CART_ID_UPDATED = 'cart_id_updated'; // post
+  /**
+   * Triggered when user adds item into cart.
+   *
+   */
+  export const ADD_TO_CART = 'add_to_cart';
+  /**
+   * Triggered when user adds item into cart.
+   *
+   */
+  export const CART_QUANTITY_UPDATED = 'cart_updated';
+
   // template events
   /**
    * Triggered when template is updated.

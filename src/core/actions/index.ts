@@ -171,6 +171,15 @@ namespace Actions {
   // added automatically by middleware to interact with redux-undo
   export const SAVE_STATE = 'SAVE_STATE';
 
+  // cart
+  export const GET_TRACKER_INFO = 'GET_TRACKER_INFO';
+  export type GetTrackerInfo = Action<typeof GET_TRACKER_INFO, Payload.Cart.TrackerInfo>;
+  export const CART_CREATED = 'CART_CREATED';
+  export type CartCreated = Action<typeof CART_CREATED, string>;
+  export const ADD_TO_CART = 'ADD_TO_CART';
+  // todo: change type
+  export type AddToCart = Action<typeof ADD_TO_CART, any>;
+
   export namespace Payload {
     export namespace Personalization {
       export interface Biasing {
@@ -262,6 +271,14 @@ namespace Actions {
       last: number;
       from: number;
       to: number;
+    }
+
+    export namespace Cart {
+      export interface TrackerInfo {
+        loginId?: string;
+        sessionId: string;
+        visitorId: string;
+      }
     }
   }
 

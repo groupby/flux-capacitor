@@ -6,6 +6,7 @@ import * as validatorMiddleware from 'redux-validator';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import ActionCreators from '../actions/creators';
+import CartAdapter from '../adapters/cart';
 import ConfigurationAdapter from '../adapters/configuration';
 import PersonalizationAdapter from '../adapters/personalization';
 import Events from '../events';
@@ -104,7 +105,7 @@ export namespace Middleware {
     return (next) => (action) => {
       const state = store.getState();
       if (ConfigurationAdapter.isRealTimeBiasEnabled(Selectors.config(state)) &&
-          PERSONALIZATION_CHANGE_ACTIONS.includes(action.type)) {
+        PERSONALIZATION_CHANGE_ACTIONS.includes(action.type)) {
         const biasing = PersonalizationAdapter.extractBias(action, state);
         if (biasing) {
           return next([

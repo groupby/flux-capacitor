@@ -26,6 +26,9 @@ namespace Store {
       middleware,
     );
 
+    // todo: put in a flag to switch persist on and off for cart
+    persistStore(store);
+
     // cannot stub persistStore
     /* istanbul ignore next */
     if (Adapter.isRealTimeBiasEnabled(flux.__config)) {
@@ -73,6 +76,7 @@ namespace Store {
     recommendations: Recommendations; // mixed
 
     personalization?: Personalization;
+    cart: Cart; // TODO
 
     recordCount: number; // post
 
@@ -253,6 +257,16 @@ namespace Store {
       collection: string;
       metadata: object;
     }
+  }
+
+  export interface Cart {
+    content: {
+      cartId: string;
+      quantity: 0;
+      visitorId: string;
+      sessionId: string;
+      items: any[];
+    };
   }
 
   export interface Product {
