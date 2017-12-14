@@ -192,6 +192,12 @@ namespace Selectors {
     state.data.present.navigations.byId[navigationId];
 
   /**
+   * Returns the navigations object.
+   */
+  export const navigationsObject = (state: Store.State) =>
+    state.data.present.navigations;
+
+  /**
    * Returns the navigations.
    */
   export const navigations = (state: Store.State) =>

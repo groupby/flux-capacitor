@@ -13,6 +13,15 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
+  describe('navigationsObject()', () => {
+    it('should select the navigations object from the state', () => {
+      const navigations = { a: 'b' };
+      const state: any = { data: { present: { navigations } } };
+
+      expect(Selectors.navigationsObject(state)).to.eq(navigations);
+    });
+  });
+
   describe('navigationSort()', () => {
     it('should select navigationSort from the state', () => {
       const sort = { d: 'r' };
@@ -184,9 +193,17 @@ suite('selectors', ({ expect, stub }) => {
 
   describe('pageSizes()', () => {
     it('should return indexed page size data', () => {
-      const pageSizes = { a: 'b' };
+      const sizes = { a: 'b' };
 
-      expect(Selectors.pageSizes(<any>{ data: { present: { page: { sizes: pageSizes } } } })).to.eq(pageSizes);
+      expect(Selectors.pageSizes(<any>{ data: { present: { page: { sizes } } } })).to.eq(sizes);
+    });
+  });
+
+  describe('pageObject()', () => {
+    it('should return the page object', () => {
+      const page = { a: 'b' };
+
+      expect(Selectors.pageObject(<any>{ data: { present: { page } } })).to.eq(page);
     });
   });
 
@@ -275,6 +292,14 @@ suite('selectors', ({ expect, stub }) => {
       const extracted = [{ a: 'b' }];
 
       expect(Selectors.products(<any>{ data: { present: { products } } })).to.eql(extracted);
+    });
+  });
+
+  describe('productsLoaded()', () => {
+    it('should return if products are loaded', () => {
+      const productsLoaded = true;
+
+      expect(Selectors.productsLoaded(<any>{ data: { present: { productsLoaded } } })).to.eql(true);
     });
   });
 
