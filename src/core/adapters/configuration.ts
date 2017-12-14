@@ -34,7 +34,7 @@ namespace Adapter {
             ...PageReducer.DEFAULTS,
             sizes: Adapter.extractPageSizes(config, PageReducer.DEFAULT_PAGE_SIZE)
           }
-        }
+        },
       },
       session: { config }
     });
