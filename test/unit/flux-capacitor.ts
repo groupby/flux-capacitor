@@ -360,8 +360,8 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
 
         expect(created.headers).to.eql({
           ...headers,
-          'Skip-Caching': false,
-          'Skip-Semantish': false,
+          'Skip-Caching': undefined,
+          'Skip-Semantish': undefined,
         });
       });
 
@@ -372,7 +372,7 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
 
         expect(created.headers).to.eql({
           'Skip-Caching': true,
-          'Skip-Semantish': false,
+          'Skip-Semantish': undefined,
         });
       });
 
@@ -382,7 +382,7 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
         const created = FluxCapacitor.createBridge(<any>{ network: { skipSemantish: true } }, () => null);
 
         expect(created.headers).to.eql({
-          'Skip-Caching': false,
+          'Skip-Caching': undefined,
           'Skip-Semantish': true,
         });
       });
