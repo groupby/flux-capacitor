@@ -158,8 +158,12 @@ class FluxCapacitor extends EventEmitter {
   static createBridge(config: Configuration, errorHandler: (err: Error) => void) {
     const networkConfig = config.network;
     const bridge = new BrowserBridge(config.customerId, networkConfig.https, networkConfig);
-    if (networkConfig.headers) {
-      bridge.headers = networkConfig.headers;
+    if (networkConfig.headers || networkConfig.skipCache || networkConfig.skipSemantish) {
+      bridge.headers = {
+        ...networkConfig.headers,
+        'Skip-Caching': Boolean(networkConfig.skipCache),
+        'Skip-Semantish': Boolean(networkConfig.skipSemantish),
+      };
     }
     bridge.errorHandler = errorHandler;
 
