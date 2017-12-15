@@ -358,7 +358,33 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
 
         const created = FluxCapacitor.createBridge(<any>{ network: { headers } }, () => null);
 
-        expect(created.headers).to.eq(headers);
+        expect(created.headers).to.eql({
+          ...headers,
+          'Skip-Caching': false,
+          'Skip-Semantish': false,
+        });
+      });
+
+      it('should set Skip-Caching', () => {
+        stub(groupbyApi, 'BrowserBridge').returns({});
+
+        const created = FluxCapacitor.createBridge(<any>{ network: { skipCache: true } }, () => null);
+
+        expect(created.headers).to.eql({
+          'Skip-Caching': true,
+          'Skip-Semantish': false,
+        });
+      });
+
+      it('should set Skip-Semantish', () => {
+        stub(groupbyApi, 'BrowserBridge').returns({});
+
+        const created = FluxCapacitor.createBridge(<any>{ network: { skipSemantish: true } }, () => null);
+
+        expect(created.headers).to.eql({
+          'Skip-Caching': false,
+          'Skip-Semantish': true,
+        });
       });
     });
 
