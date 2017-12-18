@@ -344,6 +344,15 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     });
   });
 
+  describe('extractAutocompleteHoverQuery()', () => {
+    it('should return hoverQuery boolean', () => {
+      const hoverQuery = true;
+
+      // tslint:disable-next-line max-line-length
+      expect(Adapter.extractAutocompleteHoverQuery(<any>{ autocomplete: { hoverQuery } })).to.eq(hoverQuery);
+    });
+  });
+
   describe('extractAutocompleteProductCount()', () => {
     it('should return number of autocomplete products to request', () => {
       const count = 23;
