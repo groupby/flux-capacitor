@@ -395,6 +395,12 @@ namespace Selectors {
     state.data.present.pastPurchases.query;
 
   /**
+   * Returns the past purchase navigations object.
+   */
+  export const pastPurchaseNavigationsObject = (state: Store.State) =>
+    state.data.present.pastPurchases.navigations;
+
+  /**
    * Returns the past purchase navigation object for the given navigationId.
    */
   export const pastPurchaseNavigation = (state: Store.State, navigationId: string) =>
@@ -430,6 +436,12 @@ namespace Selectors {
     const nav = Selectors.pastPurchaseNavigation(state, navigationId);
     return !!nav && nav.selected.includes(index);
   };
+
+  /**
+   * Returns the current past purchase page object.
+   */
+  export const pastPurchasePageObject = (state: Store.State) =>
+    state.data.present.pastPurchases.page;
 
   /**
    * Returns the past purchase page number
