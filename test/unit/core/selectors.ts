@@ -686,6 +686,12 @@ suite('selectors', ({ expect, stub }) => {
       });
     });
 
+    describe('pastPurchaseNavigationsObject()', () => {
+      it('should return the navigations object', () => {
+        expect(Selectors.pastPurchaseNavigationsObject(state)).to.eql(navigations);
+      });
+    });
+
     describe('pastPurchaseNavigation()', () => {
       it('should return navigation object for given navigationId', () => {
         expect(Selectors.pastPurchaseNavigation(state, 'b')).to.eql(2);
@@ -773,6 +779,12 @@ suite('selectors', ({ expect, stub }) => {
         stub(Selectors, 'pastPurchaseNavigation');
 
         expect(Selectors.isPastPurchaseRefinementSelected(state, navigationId, 1)).to.be.false;
+      });
+    });
+
+    describe('pastPurchasePageObject()', () => {
+      it('should return the past purchase page object', () => {
+        expect(Selectors.pastPurchasePageObject(state)).to.eq(page);
       });
     });
 
