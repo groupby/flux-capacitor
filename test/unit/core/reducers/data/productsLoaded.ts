@@ -9,7 +9,7 @@ suite('products', ({ expect }) => {
     it('should update state on RECEIVE_PRODUCTS', () => {
       const reducer = productsLoaded(state, { type: Actions.RECEIVE_PRODUCT_RECORDS });
 
-      expect(reducer).to.eql(true);
+      expect(reducer).to.be.true;
     });
 
     it('should return state on default', () => {
