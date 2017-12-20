@@ -134,7 +134,7 @@ namespace Selectors {
     Search.extractData(state.data.present.products);
 
   /**
-   * Returns the current products
+   * Returns a boolean indicating whether products are loaded
    */
   export const productsLoaded = (state: Store.State) =>
     state.data.present.productsLoaded;

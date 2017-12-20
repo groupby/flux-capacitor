@@ -312,7 +312,7 @@ suite('selectors', ({ expect, stub }) => {
   });
 
   describe('productsLoaded()', () => {
-    it('should return if products are loaded', () => {
+    it('should return productsLoaded value', () => {
       const productsLoaded = true;
 
       expect(Selectors.productsLoaded(<any>{ data: { present: { productsLoaded } } })).to.eql(true);
