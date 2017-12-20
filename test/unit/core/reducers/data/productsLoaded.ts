@@ -15,7 +15,7 @@ suite('products', ({ expect }) => {
     it('should return state on default', () => {
       const reducer = productsLoaded(state, <any>{});
 
-      expect(reducer).to.eql(state);
+      expect(reducer).to.eq(state);
     });
   });
 });

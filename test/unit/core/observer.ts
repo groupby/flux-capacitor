@@ -457,7 +457,7 @@ suite('Observer', ({ expect, spy, stub }) => {
           });
 
           it('should emit PAST_PURCHASE_PRODUCTS_UPDATED event', () => {
-            const extractData = stub(Search, 'extractData').callsFake(() => testObject);
+            const extractData = stub(Search, 'extractData').returns(testObject);
 
             observers.data.present.pastPurchases.products(undefined, testObject);
 
