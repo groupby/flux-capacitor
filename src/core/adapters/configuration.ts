@@ -79,8 +79,8 @@ namespace Adapter {
   export const extractAutocompleteNavigationCount = (config: Configuration) =>
     config.autocomplete.navigationCount;
 
-  export const extractAutocompleteHoverQuery = (config: Configuration) =>
-    config.autocomplete.hoverQuery;
+  export const extractAutocompleteHoverAutoFill = (config: Configuration) =>
+    config.autocomplete.hoverAutoFill;
 
   export const isAutocompleteAlphabeticallySorted = (config: Configuration) =>
     config.autocomplete.alphabetical;

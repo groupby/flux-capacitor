@@ -344,12 +344,12 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     });
   });
 
-  describe('extractAutocompleteHoverQuery()', () => {
-    it('should return hoverQuery boolean', () => {
-      const hoverQuery = true;
+  describe('extractAutocompleteAutoFill()', () => {
+    it('should return hoverAutoFill boolean', () => {
+      const hoverAutoFill = true;
 
       // tslint:disable-next-line max-line-length
-      expect(Adapter.extractAutocompleteHoverQuery(<any>{ autocomplete: { hoverQuery } })).to.eq(hoverQuery);
+      expect(Adapter.extractAutocompleteHoverAutoFill(<any>{ autocomplete: { hoverAutoFill } })).to.eq(hoverAutoFill);
     });
   });
 

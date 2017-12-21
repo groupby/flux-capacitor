@@ -164,7 +164,7 @@ namespace Configuration {
     /**
      * enable updating query when hovering over sayt elements
      */
-    hoverQuery?: boolean;
+    hoverAutoFill?: boolean;
     /**
      * autocomplete products settings
      */
