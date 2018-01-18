@@ -1,6 +1,8 @@
 import * as redux from 'redux';
-import undoable from 'redux-undo';
+import { default as undoable } from 'redux-undo';
 import Actions from '../actions';
+import ConfigAdapter from '../adapters/configuration';
+import Selectors from '../selectors';
 import Store from '../store';
 import data from './data';
 import isRunning from './is-running';
@@ -9,15 +11,29 @@ import ui from './ui';
 
 export type Action = Actions.RefreshState;
 
+export const stripOffHistory = (state, action) => {
+  return (third) => {
+    console.log('third', third)
+    const config = {
+      limit: ConfigAdapter.extractHistoryLength(state),
+      filter: ({ type }) => type === Actions.SAVE_STATE,
+    };
+
+    const reducer = undoable(data, config);
+    const newState = reducer(state, action);
+    delete newState.history;
+    return newState;
+  };
+};
+
 export const rootReducer = redux.combineReducers<Store.State>({
   isRunning,
   session,
-  data: undoable(data, {
-    limit: 5,
-    filter: ({ type }) => type === Actions.SAVE_STATE
-  }),
+  data: stripOffHistory,
   ui,
 });
+
+
 
 export default (state: Store.State, action: Action) => {
   switch (action.type) {

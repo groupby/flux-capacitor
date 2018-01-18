@@ -179,6 +179,15 @@ namespace Adapter {
 
   export const extractRealTimeBiasingExpiry = (config: Configuration) =>
     config.personalization.realTimeBiasing.expiry;
+
+  export const extractHistoryLength = (state: any) => {
+    console.log('state', state)
+    if (state && state.session && state.session.config) {
+      return state.session.config.history.length;
+    } else {
+      return 0;
+    }
+  }
 }
 
 export default Adapter;
