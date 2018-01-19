@@ -1,5 +1,5 @@
 import * as redux from 'redux';
-import { default as undoable } from 'redux-undo';
+import { default as undoable, includeAction } from 'redux-undo';
 import Actions from '../actions';
 import ConfigAdapter from '../adapters/configuration';
 import Store from '../store';
@@ -12,13 +12,18 @@ export type Action = Actions.RefreshState;
 
 export const undoWithoutHistory = (store) => {
   return (state, action) => {
+    const limit: number = ConfigAdapter.extractHistoryLength(store);
     const config = {
-      limit: ConfigAdapter.extractHistoryLength(store),
-      filter: ({ type }) => type === Actions.SAVE_STATE,
+      limit,
+      filter: includeAction(Actions.SAVE_STATE),
     };
-
     const reducer = undoable(data, config);
     const { history, ...newState } = reducer(state, action);
+
+    if (limit === 0) {
+      return { ...newState, past: [] };
+    }
+
     return newState;
   };
 };
