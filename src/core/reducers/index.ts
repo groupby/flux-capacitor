@@ -21,7 +21,7 @@ export const undoWithoutHistory = (store) => {
     const { history, ...newState } = reducer(state, action);
 
     if (limit === 0) {
-      return { ...newState, past: [] };
+      return { ...newState, past: [{}] };
     }
 
     return newState;

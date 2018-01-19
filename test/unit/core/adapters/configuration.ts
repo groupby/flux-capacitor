@@ -456,7 +456,7 @@ suite('Configuration Adapter', ({ expect, stub }) => {
   });
 
   describe('extractHistoryLength()', () => {
-    it('should return 0 is state is during constructuring', () => {
+    it('should return 0 if state is during constructuring', () => {
       expect(Adapter.extractHistoryLength(<any>{})).to.eq(0);
     });
 
