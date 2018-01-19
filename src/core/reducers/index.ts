@@ -11,29 +11,28 @@ import ui from './ui';
 
 export type Action = Actions.RefreshState;
 
-export const stripOffHistory = (state, action) => {
-  return (third) => {
-    console.log('third', third)
-    const config = {
-      limit: ConfigAdapter.extractHistoryLength(state),
-      filter: ({ type }) => type === Actions.SAVE_STATE,
-    };
-
-    const reducer = undoable(data, config);
-    const newState = reducer(state, action);
-    delete newState.history;
-    return newState;
+export const stripOffHistory = (state, action, store) => {
+  const config = {
+    limit: ConfigAdapter.extractHistoryLength(store),
+    filter: ({ type }) => type === Actions.SAVE_STATE,
   };
+
+  const reducer = undoable(data, config);
+  const newState = reducer(state, action);
+  delete newState.history;
+  return newState;
 };
 
-export const rootReducer = redux.combineReducers<Store.State>({
-  isRunning,
-  session,
-  data: stripOffHistory,
-  ui,
-});
+export const rootReducer = (state, action) => {
+  const dataState = state ? state.data : {};
+  return redux.combineReducers<Store.State>({
+    isRunning,
+    session,
+    data: () => stripOffHistory(dataState, action, state),
+    ui,
+  })(state, action);
 
-
+};
 
 export default (state: Store.State, action: Action) => {
   switch (action.type) {

@@ -181,13 +181,13 @@ namespace Adapter {
     config.personalization.realTimeBiasing.expiry;
 
   export const extractHistoryLength = (state: any) => {
-    console.log('state', state)
     if (state && state.session && state.session.config) {
+      console.log('dd', state.session.config.history.length)
       return state.session.config.history.length;
     } else {
       return 0;
     }
-  }
+  };
 }
 
 export default Adapter;
