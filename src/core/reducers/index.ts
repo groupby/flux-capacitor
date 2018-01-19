@@ -1,5 +1,5 @@
 import * as redux from 'redux';
-import { default as undoable, includeAction } from 'redux-undo';
+import undoable, { includeAction } from 'redux-undo';
 import Actions from '../actions';
 import ConfigAdapter from '../adapters/configuration';
 import Store from '../store';
@@ -21,6 +21,7 @@ export const undoWithoutHistory = (store) => {
     const { history, ...newState } = reducer(state, action);
 
     if (limit === 0) {
+      // reset past
       return { ...newState, past: [{}] };
     }
 
