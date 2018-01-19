@@ -11,27 +11,26 @@ import ui from './ui';
 
 export type Action = Actions.RefreshState;
 
-export const stripOffHistory = (state, action, store) => {
-  const config = {
-    limit: ConfigAdapter.extractHistoryLength(store),
-    filter: ({ type }) => type === Actions.SAVE_STATE,
-  };
+export const undoWithoutHistory = (store) => {
+  return (state, action) => {
+    const config = {
+      limit: ConfigAdapter.extractHistoryLength(store),
+      filter: ({ type }) => type === Actions.SAVE_STATE,
+    };
 
-  const reducer = undoable(data, config);
-  const newState = reducer(state, action);
-  delete newState.history;
-  return newState;
+    const reducer = undoable(data, config);
+    const { history, ...newState } = reducer(state, action);
+    return newState;
+  };
 };
 
 export const rootReducer = (state, action) => {
-  const dataState = state ? state.data : {};
   return redux.combineReducers<Store.State>({
     isRunning,
     session,
-    data: () => stripOffHistory(dataState, action, state),
+    data: undoWithoutHistory(state),
     ui,
   })(state, action);
-
 };
 
 export default (state: Store.State, action: Action) => {
