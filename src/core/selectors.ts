@@ -335,10 +335,12 @@ namespace Selectors {
    */
   export const pastPurchaseProductsBySku = (state: Store.State) =>
     state.data.present.pastPurchases.skus
-    .reduce((skuProducts, product) => Object.assign(skuProducts, { [product.sku]: {
-      quantity: product.quantity,
-      lastPurchased: product.lastPurchased,
-    }}), {});
+      .reduce((skuProducts, product) => Object.assign(skuProducts, {
+        [product.sku]: {
+          quantity: product.quantity,
+          lastPurchased: product.lastPurchased,
+        }
+      }), {});
 
   /**
    * Returns the entire byId object from biasing
@@ -520,6 +522,7 @@ namespace Selectors {
           refs.concat(nav.range
             ? { navigationName: nav.field, type: 'Range', high, low }
             : { navigationName: nav.field, type: 'Value', value }), [])), []);
+
 }
 
 export default Selectors;

@@ -2,7 +2,6 @@ import * as redux from 'redux';
 import { default as undoable } from 'redux-undo';
 import Actions from '../actions';
 import ConfigAdapter from '../adapters/configuration';
-import Selectors from '../selectors';
 import Store from '../store';
 import data from './data';
 import isRunning from './is-running';
