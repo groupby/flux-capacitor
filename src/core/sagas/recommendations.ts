@@ -124,15 +124,21 @@ export namespace Tasks {
         if (getNavigations) {
           const navigations = PastPurchaseAdapter.pastPurchaseNavigations(
             yield effects.select(Selectors.config), SearchAdapter.combineNavigations(results));
-          yield effects.put(<any>[
-            flux.actions.receivePastPurchaseAllRecordCount(results.totalRecordCount),
-            flux.actions.receivePastPurchaseRefinements(navigations),
-          ]);
+            yield effects.put(<any>[
+              flux.actions.receivePastPurchaseAllRecordCount(results.totalRecordCount),
+              flux.actions.receivePastPurchaseRefinements(navigations),
+            ]
+          );
         } else {
+          const state = flux.store.getState();
           yield effects.put(<any>[
-            flux.actions.receivePastPurchasePage(SearchAdapter.extractPage(
-              flux.store.getState(), SearchAdapter.extractRecordCount(results),
-              Selectors.pastPurchasePage,Selectors.pastPurchasePageSize)),
+            flux.actions.receivePastPurchasePage(
+              SearchAdapter.extractPage(
+                state, SearchAdapter.extractRecordCount(results),
+                Selectors.pastPurchasePage(state),
+                Selectors.pastPurchasePageSize(state)
+              )
+            ),
             flux.actions.receivePastPurchaseCurrentRecordCount(results.totalRecordCount),
             flux.actions.receivePastPurchaseProducts(SearchAdapter.augmentProducts(results)),
           ]);

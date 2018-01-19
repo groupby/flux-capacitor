@@ -76,6 +76,8 @@ namespace Store {
     personalization?: Personalization;
 
     pastPurchases: PastPurchase;
+    
+    infiniteScroll: InfiniteScroll;
 
     recordCount: number; // post
 
@@ -90,7 +92,10 @@ namespace Store {
   export interface UI {
     [tagName: string]: {
       global?: any;
-      [tagId: string]: any;
+      [tagId: number]: {
+        persist: boolean;
+        data: any;
+      };
     };
   }
 
@@ -269,6 +274,11 @@ namespace Store {
       value: string;
       count: number;
     }
+  }
+
+  export interface InfiniteScroll {
+    isFetchingForward: boolean;
+    isFetchingBackward: boolean;
   }
 
   export interface Product {
