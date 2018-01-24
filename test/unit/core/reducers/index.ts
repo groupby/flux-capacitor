@@ -97,7 +97,11 @@ suite('reducers', ({ expect, stub }) => {
       }
     };
 
+<<<<<<< cef98fdcb17d35fc12c7f98f59b3b04a6a7394eb
     expect(reducer(oldState, { type: Actions.REFRESH_STATE, payload }).data.past).to.eql([{}]);
+=======
+    expect(reducer(oldState, { type: Actions.REFRESH_STATE, payload }).data.past.length).to.eql(historyLength);
+>>>>>>> limit past length
   });
 
   it('should advance history on SAVE_STATE', () => {
