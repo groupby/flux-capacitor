@@ -92,6 +92,12 @@ namespace Payload {
     last: number;
     from: number;
     to: number;
+    current?: number;
+  }
+
+  export interface InfiniteScroll {
+    isFetchingForward?: boolean;
+    isFetchingBackward?: boolean;
   }
 }
 

@@ -79,7 +79,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const amount = 15;
 
-        expectAction(ActionCreators.fetchMoreProducts(amount), Actions.FETCH_MORE_PRODUCTS, amount);
+        expectAction(ActionCreators.fetchMoreProducts(amount), Actions.FETCH_MORE_PRODUCTS, { amount, forward: true });
       });
     });
 
@@ -104,6 +104,27 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const query = 'hat';
 
         expectAction(ActionCreators.fetchPastPurchaseProducts(query), Actions.FETCH_PAST_PURCHASE_PRODUCTS, query);
+      });
+    });
+
+    describe('fetchMorePastPurchaseProducts()', () => {
+      it('should return an action with amount and forward true', () => {
+        const amount = 50;
+
+        expectAction(
+          ActionCreators.fetchMorePastPurchaseProducts(50),
+          Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS, { amount, forward: true }
+        );
+      });
+
+      it('should return an action with amount and forward false', () => {
+        const amount = 50;
+        const forward = false;
+
+        expectAction(
+          ActionCreators.fetchMorePastPurchaseProducts(50, forward),
+          Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS, { amount, forward }
+        );
       });
     });
 
@@ -677,6 +698,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const receiveRecordCountAction = { gg: 'hh' };
         const receiveCollectionCountAction = { ii: 'jj' };
         const receivePageAction = { kk: 'll' };
+        const receivePageFunc = () => receivePageAction;
         const receiveTemplateAction = { mm: 'nn' };
         const products = ['x', 'x'];
         const results: any = {};
@@ -698,12 +720,11 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const pruneRefinements = stub(SearchAdapter, 'pruneRefinements').returns(prunedNavigations);
         const extractRecordCount = stub(SearchAdapter, 'extractRecordCount').returns(recordCount);
         const receiveQuery = stub(ActionCreators, 'receiveQuery').returns(receiveQueryAction);
-        const receivePage = stub(ActionCreators, 'receivePage').returns(receivePageAction);
+        const receivePage = stub(ActionCreators, 'receivePage').returns(receivePageFunc);
         const extractTemplate = stub(SearchAdapter, 'extractTemplate').returns(template);
         const augmentProducts = stub(SearchAdapter, 'augmentProducts').returns(products);
         const selectCollection = stub(Selectors, 'collection').returns(collection);
         const extractQuery = stub(SearchAdapter, 'extractQuery').returns(query);
-        const extractPage = stub(SearchAdapter, 'extractPage').returns(page);
 
         const batchAction = ActionCreators.receiveProducts(results)(state);
 
@@ -714,14 +735,13 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         expect(receiveRecordCount).to.be.calledWith(recordCount);
         expect(receiveTemplate).to.be.calledWith(template);
         expect(receiveCollectionCount).to.be.calledWith({ collection, count: recordCount });
-        expect(receivePage).to.be.calledWith(page);
+        expect(receivePage).to.be.calledWith(recordCount);
         expect(extractRecordCount).to.be.calledWith(results);
         expect(extractQuery).to.be.calledWith(results);
         expect(augmentProducts).to.be.calledWith(results);
         expect(combineNavigations).to.be.calledWith(results);
         expect(pruneRefinements).to.be.calledWith(navigations);
         expect(selectCollection).to.be.calledWith(state);
-        expect(extractPage).to.be.calledWith(state);
         expect(extractTemplate).to.be.calledWith(results.template);
         expect(batchAction).to.eql([
           ACTION,
@@ -752,6 +772,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const query: any = { a: 'b' };
 
         expectAction(ActionCreators.receiveQuery(query), Actions.RECEIVE_QUERY, query);
+      });
+    });
+
+    describe('infiniteScrollRequestState()', () => {
+      it('should return an action', () => {
+        const fetchObj: any = { a: 'b' };
+
+        expectAction(ActionCreators.infiniteScrollRequestState(fetchObj), Actions.RECEIVE_INFINITE_SCROLL, fetchObj);
       });
     });
 
@@ -786,8 +814,13 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     describe('receivePage()', () => {
       it('should return an action', () => {
         const page: any = { a: 'b' };
+        const state: any = { c: 'd' };
+        const recordCount = 300;
+        const current = 2;
+        const payload = stub(SearchAdapter, 'extractPage').returns(page);
 
-        expectAction(ActionCreators.receivePage(page), Actions.RECEIVE_PAGE, page);
+        expectAction(ActionCreators.receivePage(recordCount, current)(state), Actions.RECEIVE_PAGE, page);
+        expect(payload).to.be.calledWithExactly(state, recordCount, current);
       });
     });
 
@@ -951,13 +984,28 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       });
     });
 
+    describe('receiveMorePastPurchaseProducts()', () => {
+      it('should return an action', () => {
+        const products: any = { a: 'b' };
+        const newProds = { c: 'd' };
+        const augmentProducts = stub(SearchAdapter, 'augmentProducts').returns(newProds);
+
+        expectAction(
+          ActionCreators.receiveMorePastPurchaseProducts(products)(null),
+          Actions.RECEIVE_MORE_PAST_PURCHASE_PRODUCTS,
+          newProds
+        );
+        expect(augmentProducts).to.be.calledWithExactly(products);
+      });
+    });
+
     describe('receivePastPurchaseCurrentRecordCount()', () => {
       it('should return an action', () => {
         const recordCount = 6;
 
         // tslint:disable-next-line max-line-length
         expectAction(ActionCreators.receivePastPurchaseCurrentRecordCount(recordCount),
-                     Actions.RECEIVE_PAST_PURCHASE_CURRENT_RECORD_COUNT, recordCount);
+          Actions.RECEIVE_PAST_PURCHASE_CURRENT_RECORD_COUNT, recordCount);
       });
     });
 
@@ -967,7 +1015,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         // tslint:disable-next-line max-line-length
         expectAction(ActionCreators.receivePastPurchaseAllRecordCount(recordCount),
-                     Actions.RECEIVE_PAST_PURCHASE_ALL_RECORD_COUNT, recordCount);
+          Actions.RECEIVE_PAST_PURCHASE_ALL_RECORD_COUNT, recordCount);
       });
     });
 
@@ -995,8 +1043,11 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     describe('receivePastPurchasePage()', () => {
       it('should return an action', () => {
         const page: any = 1;
+        const state: any = { c: 'd' };
+        const current = 2;
+        const payload = stub(SearchAdapter, 'extractPage').returns(page);
 
-        expectAction(ActionCreators.receivePastPurchasePage(page), Actions.RECEIVE_PAST_PURCHASE_PAGE, page);
+        expectAction(ActionCreators.receivePastPurchasePage(page)(state), Actions.RECEIVE_PAST_PURCHASE_PAGE, page);
       });
     });
 
@@ -1109,7 +1160,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const query = 'hat';
 
       it('should return a batch action with resetPastPurchaseRefinements spreaded', () => {
-        const array = [1,2,3];
+        const array = [1, 2, 3];
         const resetPastPurchaseRefinements = stub(ActionCreators, 'resetPastPurchaseRefinements').returns(array);
 
         const action = ActionCreators.updatePastPurchaseQuery(query);
@@ -1201,7 +1252,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
 
     describe('removeComponentState()', () => {
-      it('should create a CREATE_COMPONENT_STATE action', () => {
+      it('should create a REMOVE_COMPONENT_STATE action', () => {
         const tagName = 'my-tag';
         const id = '123';
 

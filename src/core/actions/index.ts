@@ -1,7 +1,7 @@
 import { Results } from 'groupby-api';
-import Payloads from './payloads';
 import Configuration from '../configuration';
 import Store from '../store';
+import Payloads from './payloads';
 
 namespace Actions {
   export interface Action<S = string, T = any> {
@@ -80,16 +80,19 @@ namespace Actions {
   export type ResetPageAndAddRefinement = [Actions.ResetPage, Actions.AddRefinement];
   export type CheckAndResetRefinements = ResetPageAndResetRefinements | Action<any>[];
   export type ResetPageAndUpdateQuery = [Actions.ResetPage, Actions.UpdateQuery];
+  export type ReceiveMoreProductsAndPage = [Actions.ReceiveMoreProducts, Actions.ReceivePage];
 
   // fetch actions
   export const FETCH_MORE_REFINEMENTS = 'FETCH_MORE_REFINEMENTS';
   export type FetchMoreRefinements = Action<typeof FETCH_MORE_REFINEMENTS, string>;
   export const FETCH_PRODUCTS = 'FETCH_PRODUCTS';
   export type FetchProducts = Action<typeof FETCH_PRODUCTS>;
+  export const FETCH_PRODUCTS_WITHOUT_HISTORY = 'FETCH_PRODUCTS_WITHOUT_HISTORY';
+  export type FetchProductsWithoutHistory = Action<typeof FETCH_PRODUCTS_WITHOUT_HISTORY>;
   export const FETCH_PRODUCTS_WHEN_HYDRATED = 'FETCH_PRODUCTS_WHEN_HYDRATED';
-  export type fetchProductsWhenHydrated = Action<typeof FETCH_PRODUCTS_WHEN_HYDRATED, Actions.FetchProducts>;
+  export type FetchProductsWhenHydrated = Action<typeof FETCH_PRODUCTS_WHEN_HYDRATED, Actions.FetchProducts>;
   export const FETCH_MORE_PRODUCTS = 'FETCH_MORE_PRODUCTS';
-  export type FetchMoreProducts = Action<typeof FETCH_MORE_PRODUCTS, number>;
+  export type FetchMoreProducts = Action<typeof FETCH_MORE_PRODUCTS, { amount: number, forward: boolean }>;
   export const FETCH_AUTOCOMPLETE_SUGGESTIONS = 'FETCH_AUTOCOMPLETE_SUGGESTIONS';
   export type FetchAutocompleteSuggestions = Action<typeof FETCH_AUTOCOMPLETE_SUGGESTIONS, string>;
   export const FETCH_AUTOCOMPLETE_PRODUCTS = 'FETCH_AUTOCOMPLETE_PRODUCTS';
@@ -104,6 +107,8 @@ namespace Actions {
   export type FetchPastPurchases = Action<typeof FETCH_PAST_PURCHASES>;
   export const FETCH_PAST_PURCHASE_PRODUCTS = 'FETCH_PAST_PURCHASE_PRODUCTS';
   export type FetchPastPurchaseProducts = Action<typeof FETCH_PAST_PURCHASE_PRODUCTS, string | null>;
+  export const FETCH_MORE_PAST_PURCHASE_PRODUCTS = 'FETCH_MORE_PAST_PURCHASE_PRODUCTS';
+  export type FetchMorePastPurchaseProducts = Action<typeof FETCH_MORE_PAST_PURCHASE_PRODUCTS, { amount: number, forward: boolean }>;
   export const FETCH_PAST_PURCHASE_NAVIGATIONS = 'FETCH_PAST_PURCHASE_NAVIGATIONS';
   export type FetchPastPurchaseNavigations = Action<typeof FETCH_PAST_PURCHASE_NAVIGATIONS>;
   export const FETCH_SAYT_PAST_PURCHASES = 'FETCH_SAYT_PAST_PURCHASES';
@@ -148,6 +153,8 @@ namespace Actions {
   export type ReceiveSaytPastPurchases = Action<typeof RECEIVE_SAYT_PAST_PURCHASES, Store.ProductWithMetadata[]>;
   export const RECEIVE_PAST_PURCHASE_PRODUCTS = 'RECEIVE_PAST_PURCHASE_PRODUCTS';
   export type ReceivePastPurchaseProducts = Action<typeof RECEIVE_PAST_PURCHASE_PRODUCTS, Store.ProductWithMetadata[]>;
+  export const RECEIVE_MORE_PAST_PURCHASE_PRODUCTS = 'RECEIVE_MORE_PAST_PURCHASE_PRODUCTS';
+  export type ReceiveMorePastPurchaseProducts = Action<typeof RECEIVE_MORE_PAST_PURCHASE_PRODUCTS, Store.ProductWithMetadata[]>;
   export const RECEIVE_PAST_PURCHASE_CURRENT_RECORD_COUNT = 'RECEIVE_PAST_PURCHASE_CURRENT_RECORD_COUNT';
   export type ReceivePastPurchaseCurrentRecordCount = Action<typeof RECEIVE_PAST_PURCHASE_CURRENT_RECORD_COUNT, number>;
   export const RECEIVE_PAST_PURCHASE_ALL_RECORD_COUNT = 'RECEIVE_PAST_PURCHASE_ALL_RECORD_COUNT';
@@ -185,6 +192,8 @@ namespace Actions {
   export const SELECT_PAST_PURCHASE_SORT = 'SELECT_PAST_PURCHASE_SORT';
   export type SelectPastPurchaseSort = Action<typeof SELECT_PAST_PURCHASE_SORT, number>;
   export const RECEIVE_NAVIGATION_SORT = 'RECEIVE_NAVIGATION_SORT';
+  export const RECEIVE_INFINITE_SCROLL = 'RECEIVE_INFINITE_SCROLL';
+  export type ReceiveInfiniteScroll = Action<typeof RECEIVE_INFINITE_SCROLL, Payload.InfiniteScroll>;
 
   // ui
   export const CREATE_COMPONENT_STATE = 'CREATE_COMPONENT_STATE';

@@ -8,7 +8,7 @@ suite('ui', ({ expect }) => {
   const state: Store.UI = {
     breadcrumbs: {
       global,
-      [ID]: 'yeah'
+      [ID]: 'yeah',
     }
   };
 

@@ -71,6 +71,12 @@ namespace Selectors {
     state.data.present.page;
 
   /**
+   * Returns the current infinite scroll object.
+   */
+  export const infiniteScroll = (state: Store.State) =>
+    state.data.present.infiniteScroll;
+
+  /**
    * Returns the page sizes object.
    */
   export const pageSizes = (state: Store.State) =>
@@ -173,6 +179,12 @@ namespace Selectors {
    */
   export const productsWithMetadata = (state: Store.State) =>
     state.data.present.products;
+
+  /**
+   * Returns the current products extended with metadata
+   */
+  export const pastPurchaseProductsWithMetadata = (state: Store.State) =>
+    state.data.present.pastPurchases.products;
 
   /**
    * Returns the current details object.

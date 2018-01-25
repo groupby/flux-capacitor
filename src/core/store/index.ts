@@ -77,6 +77,8 @@ namespace Store {
 
     pastPurchases: PastPurchase;
 
+    infiniteScroll: InfiniteScroll;
+
     recordCount: number; // post
 
     redirect?: string; // post
@@ -90,7 +92,7 @@ namespace Store {
   export interface UI {
     [tagName: string]: {
       global?: any;
-      [tagId: string]: any;
+      [tagId: number]: any;
     };
   }
 
@@ -273,6 +275,11 @@ namespace Store {
       allRecordCount: number;
       currentRecordCount: number;
     }
+  }
+
+  export interface InfiniteScroll {
+    isFetchingForward: boolean;
+    isFetchingBackward: boolean;
   }
 
   export interface Product {

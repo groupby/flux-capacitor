@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Navigations | @storefront/flux-capacitor</title>
+	<title>InfiniteScroll | @storefront/flux-capacitor</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,16 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/configuration.html">Configuration</a>
+					<a href="../modules/store.html">Store</a>
 				</li>
 				<li>
-					<a href="../modules/configuration.recommendations.html">Recommendations</a>
-				</li>
-				<li>
-					<a href="configuration.recommendations.navigations.html">Navigations</a>
+					<a href="store.infinitescroll.html">InfiniteScroll</a>
 				</li>
 			</ul>
-			<h1>Interface Navigations</h1>
+			<h1>Interface InfiniteScroll</h1>
 		</div>
 	</div>
 </header>
@@ -76,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Navigations</span>
+						<span class="target">InfiniteScroll</span>
 					</li>
 				</ul>
 			</section>
@@ -84,47 +81,37 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
+						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="configuration.recommendations.navigations.html#pinned" class="tsd-kind-icon">pinned</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="configuration.recommendations.navigations.html#sort" class="tsd-kind-icon">sort</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="store.infinitescroll.html#isfetchingbackward" class="tsd-kind-icon">is<wbr>Fetching<wbr>Backward</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="store.infinitescroll.html#isfetchingforward" class="tsd-kind-icon">is<wbr>Fetching<wbr>Forward</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group ">
+			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="pinned" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> pinned</h3>
-					<div class="tsd-signature tsd-kind-icon">pinned<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="isfetchingbackward" class="tsd-anchor"></a>
+					<h3>is<wbr>Fetching<wbr>Backward</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Fetching<wbr>Backward<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/groupby/flux-capacitor/blob/0a62839/src/core/configuration.ts#L359">core/configuration.ts:359</a></li>
+							<li>Defined in <a href="https://github.com/groupby/flux-capacitor/blob/0a62839/src/core/store/index.ts#L282">core/store/index.ts:282</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Navigations to pin to the top regardless of recommendations.</p>
-						</div>
-					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="sort" class="tsd-anchor"></a>
-					<h3>sort</h3>
-					<div class="tsd-signature tsd-kind-icon">sort<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="isfetchingforward" class="tsd-anchor"></a>
+					<h3>is<wbr>Fetching<wbr>Forward</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Fetching<wbr>Forward<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/groupby/flux-capacitor/blob/0a62839/src/core/configuration.ts#L355">core/configuration.ts:355</a></li>
+							<li>Defined in <a href="https://github.com/groupby/flux-capacitor/blob/0a62839/src/core/store/index.ts#L281">core/store/index.ts:281</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Whether to sort navigations.</p>
-						</div>
-					</div>
 				</section>
 			</section>
 		</div>
@@ -134,134 +121,128 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class="label tsd-is-external">
-						<span>Internals</span>
-					</li>
-					<li class="current tsd-kind-module">
-						<a href="../modules/configuration.html">Configuration</a>
+					<li class="current tsd-kind-module tsd-is-external">
+						<a href="../modules/store.html">Store</a>
 						<ul>
-							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="../modules/configuration.autocomplete.html">Autocomplete</a>
+							<li class=" tsd-kind-module tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/store.autocomplete.html">Autocomplete</a>
 							</li>
-							<li class=" tsd-kind-module tsd-parent-kind-module">
-								<a href="../modules/configuration.personalization.html">Personalization</a>
+							<li class=" tsd-kind-module tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
+								<a href="../modules/store.indexed.html">Indexed</a>
 							</li>
-							<li class="current tsd-kind-module tsd-parent-kind-module">
-								<a href="../modules/configuration.recommendations.html">Recommendations</a>
+							<li class=" tsd-kind-module tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/store.pastpurchases.html">Past<wbr>Purchases</a>
+							</li>
+							<li class=" tsd-kind-module tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/store.personalization.html">Personalization</a>
+							</li>
+							<li class=" tsd-kind-module tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/store.recommendations.html">Recommendations</a>
+							</li>
+							<li class=" tsd-kind-module tsd-parent-kind-module tsd-is-external">
+								<a href="../modules/store.zone.html">Zone</a>
 							</li>
 						</ul>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/events.html">Events</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/observer.html">Observer</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/requests.html">Requests</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/selectors.html">Selectors</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/storesections.html">Store<wbr>Sections</a>
-					</li>
-					<li class="label tsd-is-external">
-						<span>Externals</span>
-					</li>
-					<li class=" tsd-kind-module tsd-is-external tsd-is-not-exported">
-						<a href="../modules/_redux_.html">"redux"</a>
-					</li>
-					<li class=" tsd-kind-module tsd-is-external">
-						<a href="../modules/actioncreators.html">Action<wbr>Creators</a>
-					</li>
-					<li class=" tsd-kind-module tsd-is-external">
-						<a href="../modules/actions.html">Actions</a>
-					</li>
-					<li class=" tsd-kind-module tsd-is-external">
-						<a href="../modules/adapter.html">Adapter</a>
-					</li>
-					<li class=" tsd-kind-module tsd-is-external">
-						<a href="../modules/middleware.html">Middleware</a>
-					</li>
-					<li class=" tsd-kind-module tsd-is-external">
-						<a href="../modules/page.html">Page</a>
-					</li>
-					<li class=" tsd-kind-module tsd-is-external">
-						<a href="../modules/pastpurchases.html">Past<wbr>Purchases</a>
-					</li>
-					<li class=" tsd-kind-module tsd-is-external">
-						<a href="../modules/payload.html">Payload</a>
-					</li>
-					<li class=" tsd-kind-module tsd-is-external">
-						<a href="../modules/personalization.html">Personalization</a>
-					</li>
-					<li class=" tsd-kind-module tsd-is-external">
-						<a href="../modules/recommendations.html">Recommendations</a>
-					</li>
-					<li class=" tsd-kind-module tsd-is-external">
-						<a href="../modules/store.html">Store</a>
-					</li>
-					<li class=" tsd-kind-module tsd-is-external">
-						<a href="../modules/tasks.html">Tasks</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="configuration.recommendations.inav.html" class="tsd-kind-icon">INav</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.baserefinement.html" class="tsd-kind-icon">Base<wbr>Refinement</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="configuration.recommendations.location.html" class="tsd-kind-icon">Location</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.basezone.html" class="tsd-kind-icon">Base<wbr>Zone</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.collection.html" class="tsd-kind-icon">Collection</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.contentzone.html" class="tsd-kind-icon">Content<wbr>Zone</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.data.html" class="tsd-kind-icon">Data</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.details.html" class="tsd-kind-icon">Details</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.geolocation.html" class="tsd-kind-icon">Geolocation</a>
 					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="configuration.recommendations.navigations.html" class="tsd-kind-icon">Navigations</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.infinitescroll.html" class="tsd-kind-icon">Infinite<wbr>Scroll</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="configuration.recommendations.navigations.html#pinned" class="tsd-kind-icon">pinned</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="store.infinitescroll.html#isfetchingbackward" class="tsd-kind-icon">is<wbr>Fetching<wbr>Backward</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="configuration.recommendations.navigations.html#sort" class="tsd-kind-icon">sort</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="store.infinitescroll.html#isfetchingforward" class="tsd-kind-icon">is<wbr>Fetching<wbr>Forward</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="configuration.recommendations.pastpurchasenavigation.html" class="tsd-kind-icon">Past<wbr>Purchase<wbr>Navigation</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.isfetching.html" class="tsd-kind-icon">Is<wbr>Fetching</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="configuration.recommendations.pastpurchases.html" class="tsd-kind-icon">Past<wbr>Purchases</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.navigation.html" class="tsd-kind-icon">Navigation</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="configuration.recommendations.pinned.html" class="tsd-kind-icon">Pinned</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.page.html" class="tsd-kind-icon">Page</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="configuration.recommendations.productsuggestions.html" class="tsd-kind-icon">Product<wbr>Suggestions</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.pastpurchase.html" class="tsd-kind-icon">Past<wbr>Purchase</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="configuration.recommendations.refinements.html" class="tsd-kind-icon">Refinements</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.product.html" class="tsd-kind-icon">Product</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="configuration.recommendations.securedpayload.html" class="tsd-kind-icon">Secured<wbr>Payload</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.productwithmetadata.html" class="tsd-kind-icon">Product<wbr>With<wbr>Metadata</a>
 					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module">
-						<a href="../modules/configuration.recommendations.html#inav-1" class="tsd-kind-icon">i<wbr>Nav</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.productszone.html" class="tsd-kind-icon">Products<wbr>Zone</a>
 					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module">
-						<a href="../modules/configuration.recommendations.html#idfield" class="tsd-kind-icon">id<wbr>Field</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.query.html" class="tsd-kind-icon">Query</a>
 					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module">
-						<a href="../modules/configuration.recommendations.html#location-1" class="tsd-kind-icon">location</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.rangerefinement.html" class="tsd-kind-icon">Range<wbr>Refinement</a>
 					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module">
-						<a href="../modules/configuration.recommendations.html#pastpurchases-1" class="tsd-kind-icon">past<wbr>Purchases</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.richcontentzone.html" class="tsd-kind-icon">Rich<wbr>Content<wbr>Zone</a>
 					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module">
-						<a href="../modules/configuration.recommendations.html#productsuggestions-1" class="tsd-kind-icon">product<wbr>Suggestions</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
+						<a href="store.selectablelist.html" class="tsd-kind-icon">Selectable<wbr>List</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.session.html" class="tsd-kind-icon">Session</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.sort.html" class="tsd-kind-icon">Sort</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.state.html" class="tsd-kind-icon">State</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.template.html" class="tsd-kind-icon">Template</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.ui.html" class="tsd-kind-icon">UI</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+						<a href="store.valuerefinement.html" class="tsd-kind-icon">Value<wbr>Refinement</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-is-external">
+						<a href="../modules/store.html#availablenavigations" class="tsd-kind-icon">Available<wbr>Navigations</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-is-external">
+						<a href="../modules/store.html#refinement" class="tsd-kind-icon">Refinement</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-external">
+						<a href="../modules/store.html#create" class="tsd-kind-icon">create</a>
 					</li>
 				</ul>
 			</nav>

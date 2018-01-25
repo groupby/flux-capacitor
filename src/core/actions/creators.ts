@@ -37,10 +37,18 @@ namespace ActionCreators {
   }
 
   /**
+   * Makes a request for products without history being set afterwards.
+   * @return {Actions.FetchProductsWithoutHistory} - Action with null.
+   */
+  export function fetchProductsWithoutHistory(): Actions.FetchProductsWithoutHistory {
+    return createAction(Actions.FETCH_PRODUCTS_WITHOUT_HISTORY, null);
+  }
+
+  /**
    * Wrapper for fetchProducts, dispatches it within saga when store is rehydrated
    * @return {Actions.FetchProductsWhenHydrated} - Action with null.
    */
-  export function fetchProductsWhenHydrated(): Actions.fetchProductsWhenHydrated {
+  export function fetchProductsWhenHydrated(): Actions.FetchProductsWhenHydrated {
     return createAction(Actions.FETCH_PRODUCTS_WHEN_HYDRATED, fetchProducts());
   }
   /**
@@ -48,8 +56,10 @@ namespace ActionCreators {
    * @param  {number}                    amount - Amount of more products to fetch.
    * @return {Actions.FetchMoreProducts}        - Action with amount.
    */
-  export function fetchMoreProducts(amount: number): Actions.FetchMoreProducts {
-    return createAction(Actions.FETCH_MORE_PRODUCTS, amount);
+  export function fetchMoreProducts(amount: number, forward: boolean = true): Actions.FetchMoreProducts {
+    return createAction(Actions.FETCH_MORE_PRODUCTS, { amount, forward }, {
+      forward: validators.isNotFetching,
+    });
   }
 
   /**
@@ -116,6 +126,11 @@ namespace ActionCreators {
 
   export function fetchPastPurchaseProducts(query: string = null): Actions.FetchPastPurchaseProducts {
     return createAction(Actions.FETCH_PAST_PURCHASE_PRODUCTS, query);
+  }
+
+  // tslint:disable-next-line max-line-length
+  export function fetchMorePastPurchaseProducts(amount: number, forward: boolean = true): Actions.FetchMorePastPurchaseProducts {
+    return createAction(Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS, { amount, forward });
   }
 
   export function fetchPastPurchaseNavigations(): Actions.FetchPastPurchaseNavigations {
@@ -421,6 +436,16 @@ namespace ActionCreators {
     return createAction(Actions.UPDATE_SECURED_PAYLOAD, payload);
   }
 
+  /**
+   * The fetch state of infinite scroll request.
+   * @param  {Actions.Payload.fetchObj} fetchObj - Whether is fetching forward or
+   * backward.
+   * @return {Actions.ReceiveInfiniteScroll}        - Action with fetching state object.
+   */
+  export function infiniteScrollRequestState(fetchObj: Actions.Payload.InfiniteScroll): Actions.ReceiveInfiniteScroll {
+    return createAction(Actions.RECEIVE_INFINITE_SCROLL, fetchObj);
+  }
+
   // response action creators
   /**
    * The query object to receive and update state with.
@@ -454,7 +479,7 @@ namespace ActionCreators {
             collection: Selectors.collection(state),
             count: recordCount
           }),
-          ActionCreators.receivePage(SearchAdapter.extractPage(state, recordCount)),
+          ActionCreators.receivePage(recordCount)(state),
           ActionCreators.receiveTemplate(SearchAdapter.extractTemplate(res.template)),
         ];
       });
@@ -496,8 +521,10 @@ namespace ActionCreators {
    * @param  {Actions.Payload.Page} page - The page object state will update to.
    * @return {Actions.ReceivePage}       - Action with page.
    */
-  export function receivePage(page: Actions.Payload.Page): Actions.ReceivePage {
-    return createAction(Actions.RECEIVE_PAGE, page);
+  export function receivePage(recordCount: number, current?: number) {
+    return (state: Store.State): Actions.ReceivePage => {
+      return createAction(Actions.RECEIVE_PAGE, SearchAdapter.extractPage(state, recordCount, current));
+    };
   }
 
   /**
@@ -562,8 +589,10 @@ namespace ActionCreators {
    * @return {Actions.ReceiveMoreProducts}          - Action with products.
    */
   export function receiveMoreProducts(res: Results) {
-    return (state: Store.State): Actions.ReceiveMoreProducts =>
-      createAction(Actions.RECEIVE_MORE_PRODUCTS, SearchAdapter.augmentProducts(res));
+    return (state: Store.State): Actions.ReceiveMoreProducts => {
+      // tslint:disable-next-line max-line-length
+      return handleError(createAction(Actions.RECEIVE_MORE_PRODUCTS, res), () => createAction(Actions.RECEIVE_MORE_PRODUCTS, SearchAdapter.augmentProducts(res)));
+    };
   }
 
   /**
@@ -639,6 +668,13 @@ namespace ActionCreators {
     return createAction(Actions.RECEIVE_PAST_PURCHASE_PRODUCTS, products);
   }
 
+  export function receiveMorePastPurchaseProducts(res: Results) {
+    return (state: Store.State): Actions.ReceiveMorePastPurchaseProducts => {
+      // tslint:disable-next-line max-line-length
+      return handleError(createAction(Actions.RECEIVE_MORE_PAST_PURCHASE_PRODUCTS, res), () => createAction(Actions.RECEIVE_MORE_PAST_PURCHASE_PRODUCTS, SearchAdapter.augmentProducts(res)));
+    };
+  }
+
   // tslint:disable-next-line max-line-length
   export function receivePastPurchaseAllRecordCount(count: number): Actions.ReceivePastPurchaseAllRecordCount {
     return createAction(Actions.RECEIVE_PAST_PURCHASE_ALL_RECORD_COUNT, count);
@@ -666,11 +702,14 @@ namespace ActionCreators {
 
   /**
    * The page to receive and update state with.
-   * @param  {Actions.Payload.Page} page - The page object state will update to.
+   * @param  {Actions.Payload.recordCount} recordCount - The current recordCount.
+   * @param  {Actions.Payload.current} current - The current page.
    * @return {Actions.ReceivePage}       - Action with page.
    */
-  export function receivePastPurchasePage(page: Actions.Payload.Page): Actions.ReceivePastPurchasePage {
-    return createAction(Actions.RECEIVE_PAST_PURCHASE_PAGE, page);
+  export function receivePastPurchasePage(recordCount: number, current?: number) {
+    return (state: Store.State): Actions.ReceivePastPurchasePage => {
+      return createAction(Actions.RECEIVE_PAST_PURCHASE_PAGE, SearchAdapter.extractPage(state, recordCount, current));
+    };
   }
 
   /**
@@ -796,6 +835,7 @@ namespace ActionCreators {
    * @param  {any={}}                       state   - The state to add in the store.
    * @return {Actions.CreateComponentState}         - Action with tagName, id, and state.
    */
+  // tslint:disable-next-line max-line-length
   export function createComponentState(tagName: string, id: string, state: any = {}): Actions.CreateComponentState {
     return createAction(Actions.CREATE_COMPONENT_STATE, { tagName, id, state });
   }

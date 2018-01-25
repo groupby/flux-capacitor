@@ -18,12 +18,13 @@ export default function updateUi(state: State = {}, { type, payload, meta = <Act
   }
 }
 
+// tslint:disable-next-line max-line-length
 export const createComponentState = (state: State, { tagName, id, state: tagState }: Actions.Payload.Component.State) =>
   ({
     ...state,
     [tagName]: {
       ...state[tagName],
-      [id]: tagState
+      [id]:  tagState
     }
   });
 

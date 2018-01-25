@@ -123,6 +123,12 @@ namespace Events {
    */
   export const CURRENT_PAGE_UPDATED = 'current_page_updated'; // pre
 
+  /**
+   * Triggered when infinite scroll is updated.
+   * Returns the current infinite scroll object.
+   */
+  export const INFINITE_SCROLL_UPDATED = 'infinite_scroll_updated';
+
   // record count event
   /**
    * Triggered when record count is updated.
@@ -182,6 +188,12 @@ namespace Events {
   export const PAST_PURCHASE_PRODUCTS_UPDATED = 'past_purchase_products_updated';
 
   /**
+   * Triggered when the more past purchase products are added
+   * Returns an array of the new past purchase products that were added
+   */
+  export const PAST_PURCHASE_MORE_PRODUCTS_ADDED = 'past_purchase_more_products_added';
+
+  /**
    * Triggered when the past purchase navigations are updated
    * Returns the new navigations
    */
@@ -200,12 +212,6 @@ namespace Events {
   export const PAST_PURCHASE_PAGE_UPDATED = 'past_purchase_page_updated';
 
   /**
-   * Triggered when the past purchase count object is updated
-   * Returns the new count object
-   */
-  export const PAST_PURCHASE_RECORD_COUNT_UPDATED = 'past_purchase_record_count_updated';
-
-  /**
    * Triggered when the past purchase current page number is udpated
    * Returns the new page number
    */
@@ -222,6 +228,12 @@ namespace Events {
    * Returns the new sort object
    */
   export const PAST_PURCHASE_SORT_UPDATED = 'past_purchase_sort_updated';
+
+  /**
+   * Triggered when the past purchase allRecordCount is updated
+   * Returns the new record count
+   */
+  export const PAST_PURCHASE_RECORD_COUNT_UPDATED = 'past_purchase_record_count_updated';
 
   /**
    * Triggered when past purchase selected refinements are updated.
@@ -324,6 +336,11 @@ namespace Events {
    * Returns the state.
    */
   export const HISTORY_SAVE = 'history:save';
+  /**
+   * Triggered when history is replaced.
+   * Returns the state.
+   */
+  export const HISTORY_REPLACE = 'history:replace';
 
   // url events
   /**

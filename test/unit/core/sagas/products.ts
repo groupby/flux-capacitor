@@ -30,10 +30,12 @@ suite('products saga', ({ expect, spy, stub }) => {
 
       const saga = sagaCreator(flux)();
 
+      expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_PRODUCTS, Tasks.fetchProducts, flux, false));
       // tslint:disable-next-line max-line-length
-      expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_PRODUCTS, Tasks.fetchProducts, flux));
+      expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_PRODUCTS_WITHOUT_HISTORY, Tasks.fetchProducts, flux, true));
+      // tslint:disable-next-line max-line-length
       expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_PRODUCTS_WHEN_HYDRATED, Tasks.fetchProductsWhenHydrated, flux));
-      expect(saga.next().value).to.eql(effects.takeLatest(Actions.FETCH_MORE_PRODUCTS, Tasks.fetchMoreProducts, flux));
+      expect(saga.next().value).to.eql(effects.takeEvery(Actions.FETCH_MORE_PRODUCTS, Tasks.fetchMoreProducts, flux));
       saga.next();
     });
   });
@@ -58,7 +60,7 @@ suite('products saga', ({ expect, spy, stub }) => {
             receiveProducts
           }
         };
-        const task = Tasks.fetchProducts(flux, <any>{});
+        const task = Tasks.fetchProducts(flux, false, <any>{});
         const error = new Error();
         task.next();
         expect(task.throw(error).value).to.eql(effects.put(receiveProductsAction));
@@ -87,7 +89,7 @@ suite('products saga', ({ expect, spy, stub }) => {
         // tslint:disable-next-line max-line-length
         const flux: any = { emit, saveState, clients: { bridge }, actions: { receiveProducts, receiveNavigationSort }, config };
 
-        const task = Tasks.fetchProducts(flux, action);
+        const task = Tasks.fetchProducts(flux, false, action);
 
         expect(task.next().value).to.eql(effects.all(([
           effects.call(Tasks.fetchProductsRequest, flux, action),
@@ -117,7 +119,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           saveState: () => undefined
         };
 
-        const task = Tasks.fetchProducts(<any>flux, <any>{ hello: 'hello' });
+        const task = Tasks.fetchProducts(<any>flux, false, <any>{ hello: 'hello' });
         task.next();
         task.next([{ redirect: true }, undefined]);
         task.next();
@@ -144,7 +146,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           saveState: () => undefined
         };
 
-        const task = Tasks.fetchProducts(<any>flux, <any>{});
+        const task = Tasks.fetchProducts(<any>flux, false, <any>{});
         task.next();
         task.next([{ redirect: false, totalRecordCount: 1, records: [record] }, undefined]);
         expect(task.next(config).value)
@@ -169,7 +171,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           saveState: () => undefined
         };
 
-        const task = Tasks.fetchProducts(<any>flux, <any>{});
+        const task = Tasks.fetchProducts(<any>flux, false, <any>{});
         task.next();
         task.next(config);
         expect(task.next([products, new Error()]).value).to.eql(effects.put(receiveProductsAction));
@@ -223,7 +225,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           { name: 'other', refinements: singleRefinement },
         ];
 
-        const task = Tasks.fetchProducts(<any>flux, <any>{});
+        const task = Tasks.fetchProducts(<any>flux, false, <any>{});
         task.next();
         task.next([{ availableNavigation }, sortArray]);
         expect(task.next(config).value)
@@ -290,7 +292,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           { name: 'other', refinements: singleRefinement },
         ];
 
-        const task = Tasks.fetchProducts(<any>flux, <any>{});
+        const task = Tasks.fetchProducts(<any>flux, false, <any>{});
         task.next();
         task.next([{ availableNavigation: avail }, sortArray]);
         expect(task.next(config).value)
@@ -357,7 +359,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           { name: 'other', refinements: singleRefinement },
         ];
 
-        const task = Tasks.fetchProducts(<any>flux, <any>{});
+        const task = Tasks.fetchProducts(<any>flux, false, <any>{});
         task.next();
         task.next([{ availableNavigation: avail }, sortArray]);
         expect(task.next(config).value).
@@ -405,7 +407,7 @@ suite('products saga', ({ expect, spy, stub }) => {
           { name: 'test1', values: singleRefinement },
         ];
 
-        const task = Tasks.fetchProducts(<any>flux, <any>{});
+        const task = Tasks.fetchProducts(<any>flux, false, <any>{});
         task.next();
         task.next([{ availableNavigation }, sortArray]);
         expect(task.next(config).value)
@@ -544,27 +546,35 @@ suite('products saga', ({ expect, spy, stub }) => {
     });
 
     describe('fetchMoreProducts()', () => {
-      it('should return more products', () => {
+      it('should return more products when fetching forward', () => {
         const id = '41892';
         const pageSize = 14;
         const emit = spy();
         const saveState = spy();
         const search = () => null;
         const bridge = { search };
-        const action: any = { payload: pageSize };
+        const action: any = { payload: { amount: pageSize, forward: true } };
         const receiveMoreProductsAction: any = { c: 'd' };
         const receiveMoreProducts = spy(() => receiveMoreProductsAction);
+        const infiniteScrollRequestStateAction: any = { e: 'f' };
+        const infiniteScrollRequestState = spy(() => infiniteScrollRequestStateAction);
         const state = { e: 'f' };
         const records = ['g', 'h'];
         const results = { records, id };
-        const flux: any = { emit, saveState, clients: { bridge }, actions: { receiveMoreProducts } };
+        const flux: any = {
+          emit,
+          saveState,
+          clients: { bridge },
+          actions: { receiveMoreProducts, infiniteScrollRequestState }
+        };
         stub(Requests, 'search').returns({ e: 'f' });
-        stub(Selectors, 'products').returns(['a', 'b', 'c']);
+        stub(Selectors, 'productsWithMetadata').returns([{ index: 1 }, { index: 2 }, { index: 3 }]);
 
         const task = Tasks.fetchMoreProducts(flux, action);
 
         expect(task.next().value).to.eql(effects.select());
-        expect(task.next(state).value).to.eql(effects.select(Selectors.config));
+        expect(task.next(state).value).to.eql(effects.put(infiniteScrollRequestStateAction));
+        expect(infiniteScrollRequestState).to.be.calledOnce.calledWithExactly({ isFetchingForward: true });
         expect(task.next().value).to.eql(effects.call([bridge, search], {
           e: 'f',
           pageSize,
@@ -573,7 +583,50 @@ suite('products saga', ({ expect, spy, stub }) => {
         expect(task.next(results).value).to.eql(effects.put(receiveMoreProductsAction));
         expect(receiveMoreProducts).to.be.calledWithExactly(results);
         expect(emit).to.be.calledWithExactly(Events.BEACON_SEARCH, id);
+        expect(task.next().value).to.eql(effects.put(infiniteScrollRequestStateAction));
+        expect(infiniteScrollRequestState).to.be.calledTwice.calledWithExactly({ isFetchingForward: false });
         task.next();
+      });
+
+      it('should return previous products when fetching backward', () => {
+        const id = '41892';
+        const pageSize = 14;
+        const emit = spy();
+        const saveState = spy();
+        const search = () => null;
+        const bridge = { search };
+        const action: any = { payload: { amount: pageSize, forward: false } };
+        const receiveMoreProductsAction: any = { c: 'd' };
+        const receiveMoreProducts = spy(() => receiveMoreProductsAction);
+        const infiniteScrollRequestStateAction: any = { e: 'f' };
+        const infiniteScrollRequestState = spy(() => infiniteScrollRequestStateAction);
+        const state = { e: 'f' };
+        const records = ['g', 'h'];
+        const results = { records, id };
+        const flux: any = {
+          emit,
+          saveState,
+          clients: { bridge },
+          actions: { receiveMoreProducts, infiniteScrollRequestState }
+        };
+        stub(Requests, 'search').returns({ e: 'f' });
+        stub(Selectors, 'productsWithMetadata').returns([{ index: 15 }, { index: 16 }, { index: 17 }]);
+
+        const task = Tasks.fetchMoreProducts(flux, action);
+
+        expect(task.next().value).to.eql(effects.select());
+        expect(task.next(state).value).to.eql(effects.put(infiniteScrollRequestStateAction));
+        expect(infiniteScrollRequestState).to.be.calledOnce.calledWithExactly({ isFetchingBackward: true });
+        expect(task.next().value).to.eql(effects.call([bridge, search], {
+          e: 'f',
+          pageSize,
+          skip: 0
+        }));
+        expect(task.next(results).value).to.eql(effects.put(receiveMoreProductsAction));
+        expect(receiveMoreProducts).to.be.calledWithExactly(results);
+        expect(emit).to.be.calledWithExactly(Events.BEACON_SEARCH, id);
+        expect(task.next().value).to.eql(effects.put(infiniteScrollRequestStateAction));
+        expect(infiniteScrollRequestState).to.be.calledTwice.calledWithExactly({ isFetchingBackward: false });
       });
 
       it('should throw error on failure', () => {
