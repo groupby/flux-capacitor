@@ -236,7 +236,7 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         const search = () => null;
         const bridge = { search };
         const query = 'umbrellas';
-        const refinements = [{ field: 'brand', value: 'Nike' }];
+        const refinements = [{ field: 'brand', value: 'Nike', exclude: true }];
         const action: any = { payload: { query, refinements } };
         const receiveAutocompleteProductsAction: any = { c: 'd' };
         const receiveAutocompleteProducts = spy(() => receiveAutocompleteProductsAction);
@@ -255,7 +255,7 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         expect(task.next(request).value).to.eql(effects.call([bridge, search], {
           ...request,
           query,
-          refinements: [{ navigationName: 'brand', type: 'Value', value: 'Nike' }, overrideRefinements[0]]
+          refinements: [{ navigationName: 'brand', type: 'Value', value: 'Nike', exclude: true }, overrideRefinements[0]]
         }));
         expect(task.next(response).value).to.eql(effects.put(receiveAutocompleteProductsAction));
         expect(receiveAutocompleteProducts).to.be.calledWith(response);

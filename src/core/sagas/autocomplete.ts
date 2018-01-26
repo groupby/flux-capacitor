@@ -68,8 +68,8 @@ export namespace Tasks {
     try {
       const request = yield effects.select(Requests.autocompleteProducts);
       const overrideRefinements = request.refinements;
-      const originalRefinements = refinements.map(({ field, value }) =>
-        ({ type: 'Value', navigationName: field, value }));
+      const originalRefinements = refinements.map(({ field, ...rest }) =>
+        ({ type: 'Value', navigationName: field, ...rest }));
       const mergedRefinements = [...originalRefinements, ...overrideRefinements];
       const res = yield effects.call(
         [flux.clients.bridge, flux.clients.bridge.search],
