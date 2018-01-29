@@ -14,6 +14,7 @@ import Selectors from '../selectors';
 import Store from '../store';
 import ConfigAdapter from './configuration';
 import Page from './page';
+import Configuration from '../configuration';
 
 export const MAX_RECORDS = 10000;
 
@@ -78,9 +79,9 @@ namespace Adapter {
     });
   };
 
-  export const filterExcludedNavigations = (navigations: Store.Navigations[], config: Store.Configuration): Store.Navigation[] => {
-    return navigations.filter()
-
+  export const filterExcludedNavigations = (navigations: Store.Navigation[], config: Configuration): Store.Navigation[] => {
+    // return navigations.filter()
+    return [];
   };
 
   export const pruneRefinements = (navigations: Store.Navigation[], state: Store.State): Store.Navigation[] => {
