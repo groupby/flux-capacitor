@@ -198,7 +198,13 @@ suite('Search Adapter', ({ expect, stub }) => {
 
   describe('filterExcludedNavigations()', () => {
     it('should remove excluded navigations', () => {
-        
+      const navigations: any = [
+        { name: 'A', refinements: [{exclude: true}], more: false },
+        { name: 'B', refinements: [{}, {}] },
+        { name: 'C', refinements: [{}], more: true }
+      ];
+      const config = {};
+      Adapter.filterExcludedNavigations(navigations,config);
     });
   });
 
