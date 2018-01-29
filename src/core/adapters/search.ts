@@ -78,8 +78,14 @@ namespace Adapter {
     });
   };
 
+  export const filterExcludedNavigations = (navigations: Store.Navigations[], config: Store.Configuration): Store.Navigation[] => {
+    return navigations.filter()
+
+  };
+
   export const pruneRefinements = (navigations: Store.Navigation[], state: Store.State): Store.Navigation[] => {
     const max = ConfigAdapter.extractMaxRefinements(Selectors.config(state));
+
     return max ? navigations.map((navigation) => ({
       ...navigation,
       more: navigation.refinements.length > max || navigation.more,

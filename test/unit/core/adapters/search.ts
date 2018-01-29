@@ -196,6 +196,12 @@ suite('Search Adapter', ({ expect, stub }) => {
     });
   });
 
+  describe('filterExcludedNavigations()', () => {
+    it('should remove excluded navigations', () => {
+        
+    });
+  });
+
   describe('pruneRefinements()', () => {
     it('should limit refinements to provided amount', () => {
       const state: any = {};
