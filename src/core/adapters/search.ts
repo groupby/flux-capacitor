@@ -84,6 +84,7 @@ namespace Adapter {
       const result = navigation.refinements.filter((ref: any) =>{
          return !ref.exclude;
       });
+      console.log('hello hello',result)
       navigation.refinements = result;
       return navigation;
     })
@@ -97,12 +98,13 @@ namespace Adapter {
 
   export const pruneRefinements = (navigations: Store.Navigation[], state: Store.State): Store.Navigation[] => {
     const max = ConfigAdapter.extractMaxRefinements(Selectors.config(state));
-
-    return max ? navigations.map((navigation) => ({
+    const filteredNavigations = filterExcludedNavigations(navigations);
+    console.log('hey there', filteredNavigations)
+    return max ? filteredNavigations.map((navigation) => ({
       ...navigation,
       more: navigation.refinements.length > max || navigation.more,
       refinements: navigation.refinements.splice(0,max),
-    })) : navigations;
+    })) : filteredNavigations;
   };
 
   // tslint:disable-next-line max-line-length
