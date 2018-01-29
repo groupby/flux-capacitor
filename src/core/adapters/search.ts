@@ -79,8 +79,12 @@ namespace Adapter {
     });
   };
 
-  export const filterExcludedNavigations = (navigations: Store.Navigation[], config: Configuration): Store.Navigation[] => {
-    // return navigations.filter()
+  export const filterExcludedNavigations = (navigations: Store.Navigation[]): Store.Navigation[] => {
+    navigations.map((navigation) => {
+      const result = navigation.refinements.filter((ref) =>{
+         return !ref.exclude;
+      });
+    });
     return [];
   };
 

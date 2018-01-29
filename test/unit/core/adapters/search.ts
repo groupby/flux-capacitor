@@ -203,14 +203,7 @@ suite('Search Adapter', ({ expect, stub }) => {
         { name: 'B', refinements: [{}, {}] },
         { name: 'C', refinements: [{}], more: true }
       ];
-      const config = {
-        search: {
-          overrides: {
-            refinements: [{exclude: true, navigationName: "Mill_Name", type: "Value", value: "Under Armour"}],
-          }
-        }
-      };
-      const navigationResult = Adapter.filterExcludedNavigations(navigations,config);
+      const navigationResult = Adapter.filterExcludedNavigations(navigations);
       expect(navigationResult).to.eql([{ name: 'B', refinements: [{}, {}] },
       { name: 'C', refinements: [{}], more: true }])
     });
