@@ -80,12 +80,19 @@ namespace Adapter {
   };
 
   export const filterExcludedNavigations = (navigations: Store.Navigation[]): Store.Navigation[] => {
-    navigations.map((navigation) => {
-      const result = navigation.refinements.filter((ref) =>{
+    return navigations.map((navigation) => {
+      const result = navigation.refinements.filter((ref: any) =>{
          return !ref.exclude;
       });
-    });
-    return [];
+      navigation.refinements = result;
+      return navigation;
+    })
+    .reduce((acc, cur) => {
+      if(cur.refinements.length > 0) {
+        acc = [...acc, cur];
+      }
+      return acc;
+    }, []);
   };
 
   export const pruneRefinements = (navigations: Store.Navigation[], state: Store.State): Store.Navigation[] => {

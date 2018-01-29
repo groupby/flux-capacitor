@@ -200,12 +200,16 @@ suite('Search Adapter', ({ expect, stub }) => {
     it.only('should remove excluded navigations', () => {
       const navigations: any = [
         { name: 'Mill_Name', refinements: [{exclude: true, value: "Under Armour", type: "Value"}], more: false },
-        { name: 'B', refinements: [{}, {}] },
+        { name: 'B', refinements: [{}, {exclude: true}] },
         { name: 'C', refinements: [{}], more: true }
       ];
+
       const navigationResult = Adapter.filterExcludedNavigations(navigations);
-      expect(navigationResult).to.eql([{ name: 'B', refinements: [{}, {}] },
-      { name: 'C', refinements: [{}], more: true }])
+
+      expect(navigationResult).to.eql([
+        { name: 'B', refinements: [{}] },
+        { name: 'C', refinements: [{}], more: true }
+      ]);
     });
   });
 
