@@ -92,10 +92,12 @@ namespace Adapter {
     return navigations
       .map((navigation) => {
         const refinements = navigation.refinements.filter((ref: any) => !ref.exclude);
-        return navigation = { ...navigation, refinements };
+        return { ...navigation, refinements };
       })
       .reduce((acc, cur) => {
-        if (cur.refinements.length > 0) acc = [...acc, cur];
+        if (cur.refinements.length > 0) {
+          acc = [...acc, cur];
+        }
         return acc;
       }, []);
   };
