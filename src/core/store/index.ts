@@ -61,7 +61,7 @@ namespace Store {
     products: ProductWithMetadata[]; // post
     productsLoaded: boolean;
     collections: Indexed.Selectable<Collection>; // mixed
-    navigations: AvailableNavigations; // mixed
+    navigations: Navigations; // mixed
 
     autocomplete: Autocomplete; // mixed
 
@@ -224,8 +224,9 @@ namespace Store {
     };
   }
 
-  export type AvailableNavigations = Indexed<Navigation> & {
+  export type Navigations = Indexed<Navigation> & {
     sort: Recommendations.Navigation[];
+    selected: Navigation[];
   };
 
   export namespace Recommendations {
@@ -306,7 +307,7 @@ namespace Store {
     max?: number;
     min?: number;
     or?: boolean; // post
-    selected: number[]; // pre
+    selected?: number[]; // pre
     refinements: Refinement[]; // post
     sort?: Sort; // post
     metadata: { [key: string]: string };

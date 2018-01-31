@@ -140,7 +140,7 @@ export const applyPageReducer = (state: State, { payload }: Action, reducer: Fun
 export const applyNavigationReducer = (state: State, { payload }: Action, reducer: Function) =>
   ({
     ...state,
-    navigations: reducer(<Store.AvailableNavigations>{
+    navigations: reducer(<Store.Navigations>{
       ...state.navigations,
       sort: []
     }, payload),

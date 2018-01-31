@@ -45,13 +45,14 @@ suite('navigations', ({ expect }) => {
     values: [valueRef[0]]
   }];
 
-  const state: Store.AvailableNavigations = {
+  const state: Store.Navigations = {
     allIds,
     byId: {
       Format,
       Section,
     },
-    sort
+    sort,
+    selected: [],
   };
 
   describe('updateNavigations()', () => {

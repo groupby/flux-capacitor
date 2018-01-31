@@ -9,12 +9,13 @@ export type Action = Actions.ResetRefinements
   | Actions.DeselectRefinement
   | Actions.ReceiveMoreRefinements
   | Actions.ReceiveNavigationSort;
-export type State = Store.AvailableNavigations;
+export type State = Store.Navigations;
 
 export const DEFAULTS: State = {
   allIds: [],
   byId: {},
   sort: [],
+  selected: [],
 };
 
 export default function updateNavigations(state: State = DEFAULTS, action: Action) {
@@ -65,6 +66,8 @@ export const receiveNavigations = (state: State, navigations: Store.Navigation[]
 // tslint:disable-next-line max-line-length
 export const selectRefinement = (state: State, { navigationId, index: refinementIndex }: Actions.Payload.Navigation.Refinement) => {
   if (navigationId && refinementIndex != null) {
+    // taking "total" out so that property isn't passed down, as it's not needed
+    const { total, ...ref } = state.byId[navigationId].refinements[refinementIndex];
     return {
       ...state,
       byId: {
@@ -74,6 +77,10 @@ export const selectRefinement = (state: State, { navigationId, index: refinement
           selected: state.byId[navigationId].selected.concat(refinementIndex),
         },
       },
+      selected: [
+        ...state.selected,
+        { navigationName: navigationId, ...ref, }
+      ]
     };
   } else {
     return state;
@@ -124,12 +131,18 @@ export const addRefinement = (state: State, { navigationId, value, low, high, ra
     const index = state.byId[navigationId].refinements
       .findIndex((ref) => Adapter.refinementsMatch(ref, refinement, range ? 'Range' : 'Value'));
 
+    const selected = state.selected.filter((nav) => )
+
     return {
       ...state,
       byId: {
         ...state.byId,
         [navigationId]: generateNavigation(state, navigationId, refinement, index)
-      }
+      },
+      selected: [
+        ...state.selected,
+
+      ]
     };
   } else {
     return {
