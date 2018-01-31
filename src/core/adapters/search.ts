@@ -79,32 +79,30 @@ namespace Adapter {
     });
   };
 
-  export const filterExcludedNavigations = (navigations: Store.Navigation[]): Store.Navigation[] => {
+  export const pruneRefinements = (navigations: Store.Navigation[], state: Store.State): Store.Navigation[] => {
+    const max = ConfigAdapter.extractMaxRefinements(Selectors.config(state));
+
+    return max ? navigations.map((navigation) => ({
+      ...navigation,
+      more: navigation.refinements.length > max || navigation.more,
+      refinements: navigation.refinements.splice(0,max),
+    })) : navigations;
+  };
+
+  export const filterExcludedNavigations = (navigations: Navigation[]): Navigation[] => {
     return navigations.map((navigation) => {
-      const result = navigation.refinements.filter((ref: any) =>{
+      const result = navigation.refinements.filter((ref: any) => {
          return !ref.exclude;
       });
-      console.log('hello hello',result)
       navigation.refinements = result;
       return navigation;
     })
     .reduce((acc, cur) => {
-      if(cur.refinements.length > 0) {
+      if (cur.refinements.length > 0) {
         acc = [...acc, cur];
       }
       return acc;
     }, []);
-  };
-
-  export const pruneRefinements = (navigations: Store.Navigation[], state: Store.State): Store.Navigation[] => {
-    const max = ConfigAdapter.extractMaxRefinements(Selectors.config(state));
-    const filteredNavigations = filterExcludedNavigations(navigations);
-    console.log('hey there', filteredNavigations)
-    return max ? filteredNavigations.map((navigation) => ({
-      ...navigation,
-      more: navigation.refinements.length > max || navigation.more,
-      refinements: navigation.refinements.splice(0,max),
-    })) : filteredNavigations;
   };
 
   // tslint:disable-next-line max-line-length
@@ -112,7 +110,9 @@ namespace Adapter {
     let navigations = available.reduce((map, navigation) =>
       Object.assign(map, { [navigation.name]: Adapter.extractNavigation(navigation) }), {});
 
-    selected.forEach((selectedNav) => {
+    const filteredNavigations = filterExcludedNavigations(selected);
+
+    filteredNavigations.forEach((selectedNav) => {
       const availableNav = navigations[selectedNav.name];
 
       if (availableNav) {
