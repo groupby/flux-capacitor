@@ -81,7 +81,6 @@ namespace Adapter {
 
   export const pruneRefinements = (navigations: Store.Navigation[], state: Store.State): Store.Navigation[] => {
     const max = ConfigAdapter.extractMaxRefinements(Selectors.config(state));
-
     return max ? navigations.map((navigation) => ({
       ...navigation,
       more: navigation.refinements.length > max || navigation.more,
@@ -90,19 +89,15 @@ namespace Adapter {
   };
 
   export const filterExcludedNavigations = (navigations: Navigation[]): Navigation[] => {
-    return navigations.map((navigation) => {
-      const result = navigation.refinements.filter((ref: any) => {
-         return !ref.exclude;
-      });
-      navigation.refinements = result;
-      return navigation;
-    })
-    .reduce((acc, cur) => {
-      if (cur.refinements.length > 0) {
-        acc = [...acc, cur];
-      }
-      return acc;
-    }, []);
+    return navigations
+      .map((navigation) => {
+        const refinements = navigation.refinements.filter((ref: any) => !ref.exclude);
+        return navigation = { ...navigation, refinements };
+      })
+      .reduce((acc, cur) => {
+        if (cur.refinements.length > 0) acc = [...acc, cur];
+        return acc;
+      }, []);
   };
 
   // tslint:disable-next-line max-line-length
