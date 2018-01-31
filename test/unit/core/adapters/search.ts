@@ -199,7 +199,7 @@ suite('Search Adapter', ({ expect, stub }) => {
   describe('filterExcludedNavigations()', () => {
     it('should remove excluded navigations', () => {
       const navigations: any = [
-        { name: 'Mill_Name', refinements: [{exclude: true, value: "Under Armour", type: "Value"}], more: false },
+        { name: 'Mill_Name', refinements: [{exclude: true, value: 'Under Armour', type: 'Value'}], more: false },
         { name: 'B', refinements: [{}, {exclude: true}] },
         { name: 'C', refinements: [{}], more: true }
       ];
