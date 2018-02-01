@@ -36,7 +36,8 @@ export const resetRefinements = (state: State, navigationId: boolean | string) =
     return {
       ...state,
       byId: state.allIds.reduce((navs, nav) =>
-        Object.assign(navs, { [nav]: { ...state.byId[nav], selected: [] } }), {})
+        Object.assign(navs, { [nav]: { ...state.byId[nav], selected: [] } }), {}),
+      selected: [],
     };
   } else {
     return {
@@ -47,7 +48,8 @@ export const resetRefinements = (state: State, navigationId: boolean | string) =
           ...state.byId[navigationId],
           selected: []
         }
-      }
+      },
+      selected: [],
     };
   }
 };
@@ -131,7 +133,7 @@ export const addRefinement = (state: State, { navigationId, value, low, high, ra
     const index = state.byId[navigationId].refinements
       .findIndex((ref) => Adapter.refinementsMatch(ref, refinement, range ? 'Range' : 'Value'));
 
-    const selected = state.selected.filter((nav) => )
+    // const selected = state.selected.filter((nav) => )
 
     return {
       ...state,

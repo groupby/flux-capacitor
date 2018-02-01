@@ -165,6 +165,9 @@ suite('navigations', ({ expect }) => {
             selected: [3, 0],
           },
         },
+        selected: [
+          { navigationName: 'Section', value: 'Books' },
+        ],
       };
 
       const reducer = navigations(state, {
