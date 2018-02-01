@@ -45,18 +45,20 @@ suite('navigations', ({ expect }) => {
     values: [valueRef[0]]
   }];
 
-  const state: Store.Navigations = {
+  const selected = [
+    {navigationName: 'Format', value: 'Hardcover'},
+    {navigationName: 'Format', value: 'Audio Book'},
+    {navigationName: 'Section', value: 'Teens'}
+  ];
+
+  const state: any = {
     allIds,
     byId: {
       Format,
       Section,
     },
     sort,
-    selected: [
-      {navigationName: 'Format', value: 'Hardcover'},
-      {navigationName: 'Format', value: 'Audio Book'},
-      {navigationName: 'Section', value: 'Teens'}
-    ],
+    selected,
   };
 
   describe('updateNavigations()', () => {
@@ -73,6 +75,7 @@ suite('navigations', ({ expect }) => {
             selected: [],
           },
         },
+        selected: [],
       };
 
       const reducer = navigations(state, { type: Actions.RESET_REFINEMENTS, payload: true });
@@ -115,6 +118,7 @@ suite('navigations', ({ expect }) => {
           colour: newNavs[0],
           size: newNavs[1],
         },
+        selected,
       };
 
       const reducer = navigations(state, {
@@ -149,6 +153,7 @@ suite('navigations', ({ expect }) => {
       const newState = {
         ...state,
         sort: nav,
+        selected,
       };
 
       const reducer = navigations({ ...state }, {
@@ -235,7 +240,8 @@ suite('navigations', ({ expect }) => {
             selected: [0],
             metadata: {}
           }
-        }
+        },
+        selected,
       };
 
       const reducer = navigations(state, {
@@ -266,7 +272,8 @@ suite('navigations', ({ expect }) => {
             selected: [0],
             metadata: {}
           }
-        }
+        },
+        selected,
       };
 
       const reducer = navigations(state, {
@@ -295,7 +302,8 @@ suite('navigations', ({ expect }) => {
             ],
             selected: [0, 2, 3]
           }
-        }
+        },
+        selected,
       };
 
       const reducer = navigations(state, {
@@ -318,7 +326,8 @@ suite('navigations', ({ expect }) => {
             ...Format,
             selected: []
           }
-        }
+        },
+        selected: [],
       };
 
       const reducer = navigations(state, {
@@ -365,7 +374,8 @@ suite('navigations', ({ expect }) => {
             ...Format,
             selected: []
           }
-        }
+        },
+        selected,
       };
 
       const reducer = navigations(state, {
