@@ -200,6 +200,14 @@ suite('navigations', ({ expect }) => {
     });
 
     it('should not add duplicate range refinement on ADD_REFINEMENT', () => {
+      const firstState = {
+         ...state,
+         selected: [
+           {navigationName: 'Section', type: 'Range', high: 20, low: 5},
+           ...state.selected
+         ],
+      };
+
       const newState = {
         ...state,
         byId: {
@@ -209,8 +217,12 @@ suite('navigations', ({ expect }) => {
             selected: [...Section.selected, 4],
           }
         },
-        selected: [{navigationName: 'Section', type: 'Range', high: 10, low: 5}],
+        selected: [
+          ...state.selected,
+          {navigationName: 'Section', type: 'Range', high: 10, low: 5}
+         ],
       };
+
 
       const reducer = navigations(state, {
         type: Actions.ADD_REFINEMENT,
@@ -241,7 +253,10 @@ suite('navigations', ({ expect }) => {
             metadata: {}
           }
         },
-        selected,
+        selected: [ 
+          ...state.selected,
+          { navigationName: 'Brand', type: 'Value', value: 'Oakley' }
+        ],
       };
 
       const reducer = navigations(state, {
@@ -375,7 +390,7 @@ suite('navigations', ({ expect }) => {
             selected: []
           }
         },
-        selected,
+        selected: [],
       };
 
       const reducer = navigations(state, {
