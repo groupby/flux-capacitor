@@ -52,7 +52,11 @@ suite('navigations', ({ expect }) => {
       Section,
     },
     sort,
-    selected: [],
+    selected: [
+      {navigationName: 'Format', value: 'Hardcover'},
+      {navigationName: 'Format', value: 'Audio Book'},
+      {navigationName: 'Section', value: 'Teens'}
+    ],
   };
 
   describe('updateNavigations()', () => {
@@ -199,7 +203,8 @@ suite('navigations', ({ expect }) => {
             ...Section,
             selected: [...Section.selected, 4],
           }
-        }
+        },
+        selected: [{navigationName: 'Section', type: 'Range', high: 10, low: 5}],
       };
 
       const reducer = navigations(state, {

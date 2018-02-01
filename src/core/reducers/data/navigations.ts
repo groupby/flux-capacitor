@@ -133,7 +133,9 @@ export const addRefinement = (state: State, { navigationId, value, low, high, ra
     const index = state.byId[navigationId].refinements
       .findIndex((ref) => Adapter.refinementsMatch(ref, refinement, range ? 'Range' : 'Value'));
 
-    // const selected = state.selected.filter((nav) => )
+    const selected = state.selected.filter((nav:any) => {
+      nav.name === navigationId
+    })
 
     return {
       ...state,
