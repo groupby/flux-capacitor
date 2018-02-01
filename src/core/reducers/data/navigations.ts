@@ -127,16 +127,12 @@ const generateNavigation = (state: State, navigationId: string, refinement: any,
 
 // tslint:disable-next-line max-line-length
 export const addRefinement = (state: State, { navigationId, value, low, high, range }: Actions.Payload.Navigation.AddRefinement) => {
-  const refinementWithType: any = range ? { type:'Range', low, high } : { type:'Value', value };
+  const refinementWithType: any = range ? { type: 'Range', low, high } : { type: 'Value', value };
   const { type, ...refinement } = refinementWithType;
 
   if (navigationId in state.byId) {
     const index = state.byId[navigationId].refinements
       .findIndex((ref) => Adapter.refinementsMatch(ref, refinement, range ? 'Range' : 'Value'));
-
-    const selected = state.selected.filter((nav:any) => {
-      nav.name === navigationId
-    })
 
     return {
       ...state,
@@ -146,10 +142,7 @@ export const addRefinement = (state: State, { navigationId, value, low, high, ra
       },
       selected: [
         ...state.selected,
-        {
-          navigationName: navigationId,
-          ...refinementWithType
-        }
+        { navigationName: navigationId, ...refinementWithType }
       ]
     };
   } else {
@@ -166,7 +159,11 @@ export const addRefinement = (state: State, { navigationId, value, low, high, ra
           selected: [0],
           metadata: {}
         }
-      }
+      },
+      selected: [
+        ...state.selected,
+        { navigationName: navigationId, ...refinementWithType }
+      ]
     };
   }
 };

@@ -1,4 +1,5 @@
 import { reduxBatch } from '@manaflair/redux-batch';
+// import { SelectedRefinement } from 'groupby-api';
 import { applyMiddleware, compose, createStore, Store as ReduxStore } from 'redux';
 import { persistStore } from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
@@ -226,8 +227,26 @@ namespace Store {
 
   export type Navigations = Indexed<Navigation> & {
     sort: Recommendations.Navigation[];
-    selected: Navigation[];
+    selected: SelectedRefinement[];
   };
+
+  export interface BaseSelectedRefinement {
+      navigationName: string;
+      exclude?: boolean;
+  }
+
+  export interface SelectedRangeRefinement extends BaseSelectedRefinement {
+      type: 'Range';
+      low?: number;
+      high?: number;
+  }
+
+  export interface SelectedValueRefinement extends BaseSelectedRefinement {
+      type: 'Value';
+      value: string;
+  }
+
+  export type SelectedRefinement = SelectedValueRefinement | SelectedRangeRefinement;
 
   export namespace Recommendations {
     export interface Navigation {

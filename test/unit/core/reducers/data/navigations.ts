@@ -45,20 +45,20 @@ suite('navigations', ({ expect }) => {
     values: [valueRef[0]]
   }];
 
-  const selected = [
-    {navigationName: 'Format', value: 'Hardcover'},
-    {navigationName: 'Format', value: 'Audio Book'},
-    {navigationName: 'Section', value: 'Teens'}
+  const selected: any = [
+    { navigationName: 'Format', value: 'Hardcover', type: 'Value' },
+    { navigationName: 'Format', value: 'Audio Book', type: 'Value' },
+    { navigationName: 'Section', value: 'Teens', type: 'Value' }
   ];
 
-  const state: any = {
+  const state: Store.Navigations = {
+    sort,
+    selected,
     allIds,
     byId: {
       Format,
       Section,
     },
-    sort,
-    selected,
   };
 
   describe('updateNavigations()', () => {
@@ -175,6 +175,7 @@ suite('navigations', ({ expect }) => {
           },
         },
         selected: [
+          ...state.selected,
           { navigationName: 'Section', value: 'Books' },
         ],
       };
@@ -200,12 +201,12 @@ suite('navigations', ({ expect }) => {
     });
 
     it('should not add duplicate range refinement on ADD_REFINEMENT', () => {
-      const firstState = {
-         ...state,
-         selected: [
-           {navigationName: 'Section', type: 'Range', high: 20, low: 5},
-           ...state.selected
-         ],
+      const firstState: any = {
+        ...state,
+        selected: [
+          { navigationName: 'Section', type: 'Range', high: 20, low: 5 },
+          ...state.selected
+        ],
       };
 
       const newState = {
@@ -218,13 +219,13 @@ suite('navigations', ({ expect }) => {
           }
         },
         selected: [
-          ...state.selected,
-          {navigationName: 'Section', type: 'Range', high: 10, low: 5}
-         ],
+          { navigationName: 'Format', value: 'Hardcover', type: 'Value' },
+          { navigationName: 'Format', value: 'Audio Book', type: 'Value' },
+          { navigationName: 'Section', type: 'Range', high: 10, low: 5 }
+        ],
       };
 
-
-      const reducer = navigations(state, {
+      const reducer = navigations(firstState, {
         type: Actions.ADD_REFINEMENT,
         payload: {
           navigationId: 'Section',
@@ -253,7 +254,7 @@ suite('navigations', ({ expect }) => {
             metadata: {}
           }
         },
-        selected: [ 
+        selected: [
           ...state.selected,
           { navigationName: 'Brand', type: 'Value', value: 'Oakley' }
         ],
@@ -288,7 +289,10 @@ suite('navigations', ({ expect }) => {
             metadata: {}
           }
         },
-        selected,
+        selected: [
+          ...state.selected,
+          { navigationName: 'Brand', type: 'Range', low: 23, high: 34 }
+        ],
       };
 
       const reducer = navigations(state, {
@@ -318,7 +322,10 @@ suite('navigations', ({ expect }) => {
             selected: [0, 2, 3]
           }
         },
-        selected,
+        selected: [
+          ...state.selected,
+          { navigationName: 'Format', type: 'Value', value: 'eBook' },
+        ],
       };
 
       const reducer = navigations(state, {
@@ -434,7 +441,7 @@ suite('navigations', ({ expect }) => {
     });
 
     it('should update refinements state on RECEIVE_MORE_REFINEMENTS', () => {
-      const selected = [0, 3, 4];
+      const selectedValues = [0, 3, 4];
       const refinements = [
         { value: 'Paper back', total: 400 },
         { value: 'ebook', total: 2000 },
@@ -446,7 +453,7 @@ suite('navigations', ({ expect }) => {
             ...Format,
             more: false,
             refinements,
-            selected
+            selected: selectedValues
           },
           Section,
         },
@@ -457,7 +464,7 @@ suite('navigations', ({ expect }) => {
         payload: {
           navigationId: 'Format',
           refinements,
-          selected
+          selected: selectedValues
         }
       });
 
