@@ -66,6 +66,7 @@ namespace Observer {
                     || oldNavigation.refinements !== newNavigation.refinements) {
                     // tslint:disable-next-line max-line-length
                     emit(`${selectedRefinementsEvent}:${id}`)(oldNavigation, newNavigation, `${path}.byId.${id}`);
+                    emit(`${selectedRefinementsEvent}`)(oldNavigation, newNavigation, `${path}.byId.${id}`);
                   }
                 });
               }
