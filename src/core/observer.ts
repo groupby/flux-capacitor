@@ -66,6 +66,7 @@ namespace Observer {
                     || oldNavigation.refinements !== newNavigation.refinements) {
                     // tslint:disable-next-line max-line-length
                     emit(`${selectedRefinementsEvent}:${id}`)(oldNavigation, newNavigation, `${path}.byId.${id}`);
+                    emit(selectedRefinementsEvent)(oldNavigation, newNavigation, path);
                   }
                 });
               }
@@ -175,7 +176,6 @@ namespace Observer {
               emit
             ),
             sort: emit(Events.PAST_PURCHASE_SORT_UPDATED),
-            allRecordCount: emit(Events.PAST_PURCHASE_RECORD_COUNT_UPDATED),
           },
 
           infiniteScroll: emit(Events.INFINITE_SCROLL_UPDATED),

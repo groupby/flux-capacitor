@@ -196,6 +196,23 @@ suite('Search Adapter', ({ expect, stub }) => {
     });
   });
 
+  describe('filterExcludedNavigations()', () => {
+    it('should remove excluded navigations', () => {
+      const navigations: any = [
+        { name: 'Mill_Name', refinements: [{exclude: true, value: 'Under Armour', type: 'Value'}], more: false },
+        { name: 'B', refinements: [{}, {exclude: true}] },
+        { name: 'C', refinements: [{}], more: true }
+      ];
+
+      const navigationResult = Adapter.filterExcludedNavigations(navigations);
+
+      expect(navigationResult).to.eql([
+        { name: 'B', refinements: [{}] },
+        { name: 'C', refinements: [{}], more: true }
+      ]);
+    });
+  });
+
   describe('pruneRefinements()', () => {
     it('should limit refinements to provided amount', () => {
       const state: any = {};
@@ -240,7 +257,7 @@ suite('Search Adapter', ({ expect, stub }) => {
         { name: 'B', refinements: [6, 7] },
         { name: 'C', refinements: [8, 9] }
       ];
-      const selectedNavigation = [{ name: 'b' }, { name: 'd' }];
+      const selectedNavigation = [{ name: 'b', refinements: [1] }, { name: 'd', refinements: [2] }];
       const extractNavigation = stub(Adapter, 'extractNavigation').callsFake((nav) => {
         if (availableNavigation.includes(nav)) {
           return extractedAvailable[availableNavigation.indexOf(nav)];

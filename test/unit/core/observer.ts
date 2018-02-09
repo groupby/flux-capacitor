@@ -341,6 +341,7 @@ suite('Observer', ({ expect, spy, stub }) => {
           observers.data.present.navigations(oldNavigations, newNavigations);
 
           expect(emit).to.be.calledWith(`${Events.SELECTED_REFINEMENTS_UPDATED}:c`, newNavigations.byId.c);
+          expect(emit).to.be.calledWith(Events.SELECTED_REFINEMENTS_UPDATED, newNavigations.byId.c);
         });
 
         it('should emit SELECTED_REFINEMENTS_UPDATED event when refinements change', () => {
@@ -356,6 +357,7 @@ suite('Observer', ({ expect, spy, stub }) => {
           observers.data.present.navigations(oldNavigations, newNavigations);
 
           expect(emit).to.be.calledWith(`${Events.SELECTED_REFINEMENTS_UPDATED}:c`, newNavigations.byId.c);
+          expect(emit).to.be.calledWith(Events.SELECTED_REFINEMENTS_UPDATED, newNavigations.byId.c);
         });
       });
 

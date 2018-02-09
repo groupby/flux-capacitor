@@ -236,12 +236,14 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         const search = () => null;
         const bridge = { search };
         const query = 'umbrellas';
-        const refinements = [{ field: 'brand', value: 'Nike' }];
+        const refinements = [{ field: 'brand', value: 'Nike', exclude: true }];
         const action: any = { payload: { query, refinements } };
         const receiveAutocompleteProductsAction: any = { c: 'd' };
         const receiveAutocompleteProducts = spy(() => receiveAutocompleteProductsAction);
         const products = ['e', 'f'];
-        const request = { g: 'h' };
+        // tslint:disable-next-line:max-line-length
+        const overrideRefinements = [{type: 'Value', navigationName: 'Mill_Name', exclude: true, value: 'Under Armour'}];
+        const request = { g: 'h', refinements: overrideRefinements};
         const response = { i: 'j' };
         const config: any = { k: 'l' };
         const flux: any = { clients: { bridge }, actions: { receiveAutocompleteProducts } };
@@ -253,7 +255,7 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         expect(task.next(request).value).to.eql(effects.call([bridge, search], {
           ...request,
           query,
-          refinements: [{ navigationName: 'brand', type: 'Value', value: 'Nike' }]
+          refinements: [{ navigationName: 'brand', type: 'Value', value: 'Nike', exclude: true }, overrideRefinements[0]]
         }));
         expect(task.next(response).value).to.eql(effects.put(receiveAutocompleteProductsAction));
         expect(receiveAutocompleteProducts).to.be.calledWith(response);

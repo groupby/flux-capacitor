@@ -10,6 +10,7 @@ import {
   Zone,
 } from 'groupby-api';
 import Actions from '../actions';
+import Configuration from '../configuration';
 import Selectors from '../selectors';
 import Store from '../store';
 import ConfigAdapter from './configuration';
@@ -87,12 +88,26 @@ namespace Adapter {
     })) : navigations;
   };
 
+  export const filterExcludedNavigations = (navigations: Navigation[]): Navigation[] => {
+    return navigations
+      .map((navigation) => {
+        const refinements = navigation.refinements.filter((ref: any) => !ref.exclude);
+        return navigation = { ...navigation, refinements };
+      })
+      .reduce((acc, cur) => {
+        if (cur.refinements.length > 0) acc = [...acc, cur];
+        return acc;
+      }, []);
+  };
+
   // tslint:disable-next-line max-line-length
   export const combineNavigations = ({ availableNavigation: available, selectedNavigation: selected }: Results): Store.Navigation[] => {
     let navigations = available.reduce((map, navigation) =>
       Object.assign(map, { [navigation.name]: Adapter.extractNavigation(navigation) }), {});
 
-    selected.forEach((selectedNav) => {
+    const filteredNavigations = filterExcludedNavigations(selected);
+
+    filteredNavigations.forEach((selectedNav) => {
       const availableNav = navigations[selectedNav.name];
 
       if (availableNav) {
