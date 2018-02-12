@@ -392,6 +392,8 @@ namespace Configuration {
     }
   }
 
+  
+
   export type ValueOptions<T> = T | { options: T[], default: T };
 
   export type RecommendationMode = keyof typeof RECOMMENDATION_MODES;

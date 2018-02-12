@@ -1,4 +1,4 @@
-import { Results } from 'groupby-api';
+import { Request, Results } from 'groupby-api';
 import Actions from '.';
 import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';
@@ -34,6 +34,11 @@ namespace ActionCreators {
    */
   export function fetchProducts(): Actions.FetchProducts {
     return createAction(Actions.FETCH_PRODUCTS, null);
+  }
+
+  // TODO:
+  export function customFetchProducts(customConfig: Partial<Request>): Actions.CustomFetchProducts {
+    return createAction(Actions.CUSTOM_FETCH_PRODUCTS, customConfig);
   }
 
   /**

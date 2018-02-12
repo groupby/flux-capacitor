@@ -1,4 +1,4 @@
-import { Results } from 'groupby-api';
+import { Request, Results } from 'groupby-api';
 import Configuration from '../configuration';
 import Store from '../store';
 import Payloads from './payloads';
@@ -91,6 +91,8 @@ namespace Actions {
   export type FetchProductsWithoutHistory = Action<typeof FETCH_PRODUCTS_WITHOUT_HISTORY>;
   export const FETCH_PRODUCTS_WHEN_HYDRATED = 'FETCH_PRODUCTS_WHEN_HYDRATED';
   export type FetchProductsWhenHydrated = Action<typeof FETCH_PRODUCTS_WHEN_HYDRATED, Actions.FetchProducts>;
+  export const CUSTOM_FETCH_PRODUCTS = 'CUSTOM FETCH PRODUCTS';
+  export type CustomFetchProducts = Action<typeof CUSTOM_FETCH_PRODUCTS, Partial<Request>>;
   export const FETCH_MORE_PRODUCTS = 'FETCH_MORE_PRODUCTS';
   export type FetchMoreProducts = Action<typeof FETCH_MORE_PRODUCTS, { amount: number, forward: boolean }>;
   export const FETCH_AUTOCOMPLETE_SUGGESTIONS = 'FETCH_AUTOCOMPLETE_SUGGESTIONS';

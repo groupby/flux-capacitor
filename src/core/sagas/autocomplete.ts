@@ -18,11 +18,15 @@ export namespace Tasks {
       const state = yield effects.select();
       const config = yield effects.select(Selectors.config);
       const field = Selectors.autocompleteCategoryField(state);
+
+      // calling sayt/search
       const suggestionsRequest = effects.call(
         [flux.clients.sayt, flux.clients.sayt.autocomplete],
         query,
         Requests.autocompleteSuggestions(config)
       );
+
+      console.log('this isffff', suggestionsRequest);
 
       const recommendationsConfig = config.autocomplete.recommendations;
       // fall back to default mode "popular" if not provided
@@ -49,6 +53,8 @@ export namespace Tasks {
       }
 
       const responses = yield effects.all(requests);
+
+      console.log('ressspppo', responses)
       const navigationLabels = ConfigAdapter.extractAutocompleteNavigationLabels(config);
       const autocompleteSuggestions = Adapter.extractSuggestions(responses[0], query, field, navigationLabels);
       const suggestions = recommendationsConfig.suggestionCount > 0 ?
@@ -71,6 +77,8 @@ export namespace Tasks {
       const originalRefinements = refinements.map(({ field, ...rest }) =>
         ({ type: 'Value', navigationName: field, ...rest }));
       const mergedRefinements = [...originalRefinements, ...overrideRefinements];
+
+      // not sayt, but api/vi/search just SEARCH api
       const res = yield effects.call(
         [flux.clients.bridge, flux.clients.bridge.search],
         {
@@ -79,6 +87,8 @@ export namespace Tasks {
           refinements: mergedRefinements,
         }
       );
+
+      console.log('this is res', res)
 
       yield effects.put(<any>flux.actions.receiveAutocompleteProducts(res));
     } catch (e) {
