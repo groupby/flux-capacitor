@@ -247,7 +247,7 @@ namespace ActionCreators {
    * or navigationId to reset all refinements on a specific navigation.
    * @return {Actions.ResetPageAndResetRefinements}   - Actions with relevant data.
    */
-  export function resetRefinements(field?: boolean | string): Actions.ResetPageAndResetRefinements {
+  export function resetRefinements(field: boolean | string): Actions.ResetPageAndResetRefinements {
     return [
       ActionCreators.resetPage(),
       createAction(Actions.RESET_REFINEMENTS, field, {
