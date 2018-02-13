@@ -124,7 +124,7 @@ namespace Actions {
   export const RECEIVE_MORE_PRODUCTS = 'RECEIVE_MORE_PRODUCTS';
   export type ReceiveMoreProducts = Action<typeof RECEIVE_MORE_PRODUCTS, Store.ProductWithMetadata[]>;
   export const RECEIVE_CUSTOM_FETCH_PRODUCTS = 'RECEIVE_CUSTOM_FETCH_PRODUCTS';
-  export type ReceiveCustomFetchProducts = Action<typeof RECEIVE_CUSTOM_FETCH_PRODUCTS, object>;
+  export type ReceiveCustomFetchProducts = Action<typeof RECEIVE_CUSTOM_FETCH_PRODUCTS, any>;
   export const RECEIVE_AUTOCOMPLETE_SUGGESTIONS = 'RECEIVE_AUTOCOMPLETE_SUGGESTIONS';
   export type ReceiveAutocompleteSuggestions = Action<typeof RECEIVE_AUTOCOMPLETE_SUGGESTIONS, Payload.Autocomplete.Suggestions>;
   export const RECEIVE_AUTOCOMPLETE_PRODUCTS = 'RECEIVE_AUTOCOMPLETE_PRODUCTS';
