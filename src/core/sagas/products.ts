@@ -51,41 +51,6 @@ export namespace Tasks {
     }
   }
 
-  export function* customFetchProducts(flux: FluxCapacitor, action: Actions.CustomFetchProducts) {
-    try {
-      let [result, navigations]: [Results, Store.Recommendations.Navigation[]] = yield effects.all([
-        effects.call(customFetchProducts, flux, action),
-        effects.call(fetchNavigations, flux, <any>action)
-      ]);
-      const config = yield effects.select(Selectors.config);
-
-      if (result.redirect) {
-        yield effects.put(flux.actions.receiveRedirect(result.redirect));
-      }
-      if (config.search.redirectSingleResult && result.totalRecordCount === 1) {
-        yield effects.put(flux.actions.setDetails(result.records[0]));
-      } else {
-        flux.emit(Events.BEACON_SEARCH, result.id);
-        const actions: any[] = [flux.actions.receiveProducts(result)];
-        if (navigations && !(navigations instanceof Error)) {
-          actions.unshift(flux.actions.receiveNavigationSort(navigations));
-        } else {
-          // if inav navigations is invalid then make it an empty array so it does not sort
-          navigations = [];
-        }
-        result.availableNavigation = RecommendationsAdapter.sortAndPinNavigations(
-          result.availableNavigation,
-          navigations,
-          config
-        );
-
-        yield effects.put(<any>actions);
-      }
-    } catch (e) {
-      yield effects.put(<any>flux.actions.receiveProducts(e));
-    }
-  }
-
   export function* fetchProductsRequest(flux: FluxCapacitor, action: Actions.FetchProducts) {
     const addedBiases = yield effects.select(PersonalizationAdapter.convertBiasToSearch);
     const request = yield effects.select(Requests.search);
@@ -99,19 +64,20 @@ export namespace Tasks {
     return yield effects.call([flux.clients.bridge, flux.clients.bridge.search], requestWithBiases);
   }
 
-  export function* fetchProductsCustomRequest(flux: FluxCapacitor, action: Actions.FetchProducts) {
-    const addedBiases = yield effects.select(PersonalizationAdapter.convertBiasToSearch);
-    let request = yield effects.select(Requests.search);
-    const customRequest = action.payload;
-    request = { ...request, customRequest };
-    const requestWithBiases = {
-      ...request,
-      biasing: {
-        ...request.biasing,
-        biases: ((request.biasing ? request.biasing.biases : []) || []).concat(addedBiases),
-      }
-    };
-    return yield effects.call([flux.clients.bridge, flux.clients.bridge.search], requestWithBiases);
+  export function* customFetchProducts(flux: FluxCapacitor, action: Actions.CustomFetchProducts) {
+    try {
+      const response = yield effects.call(fetchProductsCustomRequest, flux, action);
+      const { result } = yield response.json();
+      yield effects.put(<any>flux.actions.receiveCustomFetchProducts(result));
+    } catch (e) {
+      yield effects.put(<any>flux.actions.receiveCustomFetchProducts(e));
+    }
+  }
+
+  export function* fetchProductsCustomRequest(flux: FluxCapacitor, action: Actions.CustomFetchProducts) {
+    const { request } = action.payload;
+
+    return yield effects.call(utils.fetch, action.payload.url, request);
   }
 
   export function* fetchNavigations(flux: FluxCapacitor, action: Actions.FetchProducts) {

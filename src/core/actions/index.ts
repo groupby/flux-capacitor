@@ -92,7 +92,7 @@ namespace Actions {
   export const FETCH_PRODUCTS_WHEN_HYDRATED = 'FETCH_PRODUCTS_WHEN_HYDRATED';
   export type FetchProductsWhenHydrated = Action<typeof FETCH_PRODUCTS_WHEN_HYDRATED, Actions.FetchProducts>;
   export const CUSTOM_FETCH_PRODUCTS = 'CUSTOM FETCH PRODUCTS';
-  export type CustomFetchProducts = Action<typeof CUSTOM_FETCH_PRODUCTS, Partial<Request>>;
+  export type CustomFetchProducts = Action<typeof CUSTOM_FETCH_PRODUCTS, { request: object, url: string }>;
   export const FETCH_MORE_PRODUCTS = 'FETCH_MORE_PRODUCTS';
   export type FetchMoreProducts = Action<typeof FETCH_MORE_PRODUCTS, { amount: number, forward: boolean }>;
   export const FETCH_AUTOCOMPLETE_SUGGESTIONS = 'FETCH_AUTOCOMPLETE_SUGGESTIONS';
@@ -123,6 +123,8 @@ namespace Actions {
   export type ReceiveProducts = Action<typeof RECEIVE_PRODUCTS, Results>;
   export const RECEIVE_MORE_PRODUCTS = 'RECEIVE_MORE_PRODUCTS';
   export type ReceiveMoreProducts = Action<typeof RECEIVE_MORE_PRODUCTS, Store.ProductWithMetadata[]>;
+  export const RECEIVE_CUSTOM_FETCH_PRODUCTS = 'RECEIVE_CUSTOM_FETCH_PRODUCTS';
+  export type ReceiveCustomFetchProducts = Action<typeof RECEIVE_CUSTOM_FETCH_PRODUCTS, object>;
   export const RECEIVE_AUTOCOMPLETE_SUGGESTIONS = 'RECEIVE_AUTOCOMPLETE_SUGGESTIONS';
   export type ReceiveAutocompleteSuggestions = Action<typeof RECEIVE_AUTOCOMPLETE_SUGGESTIONS, Payload.Autocomplete.Suggestions>;
   export const RECEIVE_AUTOCOMPLETE_PRODUCTS = 'RECEIVE_AUTOCOMPLETE_PRODUCTS';

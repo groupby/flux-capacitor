@@ -37,8 +37,13 @@ namespace ActionCreators {
   }
 
   // TODO:
-  export function customFetchProducts(customConfig: Partial<Request>): Actions.CustomFetchProducts {
-    return createAction(Actions.CUSTOM_FETCH_PRODUCTS, customConfig);
+  // tslint:disable-next-line:max-line-length
+  export function customFetchProducts(customRequest: { request: object, url: string }): Actions.CustomFetchProducts {
+    return createAction(Actions.CUSTOM_FETCH_PRODUCTS, customRequest);
+  }
+
+  export function receiveCustomFetchProducts(products: object): Actions.ReceiveCustomFetchProducts {
+    return createAction(Actions.RECEIVE_CUSTOM_FETCH_PRODUCTS, products);
   }
 
   /**
@@ -433,8 +438,8 @@ namespace ActionCreators {
         ...payload,
         config: Selectors.config(state).personalization.realTimeBiasing,
       }, {
-        payload: validators.isValidBias
-      });
+          payload: validators.isValidBias
+        });
   }
 
   export function updateSecuredPayload(payload: Configuration.Recommendations.SecuredPayload) {
