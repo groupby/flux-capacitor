@@ -64,20 +64,17 @@ export namespace Tasks {
     return yield effects.call([flux.clients.bridge, flux.clients.bridge.search], requestWithBiases);
   }
 
-  export function* customFetchProducts(flux: FluxCapacitor, action: Actions.CustomFetchProducts) {
+  export function* customFetchProducts(flux: FluxCapacitor, action: Actions.CustomFetchProducts | Actions.FetchProducts) {
     try {
-      const response = yield effects.call(fetchProductsCustomRequest, flux, action);
-      const { result } = yield response.json();
+      const { request, url, type } = action.payload;    
+      const response = type === 'SEARCH' ? 
+        yield effects.call([flux.clients.bridge, flux.clients.bridge.search], request) : yield effects.call(utils.fetch, url, request);
+      
+      const result = type === 'SEARCH' ? response.records : yield response.json();
       yield effects.put(<any>flux.actions.receiveCustomFetchProducts(result));
     } catch (e) {
       yield effects.put(<any>flux.actions.receiveCustomFetchProducts(e));
     }
-  }
-
-  export function* fetchProductsCustomRequest(flux: FluxCapacitor, action: Actions.CustomFetchProducts) {
-    const { request } = action.payload;
-
-    return yield effects.call(utils.fetch, action.payload.url, request);
   }
 
   export function* fetchNavigations(flux: FluxCapacitor, action: Actions.FetchProducts) {

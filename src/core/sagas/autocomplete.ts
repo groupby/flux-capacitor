@@ -26,8 +26,6 @@ export namespace Tasks {
         Requests.autocompleteSuggestions(config)
       );
 
-      console.log('this isffff', suggestionsRequest);
-
       const recommendationsConfig = config.autocomplete.recommendations;
       // fall back to default mode "popular" if not provided
       // "popular" default will likely provide the most consistently strong data
@@ -54,7 +52,6 @@ export namespace Tasks {
 
       const responses = yield effects.all(requests);
 
-      console.log('ressspppo', responses)
       const navigationLabels = ConfigAdapter.extractAutocompleteNavigationLabels(config);
       const autocompleteSuggestions = Adapter.extractSuggestions(responses[0], query, field, navigationLabels);
       const suggestions = recommendationsConfig.suggestionCount > 0 ?
@@ -87,8 +84,6 @@ export namespace Tasks {
           refinements: mergedRefinements,
         }
       );
-
-      console.log('this is res', res)
 
       yield effects.put(<any>flux.actions.receiveAutocompleteProducts(res));
     } catch (e) {

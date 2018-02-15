@@ -2,8 +2,6 @@ import Actions from '../../actions';
 import Store from '../../store';
 
 export type Action = Actions.ReceiveCustomFetchProducts;
-// todo: change
-export type State = Store.ProductWithMetadata[];
 
 export default function updateProducts(state: any = [], action: Action) {
     switch (action.type) {

@@ -17,7 +17,7 @@ import recordCount from './record-count';
 import redirect from './redirect';
 import sorts from './sorts';
 import template from './template';
-import trending from './trending';
+import customFetchProducts from './customFetchProducts';
 
 export default redux.combineReducers({
   area,
@@ -38,5 +38,5 @@ export default redux.combineReducers({
   redirect,
   sorts,
   template,
-  trending
+  customFetchProducts
 });

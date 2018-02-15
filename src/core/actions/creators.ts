@@ -6,6 +6,7 @@ import Selectors from '../selectors';
 import Store from '../store';
 import { createAction, handleError, refinementPayload, shouldResetRefinements } from './utils';
 import * as validators from './validators';
+import payloads from './payloads';
 
 namespace ActionCreators {
   /**
@@ -38,7 +39,7 @@ namespace ActionCreators {
 
   // TODO:
   // tslint:disable-next-line:max-line-length
-  export function customFetchProducts(customRequest: { request: object, url: string }): Actions.CustomFetchProducts {
+  export function customFetchProducts(customRequest: { request: object, url?: string, type?: string }): Actions.CustomFetchProducts {
     return createAction(Actions.CUSTOM_FETCH_PRODUCTS, customRequest);
   }
 

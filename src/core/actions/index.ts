@@ -92,7 +92,7 @@ namespace Actions {
   export const FETCH_PRODUCTS_WHEN_HYDRATED = 'FETCH_PRODUCTS_WHEN_HYDRATED';
   export type FetchProductsWhenHydrated = Action<typeof FETCH_PRODUCTS_WHEN_HYDRATED, Actions.FetchProducts>;
   export const CUSTOM_FETCH_PRODUCTS = 'CUSTOM FETCH PRODUCTS';
-  export type CustomFetchProducts = Action<typeof CUSTOM_FETCH_PRODUCTS, { request: object, url: string }>;
+  export type CustomFetchProducts = Action<typeof CUSTOM_FETCH_PRODUCTS, { request: Payload.CustomRequest, url?: string, type?: string }>;
   export const FETCH_MORE_PRODUCTS = 'FETCH_MORE_PRODUCTS';
   export type FetchMoreProducts = Action<typeof FETCH_MORE_PRODUCTS, { amount: number, forward: boolean }>;
   export const FETCH_AUTOCOMPLETE_SUGGESTIONS = 'FETCH_AUTOCOMPLETE_SUGGESTIONS';

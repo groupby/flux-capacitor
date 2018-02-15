@@ -99,6 +99,11 @@ namespace Payload {
     isFetchingForward?: boolean;
     isFetchingBackward?: boolean;
   }
+
+  export interface CustomRequest {
+    method?: string;
+    body?: object;
+  }
 }
 
 export default Payload;
