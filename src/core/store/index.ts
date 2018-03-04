@@ -332,6 +332,7 @@ namespace Store {
     query?: string; // pre
     suggestions: Autocomplete.Suggestion[]; // post
     category: Autocomplete.Category; // static & post
+    showCategoryValuesForFirstMatch: boolean;
     navigations: Autocomplete.Navigation[]; // post
     products: ProductWithMetadata[]; // post
     template?: Template; // post

@@ -149,6 +149,9 @@ namespace Configuration {
      * number of characters before activating typeahead
      */
     searchCharMinLimit?: number;
+     * whether to use the first term as a category search
+     */
+    showCategoryValuesForFirstMatch?: boolean;
     /**
      * number of suggestions to request
      */

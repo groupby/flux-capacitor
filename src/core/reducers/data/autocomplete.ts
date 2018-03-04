@@ -9,6 +9,7 @@ export type State = Store.Autocomplete;
 
 export const DEFAULTS: State = {
   category: { values: [] },
+  showCategoryValuesForFirstMatch: false,
   products: [],
   navigations: [],
   suggestions: [],

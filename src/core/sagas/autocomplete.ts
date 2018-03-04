@@ -50,7 +50,7 @@ export namespace Tasks {
 
       const responses = yield effects.all(requests);
       const navigationLabels = ConfigAdapter.extractAutocompleteNavigationLabels(config);
-      const autocompleteSuggestions = Adapter.extractSuggestions(responses[0], query, field, navigationLabels);
+      const autocompleteSuggestions = Adapter.extractSuggestions(responses[0], query, field, navigationLabels, config);
       const suggestions = recommendationsConfig.suggestionCount > 0 ?
         {
           ...autocompleteSuggestions,

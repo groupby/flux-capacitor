@@ -19,7 +19,8 @@ namespace Adapter {
     Config.extractAutocompleteProductArea(config) || Adapter.extractArea(config);
 
   // tslint:disable-next-line max-line-length
-  export const extractSuggestions = ({ result }: any, query: string, category: string, labels: { [key: string]: string }): Actions.Payload.Autocomplete.Suggestions => {
+  export const extractSuggestions = ({ result }: any, query: string, category: string, labels: { [key: string]: string }, config: Configuration): Actions.Payload.Autocomplete.Suggestions => {
+    console.log("CONFIG:", Config.extractSaytCategoriesForFirstMatch(config) );
     const searchTerms = result.searchTerms || [];
     const navigations = result.navigations || [];
     const hasCategory = category && searchTerms[0] && Adapter.termsMatch(searchTerms[0].value, query);

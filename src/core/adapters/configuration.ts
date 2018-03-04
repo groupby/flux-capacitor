@@ -138,6 +138,9 @@ namespace Adapter {
   export const extractSaytCategoryField = (config: Configuration) =>
     config.autocomplete.category;
 
+  export const extractSaytCategoriesForFirstMatch = (config: Configuration) =>
+    config.autocomplete.showCategoryValuesForFirstMatch;
+
   export const extractAutocompleteNavigationLabels = (config: Configuration) => {
     return config.autocomplete.navigations;
   };
