@@ -30,7 +30,7 @@ namespace Adapter {
     }
     return {
       categoryValues,
-      suggestions: searchTerms.map(({ value, disabled }) => ({ value, disabled })),
+      suggestions: searchTerms.map(({ value, disabled, additionalInfo }) => ({ value, disabled, additionalInfo })),
       navigations: navigations.map(({ name: field, values: refinements }) =>
         ({ field, label: labels[field] || field, refinements }))
     };
