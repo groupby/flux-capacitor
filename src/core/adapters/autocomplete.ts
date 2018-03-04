@@ -20,12 +20,15 @@ namespace Adapter {
 
   // tslint:disable-next-line max-line-length
   export const extractSuggestions = ({ result }: any, query: string, category: string, labels: { [key: string]: string }, config: Configuration): Actions.Payload.Autocomplete.Suggestions => {
-    console.log("CONFIG:", Config.extractSaytCategoriesForFirstMatch(config) );
     const searchTerms = result.searchTerms || [];
     const navigations = result.navigations || [];
-    const hasCategory = category && searchTerms[0] && Adapter.termsMatch(searchTerms[0].value, query);
+    let hasCategory = category && searchTerms[0] && Adapter.termsMatch(searchTerms[0].value, query);
+    let categoryValues = hasCategory ? [{ matchAll: true }, ...Adapter.extractCategoryValues(searchTerms[0], category)] : [];
+    if( Config.extractSaytCategoriesForFirstMatch(config) ) {
+      hasCategory = category && searchTerms[0];
+      categoryValues = (hasCategory && searchTerms[0].additionalInfo) ? [{ matchAll: true }, ...Adapter.extractCategoryValues(searchTerms[0], category)] : [{ matchAll: true }];
+    }
     // tslint:disable-next-line max-line-length
-    const categoryValues = hasCategory ? [{ matchAll: true }, ...Adapter.extractCategoryValues(searchTerms[0], category)] : [];
     if (hasCategory) {
       searchTerms[0].disabled = true;
     }
