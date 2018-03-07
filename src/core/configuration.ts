@@ -146,6 +146,10 @@ namespace Configuration {
      */
     category?: string;
     /**
+     * number of characters before activating typeahead
+     */
+    searchCharLimit?: number;
+    /**
      * number of suggestions to request
      */
     suggestionCount?: number;
