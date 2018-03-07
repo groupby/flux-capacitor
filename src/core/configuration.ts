@@ -148,7 +148,7 @@ namespace Configuration {
     /**
      * number of characters before activating typeahead
      */
-    searchCharLimit?: number;
+    searchCharMinLimit?: number;
     /**
      * number of suggestions to request
      */
