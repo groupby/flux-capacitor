@@ -5,11 +5,13 @@ import suite from '../../../_suite';
 suite('autocomplete', ({ expect }) => {
   const query = 'brown shoes';
   const category = { field: 'a', values: ['b'] };
+  const showCategoryValuesForFirstMatch = false;
   const suggestions = [{ value: 'e' }, { value: 'f' }, { value: 'g' }];
   const navigations = [];
   const products = [];
   const state: Store.Autocomplete = {
     category,
+    showCategoryValuesForFirstMatch,
     products,
     navigations,
     suggestions,
@@ -20,6 +22,7 @@ suite('autocomplete', ({ expect }) => {
       const payload = 'red shoes';
       const newState = {
         category,
+        showCategoryValuesForFirstMatch: false,
         products,
         query: payload,
         navigations,
@@ -35,6 +38,7 @@ suite('autocomplete', ({ expect }) => {
       const categoryValues = ['a', 'c', 'd'];
       const newState = {
         category: { ...category, values: categoryValues },
+        showCategoryValuesForFirstMatch: false,
         products,
         navigations,
         suggestions,
@@ -56,6 +60,7 @@ suite('autocomplete', ({ expect }) => {
       const newProducts = [1, 2, 3];
       const newState = {
         category,
+        showCategoryValuesForFirstMatch: false,
         products: newProducts,
         navigations,
         suggestions,
@@ -73,6 +78,7 @@ suite('autocomplete', ({ expect }) => {
       const newTemplate = { a: 'b' };
       const newState = {
         category,
+        showCategoryValuesForFirstMatch: false,
         products,
         template: newTemplate,
         navigations,
