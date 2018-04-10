@@ -6,12 +6,14 @@ import suite from '../../_suite';
 suite('Autocomplete Adapter', ({ expect, stub }) => {
 
   describe('extractSuggestions()', () => {
+    const config: any = { autocomplete: { showCategoryValuesForFirstMatch: false } };
+
     it('should remap search term values', () => {
-      const response = { result: { searchTerms: [{ value: 'a' }, { value: 'b', test: 'ignore me' }] } };
+      const response = { result: { searchTerms: [{ value: 'a', additionalInfo: '' }, { value: 'b', additionalInfo: '', test: 'ignore me' }] } };
 
-      const { suggestions } = Adapter.extractSuggestions(response, '', '', {});
+      const { suggestions } = Adapter.extractSuggestions(response, '', '', {}, config);
 
-      expect(suggestions).to.eql([{ value: 'a', disabled: undefined }, { value: 'b', disabled: undefined }]);
+      expect(suggestions).to.eql([{ value: 'a', additionalInfo: '', disabled: undefined }, { value: 'b', additionalInfo: '', disabled: undefined }]);
     });
 
     it('should not extract category values if query does not match', () => {
@@ -22,7 +24,7 @@ suite('Autocomplete Adapter', ({ expect, stub }) => {
       stub(Adapter, 'termsMatch').returns(false);
       stub(Adapter, 'extractCategoryValues').callsFake(() => expect.fail());
 
-      const { categoryValues } = Adapter.extractSuggestions(response, '', 'brand', {});
+      const { categoryValues } = Adapter.extractSuggestions(response, '', 'brand', {}, config);
 
       expect(categoryValues).to.eql([]);
     });
@@ -34,7 +36,7 @@ suite('Autocomplete Adapter', ({ expect, stub }) => {
       const extractCategoryValues = stub(Adapter, 'extractCategoryValues').returns(['x', 'y']);
       stub(Adapter, 'termsMatch').returns(true);
 
-      const { categoryValues } = Adapter.extractSuggestions(response, '', 'brand', {});
+      const { categoryValues } = Adapter.extractSuggestions(response, '', 'brand', {}, config);
 
       expect(categoryValues).to.eql([{matchAll: true}, 'x', 'y']);
       expect(extractCategoryValues).to.be.calledWith(searchTerm);
@@ -46,7 +48,7 @@ suite('Autocomplete Adapter', ({ expect, stub }) => {
       const response = { result: { navigations: [brandNavigation, categoryNavigation] } };
       const labels = { a: 'Brand' };
 
-      const { navigations } = Adapter.extractSuggestions(response, '', 'brand', labels);
+      const { navigations } = Adapter.extractSuggestions(response, '', 'brand', labels, config);
 
       expect(navigations).to.eql([
         { field: 'a', refinements: ['b', 'c'], label: 'Brand' },
@@ -58,7 +60,7 @@ suite('Autocomplete Adapter', ({ expect, stub }) => {
       const response = { result: { searchTerms: [{}] } };
       const extractCategoryValues = stub(Adapter, 'extractCategoryValues');
 
-      Adapter.extractSuggestions(response, '', '', {});
+      Adapter.extractSuggestions(response, '', '', {}, config);
 
       expect(extractCategoryValues.called).to.be.false;
     });
@@ -67,12 +69,12 @@ suite('Autocomplete Adapter', ({ expect, stub }) => {
       const response = { result: { searchTerms: [] } };
       const extractCategoryValues = stub(Adapter, 'extractCategoryValues');
 
-      Adapter.extractSuggestions(response, '', 'brand', {});
+      Adapter.extractSuggestions(response, '', 'brand', {}, config);
 
       expect(extractCategoryValues.called).to.be.false;
     });
 
-    it ('should set first searchTerms element to disabled',() => {
+    it('should set first searchTerms element to disabled',() => {
       const searchTerms = [{ value: 'g' }, { value: 'r' },
                            { value: 'o' }, { value: 'u' },
                            { value: 'p' }, { value: 'b' },
@@ -81,12 +83,14 @@ suite('Autocomplete Adapter', ({ expect, stub }) => {
       stub(Adapter, 'termsMatch').returns(true);
       stub(Adapter, 'extractCategoryValues');
 
-      Adapter.extractSuggestions({ result: { searchTerms } }, '', 'brand', {});
+      Adapter.extractSuggestions({ result: { searchTerms } }, '', 'brand', {}, config);
 
       expect(searchTerms).to.eql([{ value: 'g', disabled: true }, { value: 'r' },
                                   { value: 'o' }, { value: 'u' }, { value: 'p' },
                                   { value: 'b' }, { value: 'y' }]);
     });
+
+    // it
   });
 
   describe('extractCategoryValues()', () => {
