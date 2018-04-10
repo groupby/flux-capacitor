@@ -81,7 +81,7 @@ suite('autocomplete saga', ({ expect, spy, stub }) => {
         expect(task.next([response, trendingResponse]).value).to.eql(trendingBodyPromise);
         expect(task.next(trendingResponseValue).value).to.eql(effects.put(receiveAutocompleteSuggestionsAction));
         expect(extractAutocompleteNavigationLabels).to.be.calledWithExactly(config);
-        expect(extractSuggestions).to.be.calledWithExactly(response, query, field, navigationLabels);
+        expect(extractSuggestions).to.be.calledWithExactly(response, query, field, navigationLabels, config);
         expect(mergeSuggestions).to.be.calledWithExactly(suggestions.suggestions, trendingResponseValue);
         // tslint:disable-next-line max-line-length
         expect(receiveAutocompleteSuggestions).to.be.calledWithExactly({ ...suggestions, suggestions: mergedSuggestions });
