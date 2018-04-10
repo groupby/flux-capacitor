@@ -9,11 +9,15 @@ suite('Autocomplete Adapter', ({ expect, stub }) => {
     const config: any = { autocomplete: { showCategoryValuesForFirstMatch: false } };
 
     it('should remap search term values', () => {
-      const response = { result: { searchTerms: [{ value: 'a', additionalInfo: '' }, { value: 'b', additionalInfo: '', test: 'ignore me' }] } };
+      const searchTerms = [{ value: 'a', additionalInfo: '' }, { value: 'b', additionalInfo: '', test: 'ignore me' }];
+      const response = { result: { searchTerms } };
 
       const { suggestions } = Adapter.extractSuggestions(response, '', '', {}, config);
 
-      expect(suggestions).to.eql([{ value: 'a', additionalInfo: '', disabled: undefined }, { value: 'b', additionalInfo: '', disabled: undefined }]);
+      expect(suggestions).to.eql([
+        { value: 'a', additionalInfo: '', disabled: undefined },
+        { value: 'b', additionalInfo: '', disabled: undefined }
+      ]);
     });
 
     it('should not extract category values if query does not match', () => {

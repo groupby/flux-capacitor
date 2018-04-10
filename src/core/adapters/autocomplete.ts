@@ -24,10 +24,14 @@ namespace Adapter {
     const searchTerms = result.searchTerms || [];
     const navigations = result.navigations || [];
     let hasCategory = category && searchTerms[0] && Adapter.termsMatch(searchTerms[0].value, query);
-    let categoryValues = hasCategory ? [{ matchAll: true }, ...Adapter.extractCategoryValues(searchTerms[0], category)] : [];
-    if( Config.extractSaytCategoriesForFirstMatch(config) ) {
+    let categoryValues = hasCategory
+      ? [{ matchAll: true }, ...Adapter.extractCategoryValues(searchTerms[0], category)]
+      : [];
+    if ( Config.extractSaytCategoriesForFirstMatch(config) ) {
       hasCategory = category && searchTerms[0];
-      categoryValues = (hasCategory && searchTerms[0].additionalInfo) ? [{ matchAll: true }, ...Adapter.extractCategoryValues(searchTerms[0], category)] : [{ matchAll: true }];
+      categoryValues = (hasCategory && searchTerms[0].additionalInfo)
+        ? [{ matchAll: true }, ...Adapter.extractCategoryValues(searchTerms[0], category)]
+        : [{ matchAll: true }];
     }
     // tslint:disable-next-line max-line-length
     if (hasCategory) {
