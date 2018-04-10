@@ -20,6 +20,7 @@ namespace Adapter {
 
   // tslint:disable-next-line max-line-length
   export const extractSuggestions = ({ result }: any, query: string, category: string, labels: { [key: string]: string }, config: Configuration): Actions.Payload.Autocomplete.Suggestions => {
+
     const searchTerms = result.searchTerms || [];
     const navigations = result.navigations || [];
     let hasCategory = category && searchTerms[0] && Adapter.termsMatch(searchTerms[0].value, query);
