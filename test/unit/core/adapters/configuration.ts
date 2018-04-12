@@ -32,7 +32,8 @@ suite('Configuration Adapter', ({ expect, stub }) => {
               category: {
                 field: category,
                 values: []
-              }
+              },
+              searchCharMinLimit: 1,
             },
             fields: [],
             collections: {
@@ -112,7 +113,8 @@ suite('Configuration Adapter', ({ expect, stub }) => {
               category: {
                 field: category,
                 values: []
-              }
+              },
+              searchCharMinLimit: 1,
             },
             fields,
             collections: {

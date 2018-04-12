@@ -335,6 +335,7 @@ namespace Store {
     navigations: Autocomplete.Navigation[]; // post
     products: ProductWithMetadata[]; // post
     template?: Template; // post
+    searchCharMinLimit?: number;
   }
 
   export namespace Autocomplete {

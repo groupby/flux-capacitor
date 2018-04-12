@@ -12,6 +12,7 @@ export const DEFAULTS: State = {
   products: [],
   navigations: [],
   suggestions: [],
+  searchCharMinLimit: 1
 };
 
 export default function updateAutocomplete(state: State = DEFAULTS, action: Action): State {
