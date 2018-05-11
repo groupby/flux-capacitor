@@ -1,5 +1,5 @@
 import { EventEmitter } from 'eventemitter3';
-import { BrowserBridge, Results } from 'groupby-api';
+import { BrowserBridge } from 'groupby-api';
 import { Action as ReduxAction, Store as ReduxStore } from 'redux';
 import { Sayt } from 'sayt';
 import Actions from './core/actions';

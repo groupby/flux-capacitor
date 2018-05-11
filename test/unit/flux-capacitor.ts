@@ -1,8 +1,6 @@
 import { EventEmitter } from 'eventemitter3';
 import * as groupbyApi from 'groupby-api';
 import * as saytApi from 'sayt';
-import * as sinon from 'sinon';
-import * as core from '../../src/core';
 import ActionCreators from '../../src/core/actions/creators';
 import ConfigAdapter from '../../src/core/adapters/configuration';
 import Events from '../../src/core/events';
@@ -341,6 +339,21 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
         const customerId = 'testcustomer';
         const https = true;
         const networkConfig = { https };
+        const bridge = { a: 'b' };
+        const errorHandler = () => null;
+        const browserBridge = stub(groupbyApi, 'BrowserBridge').returns(bridge);
+
+        const created = FluxCapacitor.createBridge(<any>{ customerId, network: networkConfig }, errorHandler);
+
+        expect(browserBridge).to.be.calledWith(customerId, https, networkConfig);
+        expect(created).to.eq(bridge);
+        expect(created.errorHandler).to.eq(errorHandler);
+      });
+
+      it('should create new BrowserBridge with custom endpoint when proxyUrl is provided', () => {
+        const customerId = 'testcustomer';
+        const https = true;
+        const networkConfig = { https, proxyUrl: 'example.com' };
         const bridge = { a: 'b' };
         const errorHandler = () => null;
         const browserBridge = stub(groupbyApi, 'BrowserBridge').returns(bridge);

@@ -82,6 +82,11 @@ namespace Configuration {
      * add SkipSemantish header to search requests
      */
     skipSemantish?: boolean;
+
+    /**
+     * URL to be used in place of the standard GroupBy search URL.
+     */
+    proxyUrl?: string;
   }
 
   export interface Clients {
