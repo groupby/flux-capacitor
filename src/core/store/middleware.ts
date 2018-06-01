@@ -136,23 +136,6 @@ export namespace Middleware {
     };
   }
 
-  export function personalizationAnalyzer(store: Store<any>) {
-    return (next) => (action) => {
-      const state = store.getState();
-      if (ConfigurationAdapter.isRealTimeBiasEnabled(Selectors.config(state)) &&
-          PERSONALIZATION_CHANGE_ACTIONS.includes(action.type)) {
-        const biasing = PersonalizationAdapter.extractBias(action, state);
-        if (biasing) {
-          return next([
-            action,
-            ActionCreators.updateBiasing(biasing)
-          ]);
-        }
-      }
-      return next(action);
-    };
-  }
-
   export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
     const middleware = [
       thunkEvaluator,
@@ -163,7 +146,6 @@ export namespace Middleware {
       Middleware.errorHandler(flux),
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,
-      personalizationAnalyzer,
       thunkEvaluator,
       saveStateAnalyzer,
     ];

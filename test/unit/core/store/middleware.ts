@@ -10,11 +10,11 @@ import PersonalizationAdapter from '../../../../src/core/adapters/personalizatio
 import Events from '../../../../src/core/events';
 import Selectors from '../../../../src/core/selectors';
 import Middleware, {
-  PERSONALIZATION_CHANGE_ACTIONS,
   PAST_PURCHASE_SKU_ACTIONS,
+  PAST_PURCHASES_SEARCH_CHANGE_ACTIONS,
+  PERSONALIZATION_CHANGE_ACTIONS,
   RECALL_CHANGE_ACTIONS,
   SEARCH_CHANGE_ACTIONS,
-  PAST_PURCHASES_SEARCH_CHANGE_ACTIONS,
 } from '../../../../src/core/store/middleware';
 import suite from '../../_suite';
 
@@ -38,7 +38,6 @@ suite('Middleware', ({ expect, spy, stub }) => {
       errorHandlerMiddleware,
       checkPastPurchaseSkusMiddleware,
       sagaMiddleware,
-      Middleware.personalizationAnalyzer,
       Middleware.thunkEvaluator,
       Middleware.saveStateAnalyzer
     ];
@@ -352,74 +351,6 @@ suite('Middleware', ({ expect, spy, stub }) => {
 
       expect(next).to.be.calledWithExactly(action);
       expect(thunk).to.be.calledWithExactly(state);
-    });
-  });
-
-  describe('personalizationAnalyzer()', () => {
-    const conf = { a: 1 };
-    const state = { b: 2 };
-
-    it('should pass the action forward unchanged if not in list of relevant actions', () => {
-      const action = { a: 'b', type: 'NOT_VALID_ACTION' };
-      const config = stub(Selectors, 'config').returns(conf);
-      const enabled = stub(ConfigurationAdapter, 'isRealTimeBiasEnabled').returns(true);
-      const next = spy();
-      const getState = spy(() => state);
-
-      Middleware.personalizationAnalyzer(<any>{ getState })(next)(action);
-
-      expect(next).to.be.calledWithExactly(action);
-      expect(config).to.be.calledWithExactly(state);
-      expect(enabled).to.be.calledWithExactly(conf);
-      expect(getState).to.be.called;
-    });
-
-    it('should pass the action forward unchanged if real time biasing disabled', () => {
-      const action = { a: 'b', type: PERSONALIZATION_CHANGE_ACTIONS[0] };
-      const config = stub(Selectors, 'config').returns(conf);
-      const enabled = stub(ConfigurationAdapter, 'isRealTimeBiasEnabled').returns(false);
-      const next = spy();
-      const getState = spy(() => state);
-
-      Middleware.personalizationAnalyzer(<any>{ getState })(next)(action);
-
-      expect(next).to.be.calledWithExactly(action);
-    });
-
-    it('should pass the action forward if extractBias returns falsy', () => {
-      const action = { a: 'b', type: PERSONALIZATION_CHANGE_ACTIONS[0] };
-      const returnAction = 'return';
-      const extracted = 'extra';
-      const config = stub(Selectors, 'config').returns(conf);
-      const updateBiasing = stub(ActionCreators, 'updateBiasing').returns(returnAction);
-      const extract = stub(PersonalizationAdapter, 'extractBias').returns(null);
-      const next = spy();
-      const getState = spy(() => state);
-      stub(ConfigurationAdapter, 'isRealTimeBiasEnabled').returns(true);
-
-      Middleware.personalizationAnalyzer(<any>{ getState })(next)(action);
-
-      expect(next).to.be.calledWithExactly(action);
-      expect(extract).to.be.calledWithExactly(action, state);
-      expect(updateBiasing).to.not.be.called;
-    });
-
-    it('should make a batch action if action correct type', () => {
-      const action = { a: 'b', type: PERSONALIZATION_CHANGE_ACTIONS[0] };
-      const returnAction = 'return';
-      const extracted = 'extra';
-      const config = stub(Selectors, 'config').returns(conf);
-      const updateBiasing = stub(ActionCreators, 'updateBiasing').returns(returnAction);
-      const extract = stub(PersonalizationAdapter, 'extractBias').returns(extracted);
-      const next = spy();
-      const getState = spy(() => state);
-      stub(ConfigurationAdapter, 'isRealTimeBiasEnabled').returns(true);
-
-      Middleware.personalizationAnalyzer(<any>{ getState })(next)(action);
-
-      expect(next).to.be.calledWith([action, returnAction]);
-      expect(extract).to.be.calledWithExactly(action, state);
-      expect(updateBiasing).to.be.calledWithExactly(extracted);
     });
   });
 });
