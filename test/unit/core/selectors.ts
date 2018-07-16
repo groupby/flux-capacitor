@@ -557,6 +557,17 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
+  describe('autocompleteTemplate()', () => {
+    it('should return the current autocomplete template', () => {
+      const state: any = { a: 'b' };
+      const template = [{ data: 'c' }, { data: 'd' }];
+      const autocompleteSelector = stub(Selectors, 'autocomplete').returns({ template });
+
+      expect(Selectors.autocompleteTemplate(state)).to.eql(template);
+      expect(autocompleteSelector).to.be.calledWith(state);
+    });
+  });
+
   describe('refinementCrumb()', () => {
     it('should convert refinement to breadcrumb', () => {
       const field = 'brand';

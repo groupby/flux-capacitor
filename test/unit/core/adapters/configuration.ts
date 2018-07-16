@@ -34,7 +34,8 @@ suite('Configuration Adapter', ({ expect, stub }) => {
                 values: []
               },
               searchCharMinLimit: 1,
-              showCategoryValuesForFirstMatch: false
+              showCategoryValuesForFirstMatch: false,
+              template: {},
             },
             fields: [],
             collections: {
@@ -116,7 +117,8 @@ suite('Configuration Adapter', ({ expect, stub }) => {
                 values: []
               },
               searchCharMinLimit: 1,
-              showCategoryValuesForFirstMatch: false
+              showCategoryValuesForFirstMatch: false,
+              template: {},
             },
             fields,
             collections: {

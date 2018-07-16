@@ -331,6 +331,12 @@ namespace Selectors {
     Search.extractData(Selectors.autocomplete(state).products);
 
   /**
+   * Returns the current autocomplete template.
+   */
+  export const autocompleteTemplate = (state: Store.State) =>
+    Selectors.autocomplete(state).template;
+
+  /**
    * Returns the current session location.
    */
   export const location = (state: Store.State) =>
