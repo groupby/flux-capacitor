@@ -134,6 +134,12 @@ namespace Selectors {
     (Selectors.page(state) - 1) * pagesize;
 
   /**
+   * Returns the template.
+   */
+  export const template = (state: Store.State) =>
+    state.data.present.template;
+
+  /**
    * Returns the current products
    */
   export const products = (state: Store.State) =>

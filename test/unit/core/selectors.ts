@@ -310,6 +310,14 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
+  describe('template()', () => {
+    it('should return template', () => {
+      const template = { a: 'b' };
+
+      expect(Selectors.template(<any>{ data: { present: { template } } })).to.eql(template);
+    });
+  });
+
   describe('products()', () => {
     it('should return all products', () => {
       const products = [{ data: { a: 'b' } }];
