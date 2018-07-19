@@ -397,6 +397,7 @@ namespace Configuration {
       maxBiases: number;
       attributeMaxBiases: number;
       expiry: number;
+      autocomplete: boolean;
     }
 
     export interface RealTimeBiasingAttribute {
