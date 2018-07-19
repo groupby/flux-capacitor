@@ -94,5 +94,24 @@ suite('products', ({ expect }) => {
 
       expect(reducer).to.eql(state);
     });
+
+    it('should return the payload if there are no products in state', () => {
+      const payload = [
+        {
+          index: 3,
+          meta: { collection: 'heyys' },
+          data: { id: '29384', price: 12, title: 'a new book!' }
+        },
+        {
+          index: 4,
+          meta: { collection: 'howsa' },
+          data: { id: '34392', price: 30, title: 'a really interesting another book' }
+        },
+      ];
+
+      const reducer = products([], { type: Actions.RECEIVE_MORE_PRODUCTS, payload });
+
+      expect(reducer).to.eql(payload);
+    });
   });
 });

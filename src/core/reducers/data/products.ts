@@ -16,6 +16,8 @@ export default function updateProducts(state: State = [], action: Action): State
 export function updateMoreProducts(state: State, { payload }: Actions.ReceiveMoreProducts | Actions.ReceiveMorePastPurchaseProducts) {
   if (payload.length === 0) {
     return state;
+  } else if (state.length === 0) {
+    return payload;
   } else if (state[0].index > payload[payload.length - 1].index) {
     return [...payload, ...state];
   } else if (state[state.length - 1].index < payload[0].index) {
