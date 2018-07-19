@@ -86,5 +86,13 @@ suite('products', ({ expect }) => {
 
       expect(reducer).to.eql(state);
     });
+
+    it('should return state when there are no products', () => {
+      const payload = [];
+
+      const reducer = products(state, { type: Actions.RECEIVE_MORE_PRODUCTS, payload });
+
+      expect(reducer).to.eql(state);
+    });
   });
 });
