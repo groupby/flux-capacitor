@@ -104,7 +104,7 @@ export namespace Tasks {
 
       let skip;
       if (action.payload.forward) {
-        skip = products[products.length - 1].index;
+        skip = products.length === 0 ? 0 : products[products.length - 1].index;
         if (skip >= recordCount) {
           throw new Error('cannot skip past the last record');
         }
