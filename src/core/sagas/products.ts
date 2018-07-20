@@ -110,7 +110,7 @@ export namespace Tasks {
         }
         yield effects.put(<any>flux.actions.infiniteScrollRequestState({ isFetchingForward: true }));
       } else {
-        if (products[0].index <= 1) {
+        if (products.length === 0 || products[0].index <= 1) {
           throw new Error('cannot skip past the first record');
         }
         skip = products[0].index - pageSize - 1;

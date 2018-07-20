@@ -721,6 +721,29 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         task.next();
       });
 
+      it('should throw error when skipping backwards and there are currently no products', () => {
+        const pageSize = 14;
+        const action: any = { payload: { amount: pageSize, forward: false } };
+        const receiveMoreProductsAction: any = { c: 'd' };
+        const receiveMoreProducts = spy(() => receiveMoreProductsAction);
+        const infiniteScrollRequestStateAction: any = { e: 'f' };
+        const infiniteScrollRequestState = spy(() => infiniteScrollRequestStateAction);
+        const state = { e: 'f' };
+        const flux: any = {
+          actions: { receiveMoreProducts, infiniteScrollRequestState }
+        };
+        stub(Selectors, 'productsWithMetadata').returns([]);
+        stub(Selectors, 'recordCount').returns(50);
+
+        const task = Tasks.fetchMoreProducts(flux, action);
+
+        expect(task.next().value).to.eql(effects.select());
+        task.next(state);
+        expect(infiniteScrollRequestState).not.to.be.called;
+        expect(receiveMoreProducts).to.be.calledWith(sinon.match.instanceOf(Error));
+        task.next();
+      });
+
       it('should throw error on failure', () => {
         const error = new Error();
         const receiveMoreProductsAction: any = { a: 'b' };
