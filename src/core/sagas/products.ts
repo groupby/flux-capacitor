@@ -100,10 +100,14 @@ export namespace Tasks {
       const state: Store.State = yield effects.select();
       const products = Selectors.productsWithMetadata(state);
       const pageSize = action.payload.amount;
+      const recordCount = Selectors.recordCount(state);
 
       let skip;
       if (action.payload.forward) {
         skip = products[products.length - 1].index;
+        if (skip >= recordCount) {
+          throw new Error('cannot skip past the last record');
+        }
         yield effects.put(<any>flux.actions.infiniteScrollRequestState({ isFetchingForward: true }));
       } else {
         skip = products[0].index - pageSize - 1;
