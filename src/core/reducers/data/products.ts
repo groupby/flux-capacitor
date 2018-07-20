@@ -14,9 +14,9 @@ export default function updateProducts(state: State = [], action: Action): State
 
 // tslint:disable-next-line max-line-length
 export function updateMoreProducts(state: State, { payload }: Actions.ReceiveMoreProducts | Actions.ReceiveMorePastPurchaseProducts) {
-  if (payload.length === 0) {
+  if (!payload.length) {
     return state;
-  } else if (state.length === 0) {
+  } else if (!state.length) {
     return payload;
   } else if (state[0].index > payload[payload.length - 1].index) {
     return [...payload, ...state];
