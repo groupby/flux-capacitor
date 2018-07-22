@@ -3,6 +3,7 @@ import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt'
 import Autocomplete from './adapters/autocomplete';
 import Configuration from './adapters/configuration';
 import PastPurchaseAdapter from './adapters/pastPurchases';
+import Personalization from './adapters/personalization';
 import SearchAdapter, { MAX_RECORDS } from './adapters/search';
 import AppConfig from './configuration';
 import Selectors from './selectors';
@@ -68,7 +69,7 @@ namespace Requests {
 
   export const autocompleteProducts = (state: Store.State): QueryTimeProductSearchConfig => {
     const config = Selectors.config(state);
-    return Requests.chain(config.autocomplete.defaults.products, {
+    let request = {
       ...Requests.search(state),
       refinements: [],
       skip: 0,
@@ -76,7 +77,25 @@ namespace Requests {
       language: Autocomplete.extractProductLanguage(config),
       area: Autocomplete.extractProductArea(config),
       pageSize: Configuration.extractAutocompleteProductCount(config)
-    }, config.autocomplete.overrides.products);
+    };
+
+    if (config.personalization.realTimeBiasing.autocomplete) {
+      request = Requests.realTimeBiasing(state, request);
+    }
+
+    return Requests.chain(config.autocomplete.defaults.products, request, config.autocomplete.overrides.products);
+  };
+
+  export const realTimeBiasing = (state: Store.State, request: Request): Request => {
+    const addedBiases = Personalization.convertBiasToSearch(state);
+
+    return {
+      ...request,
+      biasing: {
+        ...request.biasing,
+        biases: ((request.biasing ? request.biasing.biases : []) || []).concat(addedBiases),
+      }
+    };
   };
 
   export const chain = (...objs: Array<object | ((obj: object) => object)>) =>

@@ -2,6 +2,7 @@ import { Request } from 'groupby-api';
 import * as sinon from 'sinon';
 import ConfigAdapter from '../../../src/core/adapters/configuration';
 import PastPurchaseAdapter from '../../../src/core/adapters/pastPurchases';
+import PersonalizationAdapter from '../../../src/core/adapters/personalization';
 import SearchAdapter, { MAX_RECORDS } from '../../../src/core/adapters/search';
 import Requests from '../../../src/core/requests';
 import Selectors from '../../../src/core/selectors';
@@ -218,6 +219,11 @@ suite('requests', ({ expect, stub }) => {
           products: { count: productCount },
           defaults: { products: defaults },
           overrides: { products: overrides },
+        },
+        personalization: {
+          realTimeBiasing: {
+            autocomplete: false
+          }
         }
       };
       const chained = { e: 'f' };
@@ -238,6 +244,76 @@ suite('requests', ({ expect, stub }) => {
         language,
         pageSize: productCount,
       }, overrides);
+    });
+
+    it('should create a products request with realTimeBiasing bias', () => {
+      const area = 'myArea';
+      const language = 'en';
+      const productCount = 41;
+      const defaults = { a: 'b' };
+      const overrides = { c: 'd' };
+      const config: any = {
+        autocomplete: {
+          area,
+          language,
+          products: { count: productCount },
+          defaults: { products: defaults },
+          overrides: { products: overrides },
+        },
+        personalization: {
+          realTimeBiasing: {
+            autocomplete: true
+          }
+        }
+      };
+      const chained = { e: 'f' };
+      const biasReq = { c: 'd' };
+      const state: any = {};
+      const chain = stub(Requests, 'chain').returns(chained);
+      const search = stub(Requests, 'search').returns({ i: 'j' });
+      const realTimeBiasing = stub(Requests, 'realTimeBiasing').returns(biasReq);
+      stub(Selectors,'config').returns(config);
+
+      const request = Requests.autocompleteProducts(state);
+
+      expect(realTimeBiasing).to.be.calledOnce;
+      expect(request).to.eql(chained);
+      expect(chain).to.be.calledWith(defaults, biasReq, overrides);
+    });
+  });
+
+  describe('realTimeBiasing()', () => {
+    it('should mix biases into request', () => {
+      const state = <any>{ a: 'b' };
+      const request = <any>{ c: 'd' };
+      const addedBiases = [{ e: 'f' }, { g: 'h' }];
+      const requestWithRTB = {
+        ...request,
+        biasing: { biases: addedBiases }
+      };
+      const convertBiasToSearch = stub(PersonalizationAdapter, 'convertBiasToSearch').returns(addedBiases);
+
+      const result = Requests.realTimeBiasing(state, request);
+
+      expect(convertBiasToSearch).to.be.calledWithExactly(state);
+      expect(result).to.eql(requestWithRTB);
+    });
+
+    it('should include request bias in resulting request', () => {
+      const state = <any>{ a: 'b' };
+      const reqBiases = [{ i: 'j' }];
+      const request = <any>{ c: 'd', biasing: { biases: reqBiases } };
+      const addedBiases = [{ e: 'f' }, { g: 'h' }];
+      const requestWithRTB = {
+        ...request,
+        biasing: { biases: [...reqBiases, ...addedBiases] }
+      };
+      const convertBiasToSearch = stub(PersonalizationAdapter, 'convertBiasToSearch').returns(addedBiases);
+
+      const result = Requests.realTimeBiasing(state, request);
+
+      expect(convertBiasToSearch).to.be.calledWithExactly(state);
+      expect(result).to.eql(requestWithRTB);
     });
   });
 
