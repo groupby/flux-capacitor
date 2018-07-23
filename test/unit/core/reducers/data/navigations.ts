@@ -92,8 +92,8 @@ suite('navigations', ({ expect }) => {
     it('should return original refinement for refinements that weren\'t selected on RESET_REFINEMENTS', () => {
       const reducer = navigations(state, { type: Actions.RESET_REFINEMENTS, payload: true });
 
-      expect(reducer.byId.Format).to.not.eql(state.byId.Format);
-      expect(reducer.byId.Department).to.eql(state.byId.Department);
+      expect(reducer.byId.Format).to.not.eq(state.byId.Format);
+      expect(reducer.byId.Department).to.eq(state.byId.Department);
     });
 
     it('should update navigations state on RECEIVE_NAVIGATIONS', () => {
