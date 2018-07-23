@@ -3,7 +3,7 @@ import navigations from '../../../../../src/core/reducers/data/navigations';
 import suite from '../../../_suite';
 
 suite('navigations', ({ expect }) => {
-  const allIds = ['Format', 'Section'];
+  const allIds = ['Format', 'Section', 'Department'];
   const valueRef = [
     { value: 'Hardcover', count: 200 },
     { value: 'Paper', count: 129 },
@@ -37,6 +37,18 @@ suite('navigations', ({ expect }) => {
     ],
     metadata: {}
   };
+  const Department = { // tslint:disable-line variable-name
+    field: 'department',
+    label: 'Department',
+    more: true,
+    or: false,
+    selected: [],
+    refinements: [
+      { value: 'first', total: 100 },
+      { value: 'second', total: 123 },
+    ],
+    metadata: {}
+  };
   const sort = [{
     name: 'Format',
     values: valueRef
@@ -50,6 +62,7 @@ suite('navigations', ({ expect }) => {
     byId: {
       Format,
       Section,
+      Department,
     },
     sort
   };
@@ -67,12 +80,20 @@ suite('navigations', ({ expect }) => {
             ...Section,
             selected: [],
           },
+          Department,
         },
       };
 
       const reducer = navigations(state, { type: Actions.RESET_REFINEMENTS, payload: true });
 
       expect(reducer).to.eql(newState);
+    });
+
+    it('should return original refinement for refinements that weren\'t selected on RESET_REFINEMENTS', () => {
+      const reducer = navigations(state, { type: Actions.RESET_REFINEMENTS, payload: true });
+
+      expect(reducer.byId.Format).to.not.eql(state.byId.Format);
+      expect(reducer.byId.Department).to.eql(state.byId.Department);
     });
 
     it('should update navigations state on RECEIVE_NAVIGATIONS', () => {
@@ -163,6 +184,7 @@ suite('navigations', ({ expect }) => {
             ...Section,
             selected: [3, 0],
           },
+          Department,
         },
       };
 
@@ -214,10 +236,11 @@ suite('navigations', ({ expect }) => {
     it('should add value refinement on ADD_REFINEMENT', () => {
       const newState = {
         ...state,
-        allIds: ['Format', 'Section', 'Brand'],
+        allIds: ['Format', 'Section', 'Department', 'Brand'],
         byId: {
           Format,
           Section,
+          Department,
           Brand: {
             field: 'Brand',
             label: 'Brand',
@@ -245,10 +268,11 @@ suite('navigations', ({ expect }) => {
     it('should add range navigation and refinement on ADD_REFINEMENT', () => {
       const newState = {
         ...state,
-        allIds: ['Format', 'Section', 'Brand'],
+        allIds: ['Format', 'Section', 'Department', 'Brand'],
         byId: {
           Format,
           Section,
+          Department,
           Brand: {
             field: 'Brand',
             label: 'Brand',
@@ -285,7 +309,8 @@ suite('navigations', ({ expect }) => {
               { value: 'eBook' }
             ],
             selected: [0, 2, 3]
-          }
+          },
+          Department,
         }
       };
 
@@ -308,7 +333,8 @@ suite('navigations', ({ expect }) => {
           Format: {
             ...Format,
             selected: []
-          }
+          },
+          Department,
         }
       };
 
@@ -328,7 +354,8 @@ suite('navigations', ({ expect }) => {
           Format: {
             ...Format,
             selected: [0, 2, 1]
-          }
+          },
+          Department,
         }
       };
 
@@ -355,7 +382,8 @@ suite('navigations', ({ expect }) => {
           Format: {
             ...Format,
             selected: []
-          }
+          },
+          Department,
         }
       };
 
@@ -376,6 +404,7 @@ suite('navigations', ({ expect }) => {
             selected: [2],
           },
           Section,
+          Department,
         },
       };
 
@@ -415,6 +444,7 @@ suite('navigations', ({ expect }) => {
             selected
           },
           Section,
+          Department,
         },
       };
 

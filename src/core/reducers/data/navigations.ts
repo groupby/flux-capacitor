@@ -32,11 +32,13 @@ export default function updateNavigations(state: State = DEFAULTS, action: Actio
 
 export const resetRefinements = (state: State, navigationId: boolean | string) => {
   if (typeof navigationId === 'boolean') {
-    return {
-      ...state,
-      byId: state.allIds.reduce((navs, nav) =>
-        Object.assign(navs, { [nav]: { ...state.byId[nav], selected: [] } }), {})
-    };
+    const newIds = state.allIds.map((nav) => {
+      return state.byId[nav].selected.length
+        ? { [nav]: { ...state.byId[nav], selected: [] } }
+        : { [nav]: state.byId[nav] };
+    }).reduce((acc, curr) => ({ ...acc, ...curr }));
+
+    return { ...state, byId: newIds };
   } else {
     return {
       ...state,
