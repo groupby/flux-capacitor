@@ -463,10 +463,9 @@ suite('Personalization Adapter', ({ expect, stub }) => {
         }
       };
       stub(Selectors, 'realTimeBiasesAllIds').returns(allIds);
-      stub(Selectors, 'selectedRefinements').returns([]);
       stub(Selectors, 'config').returns(config);
 
-      const result = Adapter.convertBiasToSearch(state);
+      const result = Adapter.convertBiasToSearch(state, []);
 
       expect(result).to.eql([{
         name: 'color',
@@ -496,14 +495,14 @@ suite('Personalization Adapter', ({ expect, stub }) => {
           }
         }
       };
-      stub(Selectors, 'realTimeBiasesAllIds').returns(allIds);
-      stub(Selectors, 'selectedRefinements').returns([
+      const selectedRefinements: any = [
         { navigationName: 'color', type: 'Value', value: 'blue' },
         { navigationName: 'color', type: 'Value', value: 'red' }
-      ]);
+      ];
+      stub(Selectors, 'realTimeBiasesAllIds').returns(allIds);
       stub(Selectors, 'config').returns(config);
 
-      const result = Adapter.convertBiasToSearch(state);
+      const result = Adapter.convertBiasToSearch(state, selectedRefinements);
 
       expect(result).to.eql([{
         name: 'brand',

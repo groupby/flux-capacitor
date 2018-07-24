@@ -285,7 +285,7 @@ suite('requests', ({ expect, stub }) => {
   describe('realTimeBiasing()', () => {
     it('should mix biases into request', () => {
       const state = <any>{ a: 'b' };
-      const request = <any>{ c: 'd' };
+      const request = <any>{ c: 'd', refinements: [] };
       const addedBiases = [{ e: 'f' }, { g: 'h' }];
       const requestWithRTB = {
         ...request,
@@ -295,14 +295,14 @@ suite('requests', ({ expect, stub }) => {
 
       const result = Requests.realTimeBiasing(state, request);
 
-      expect(convertBiasToSearch).to.be.calledWithExactly(state);
+      expect(convertBiasToSearch).to.be.calledWithExactly(state, request.refinements);
       expect(result).to.eql(requestWithRTB);
     });
 
     it('should include request bias in resulting request', () => {
       const state = <any>{ a: 'b' };
       const reqBiases = [{ i: 'j' }];
-      const request = <any>{ c: 'd', biasing: { biases: reqBiases } };
+      const request = <any>{ c: 'd', refinements: [], biasing: { biases: reqBiases } };
       const addedBiases = [{ e: 'f' }, { g: 'h' }];
       const requestWithRTB = {
         ...request,
@@ -312,7 +312,7 @@ suite('requests', ({ expect, stub }) => {
 
       const result = Requests.realTimeBiasing(state, request);
 
-      expect(convertBiasToSearch).to.be.calledWithExactly(state);
+      expect(convertBiasToSearch).to.be.calledWithExactly(state, request.refinements);
       expect(result).to.eql(requestWithRTB);
     });
   });
