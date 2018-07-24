@@ -1,4 +1,4 @@
-import { Request } from 'groupby-api';
+import { SelectedRefinement } from 'groupby-api';
 import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt';
 import Autocomplete from './adapters/autocomplete';
 import Configuration from './adapters/configuration';
@@ -538,7 +538,7 @@ namespace Selectors {
   /**
    * Helper function to get selected navigations from an array of navigations
    */
-  export const getSelected = (allNavigations: Store.Navigation[]) =>
+  export const getSelected = (allNavigations: Store.Navigation[]): SelectedRefinement[] =>
     allNavigations.reduce((allRefinements, nav) =>
       allRefinements.concat(nav.selected
         .map<any>((refinementIndex) => nav.refinements[refinementIndex])

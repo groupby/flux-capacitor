@@ -1,3 +1,4 @@
+import { SelectedRefinement } from 'groupby-api';
 import Actions from '../actions';
 import Configuration from '../configuration';
 import Selectors from '../selectors';
@@ -80,14 +81,13 @@ namespace Personalization {
     return { allIds, byId };
   };
 
-  export const convertBiasToSearch = (state: Store.State) => {
+  export const convertBiasToSearch = (state: Store.State, selectedRefinements: SelectedRefinement[]) => {
     const allIds = Selectors.realTimeBiasesAllIds(state);
     const config = Selectors.config(state).personalization.realTimeBiasing;
-    const selectedRefinements = Selectors.selectedRefinements(state);
 
     return allIds.filter(({ field, value }) =>
-      config.attributes[field] && !selectedRefinements.some(({ navigationName, type, value: navigationValue }) =>
-        type === 'Value' && navigationName === field && value && value === navigationValue)
+      config.attributes[field] && !selectedRefinements.some((nav) =>
+        nav.type === 'Value' && nav.navigationName === field && value && value === nav.value)
     ).map(({ field, value }) => ({
       name: field,
       content: value,

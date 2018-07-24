@@ -1,4 +1,4 @@
-import { Request } from 'groupby-api';
+import { Request, SelectedRefinement } from 'groupby-api';
 import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt';
 import Autocomplete from './adapters/autocomplete';
 import Configuration from './adapters/configuration';
@@ -86,8 +86,9 @@ namespace Requests {
     return Requests.chain(config.autocomplete.defaults.products, request, config.autocomplete.overrides.products);
   };
 
+  // tslint:disable-next-line max-line-length
   export const realTimeBiasing = (state: Store.State, request: Request): Request => {
-    const addedBiases = Personalization.convertBiasToSearch(state);
+    const addedBiases = Personalization.convertBiasToSearch(state, request.refinements);
 
     return {
       ...request,

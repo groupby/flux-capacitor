@@ -2,8 +2,8 @@ import {
   Navigation,
   PageInfo,
   RangeRefinement,
-  Refinement,
   Results,
+  SelectedRefinement,
   SortType,
   Template,
   ValueRefinement,
@@ -52,7 +52,7 @@ namespace Adapter {
       .reduce((metadata, keyValue) => Object.assign(metadata, { [keyValue.key]: keyValue.value }), {}),
   });
 
-  export const refinementsMatch = (lhs: Store.Refinement, rhs: Refinement, type: string = rhs.type) => {
+  export const refinementsMatch = (lhs: Store.Refinement, rhs: SelectedRefinement, type: string = rhs.type) => {
     if (type === 'Value') {
       return (<any>lhs).value === (<any>rhs).value;
     } else {
