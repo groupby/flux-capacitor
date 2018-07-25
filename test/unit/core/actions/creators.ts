@@ -434,21 +434,20 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     describe('search()', () => {
       it('should call ActionCreators.updateSearch()', () => {
         const query = 'pineapple';
-
-        const resetRefinementsReturn = 'reset';
-        const updateReturn = 'update';
+        const resetRefinementsReturn = ['reset'];
+        const updateReturn = ['update'];
         const resetPageReturn = 'page';
-
         const resetRefinements = stub(ActionCreators, 'resetRefinements').returns(resetRefinementsReturn);
         const updateQuery = stub(ActionCreators, 'updateQuery').returns(updateReturn);
         stub(ActionCreators, 'resetPage').returns(resetPageReturn);
+        stub(Selectors, 'config').returns({ search: { useDefaultCollection: false } });
 
         const result = ActionCreators.search(query)(null);
 
         expect(result).to.eql([
           resetPageReturn,
-          resetRefinementsReturn,
-          updateReturn,
+          ...resetRefinementsReturn,
+          ...updateReturn,
         ]);
         expect(resetRefinements).to.be.calledWithExactly(true);
         expect(updateQuery).to.be.calledWithExactly(query);
@@ -456,51 +455,50 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
       it('should fall back to current query', () => {
         const query = 'pineapple';
-
-        const resetRefinementsReturn = 'reset';
-        const updateReturn = 'update';
+        const resetRefinementsReturn = ['reset'];
+        const updateReturn = ['update'];
         const resetPageReturn = 'page';
-
         const resetRefinements = stub(ActionCreators, 'resetRefinements').returns(resetRefinementsReturn);
         const updateQuery = stub(ActionCreators, 'updateQuery').returns(updateReturn);
         const queryStub = stub(Selectors, 'query').returns(query);
         stub(ActionCreators, 'resetPage').returns(resetPageReturn);
+        stub(Selectors, 'config').returns({ search: { useDefaultCollection: false } });
 
         const result = ActionCreators.search()(null);
 
         expect(result).to.eql([
           resetPageReturn,
-          resetRefinementsReturn,
-          updateReturn,
+          ...resetRefinementsReturn,
+          ...updateReturn,
         ]);
         expect(resetRefinements).to.be.calledWithExactly(true);
         expect(updateQuery).to.be.calledWithExactly(query);
       });
 
-      it.only('should switch to the default collection if set in the config', () => {
+      it('should switch to the default collection if set in the config', () => {
         const query = 'pineapple';
-
-        const resetRefinementsReturn = 'reset';
-        const updateReturn = 'update';
+        const resetRefinementsReturn = ['reset'];
+        const updateReturn = ['update'];
         const resetPageReturn = 'page';
         const selectCollectionReturn = 'collection';
-
+        const defaultCollection = 'defaultCollection';
+        const config = stub(Selectors, 'config').returns({ search: { useDefaultCollection: true } });
+        const selectCollection = stub(ActionCreators, 'selectCollection').returns(selectCollectionReturn);
         const resetRefinements = stub(ActionCreators, 'resetRefinements').returns(resetRefinementsReturn);
         const updateQuery = stub(ActionCreators, 'updateQuery').returns(updateReturn);
-        const selectCollection = stub(ActionCreators, 'selectCollection').returns(selectCollectionReturn);
         stub(ActionCreators, 'resetPage').returns(resetPageReturn);
+        stub(Selectors, 'defaultCollection').returns(defaultCollection);
 
         const result = ActionCreators.search(query)(null);
-        console.log('DEBUG Result', result);
 
         expect(result).to.eql([
           resetPageReturn,
-          resetRefinementsReturn,
           selectCollectionReturn,
-          updateReturn,
+          ...resetRefinementsReturn,
+          ...updateReturn,
         ]);
         expect(resetRefinements).to.be.calledWithExactly(true);
-        expect(selectCollection).to.be.calledWithExactly();
+        expect(selectCollection).to.be.calledWithExactly(defaultCollection);
         expect(updateQuery).to.be.calledWithExactly(query);
       });
     });

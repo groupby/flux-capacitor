@@ -118,11 +118,14 @@ namespace Configuration {
      * redirect to the details page of product if there is only 1 product result for a search
      */
     redirectSingleResult: boolean;
-
     /**
      * maximum number of refinements to show in a single section
      */
     maxRefinements?: number;
+    /**
+     * reset the collection to the default collection on a search
+     */
+    useDefaultCollection?: boolean;
     /**
      * default request values
      */

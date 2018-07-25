@@ -70,9 +70,10 @@ namespace Actions {
 
   // batch actions
   export type SwitchRefinement = [Actions.ResetPage, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.AddRefinement];
-  export type Search = [Actions.ResetPage, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.AddRefinement];
-  export type ResetRecall = [Actions.ResetPage, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.UpdateQuery] |
-    [Actions.ResetPage, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.UpdateQuery, Actions.ResetPage, Actions.SelectRefinement];
+  export type Search = [Actions.ResetPage, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.AddRefinement]
+    | [Actions.ResetPage, Actions.SelectCollection, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.AddRefinement];
+  export type ResetRecall = [Actions.ResetPage, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.UpdateQuery]
+    | [Actions.ResetPage, Actions.ResetPage, Actions.ResetRefinements, Actions.ResetPage, Actions.UpdateQuery, Actions.ResetPage, Actions.SelectRefinement];
   export type UpdateSearch = Array<Actions.ResetPage | Actions.UpdateQuery | Actions.ResetRefinements | Actions.SelectRefinement | Actions.AddRefinement>;
   export type ResetPageAndResetRefinements = [Actions.ResetPage, Actions.ResetRefinements];
   export type ResetPageAndSelectRefinement = [Actions.ResetPage, Actions.SelectRefinement];

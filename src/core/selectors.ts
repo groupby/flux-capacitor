@@ -47,6 +47,14 @@ namespace Selectors {
   };
 
   /**
+   * Returns the name of the default collection
+   */
+  export const defaultCollection = (state: Store.State) => {
+    const collectionConfig = Selectors.config(state).collection;
+    return typeof collectionConfig === 'string' ? collectionConfig : collectionConfig.default;
+  };
+
+  /**
    * Returns the collections object.
    */
   export const collections = (state: Store.State) =>

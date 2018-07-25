@@ -278,15 +278,14 @@ namespace ActionCreators {
    */
   export function search(query?: string) {
     return (state: Store.State): Actions.Search => {
+      const actions: any = [ActionCreators.resetPage()];
+      if (Selectors.config(state).search.useDefaultCollection) {
+        actions.push(ActionCreators.selectCollection(Selectors.defaultCollection(state)));
+      }
+      // tslint:disable-next-line max-line-length
+      actions.push(...ActionCreators.resetRefinements(true), ...ActionCreators.updateQuery(query || Selectors.query(state)));
 
-      if ()
-
-      return <any>[
-        ActionCreators.resetPage(),
-        ...ActionCreators.resetRefinements(true),
-        ...ActionCreators.selectCollection(),
-        ...ActionCreators.updateQuery(query || Selectors.query(state))
-      ]
+      return actions;
     };
   }
 
