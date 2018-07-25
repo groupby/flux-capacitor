@@ -178,6 +178,26 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
+  describe('defaultCollection()', () => {
+    it('should return the default collection from object', () => {
+      const defaultCollection = 'defaultCollection';
+      const state: any = { a: 'b' };
+      const config = stub(Selectors, 'config').returns({ collection: { default: defaultCollection } });
+
+      expect(Selectors.defaultCollection(state)).to.eq(defaultCollection);
+      expect(config).to.be.calledWith(state);
+    });
+
+    it('should return the default collection from string', () => {
+      const defaultCollection = 'defaultCollection';
+      const state: any = { a: 'b' };
+      const config = stub(Selectors, 'config').returns({ collection: defaultCollection });
+
+      expect(Selectors.defaultCollection(state)).to.eq(defaultCollection);
+      expect(config).to.be.calledWith(state);
+    });
+  });
+
   describe('collections()', () => {
     it('should return indexed collections data', () => {
       const collections = { a: 'b' };
