@@ -277,11 +277,17 @@ namespace ActionCreators {
    * @return {[type]}       - Actions with relevant data.
    */
   export function search(query?: string) {
-    return (state: Store.State): Actions.Search => <any>[
-      ActionCreators.resetPage(),
-      ...ActionCreators.resetRefinements(true),
-      ...ActionCreators.updateQuery(query || Selectors.query(state))
-    ];
+    return (state: Store.State): Actions.Search => {
+
+      if ()
+
+      return <any>[
+        ActionCreators.resetPage(),
+        ...ActionCreators.resetRefinements(true),
+        ...ActionCreators.selectCollection(),
+        ...ActionCreators.updateQuery(query || Selectors.query(state))
+      ]
+    };
   }
 
   /**

@@ -476,6 +476,33 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         expect(resetRefinements).to.be.calledWithExactly(true);
         expect(updateQuery).to.be.calledWithExactly(query);
       });
+
+      it.only('should switch to the default collection if set in the config', () => {
+        const query = 'pineapple';
+
+        const resetRefinementsReturn = 'reset';
+        const updateReturn = 'update';
+        const resetPageReturn = 'page';
+        const selectCollectionReturn = 'collection';
+
+        const resetRefinements = stub(ActionCreators, 'resetRefinements').returns(resetRefinementsReturn);
+        const updateQuery = stub(ActionCreators, 'updateQuery').returns(updateReturn);
+        const selectCollection = stub(ActionCreators, 'selectCollection').returns(selectCollectionReturn);
+        stub(ActionCreators, 'resetPage').returns(resetPageReturn);
+
+        const result = ActionCreators.search(query)(null);
+        console.log('DEBUG Result', result);
+
+        expect(result).to.eql([
+          resetPageReturn,
+          resetRefinementsReturn,
+          selectCollectionReturn,
+          updateReturn,
+        ]);
+        expect(resetRefinements).to.be.calledWithExactly(true);
+        expect(selectCollection).to.be.calledWithExactly();
+        expect(updateQuery).to.be.calledWithExactly(query);
+      });
     });
 
     describe('resetRecall()', () => {
