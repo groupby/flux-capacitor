@@ -453,7 +453,8 @@ suite('navigations', ({ expect }) => {
         payload: {
           navigationId: 'Format',
           refinements,
-          selected
+          selected,
+          show: [1, 2]
         }
       });
 

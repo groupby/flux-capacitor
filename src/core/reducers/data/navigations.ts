@@ -155,12 +155,13 @@ export const addRefinement = (state: State, { navigationId, value, low, high, ra
 // tslint:disable-next-line max-line-length
 export const receiveMoreRefinements = (state: State, { navigationId, refinements, selected }: Actions.Payload.Navigation.MoreRefinements) => {
   if (navigationId && refinements) {
+    const { show, ...navWithoutShow } = state.byId[navigationId];
     return {
       ...state,
       byId: {
         ...state.byId,
         [navigationId]: {
-          ...state.byId[navigationId],
+          ...navWithoutShow,
           refinements,
           selected,
           more: false,
