@@ -84,11 +84,11 @@ namespace Adapter {
     return max ? navigations.map((navigation) => {
       const show = navigation.selected.slice(0, max);
       if (show.length < max) {
-        navigation.refinements.forEach((_, i) => {
+        for (let i = 0; i < navigation.refinements.length && show.length < max; i++) {
           if (!navigation.selected.includes(i)) {
             show.push(i);
           }
-        });
+        }
       }
       return {
         ...navigation,
