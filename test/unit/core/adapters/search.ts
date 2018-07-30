@@ -214,23 +214,24 @@ suite('Search Adapter', ({ expect, stub }) => {
   });
 
   describe('pruneRefinements()', () => {
-    it('should limit refinements to provided amount', () => {
+    it('should mark which refinements to show', () => {
       const state: any = {};
       const conf = {};
       const max = stub(ConfigAdapter, 'extractMaxRefinements').returns(2);
       const config = stub(Selectors, 'config').returns(conf);
       const navigations: any = [
-        { name: 'A', refinements: [4], selected: [], more: false },
-        { name: 'B', refinements: [6, 7, 4, 5, 6, 8], selected: [1, 5] },
-        { name: 'C', refinements: [8, 9], selected: [0], more: true },
-        { name: 'D', refinements: [0, 1, 2, 3, 4], selected: [1, 2, 3, 4], more: true },
+        { name: 'Adds non-selected refinement', refinements: [4], selected: [], more: false },
+        { name: 'Adds selected refinements', refinements: [6, 7, 4, 5, 6, 8], selected: [1, 5] },
+        { name: 'Adds selected refinement first', refinements: [8, 9], selected: [1], more: true },
+        { name: 'Limits to max', refinements: [0, 1, 2, 3, 4], selected: [1, 2, 3, 4], more: true },
       ];
 
       expect(Adapter.pruneRefinements(navigations, state)).to.eql([
-        { name: 'A', refinements: [4], selected: [], show: [0], more: false },
-        { name: 'B', refinements: [7, 8], selected: [1, 5], show: [0, 1], more: true },
-        { name: 'C', refinements: [8, 9], selected: [0], show: [0, 1], more: true },
-        { name: 'D', refinements: [0, 1, 2, 3, 4], selected: [1, 2, 3, 4], show: [1, 2], more: true },
+        { name: 'Adds non-selected refinement', refinements: [4], selected: [], show: [0], more: false },
+        // tslint:disable-next-line max-line-length
+        { name: 'Adds selected refinements', refinements: [6, 7, 4, 5, 6, 8], selected: [1, 5], show: [1, 5], more: true },
+        { name: 'Adds selected refinement first', refinements: [8, 9], selected: [1], show: [1, 0], more: true },
+        { name: 'Limits to max', refinements: [0, 1, 2, 3, 4], selected: [1, 2, 3, 4], show: [1, 2], more: true },
       ]);
       expect(max).to.be.calledWithExactly(conf);
       expect(config).to.be.calledWithExactly(state);
