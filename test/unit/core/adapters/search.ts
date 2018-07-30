@@ -220,15 +220,17 @@ suite('Search Adapter', ({ expect, stub }) => {
       const max = stub(ConfigAdapter, 'extractMaxRefinements').returns(2);
       const config = stub(Selectors, 'config').returns(conf);
       const navigations: any = [
-        { name: 'A', refinements: [4], more: false },
-        { name: 'B', refinements: [6, 7, 4, 5, 6, 7] },
-        { name: 'C', refinements: [8, 9], more: true }
+        { name: 'A', refinements: [4], selected: [], more: false },
+        { name: 'B', refinements: [6, 7, 4, 5, 6, 8], selected: [1, 5] },
+        { name: 'C', refinements: [8, 9], selected: [0], more: true },
+        { name: 'D', refinements: [0, 1, 2, 3, 4], selected: [1, 2, 3, 4], more: true },
       ];
 
       expect(Adapter.pruneRefinements(navigations, state)).to.eql([
-        { name: 'A', refinements: [4], more: false },
-        { name: 'B', refinements: [6, 7], more: true },
-        { name: 'C', refinements: [8, 9], more: true }
+        { name: 'A', refinements: [4], selected: [], show: [0], more: false },
+        { name: 'B', refinements: [7, 8], selected: [1, 5], show: [0, 1], more: true },
+        { name: 'C', refinements: [8, 9], selected: [0], show: [0, 1], more: true },
+        { name: 'D', refinements: [0, 1, 2, 3, 4], selected: [1, 2, 3, 4], show: [1, 2], more: true },
       ]);
       expect(max).to.be.calledWithExactly(conf);
       expect(config).to.be.calledWithExactly(state);

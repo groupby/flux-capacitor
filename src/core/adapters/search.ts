@@ -81,11 +81,17 @@ namespace Adapter {
 
   export const pruneRefinements = (navigations: Store.Navigation[], state: Store.State): Store.Navigation[] => {
     const max = ConfigAdapter.extractMaxRefinements(Selectors.config(state));
-    return max ? navigations.map((navigation) => ({
-      ...navigation,
-      more: navigation.refinements.length > max || navigation.more,
-      refinements: navigation.refinements.splice(0,max),
-    })) : navigations;
+    return max ? navigations.map((navigation) => {
+      let show = navigation.selected.slice(0, max);
+      if (show.length < max) {
+        show = show.concat(navigation.refinements.filter((_, index) => !navigation.selected.includes(index)).slice(0, max - show.length));
+      }
+      return {
+        ...navigation,
+          more: navigation.refinements.length > max || navigation.more,
+          show,
+      }
+    }) : navigations;
   };
 
   export const filterExcludedNavigations = (navigations: Navigation[]): Navigation[] => {
