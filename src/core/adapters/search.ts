@@ -83,13 +83,12 @@ namespace Adapter {
     const max = ConfigAdapter.extractMaxRefinements(Selectors.config(state));
     return max ? navigations.map((navigation) => {
       const show = navigation.selected.slice(0, max);
-      if (show.length < max) {
-        for (let i = 0; i < navigation.refinements.length && show.length < max; i++) {
-          if (!navigation.selected.includes(i)) {
-            show.push(i);
-          }
+      for (let i = 0; i < navigation.refinements.length && show.length < max; i++) {
+        if (!navigation.selected.includes(i)) {
+          show.push(i);
         }
       }
+
       return {
         ...navigation,
           more: navigation.refinements.length > max || navigation.more,
