@@ -78,7 +78,7 @@
     "groupby-api": "2.5.0",
     "redux": "^3.7.0",
     "redux-logger": "^3.0.6",
-    "redux-persist": "^5.1.0",
+    "redux-persist": "5.4.0",
     "redux-saga": "^0.16.0",
     "redux-undo": "^0.6.1",
     "redux-validator": "^0.2.2",
