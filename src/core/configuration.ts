@@ -208,6 +208,7 @@ namespace Configuration {
     overrides?: {
       // tslint:disable-next-line max-line-length
       suggestions?: QueryTimeAutocompleteConfig | ((config: QueryTimeAutocompleteConfig) => QueryTimeAutocompleteConfig);
+      // tslint:disable-next-line max-line-length
       products?: QueryTimeProductSearchConfig | ((currConfig: QueryTimeProductSearchConfig, prevConfig: QueryTimeProductSearchConfig) => QueryTimeProductSearchConfig);
     };
   }
