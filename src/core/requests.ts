@@ -10,8 +10,33 @@ import Selectors from './selectors';
 import Store from './store';
 
 namespace Requests {
+  export type R = Partial<Request> | QueryTimeProductSearchConfig;
+  export enum RNames {
+    search = 'search',
+    autocompleteProducts = 'autocompleteProducts'
+  }
 
-  export const search = (state: Store.State): Request => {
+  export interface PastRequests {
+    [key: string]:  R;
+  }
+
+  export const pastReqs: Requests.PastRequests = {
+    [Requests.RNames.search]: <any>{},
+    [Requests.RNames.autocompleteProducts]: <any>{}
+  };
+
+  // tslint:disable-next-line max-line-length
+  export const override = (overrideConfig: R | ((currReq: R, prevReq: R) => R), req: R, pastReq: RNames): R => {
+    if (typeof overrideConfig === 'function') {
+      const finalReq = overrideConfig(req, Requests.pastReqs[pastReq]);
+      pastReqs[pastReq] = finalReq;
+      return finalReq;
+    } else {
+      return Object.assign(req, overrideConfig);
+    }
+  };
+
+  export const search = (state: Store.State, addOverride: boolean = true): Request => {
     const config = Selectors.config(state);
     const sort = Selectors.sort(state);
     const pageSize = Selectors.pageSize(state);
@@ -37,7 +62,10 @@ namespace Requests {
       request.biasing = PastPurchaseAdapter.pastPurchaseBiasing(state);
     }
 
-    return <Request>Requests.chain(config.search.defaults, request, config.search.overrides);
+    const finalReq = Requests.chain(config.search.defaults, request);
+
+    // tslint:disable-next-line max-line-length
+    return addOverride ? <Request>Requests.override(config.search.overrides, finalReq, Requests.RNames.search) : <Request>finalReq;
   };
 
   // tslint:disable-next-line max-line-length
@@ -69,8 +97,9 @@ namespace Requests {
 
   export const autocompleteProducts = (state: Store.State): QueryTimeProductSearchConfig => {
     const config = Selectors.config(state);
+
     let request = {
-      ...Requests.search(state),
+      ...Requests.search(state, false),
       refinements: [],
       skip: 0,
       sort: undefined,
@@ -83,7 +112,10 @@ namespace Requests {
       request = Requests.realTimeBiasing(state, request);
     }
 
-    return Requests.chain(config.autocomplete.defaults.products, request, config.autocomplete.overrides.products);
+    const finalReq = Requests.chain(config.autocomplete.defaults.products, request);
+
+    // tslint:disable-next-line max-line-length
+    return <QueryTimeProductSearchConfig>Requests.override(config.autocomplete.overrides.products, finalReq, Requests.RNames.autocompleteProducts);
   };
 
   // tslint:disable-next-line max-line-length

@@ -133,7 +133,7 @@ namespace Configuration {
     /**
      * override any computed request value
      */
-    overrides?: Partial<Request> | ((request: Partial<Request>) => Partial<Request>);
+    overrides?: Partial<Request> | ((currReq: Partial<Request>, prevReq: Partial<Request>) => Partial<Request>);
   }
 
   export interface Autocomplete {
@@ -208,7 +208,7 @@ namespace Configuration {
     overrides?: {
       // tslint:disable-next-line max-line-length
       suggestions?: QueryTimeAutocompleteConfig | ((config: QueryTimeAutocompleteConfig) => QueryTimeAutocompleteConfig);
-      products?: QueryTimeProductSearchConfig | ((config: QueryTimeProductSearchConfig) => QueryTimeProductSearchConfig);
+      products?: QueryTimeProductSearchConfig | ((currConfig: QueryTimeProductSearchConfig, prevConfig: QueryTimeProductSearchConfig) => QueryTimeProductSearchConfig);
     };
   }
 

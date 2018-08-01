@@ -8,7 +8,33 @@ import Requests from '../../../src/core/requests';
 import Selectors from '../../../src/core/selectors';
 import suite from '../_suite';
 
-suite('requests', ({ expect, stub }) => {
+suite('requests', ({ expect, stub, spy }) => {
+
+  describe('override', () => {
+    it('should call override function and update past request', () => {
+      const finalReq = { c: 'd' };
+      const overrideConfig = spy(() => finalReq);
+      const req: any = { a: 'b' };
+      const pastReq: any = 'search';
+      const pastSearchReq = Requests.pastReqs.search;
+
+      const result = Requests.override(overrideConfig, req, pastReq);
+
+      expect(result).to.eql(finalReq);
+      expect(overrideConfig).to.be.calledWith(req, pastSearchReq);
+      expect(Requests.pastReqs.search).to.eql(finalReq);
+    });
+
+    it('should return a new request with override config mixed in', () => {
+      const overrideConfig: any = { e: 'f' };
+      const req: any = { a: 'b' };
+      const finalReq = { ...req, ...overrideConfig };
+
+      const result = Requests.override(overrideConfig, req, <any>'');
+
+      expect(result).to.eql(finalReq);
+    });
+  });
 
   describe('search()', () => {
     const remainingRecords = 2;
@@ -227,14 +253,16 @@ suite('requests', ({ expect, stub }) => {
         }
       };
       const chained = { e: 'f' };
+      const req = { g: 'h' };
       const state: any = {};
       const chain = stub(Requests, 'chain').returns(chained);
       const search = stub(Requests, 'search').returns({ i: 'j' });
+      const override = stub(Requests, 'override').returns(req);
       stub(Selectors,'config').returns(config);
 
       const request = Requests.autocompleteProducts(state);
 
-      expect(request).to.eql(chained);
+      expect(request).to.eql(req);
       expect(chain).to.be.calledWith(defaults, {
         i: 'j',
         skip: 0,
@@ -243,7 +271,8 @@ suite('requests', ({ expect, stub }) => {
         area,
         language,
         pageSize: productCount,
-      }, overrides);
+      });
+      expect(override).to.be.calledWithExactly(config.autocomplete.overrides.products, chained, 'autocompleteProducts');
     });
 
     it('should create a products request with realTimeBiasing bias', () => {
@@ -268,17 +297,20 @@ suite('requests', ({ expect, stub }) => {
       };
       const chained = { e: 'f' };
       const biasReq = { c: 'd' };
+      const req = { g: 'h' };
       const state: any = {};
       const chain = stub(Requests, 'chain').returns(chained);
       const search = stub(Requests, 'search').returns({ i: 'j' });
       const realTimeBiasing = stub(Requests, 'realTimeBiasing').returns(biasReq);
+      const override = stub(Requests, 'override').returns(req);
       stub(Selectors,'config').returns(config);
 
       const request = Requests.autocompleteProducts(state);
 
+      expect(request).to.eql(req);
       expect(realTimeBiasing).to.be.calledOnce;
-      expect(request).to.eql(chained);
-      expect(chain).to.be.calledWith(defaults, biasReq, overrides);
+      expect(chain).to.be.calledWith(defaults, biasReq);
+      expect(override).to.be.calledWithExactly(config.autocomplete.overrides.products, chained, 'autocompleteProducts');
     });
   });
 
