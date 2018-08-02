@@ -12,13 +12,13 @@ import { normalizeToFunction } from './utils';
 
 namespace Requests {
   export interface PastRequests {
-    search: Partial<Request>;
-    autocompleteProducts: Partial<QueryTimeProductSearchConfig>;
+    search: Request;
+    autocompleteProducts: QueryTimeProductSearchConfig;
   }
 
   export const pastReqs: Requests.PastRequests = {
-    search: {},
-    autocompleteProducts: {}
+    search: <Request>{},
+    autocompleteProducts: <QueryTimeProductSearchConfig>{}
   };
 
   // tslint:disable-next-line max-line-length
@@ -104,10 +104,10 @@ namespace Requests {
       request = Requests.realTimeBiasing(state, request);
     }
 
-    const finalReq = Requests.chain(Configuration.autocompleteProductsDefaults(config), request);
+    const finalReq = Requests.chain(<Partial<Request>>Configuration.autocompleteProductsDefaults(config), request);
 
     // tslint:disable-next-line max-line-length
-    return <Request>Requests.override(Configuration.autocompleteProductsOverrides(config), finalReq, 'autocompleteProducts');
+    return <Request>Requests.override(<Partial<Request>>Configuration.autocompleteProductsOverrides(config), finalReq, 'autocompleteProducts');
   };
 
   // tslint:disable-next-line max-line-length
@@ -123,8 +123,9 @@ namespace Requests {
     };
   };
 
-  export const chain = <T>(...objs: Array<T | ((...obj: T[]) => T)>): T =>
-    <T>objs.reduce((final, obj) => normalizeToFunction(obj)(final) || final, {});
+  export const chain = <T>(...objs: Array<T | ((...obj: any[]) => T)>): T =>
+    // objs.reduce((final, obj) => normalizeToFunction(obj)(final) || final, {});
+    objs.map(normalizeToFunction).reduce((final, fn) => fn(final) || final, <T>{});
 }
 
 export default Requests;

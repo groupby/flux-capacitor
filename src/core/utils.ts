@@ -41,7 +41,7 @@ export const sortBasedOn = function<T,S>(toBeSorted: T[], basisArray: S[], callb
 };
 
 // tslint:disable-next-line max-line-length
-export function normalizeToFunction<T>(objOrFn: Partial<T> | ((...arg: Partial<T>[]) => Partial<T>)): (arg: Partial<T>) => Partial<T> {
+export function normalizeToFunction<S>(objOrFn: Partial<S> | ((...arg: any[]) => S)): (...arg: any[]) => S {
   return typeof objOrFn === 'function'
     ? objOrFn
     : (obj) => (Object.assign(obj, objOrFn));
