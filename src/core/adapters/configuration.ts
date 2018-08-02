@@ -194,22 +194,22 @@ namespace Adapter {
   };
 
   export const searchDefaults = (config: Configuration) =>
-    normalizeToFunction<Request>(config.search.defaults);
+    normalizeToFunction(config.search.defaults);
 
   export const searchOverrides = (config: Configuration) =>
-    normalizeToFunction<Request>(config.search.overrides);
+    normalizeToFunction(config.search.overrides);
 
   export const autocompleteSuggestionsDefaults = (config: Configuration) =>
-    normalizeToFunction<Request>(config.autocomplete.defaults.suggestions);
+    normalizeToFunction(config.autocomplete.defaults.suggestions);
 
   export const autocompleteSuggestionsOverrides = (config: Configuration) =>
-    normalizeToFunction<Request>(config.autocomplete.overrides.suggestions);
+    normalizeToFunction(config.autocomplete.overrides.suggestions);
 
   export const autocompleteProductsDefaults = (config: Configuration) =>
-    normalizeToFunction<Request>(config.autocomplete.defaults.products);
+    normalizeToFunction(config.autocomplete.defaults.products);
 
   export const autocompleteProductsOverrides = (config: Configuration) =>
-    normalizeToFunction<Request>(config.autocomplete.overrides.products);
+    normalizeToFunction(config.autocomplete.overrides.products);
 }
 
 export default Adapter;

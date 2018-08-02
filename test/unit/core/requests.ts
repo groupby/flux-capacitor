@@ -220,6 +220,8 @@ suite('requests', ({ expect, stub, spy }) => {
       };
       const chained = { e: 'f' };
       const chain = stub(Requests, 'chain').returns(chained);
+      stub(ConfigAdapter, 'autocompleteSuggestionsDefaults').returns(defaults);
+      stub(ConfigAdapter, 'autocompleteSuggestionsOverrides').returns(overrides);
 
       const request = Requests.autocompleteSuggestions(config);
 
@@ -258,17 +260,19 @@ suite('requests', ({ expect, stub, spy }) => {
       const chained = { e: 'f' };
       const req = { g: 'h' };
       const autocompleteProductsDefaults = { i: 'j' };
+      const autocompleteProductsOverrides = { k: 'l' };
       const state: any = {};
       const chain = stub(Requests, 'chain').returns(chained);
       const search = stub(Requests, 'search').returns({ i: 'j' });
       const override = stub(Requests, 'override').returns(req);
       stub(ConfigAdapter, 'autocompleteProductsDefaults').returns(autocompleteProductsDefaults);
+      stub(ConfigAdapter, 'autocompleteProductsOverrides').returns(autocompleteProductsOverrides);
       stub(Selectors,'config').returns(config);
 
       const request = Requests.autocompleteProducts(state);
 
       expect(request).to.eql(req);
-      expect(chain).to.be.calledWith(defaults, {
+      expect(chain).to.be.calledWith(autocompleteProductsDefaults, {
         i: 'j',
         skip: 0,
         refinements: [],
@@ -277,7 +281,7 @@ suite('requests', ({ expect, stub, spy }) => {
         language,
         pageSize: productCount,
       });
-      expect(override).to.be.calledWithExactly(autocompleteProductsDefaults, chained, 'autocompleteProducts');
+      expect(override).to.be.calledWithExactly(autocompleteProductsOverrides, chained, 'autocompleteProducts');
     });
 
     it('should create a products request with realTimeBiasing bias', () => {
@@ -304,20 +308,22 @@ suite('requests', ({ expect, stub, spy }) => {
       const biasReq = { c: 'd' };
       const req = { g: 'h' };
       const autocompleteProductsDefaults = { i: 'j' };
+      const autocompleteProductsOverrides = { k: 'l' };
       const state: any = {};
       const chain = stub(Requests, 'chain').returns(chained);
       const search = stub(Requests, 'search').returns({ i: 'j' });
       const realTimeBiasing = stub(Requests, 'realTimeBiasing').returns(biasReq);
       const override = stub(Requests, 'override').returns(req);
       stub(ConfigAdapter, 'autocompleteProductsDefaults').returns(autocompleteProductsDefaults);
+      stub(ConfigAdapter, 'autocompleteProductsOverrides').returns(autocompleteProductsOverrides);
       stub(Selectors,'config').returns(config);
 
       const request = Requests.autocompleteProducts(state);
 
       expect(request).to.eql(req);
       expect(realTimeBiasing).to.be.calledOnce;
-      expect(chain).to.be.calledWith(defaults, biasReq);
-      expect(override).to.be.calledWithExactly(autocompleteProductsDefaults, chained, 'autocompleteProducts');
+      expect(chain).to.be.calledWith(autocompleteProductsDefaults, biasReq);
+      expect(override).to.be.calledWithExactly(autocompleteProductsOverrides, chained, 'autocompleteProducts');
     });
   });
 
@@ -358,11 +364,11 @@ suite('requests', ({ expect, stub, spy }) => {
 
   describe('chain()', () => {
     it('should apply transformations and merge objects', () => {
-      expect(Requests.chain({ a: 'b' }, (x) => ({ ...x, c: 'd' }), { e: 'f' })).to.eql({ a: 'b', c: 'd', e: 'f' });
+      expect(Requests.chain({ a: 'b' }, (x) => ({ ...x, c: 'd' }), <any>{ e: 'f' })).to.eql({ a: 'b', c: 'd', e: 'f' });
     });
 
     it('should merge source if tranformation returned falsey', () => {
-      expect(Requests.chain({ a: 'b' }, (x) => null, { e: 'f' })).to.eql({ a: 'b', e: 'f' });
+      expect(Requests.chain({ a: 'b' }, (x) => null, <any>{ e: 'f' })).to.eql({ a: 'b', e: 'f' });
     });
   });
 });

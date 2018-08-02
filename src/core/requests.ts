@@ -11,23 +11,18 @@ import Store from './store';
 import { normalizeToFunction } from './utils';
 
 namespace Requests {
-  export type R = Partial<Request> | QueryTimeProductSearchConfig;
-  export enum RNames {
-    search = 'search',
-    autocompleteProducts = 'autocompleteProducts'
-  }
-
   export interface PastRequests {
-    [key: string]:  R;
+    search: Partial<Request>;
+    autocompleteProducts: Partial<QueryTimeProductSearchConfig>;
   }
 
   export const pastReqs: Requests.PastRequests = {
-    [Requests.RNames.search]: <any>{},
-    [Requests.RNames.autocompleteProducts]: <any>{}
+    search: {},
+    autocompleteProducts: {}
   };
 
   // tslint:disable-next-line max-line-length
-  export const override = (overrideConfig: R | ((currReq: R, prevReq: R) => R), req: R, pastReq: RNames): R => {
+  export const override = <T>(overrideConfig: T | ((currReq: T, prevReq: T) => T), req: T, pastReq: keyof Requests.PastRequests): T => {
     const finalReq = Requests.chain(req, overrideConfig);
     pastReqs[pastReq] = finalReq;
     return finalReq;
@@ -59,10 +54,10 @@ namespace Requests {
       request.biasing = PastPurchaseAdapter.pastPurchaseBiasing(state);
     }
 
-    const finalReq = Requests.chain(config.search.defaults, request);
+    const finalReq = Requests.chain(Configuration.searchDefaults(config), request);
 
     // tslint:disable-next-line max-line-length
-    return addOverride ? <Request>Requests.override(Configuration.searchOverrides(config), finalReq, Requests.RNames.search) : <Request>finalReq;
+    return addOverride ? <Request>Requests.override(Configuration.searchOverrides(config), finalReq, 'search') : <Request>finalReq;
   };
 
   // tslint:disable-next-line max-line-length
@@ -84,18 +79,18 @@ namespace Requests {
   };
 
   export const autocompleteSuggestions = (config: AppConfig): QueryTimeAutocompleteConfig =>
-    Requests.chain(config.autocomplete.defaults.suggestions, {
+    Requests.chain(Configuration.autocompleteSuggestionsDefaults(config), {
       language: Autocomplete.extractLanguage(config),
       numSearchTerms: Configuration.extractAutocompleteSuggestionCount(config),
       numNavigations: Configuration.extractAutocompleteNavigationCount(config),
       sortAlphabetically: Configuration.isAutocompleteAlphabeticallySorted(config),
       fuzzyMatch: Configuration.isAutocompleteMatchingFuzzily(config)
-    }, config.autocomplete.overrides.suggestions);
+    }, Configuration.autocompleteSuggestionsOverrides(config));
 
-  export const autocompleteProducts = (state: Store.State): QueryTimeProductSearchConfig => {
+  export const autocompleteProducts = (state: Store.State): Request => {
     const config = Selectors.config(state);
 
-    let request = {
+    let request: Request = {
       ...Requests.search(state, false),
       refinements: [],
       skip: 0,
@@ -109,10 +104,10 @@ namespace Requests {
       request = Requests.realTimeBiasing(state, request);
     }
 
-    const finalReq = Requests.chain(config.autocomplete.defaults.products, request);
+    const finalReq = Requests.chain(Configuration.autocompleteProductsDefaults(config), request);
 
     // tslint:disable-next-line max-line-length
-    return <QueryTimeProductSearchConfig>Requests.override(Configuration.autocompleteProductsDefaults(config), finalReq, Requests.RNames.autocompleteProducts);
+    return <Request>Requests.override(Configuration.autocompleteProductsOverrides(config), finalReq, 'autocompleteProducts');
   };
 
   // tslint:disable-next-line max-line-length
@@ -128,8 +123,8 @@ namespace Requests {
     };
   };
 
-  export const chain = (...objs: Array<object | ((obj: object) => object)>) =>
-    objs.reduce((final, obj) => normalizeToFunction(obj)(final) || final, {});
+  export const chain = <T>(...objs: Array<T | ((...obj: T[]) => T)>): T =>
+    <T>objs.reduce((final, obj) => normalizeToFunction(obj)(final) || final, {});
 }
 
 export default Requests;
