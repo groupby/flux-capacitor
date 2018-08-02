@@ -7,7 +7,6 @@ import * as PageReducer from '../reducers/data/page';
 import * as PastPurchaseReducer from '../reducers/data/pastPurchases';
 import * as PersonalizationAdapter from '../reducers/data/personalization';
 import Store from '../store';
-import { normalizeToFunction } from '../utils';
 
 namespace Adapter {
 
@@ -194,22 +193,22 @@ namespace Adapter {
   };
 
   export const searchDefaults = (config: Configuration) =>
-    normalizeToFunction(config.search.defaults);
+    config.search.defaults;
 
   export const searchOverrides = (config: Configuration) =>
-    normalizeToFunction(config.search.overrides);
+    config.search.overrides;
 
   export const autocompleteSuggestionsDefaults = (config: Configuration) =>
-    normalizeToFunction(config.autocomplete.defaults.suggestions);
+    config.autocomplete.defaults.suggestions;
 
   export const autocompleteSuggestionsOverrides = (config: Configuration) =>
-    normalizeToFunction(config.autocomplete.overrides.suggestions);
+    config.autocomplete.overrides.suggestions;
 
   export const autocompleteProductsDefaults = (config: Configuration) =>
-    normalizeToFunction(config.autocomplete.defaults.products);
+    config.autocomplete.defaults.products;
 
   export const autocompleteProductsOverrides = (config: Configuration) =>
-    normalizeToFunction(config.autocomplete.overrides.products);
+    config.autocomplete.overrides.products;
 }
 
 export default Adapter;
