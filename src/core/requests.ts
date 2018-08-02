@@ -124,7 +124,6 @@ namespace Requests {
   };
 
   export const chain = <T>(...objs: Array<T | ((...obj: T[]) => T)>): T =>
-    // objs.reduce((final, obj) => normalizeToFunction(obj)(final) || final, {});
     objs.map(normalizeToFunction).reduce((final, fn) => fn(final) || final, <T>{});
 }
 
