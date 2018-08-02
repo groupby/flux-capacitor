@@ -13,26 +13,17 @@ suite('requests', ({ expect, stub, spy }) => {
   describe('override', () => {
     it('should call override function and update past request', () => {
       const finalReq = { c: 'd' };
-      const overrideConfig = spy(() => finalReq);
+      const overrideConfig = () => ({});
       const req: any = { a: 'b' };
       const pastReq: any = 'search';
       const pastSearchReq = Requests.pastReqs.search;
+      const chain = stub(Requests, 'chain').returns(finalReq);
 
       const result = Requests.override(overrideConfig, req, pastReq);
 
       expect(result).to.eql(finalReq);
-      expect(overrideConfig).to.be.calledWith(req, pastSearchReq);
+      expect(chain).to.be.calledWith(req, overrideConfig);
       expect(Requests.pastReqs.search).to.eql(finalReq);
-    });
-
-    it('should return a new request with override config mixed in', () => {
-      const overrideConfig: any = { e: 'f' };
-      const req: any = { a: 'b' };
-      const finalReq = { ...req, ...overrideConfig };
-
-      const result = Requests.override(overrideConfig, req, <any>'');
-
-      expect(result).to.eql(finalReq);
     });
   });
 

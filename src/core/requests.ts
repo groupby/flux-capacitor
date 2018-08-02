@@ -27,13 +27,9 @@ namespace Requests {
 
   // tslint:disable-next-line max-line-length
   export const override = (overrideConfig: R | ((currReq: R, prevReq: R) => R), req: R, pastReq: RNames): R => {
-    if (typeof overrideConfig === 'function') {
-      const finalReq = overrideConfig(req, Requests.pastReqs[pastReq]);
-      pastReqs[pastReq] = finalReq;
-      return finalReq;
-    } else {
-      return Object.assign(req, overrideConfig);
-    }
+    const finalReq = Requests.chain(req, overrideConfig);
+    pastReqs[pastReq] = finalReq;
+    return finalReq;
   };
 
   export const search = (state: Store.State, addOverride: boolean = true): Request => {
@@ -65,7 +61,7 @@ namespace Requests {
     const finalReq = Requests.chain(config.search.defaults, request);
 
     // tslint:disable-next-line max-line-length
-    return addOverride ? <Request>Requests.override(config.search.overrides, finalReq, Requests.RNames.search) : <Request>finalReq;
+    return addOverride ? <Request>Requests.override(Configuration.searchOverrides(config), finalReq, Requests.RNames.search) : <Request>finalReq;
   };
 
   // tslint:disable-next-line max-line-length
@@ -115,7 +111,7 @@ namespace Requests {
     const finalReq = Requests.chain(config.autocomplete.defaults.products, request);
 
     // tslint:disable-next-line max-line-length
-    return <QueryTimeProductSearchConfig>Requests.override(config.autocomplete.overrides.products, finalReq, Requests.RNames.autocompleteProducts);
+    return <QueryTimeProductSearchConfig>Requests.override(Configuration.autocompleteProductsDefaults(config), finalReq, Requests.RNames.autocompleteProducts);
   };
 
   // tslint:disable-next-line max-line-length

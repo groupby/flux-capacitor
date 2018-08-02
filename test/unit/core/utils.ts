@@ -44,4 +44,19 @@ suite('utils', ({ expect, spy, stub }) => {
       ]);
     });
   });
+
+  describe('normalizeToFunction()', () => {
+    it('should return the given argument if its a function', () => {
+      const fn = (r) => r;
+
+      expect(utils.normalizeToFunction(fn)).to.eql(fn);
+    });
+
+    it('should return a function that mixes the given argument in a given object', () => {
+      const o = { a: 'b' };
+      const o2: any = { c: 'd' };
+
+      expect(utils.normalizeToFunction(o)(o2)).to.eql({ ...o2, ...o });
+    });
+  });
 });

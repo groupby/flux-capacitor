@@ -1,3 +1,4 @@
+import { Request } from 'groupby-api';
 import Configuration from '../configuration';
 import * as AreaReducer from '../reducers/data/area';
 import * as AutocompleteReducer from '../reducers/data/autocomplete';
@@ -6,6 +7,7 @@ import * as PageReducer from '../reducers/data/page';
 import * as PastPurchaseReducer from '../reducers/data/pastPurchases';
 import * as PersonalizationAdapter from '../reducers/data/personalization';
 import Store from '../store';
+import { normalizeToFunction } from '../utils';
 
 namespace Adapter {
 
@@ -190,6 +192,24 @@ namespace Adapter {
       return 0;
     }
   };
+
+  export const searchDefaults = (config: Configuration) =>
+    normalizeToFunction<Request>(config.search.defaults);
+
+  export const searchOverrides = (config: Configuration) =>
+    normalizeToFunction<Request>(config.search.overrides);
+
+  export const autocompleteSuggestionsDefaults = (config: Configuration) =>
+    normalizeToFunction<Request>(config.autocomplete.defaults.suggestions);
+
+  export const autocompleteSuggestionsOverrides = (config: Configuration) =>
+    normalizeToFunction<Request>(config.autocomplete.overrides.suggestions);
+
+  export const autocompleteProductsDefaults = (config: Configuration) =>
+    normalizeToFunction<Request>(config.autocomplete.defaults.products);
+
+  export const autocompleteProductsOverrides = (config: Configuration) =>
+    normalizeToFunction<Request>(config.autocomplete.overrides.products);
 }
 
 export default Adapter;
