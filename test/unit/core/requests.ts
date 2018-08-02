@@ -114,6 +114,18 @@ suite('requests', ({ expect, stub, spy }) => {
       expect(request.skip).to.eq(skip);
     });
 
+    it('should not apply overrides', () => {
+      const pageSize = 32;
+      const skip = 22;
+      const overrides = { pageSize, skip };
+      stub(Selectors,'config').returns({ search: { overrides } });
+
+      const request = Requests.search(<any>{}, false);
+
+      expect(request.pageSize).to.eq(remainingRecords);
+      expect(request.skip).to.eq(originalSkip);
+    });
+
     it('should override defaults', () => {
       const defaults = { a: 'b', c: 'd' };
       const overrides = { c: 'd1' };
