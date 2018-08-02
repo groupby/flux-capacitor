@@ -8,6 +8,7 @@ import SearchAdapter, { MAX_RECORDS } from './adapters/search';
 import AppConfig from './configuration';
 import Selectors from './selectors';
 import Store from './store';
+import { normalizeToFunction } from './utils';
 
 namespace Requests {
   export type R = Partial<Request> | QueryTimeProductSearchConfig;
@@ -128,13 +129,7 @@ namespace Requests {
   };
 
   export const chain = (...objs: Array<object | ((obj: object) => object)>) =>
-    objs.reduce((final, obj) => {
-      if (typeof obj === 'function') {
-        return obj(final) || final;
-      } else {
-        return Object.assign(final, obj);
-      }
-    }, {});
+    objs.reduce((final, obj) => normalizeToFunction(obj)(final) || final, {});
 }
 
 export default Requests;

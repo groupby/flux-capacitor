@@ -245,10 +245,12 @@ suite('requests', ({ expect, stub, spy }) => {
       };
       const chained = { e: 'f' };
       const req = { g: 'h' };
+      const autocompleteProductsDefaults = { i: 'j' };
       const state: any = {};
       const chain = stub(Requests, 'chain').returns(chained);
       const search = stub(Requests, 'search').returns({ i: 'j' });
       const override = stub(Requests, 'override').returns(req);
+      stub(ConfigAdapter, 'autocompleteProductsDefaults').returns(autocompleteProductsDefaults);
       stub(Selectors,'config').returns(config);
 
       const request = Requests.autocompleteProducts(state);
@@ -263,7 +265,7 @@ suite('requests', ({ expect, stub, spy }) => {
         language,
         pageSize: productCount,
       });
-      expect(override).to.be.calledWithExactly(config.autocomplete.overrides.products, chained, 'autocompleteProducts');
+      expect(override).to.be.calledWithExactly(autocompleteProductsDefaults, chained, 'autocompleteProducts');
     });
 
     it('should create a products request with realTimeBiasing bias', () => {
@@ -289,11 +291,13 @@ suite('requests', ({ expect, stub, spy }) => {
       const chained = { e: 'f' };
       const biasReq = { c: 'd' };
       const req = { g: 'h' };
+      const autocompleteProductsDefaults = { i: 'j' };
       const state: any = {};
       const chain = stub(Requests, 'chain').returns(chained);
       const search = stub(Requests, 'search').returns({ i: 'j' });
       const realTimeBiasing = stub(Requests, 'realTimeBiasing').returns(biasReq);
       const override = stub(Requests, 'override').returns(req);
+      stub(ConfigAdapter, 'autocompleteProductsDefaults').returns(autocompleteProductsDefaults);
       stub(Selectors,'config').returns(config);
 
       const request = Requests.autocompleteProducts(state);
@@ -301,7 +305,7 @@ suite('requests', ({ expect, stub, spy }) => {
       expect(request).to.eql(req);
       expect(realTimeBiasing).to.be.calledOnce;
       expect(chain).to.be.calledWith(defaults, biasReq);
-      expect(override).to.be.calledWithExactly(config.autocomplete.overrides.products, chained, 'autocompleteProducts');
+      expect(override).to.be.calledWithExactly(autocompleteProductsDefaults, chained, 'autocompleteProducts');
     });
   });
 
