@@ -23,7 +23,7 @@ namespace Requests {
 
   // tslint:disable-next-line max-line-length
   export const override = <T>(overrideConfig: T | ((currReq: T, prevReq: T) => T), req: T, pastReq: keyof Requests.PastRequests): T => {
-    const finalReq = Requests.chain(req, overrideConfig);
+    const finalReq = Requests.chain(req, (r: T) => normalizeToFunction(overrideConfig)(r, <T>pastReqs[pastReq]));
     pastReqs[pastReq] = finalReq;
     return finalReq;
   };
