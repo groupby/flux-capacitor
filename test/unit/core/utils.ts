@@ -49,7 +49,7 @@ suite('utils', ({ expect, spy, stub }) => {
     it('should return the given argument if its a function', () => {
       const fn = (r) => r;
 
-      expect(utils.normalizeToFunction(fn)).to.eql(fn);
+      expect(utils.normalizeToFunction(fn)).to.eq(fn);
     });
 
     it('should return a function that mixes the given argument in a given object', () => {
