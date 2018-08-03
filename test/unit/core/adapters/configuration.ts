@@ -478,45 +478,93 @@ suite('Configuration Adapter', ({ expect, stub }) => {
 
       expect(Adapter.searchDefaults(state)).to.eql(state.search.defaults);
     });
+
+    it('should return a function that mixes in the defaults with a given object', () => {
+      const defaults: any = { a: 'b' };
+      const state: any = { search: { defaults } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.searchDefaults(state)(o)).to.eql({ ...o, ...defaults });
+    });
   });
 
   describe('searchOverrides()', () => {
-    it('should return the search overrides', () => {
+    it('should return the search overrides function', () => {
       const state: any = { search: { overrides: (r) => r } };
 
       expect(Adapter.searchOverrides(state)).to.eql(state.search.overrides);
     });
+
+    it('should return a function that mixes in the overrides with a given object', () => {
+      const overrides: any = { a: 'b' };
+      const state: any = { search: { overrides } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.searchOverrides(state)(o)).to.eql({ ...o, ...overrides });
+    });
   });
 
   describe('autocompleteSuggestionsDefaults()', () => {
-    it('should return the autocomplete suggestions defaults', () => {
+    it('should return the autocomplete suggestions defaults function', () => {
       const state: any = { autocomplete: { defaults: { suggestions: (r) => r } } };
 
       expect(Adapter.autocompleteSuggestionsDefaults(state)).to.eql(state.autocomplete.defaults.suggestions);
     });
+
+    it('should return a function that mixes in the defaults with a given object', () => {
+      const suggestions: any = { a: 'b' };
+      const state: any = { autocomplete: { defaults: { suggestions } } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.autocompleteSuggestionsDefaults(state)(o)).to.eql({ ...o, ...suggestions });
+    });
   });
 
   describe('autocompleteSuggestionsOverrides()', () => {
-    it('should return the autocomplete suggestions overrides', () => {
+    it('should return the autocomplete suggestions overrides function', () => {
       const state: any = { autocomplete: { overrides: { suggestions: (r) => r } } };
 
       expect(Adapter.autocompleteSuggestionsOverrides(state)).to.eql(state.autocomplete.overrides.suggestions);
     });
+
+    it('should return a function that mixes in the overrides with a given object', () => {
+      const suggestions: any = { a: 'b' };
+      const state: any = { autocomplete: { overrides: { suggestions } } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.autocompleteSuggestionsOverrides(state)(o)).to.eql({ ...o, ...suggestions });
+    });
   });
 
   describe('autocompleteProductsDefaults()', () => {
-    it('should return the autocomplete products defaults', () => {
+    it('should return the autocomplete products defaults function', () => {
       const state: any = { autocomplete: { defaults: { products: (r) => r } } };
 
       expect(Adapter.autocompleteProductsDefaults(state)).to.eql(state.autocomplete.defaults.products);
     });
+
+    it('should return a function that mixes in the defaults with a given object', () => {
+      const products: any = { a: 'b' };
+      const state: any = { autocomplete: { defaults: { products } } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.autocompleteProductsDefaults(state)(o)).to.eql({ ...o, ...products });
+    });
   });
 
   describe('autocompleteProductsOverrides()', () => {
-    it('should return the autocomplete products overrides', () => {
+    it('should return the autocomplete products overrides function', () => {
       const state: any = { autocomplete: { overrides: { products: (r) => r } } };
 
-      expect(Adapter.autocompleteProductsOverrides(state)).to.eql(state.autocomplete.overrides.products);
+      expect(Adapter.autocompleteProductsOverrides(state)).to.eq(state.autocomplete.overrides.products);
+    });
+
+    it('should return a function that mixes in the overrides with a given object', () => {
+      const products: any = { a: 'b' };
+      const state: any = { autocomplete: { overrides: { products } } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.autocompleteProductsOverrides(state)(o)).to.eql({ ...o, ...products });
     });
   });
 });
