@@ -57,7 +57,7 @@ suite('requests', ({ expect, stub, spy }) => {
     });
 
     it('should decrease page size to prevent exceeding MAX_RECORDS', () => {
-      stub(Selectors,'config').returns({ search: {} });
+      stub(Selectors, 'config').returns({ search: {} });
 
       const { pageSize, skip } = Requests.search(<any>{});
 
@@ -68,7 +68,7 @@ suite('requests', ({ expect, stub, spy }) => {
     it('should include language when truthy', () => {
       const language = 'en';
       const extractLanguage = stub(ConfigAdapter, 'extractLanguage').returns(language);
-      stub(Selectors,'config').returns({ search: {} });
+      stub(Selectors, 'config').returns({ search: {} });
 
       const request = Requests.search(<any>{});
 
@@ -79,7 +79,7 @@ suite('requests', ({ expect, stub, spy }) => {
       const sort = { a: 'b' };
       sortSelector.returns(true);
       requestSortAdapter.returns(sort);
-      stub(Selectors,'config').returns({ search: {} });
+      stub(Selectors, 'config').returns({ search: {} });
 
       const request = Requests.search(<any>{});
 
@@ -92,7 +92,7 @@ suite('requests', ({ expect, stub, spy }) => {
       const config: any = { search: {} };
       const pastPurchaseBiasing = stub(PastPurchaseAdapter, 'pastPurchaseBiasing').returns(biasing);
       pastPurchaseBiasingAdapter.returns(true);
-      stub(Selectors,'config').returns(config);
+      stub(Selectors, 'config').returns(config);
 
       const request = Requests.search(state);
 
@@ -102,7 +102,7 @@ suite('requests', ({ expect, stub, spy }) => {
 
     it('should apply defaults', () => {
       const defaults = { a: 'b', c: 'd' };
-      stub(Selectors,'config').returns({ search: { defaults } });
+      stub(Selectors, 'config').returns({ search: { defaults } });
 
       const request: any = Requests.search(<any>{});
 
@@ -114,7 +114,7 @@ suite('requests', ({ expect, stub, spy }) => {
       const pageSize = 32;
       const skip = 22;
       const overrides = { pageSize, skip };
-      stub(Selectors,'config').returns({ search: { overrides } });
+      stub(Selectors, 'config').returns({ search: { overrides } });
 
       const request = Requests.search(<any>{});
 
@@ -126,7 +126,7 @@ suite('requests', ({ expect, stub, spy }) => {
       const pageSize = 32;
       const skip = 22;
       const overrides = { pageSize, skip };
-      stub(Selectors,'config').returns({ search: { overrides } });
+      stub(Selectors, 'config').returns({ search: { overrides } });
 
       const request = Requests.search(<any>{}, false);
 
@@ -134,15 +134,16 @@ suite('requests', ({ expect, stub, spy }) => {
       expect(request.skip).to.eq(originalSkip);
     });
 
-    it('should override defaults', () => {
+    it('should override defaults and set past state', () => {
       const defaults = { a: 'b', c: 'd' };
       const overrides = { c: 'd1' };
-      stub(Selectors,'config').returns({ search: { defaults, overrides } });
+      stub(Selectors, 'config').returns({ search: { defaults, overrides } });
 
       const request: any = Requests.search(<any>{});
 
       expect(request.a).to.eq('b');
       expect(request.c).to.eq('d1');
+      expect(Requests.pastReqs.search).to.eq(request);
     });
   });
 
@@ -246,6 +247,7 @@ suite('requests', ({ expect, stub, spy }) => {
   });
 
   describe('autocompleteProducts()', () => {
+    let chain;
     let config: any = {
       personalization: {
         realTimeBiasing: {
@@ -253,7 +255,7 @@ suite('requests', ({ expect, stub, spy }) => {
         }
       }
     };
-    const state = { a: 'b' };
+    const state: any = { a: 'b' };
     const area = 'myArea';
     const language = 'en';
     const pageSize = 41;
@@ -270,80 +272,40 @@ suite('requests', ({ expect, stub, spy }) => {
       area,
       pageSize
     };
+    const normalizedRequest = () => null;
+    const overrideFn = () => null;
+    const setPastState = () => null;
 
     beforeEach(() => {
-      stub(Selectors, config).withArgs(state).returns(config);
+      chain = stub(Requests, 'chain');
+      stub(Selectors, 'config').withArgs(state).returns(config);
       stub(Requests, 'search').withArgs(state, false).returns(searchReq);
       stub(Autocomplete, 'extractProductLanguage').withArgs(config).returns(language);
       stub(Autocomplete, 'extractProductArea').withArgs(config).returns(area);
       stub(ConfigAdapter, 'extractAutocompleteProductCount').withArgs(config).returns(pageSize);
       stub(ConfigAdapter, 'autocompleteProductsDefaults').withArgs(config).returns(defaults);
       stub(ConfigAdapter, 'autocompleteProductsOverrides').withArgs(config).returns(overrides);
+      stub(Requests, 'override').withArgs(overrides, 'autocompleteProducts').returns(overrideFn);
+      stub(Requests, 'setPastState').withArgs('autocompleteProducts').returns(setPastState);
     });
 
     it('should create a products request', () => {
-      // const chain = stub(Requests, 'chain').returns(chained);
-      // const search = stub(Requests, 'search').returns({ i: 'j' });
-      // const override = stub(Requests, 'override').returns(req);
-      stub(ConfigAdapter, 'autocompleteProductsDefaults').returns(autocompleteProductsDefaults);
-      stub(ConfigAdapter, 'autocompleteProductsOverrides').returns(autocompleteProductsOverrides);
-      stub(Selectors,'config').returns(config);
+      stub(utils, 'normalizeToFunction').withArgs(buildingReq).returns(normalizedRequest);
 
-      const request = Requests.autocompleteProducts(state);
+      Requests.autocompleteProducts(state);
 
-      expect(request).to.eql(req);
-      expect(chain).to.be.calledWith(autocompleteProductsDefaults, {
-        i: 'j',
-        skip: 0,
-        refinements: [],
-        sort: undefined,
-        area,
-        language,
-        pageSize: productCount,
-      });
-      expect(override).to.be.calledWithExactly(autocompleteProductsOverrides, chained, 'autocompleteProducts');
+      expect(chain).to.be.calledWithExactly(defaults, normalizedRequest, overrideFn, setPastState);
     });
 
     it('should create a products request with realTimeBiasing bias', () => {
-      const area = 'myArea';
-      const language = 'en';
-      const productCount = 41;
-      const defaults = { a: 'b' };
-      const overrides = { c: 'd' };
-      const config: any = {
-        autocomplete: {
-          area,
-          language,
-          products: { count: productCount },
-          defaults: { products: defaults },
-          overrides: { products: overrides },
-        },
-        personalization: {
-          realTimeBiasing: {
-            autocomplete: true
-          }
-        }
-      };
-      const chained = { e: 'f' };
-      const biasReq = { c: 'd' };
-      const req = { g: 'h' };
-      const autocompleteProductsDefaults = { i: 'j' };
-      const autocompleteProductsOverrides = { k: 'l' };
-      const state: any = {};
-      const chain = stub(Requests, 'chain').returns(chained);
-      const search = stub(Requests, 'search').returns({ i: 'j' });
-      const realTimeBiasing = stub(Requests, 'realTimeBiasing').returns(biasReq);
-      const override = stub(Requests, 'override').returns(req);
-      stub(ConfigAdapter, 'autocompleteProductsDefaults').returns(autocompleteProductsDefaults);
-      stub(ConfigAdapter, 'autocompleteProductsOverrides').returns(autocompleteProductsOverrides);
-      stub(Selectors,'config').returns(config);
+      config.personalization.realTimeBiasing.autocomplete = true;
+      const realTimeBiasBuiltReq = { a: 'b' };
+      stub(Requests, 'realTimeBiasing').withArgs(state, buildingReq).returns(realTimeBiasBuiltReq);
+      stub(utils, 'normalizeToFunction').withArgs(realTimeBiasBuiltReq).returns(normalizedRequest);
 
-      const request = Requests.autocompleteProducts(state);
+      Requests.autocompleteProducts(state);
 
-      expect(request).to.eql(req);
-      expect(realTimeBiasing).to.be.calledOnce;
-      expect(chain).to.be.calledWith(autocompleteProductsDefaults, biasReq);
-      expect(override).to.be.calledWithExactly(autocompleteProductsOverrides, chained, 'autocompleteProducts');
+      expect(chain).to.be.calledWithExactly(defaults, normalizedRequest, overrideFn, setPastState);
     });
   });
 
