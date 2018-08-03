@@ -22,11 +22,11 @@ namespace Requests {
   };
 
   // tslint:disable-next-line max-line-length
-  export const override = <T>(overrideConfig: T | ((currReq: T, prevReq: T) => T), req: T, pastReq: keyof Requests.PastRequests): T => {
-    const finalReq = Requests.chain(req, (r: T) => normalizeToFunction(overrideConfig)(r, <T>pastReqs[pastReq]));
-    pastReqs[pastReq] = finalReq;
-    return finalReq;
-  };
+  export const override = <T>(overrideConfig: (currReq: T, prevReq: T) => T, pastReq: keyof Requests.PastRequests): ((r: T) => T) =>
+    (r: T) => overrideConfig(r, <T>pastReqs[pastReq]);
+
+  export const setPastState = <T>(pastReq: keyof Requests.PastRequests): ((request: T) => T) =>
+    (request) => pastReqs[pastReq] = request;
 
   export const search = (state: Store.State, addOverride: boolean = true): Request => {
     const config = Selectors.config(state);
@@ -53,6 +53,14 @@ namespace Requests {
     if (Configuration.shouldAddPastPurchaseBias(config)) {
       request.biasing = PastPurchaseAdapter.pastPurchaseBiasing(state);
     }
+
+    const reqs = [Configuration.searchDefaults(config), request];
+
+    if (addOverride) {
+      reqs.push(Configuration.searchOverrides(config));
+    }
+
+    const normalizedReqs = reqs.map(normalizeToFunction);
 
     const finalReq = Requests.chain(Configuration.searchDefaults(config), request);
 
