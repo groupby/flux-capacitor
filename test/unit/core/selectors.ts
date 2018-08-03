@@ -495,6 +495,24 @@ suite('selectors', ({ expect, stub }) => {
     });
   });
 
+  describe('availableNavigations()', () => {
+    it('should return navigations that are or-able or are not selected', () => {
+      const state: any = { a: 'b' };
+      const navs = [
+        { or: false, selected: [] },
+        { or: true, selected: [0, 1] },
+        { or: false, selected: [3] },
+        { or: true, selected: [] },
+      ];
+      const navigations = stub(Selectors, 'navigations').returns(navs);
+
+      const availableNavigations = Selectors.availableNavigations(state);
+
+      expect(navigations).to.be.calledWith(state);
+      expect(availableNavigations).to.eql([navs[0], navs[1], navs[3]]);
+    });
+  });
+
   describe('recordCount()', () => {
     it('should return the current number of products returned by the latest search', () => {
       const recordCount = 77;

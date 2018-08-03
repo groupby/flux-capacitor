@@ -243,6 +243,12 @@ namespace Selectors {
       .map((id) => Selectors.navigation(state, id));
 
   /**
+   * Returns the available navigations.
+   */
+  export const availableNavigations = (state: Store.State) =>
+    Selectors.navigations(state).filter((nav) => nav.or || !nav.selected.length);
+
+  /**
    * Returns the navigation sort.
    */
   export const navigationSort = (state: Store.State) =>
