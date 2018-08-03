@@ -1,29 +1,37 @@
 import { Request } from 'groupby-api';
 import * as sinon from 'sinon';
+import Autocomplete from '../../../src/core/adapters/autocomplete';
 import ConfigAdapter from '../../../src/core/adapters/configuration';
 import PastPurchaseAdapter from '../../../src/core/adapters/pastPurchases';
 import PersonalizationAdapter from '../../../src/core/adapters/personalization';
 import SearchAdapter, { MAX_RECORDS } from '../../../src/core/adapters/search';
 import Requests from '../../../src/core/requests';
 import Selectors from '../../../src/core/selectors';
+import * as utils from '../../../src/core/utils';
 import suite from '../_suite';
 
 suite('requests', ({ expect, stub, spy }) => {
-
   describe('override', () => {
-    it('should call override function and update past request', () => {
-      const finalReq = { c: 'd' };
-      const overrideConfig = () => ({});
+    it('should return a function that calls override function with given request and pastRequest key', () => {
+      const overrideConfig = spy();
       const req: any = { a: 'b' };
       const pastReq: any = 'search';
-      const pastSearchReq = Requests.pastReqs.search;
-      const chain = stub(Requests, 'chain').returns(finalReq);
 
-      const result = Requests.override(overrideConfig, req, pastReq);
+      Requests.override(overrideConfig, pastReq)(req);
 
-      expect(result).to.eql(finalReq);
-      expect(chain).to.be.calledWith(req, overrideConfig);
-      expect(Requests.pastReqs.search).to.eql(finalReq);
+      expect(overrideConfig).to.be.calledWithExactly(req, Requests.pastReqs[pastReq]);
+    });
+  });
+
+  describe('setPastState()', () => {
+    it('should return a function that sets the pastReq to the given request', () => {
+      const pastReq = 'search';
+      const req = { a: 'b' };
+
+      const r = Requests.setPastState(pastReq)(req);
+
+      expect(r).to.eq(req);
+      expect(Requests.pastReqs[pastReq]).to.eq(req);
     });
   });
 
@@ -202,69 +210,81 @@ suite('requests', ({ expect, stub, spy }) => {
     it('should create a suggestions request', () => {
       const area = 'myArea';
       const language = 'en';
-      const suggestionCount = 31;
-      const navigationCount = 3;
+      const numSearchTerms = 31;
+      const numNavigations = 3;
+      const sortAlphabetically = true;
+      const fuzzyMatch = false;
+      const normalized = { e: 'f' };
       const defaults = { a: 'b' };
       const overrides = { c: 'd' };
-      const config: any = {
-        autocomplete: {
-          area,
-          language,
-          suggestionCount,
-          navigationCount,
-          alphabetical: true,
-          fuzzy: true,
-          defaults: { suggestions: defaults },
-          overrides: { suggestions: overrides },
-        }
-      };
+      const overrideFn = () => null;
+      const setPastStateFn = () => null;
+      const config: any = { g: 'h' };
       const chained = { e: 'f' };
       const chain = stub(Requests, 'chain').returns(chained);
-      stub(ConfigAdapter, 'autocompleteSuggestionsDefaults').returns(defaults);
-      stub(ConfigAdapter, 'autocompleteSuggestionsOverrides').returns(overrides);
+      const normalizer = stub(utils, 'normalizeToFunction').returns(normalized);
+      const override = stub(Requests, 'override').returns(overrideFn);
+      const setPastState = stub(Requests, 'setPastState').returns(setPastStateFn);
+      stub(ConfigAdapter, 'autocompleteSuggestionsDefaults').withArgs(config).returns(defaults);
+      stub(ConfigAdapter, 'autocompleteSuggestionsOverrides').withArgs(config).returns(overrides);
+      stub(Autocomplete, 'extractLanguage').withArgs(config).returns(language);
+      stub(ConfigAdapter, 'extractAutocompleteSuggestionCount').withArgs(config).returns(numSearchTerms);
+      stub(ConfigAdapter, 'extractAutocompleteNavigationCount').withArgs(config).returns(numNavigations);
+      stub(ConfigAdapter, 'isAutocompleteAlphabeticallySorted').withArgs(config).returns(sortAlphabetically);
+      stub(ConfigAdapter, 'isAutocompleteMatchingFuzzily').withArgs(config).returns(fuzzyMatch);
 
       const request = Requests.autocompleteSuggestions(config);
 
       expect(request).to.eql(chained);
-      expect(chain).to.be.calledWithExactly(defaults, {
-        language,
-        numSearchTerms: suggestionCount,
-        numNavigations: navigationCount,
-        sortAlphabetically: true,
-        fuzzyMatch: true,
-      }, overrides);
+      expect(normalizer).to.be.calledWithExactly({
+        language, numSearchTerms, numNavigations, sortAlphabetically, fuzzyMatch
+      });
+      expect(override).to.be.calledWithExactly(overrides, 'autocompleteSuggestions');
+      expect(setPastState).to.be.calledWithExactly('autocompleteSuggestions');
+      expect(chain).to.be.calledWithExactly(defaults, normalized, overrideFn, setPastStateFn);
     });
   });
 
   describe('autocompleteProducts()', () => {
-    it('should create a products request', () => {
-      const area = 'myArea';
-      const language = 'en';
-      const productCount = 41;
-      const defaults = { a: 'b' };
-      const overrides = { c: 'd' };
-      const config: any = {
-        autocomplete: {
-          area,
-          language,
-          products: { count: productCount },
-          defaults: { products: defaults },
-          overrides: { products: overrides },
-        },
-        personalization: {
-          realTimeBiasing: {
-            autocomplete: false
-          }
+    let config: any = {
+      personalization: {
+        realTimeBiasing: {
+          autocomplete: false
         }
-      };
-      const chained = { e: 'f' };
-      const req = { g: 'h' };
-      const autocompleteProductsDefaults = { i: 'j' };
-      const autocompleteProductsOverrides = { k: 'l' };
-      const state: any = {};
-      const chain = stub(Requests, 'chain').returns(chained);
-      const search = stub(Requests, 'search').returns({ i: 'j' });
-      const override = stub(Requests, 'override').returns(req);
+      }
+    };
+    const state = { a: 'b' };
+    const area = 'myArea';
+    const language = 'en';
+    const pageSize = 41;
+    const defaults = { c: 'd' };
+    const overrides = { e: 'f' };
+    const searchReq = { g: 'h' };
+    const chained = { i: 'j' };
+    const buildingReq = {
+      ...searchReq,
+      refinements: [],
+      skip: 0,
+      sort: undefined,
+      language,
+      area,
+      pageSize
+    };
+
+    beforeEach(() => {
+      stub(Selectors, config).withArgs(state).returns(config);
+      stub(Requests, 'search').withArgs(state, false).returns(searchReq);
+      stub(Autocomplete, 'extractProductLanguage').withArgs(config).returns(language);
+      stub(Autocomplete, 'extractProductArea').withArgs(config).returns(area);
+      stub(ConfigAdapter, 'extractAutocompleteProductCount').withArgs(config).returns(pageSize);
+      stub(ConfigAdapter, 'autocompleteProductsDefaults').withArgs(config).returns(defaults);
+      stub(ConfigAdapter, 'autocompleteProductsOverrides').withArgs(config).returns(overrides);
+    });
+
+    it('should create a products request', () => {
+      // const chain = stub(Requests, 'chain').returns(chained);
+      // const search = stub(Requests, 'search').returns({ i: 'j' });
+      // const override = stub(Requests, 'override').returns(req);
       stub(ConfigAdapter, 'autocompleteProductsDefaults').returns(autocompleteProductsDefaults);
       stub(ConfigAdapter, 'autocompleteProductsOverrides').returns(autocompleteProductsOverrides);
       stub(Selectors,'config').returns(config);
@@ -363,12 +383,20 @@ suite('requests', ({ expect, stub, spy }) => {
   });
 
   describe('chain()', () => {
-    it('should apply transformations and merge objects', () => {
-      expect(Requests.chain({ a: 'b' }, (x) => ({ ...x, c: 'd' }), <any>{ e: 'f' })).to.eql({ a: 'b', c: 'd', e: 'f' });
+    it('should apply transformations', () => {
+      expect(Requests.chain(
+        utils.normalizeToFunction(<any>{ a: 'b' }),
+        (x) => ({ ...x, c: 'd' }),
+        utils.normalizeToFunction({ e: 'f' })
+      )).to.eql({ a: 'b', c: 'd', e: 'f' });
     });
 
     it('should merge source if tranformation returned falsey', () => {
-      expect(Requests.chain({ a: 'b' }, (x) => null, <any>{ e: 'f' })).to.eql({ a: 'b', e: 'f' });
+      expect(Requests.chain(
+        utils.normalizeToFunction(<any>{ a: 'b' }),
+        (x) => null,
+        utils.normalizeToFunction({ e: 'f' })
+      )).to.eql({ a: 'b', e: 'f' });
     });
   });
 });

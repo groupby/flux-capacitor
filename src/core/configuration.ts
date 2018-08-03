@@ -202,7 +202,7 @@ namespace Configuration {
      */
     defaults?: {
       // tslint:disable-next-line max-line-length
-      suggestions?: Configuration.AutocompleteSuggestions;
+      suggestions?: Configuration.autocompleteSuggestionsDefaults;
       products?: Configuration.AutocompleteProductsDefaults;
     };
     /**
@@ -210,14 +210,15 @@ namespace Configuration {
      */
     overrides?: {
       // tslint:disable-next-line max-line-length
-      suggestions?: Configuration.AutocompleteSuggestions;
+      suggestions?: Configuration.autocompleteSuggestionsOverrides;
       // tslint:disable-next-line max-line-length
       products?: Configuration.AutocompleteProductsOverrides;
     };
   }
 
   // tslint:disable:max-line-length
-  export type AutocompleteSuggestions = QueryTimeAutocompleteConfig | ((config: QueryTimeAutocompleteConfig) => QueryTimeAutocompleteConfig);
+  export type autocompleteSuggestionsDefaults = QueryTimeAutocompleteConfig | ((config: QueryTimeAutocompleteConfig) => QueryTimeAutocompleteConfig);
+  export type autocompleteSuggestionsOverrides = QueryTimeAutocompleteConfig | ((currConfig: QueryTimeAutocompleteConfig, prevConfig: QueryTimeAutocompleteConfig) => QueryTimeAutocompleteConfig);
   export type AutocompleteProductsDefaults = QueryTimeProductSearchConfig | ((config: QueryTimeProductSearchConfig) => QueryTimeProductSearchConfig);
   export type AutocompleteProductsOverrides = QueryTimeProductSearchConfig | ((currConfig: QueryTimeProductSearchConfig, prevConfig?: QueryTimeProductSearchConfig) => QueryTimeProductSearchConfig);
   // tslint:enable:max-line-length

@@ -13,11 +13,13 @@ import { normalizeToFunction } from './utils';
 namespace Requests {
   export interface PastRequests {
     search: Request;
+    autocompleteSuggestions: QueryTimeProductSearchConfig;
     autocompleteProducts: QueryTimeProductSearchConfig;
   }
 
   export const pastReqs: Requests.PastRequests = {
     search: <Request>{},
+    autocompleteSuggestions: <QueryTimeProductSearchConfig>{},
     autocompleteProducts: <QueryTimeProductSearchConfig>{}
   };
 
@@ -54,18 +56,16 @@ namespace Requests {
       request.biasing = PastPurchaseAdapter.pastPurchaseBiasing(state);
     }
 
-    const reqs = [Configuration.searchDefaults(config), request];
+    const requestTransformer = [Configuration.searchDefaults(config), normalizeToFunction(request)];
 
     if (addOverride) {
-      reqs.push(Configuration.searchOverrides(config));
+      requestTransformer.push(
+        Requests.override(Configuration.searchOverrides(config), 'search'),
+        Requests.setPastState('search')
+      );
     }
 
-    const normalizedReqs = reqs.map(normalizeToFunction);
-
-    const finalReq = Requests.chain(Configuration.searchDefaults(config), request);
-
-    // tslint:disable-next-line max-line-length
-    return addOverride ? <Request>Requests.override(Configuration.searchOverrides(config), finalReq, 'search') : <Request>finalReq;
+    return <Request>Requests.chain(...requestTransformer);
   };
 
   // tslint:disable-next-line max-line-length
@@ -87,13 +87,18 @@ namespace Requests {
   };
 
   export const autocompleteSuggestions = (config: AppConfig): QueryTimeAutocompleteConfig =>
-    Requests.chain(Configuration.autocompleteSuggestionsDefaults(config), {
-      language: Autocomplete.extractLanguage(config),
-      numSearchTerms: Configuration.extractAutocompleteSuggestionCount(config),
-      numNavigations: Configuration.extractAutocompleteNavigationCount(config),
-      sortAlphabetically: Configuration.isAutocompleteAlphabeticallySorted(config),
-      fuzzyMatch: Configuration.isAutocompleteMatchingFuzzily(config)
-    }, Configuration.autocompleteSuggestionsOverrides(config));
+    Requests.chain(
+      Configuration.autocompleteSuggestionsDefaults(config),
+      normalizeToFunction({
+        language: Autocomplete.extractLanguage(config),
+        numSearchTerms: Configuration.extractAutocompleteSuggestionCount(config),
+        numNavigations: Configuration.extractAutocompleteNavigationCount(config),
+        sortAlphabetically: Configuration.isAutocompleteAlphabeticallySorted(config),
+        fuzzyMatch: Configuration.isAutocompleteMatchingFuzzily(config)
+      }),
+      Requests.override(Configuration.autocompleteSuggestionsOverrides(config), 'autocompleteSuggestions'),
+      Requests.setPastState('autocompleteSuggestions')
+    );
 
   export const autocompleteProducts = (state: Store.State): Request => {
     const config = Selectors.config(state);
@@ -112,10 +117,12 @@ namespace Requests {
       request = Requests.realTimeBiasing(state, request);
     }
 
-    const finalReq = Requests.chain(<Partial<Request>>Configuration.autocompleteProductsDefaults(config), request);
-
-    // tslint:disable-next-line max-line-length
-    return <Request>Requests.override(<Partial<Request>>Configuration.autocompleteProductsOverrides(config), finalReq, 'autocompleteProducts');
+    return Requests.chain(
+      Configuration.autocompleteProductsDefaults(config),
+      normalizeToFunction(request),
+      Requests.override(Configuration.autocompleteProductsOverrides(config), 'autocompleteProducts'),
+      Requests.setPastState('autocompleteProducts')
+    );
   };
 
   // tslint:disable-next-line max-line-length
@@ -131,8 +138,8 @@ namespace Requests {
     };
   };
 
-  export const chain = <T>(...objs: Array<T | ((...obj: T[]) => T)>): T =>
-    objs.map(normalizeToFunction).reduce((final, fn) => fn(final) || final, <T>{});
+  export const chain = <T>(...fns: Array<(...obj: any[]) => T>): T =>
+    fns.reduce((final, fn) => fn(final) || final, <T>{});
 }
 
 export default Requests;
