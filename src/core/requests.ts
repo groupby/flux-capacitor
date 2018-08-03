@@ -86,19 +86,22 @@ namespace Requests {
     return <Request>request;
   };
 
-  export const autocompleteSuggestions = (config: AppConfig): QueryTimeAutocompleteConfig =>
-    Requests.chain(
+  export const autocompleteSuggestions = (config: AppConfig): QueryTimeAutocompleteConfig => {
+    const normalizedRequest = normalizeToFunction({
+      language: Autocomplete.extractLanguage(config),
+      numSearchTerms: Configuration.extractAutocompleteSuggestionCount(config),
+      numNavigations: Configuration.extractAutocompleteNavigationCount(config),
+      sortAlphabetically: Configuration.isAutocompleteAlphabeticallySorted(config),
+      fuzzyMatch: Configuration.isAutocompleteMatchingFuzzily(config)
+    });
+
+    return Requests.chain(
       Configuration.autocompleteSuggestionsDefaults(config),
-      normalizeToFunction({
-        language: Autocomplete.extractLanguage(config),
-        numSearchTerms: Configuration.extractAutocompleteSuggestionCount(config),
-        numNavigations: Configuration.extractAutocompleteNavigationCount(config),
-        sortAlphabetically: Configuration.isAutocompleteAlphabeticallySorted(config),
-        fuzzyMatch: Configuration.isAutocompleteMatchingFuzzily(config)
-      }),
+      normalizedRequest,
       Requests.override(Configuration.autocompleteSuggestionsOverrides(config), 'autocompleteSuggestions'),
       Requests.setPastState('autocompleteSuggestions')
     );
+  };
 
   export const autocompleteProducts = (state: Store.State): Request => {
     const config = Selectors.config(state);

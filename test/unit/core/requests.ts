@@ -12,7 +12,8 @@ import suite from '../_suite';
 
 suite('requests', ({ expect, stub, spy }) => {
   describe('override', () => {
-    it('should return a function that calls override function with given request and pastRequest key', () => {
+    // tslint:disable-next-line max-line-length
+    it('should return a function that that calls the given override function with the given request and pastRequest key', () => {
       const overrideConfig = spy();
       const req: any = { a: 'b' };
       const pastReq: any = 'search';
@@ -298,8 +299,8 @@ suite('requests', ({ expect, stub, spy }) => {
     });
 
     it('should create a products request with realTimeBiasing bias', () => {
-      config.personalization.realTimeBiasing.autocomplete = true;
       const realTimeBiasBuiltReq = { a: 'b' };
+      config.personalization.realTimeBiasing.autocomplete = true;
       stub(Requests, 'realTimeBiasing').withArgs(state, buildingReq).returns(realTimeBiasBuiltReq);
       stub(utils, 'normalizeToFunction').withArgs(realTimeBiasBuiltReq).returns(normalizedRequest);
 
