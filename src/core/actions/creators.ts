@@ -740,7 +740,7 @@ namespace ActionCreators {
    * @param  {any} response - The verbatim recommendations response.
    * @return {Actions.ReceiveRecommendationsResponse}       - Action with recommendations response.
    */
-  export function receiveRecommendationsResponse(response: Results) {
+  export function receiveRecommendationsResponse(response: any) {
     return createAction(Actions.RECEIVE_RECOMMENDATIONS_RESPONSE, { recommendations: response });
   }
 
@@ -749,7 +749,7 @@ namespace ActionCreators {
    * @param  {any} response - The verbatim past purchase response.
    * @return {Actions.ReceivePastPurchaseResponse}       - Action with past purchase response.
    */
-  export function receivePastPurchaseResponse(response: Results) {
+  export function receivePastPurchaseResponse(response: any) {
     return createAction(Actions.RECEIVE_PAST_PURCHASE_RESPONSE, { pastPurchase: response });
   }
 
