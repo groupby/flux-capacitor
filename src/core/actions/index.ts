@@ -175,6 +175,15 @@ namespace Actions {
   export const RECEIVE_PAST_PURCHASE_PAGE = 'RECEIVE_PAST_PURCHASE_PAGE';
   export type ReceivePastPurchasePage = Action<typeof RECEIVE_PAST_PURCHASE_PAGE, Payload.Page>;
 
+  export const RECEIVE_SEARCH_RESPONSE = 'RECEIVE_SEARCH_RESPONSE';
+  export type ReceiveSearchResponse = Action<typeof RECEIVE_SEARCH_RESPONSE, any>;
+  export const RECEIVE_SAYT_RESPONSE = 'RECEIVE_SAYT_RESPONSE';
+  export type ReceiveSaytResponse = Action<typeof RECEIVE_SAYT_RESPONSE, any>;
+  export const RECEIVE_RECOMMENDATIONS_RESPONSE = 'RECEIVE_RECOMMENDATIONS_RESPONSE';
+  export type ReceiveRecommendationsResponse = Action<typeof RECEIVE_RECOMMENDATIONS_RESPONSE, any>;
+  export const RECEIVE_PAST_PURCHASE_RESPONSE = 'RECEIVE_PAST_PURCHASE_RESPONSE';
+  export type ReceivePastPurchaseResponse = Action<typeof RECEIVE_PAST_PURCHASE_RESPONSE, any>;
+
   export type PastPurchaseReset = [Actions.ResetPastPurchasePage, Actions.ResetPastPurchaseRefinements];
   export type PastPurchaseSelect = [Actions.ResetPastPurchasePage, Actions.SelectPastPurchaseRefinement];
   export type PastPurchaseDeselect = [Actions.ResetPastPurchasePage, Actions.DeselectPastPurchaseRefinement];

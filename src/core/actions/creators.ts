@@ -718,6 +718,42 @@ namespace ActionCreators {
   }
 
   /**
+   * The search response to receive and update state with.
+   * @param  {Results} response - The verbatim search response.
+   * @return {Actions.ReceiveSearchResponse}       - Action with search response.
+   */
+  export function receiveSearchResponse(response: Results) {
+    return createAction(Actions.RECEIVE_SEARCH_RESPONSE, { search: response });
+  }
+
+  /**
+   * The sayt response to receive and update state with.
+   * @param  {any} response - The verbatim sayt response.
+   * @return {Actions.ReceiveSaytResponse}       - Action with sayt response.
+   */
+  export function receiveSaytResponse(response: any) {
+    return createAction(Actions.RECEIVE_SAYT_RESPONSE, { sayt: response });
+  }
+
+  /**
+   * The recommendations response to receive and update state with.
+   * @param  {any} response - The verbatim recommendations response.
+   * @return {Actions.ReceiveRecommendationsResponse}       - Action with recommendations response.
+   */
+  export function receiveRecommendationsResponse(response: Results) {
+    return createAction(Actions.RECEIVE_RECOMMENDATIONS_RESPONSE, { recommendations: response });
+  }
+
+  /**
+   * The past purchase response to receive and update state with.
+   * @param  {any} response - The verbatim past purchase response.
+   * @return {Actions.ReceivePastPurchaseResponse}       - Action with past purchase response.
+   */
+  export function receivePastPurchaseResponse(response: Results) {
+    return createAction(Actions.RECEIVE_PAST_PURCHASE_RESPONSE, { pastPurchase: response });
+  }
+
+  /**
    * In the past purchase section, selects a given refinement based on navigationId and index.
    * @param  {string}                               navigationId - The navigationId for
    * the navigation to fetch more refinements against.
