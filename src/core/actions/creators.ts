@@ -479,7 +479,7 @@ namespace ActionCreators {
           ActionCreators.receiveProductRecords(SearchAdapter.augmentProducts(res)),
           ActionCreators.receiveNavigations(
             SearchAdapter.pruneRefinements(SearchAdapter.combineNavigations(res), state)),
-          ActionCreators.receiveRecordCount(recordCount),
+          ActionCreators.receiveRecordCount(res.totalRecordCount),
           ActionCreators.receiveCollectionCount({
             collection: Selectors.collection(state),
             count: recordCount
