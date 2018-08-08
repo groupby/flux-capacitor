@@ -1,4 +1,5 @@
 import { reduxBatch } from '@manaflair/redux-batch';
+import { Results } from 'groupby-api';
 import { applyMiddleware, compose, createStore, Store as ReduxStore } from 'redux';
 import { persistStore } from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
@@ -403,6 +404,13 @@ namespace Store {
     export interface SingleBias {
       lastUsed: number;
     }
+  }
+
+  export interface Responses {
+    search: Results;
+    sayt: any;
+    recommendations: any;
+    pastPurchases: any;
   }
 
 }

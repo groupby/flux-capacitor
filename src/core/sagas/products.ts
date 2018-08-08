@@ -20,6 +20,9 @@ export namespace Tasks {
       ]);
       const config = yield effects.select(Selectors.config);
 
+      yield effects.put(flux.actions.receiveSearchResponse(result));
+      yield effects.put(flux.actions.receiveRecommendationsResponse(navigations));
+
       if (result.redirect) {
         yield effects.put(flux.actions.receiveRedirect(result.redirect));
       }
