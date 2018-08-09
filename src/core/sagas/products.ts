@@ -94,7 +94,7 @@ export namespace Tasks {
       const state: Store.State = yield effects.select();
       const products = Selectors.productsWithMetadata(state);
       const pageSize = action.payload.amount;
-      const recordCount = Selectors.recordCount(state);
+      const recordCount = SearchAdapter.extractRecordCount(Selectors.recordCount(state));
 
       let skip;
       if (action.payload.forward) {

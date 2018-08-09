@@ -471,7 +471,7 @@ namespace ActionCreators {
       const receiveProductsAction = createAction(Actions.RECEIVE_PRODUCTS, res);
 
       return handleError(receiveProductsAction, () => {
-        const recordCount = SearchAdapter.extractRecordCount(res);
+        const limitedRecordCount = SearchAdapter.extractRecordCount(res.totalRecordCount);
 
         return [
           receiveProductsAction,
@@ -482,9 +482,9 @@ namespace ActionCreators {
           ActionCreators.receiveRecordCount(res.totalRecordCount),
           ActionCreators.receiveCollectionCount({
             collection: Selectors.collection(state),
-            count: recordCount
+            count: limitedRecordCount
           }),
-          ActionCreators.receivePage(recordCount)(state),
+          ActionCreators.receivePage(limitedRecordCount)(state),
           ActionCreators.receiveTemplate(SearchAdapter.extractTemplate(res.template)),
         ];
       });

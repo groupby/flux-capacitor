@@ -161,8 +161,8 @@ namespace Adapter {
       Object.assign(zones, { [key]: Adapter.extractZone(template.zones[key]) }), {}),
   });
 
-  export const extractRecordCount = (results: Results) =>
-    Math.min(results.totalRecordCount, MAX_RECORDS);
+  export const extractRecordCount = (recordCount: number) =>
+    Math.min(recordCount, MAX_RECORDS);
 
   // tslint:disable-next-line max-line-length
   export const extractPage = (state: Store.State, totalRecords: number, current?: number, pageSize?: number): Actions.Payload.Page => {

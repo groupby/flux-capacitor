@@ -131,7 +131,7 @@ export namespace Tasks {
         } else {
           yield effects.put(<any>[
             flux.actions.receivePastPurchasePage(
-              SearchAdapter.extractRecordCount(results),
+              SearchAdapter.extractRecordCount(results.totalRecordCount),
               Selectors.pastPurchasePage(flux.store.getState()),
             ),
             flux.actions.receivePastPurchaseCurrentRecordCount(results.totalRecordCount),

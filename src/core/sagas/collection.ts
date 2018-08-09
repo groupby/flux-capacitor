@@ -16,7 +16,7 @@ export namespace Tasks {
 
       yield effects.put(flux.actions.receiveCollectionCount({
         collection,
-        count: Adapter.extractRecordCount(res)
+        count: res.totalRecordCount
       }));
     } catch (e) {
       yield effects.put(flux.actions.receiveCollectionCount(e));
