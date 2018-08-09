@@ -13,5 +13,5 @@ export default function updateDetails(state: State = DEFAULTS, action: Action): 
   }
 }
 
-export const update = (state: State, data: Store.Product) =>
-  ({ ...state, data });
+export const update = (state: State, { data, template }: Store.Details) =>
+  ({ ...state, data, template });

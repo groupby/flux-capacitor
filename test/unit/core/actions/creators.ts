@@ -662,8 +662,15 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     describe('setDetails()', () => {
       it('should return an action', () => {
         const product: any = { a: 'b' };
+        const responseTemplate: any = { c: 'd' };
+        const template: any = { e: 'f' };
+        const extractTemplate = stub(SearchAdapter, 'extractTemplate').withArgs(responseTemplate).returns(template);
 
-        expectAction(ActionCreators.setDetails(product), Actions.SET_DETAILS, product);
+        expectAction(
+          ActionCreators.setDetails(product, responseTemplate),
+          Actions.SET_DETAILS,
+          { data: product, template }
+        );
       });
     });
 

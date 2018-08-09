@@ -216,6 +216,7 @@ namespace Store {
 
   export interface Details {
     data?: Product;
+    template?: Template;
   }
 
   export interface Recommendations {

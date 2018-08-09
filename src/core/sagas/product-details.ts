@@ -1,6 +1,7 @@
 import * as effects from 'redux-saga/effects';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
+import SearchAdapter from '../adapters/search';
 import Events from '../events';
 import Requests from '../requests';
 import Selectors from '../selectors';
@@ -11,7 +12,7 @@ export namespace Tasks {
   export function* fetchProductDetails(flux: FluxCapacitor, { payload: id }: Actions.FetchProductDetails) {
     try {
       const request = yield effects.select(Requests.search);
-      const { records } = yield effects.call(
+      const { records, template } = yield effects.call(
         [flux.clients.bridge, flux.clients.bridge.search],
         {
           ...request,
@@ -23,7 +24,7 @@ export namespace Tasks {
       );
       if (records.length !== 0) {
         const [record] = records;
-        yield effects.put(flux.actions.setDetails(record));
+        yield effects.put(flux.actions.setDetails(record, template));
       } else {
         throw new Error(`no records found matching id: ${id}`);
       }
@@ -32,12 +33,12 @@ export namespace Tasks {
     }
   }
 
-  export function* receiveDetailsProduct(flux: FluxCapacitor, { payload: product }: Actions.SetDetails) {
-    if (product.allMeta) {
-      flux.emit(Events.BEACON_VIEW_PRODUCT, product);
-      product = product.allMeta;
+  export function* receiveDetailsProduct(flux: FluxCapacitor, { payload }: Actions.SetDetails) {
+    if (payload.data.allMeta) {
+      flux.emit(Events.BEACON_VIEW_PRODUCT, payload.data);
+      payload.data = payload.data.allMeta;
     }
-    yield effects.put(flux.actions.updateDetails(product));
+    yield effects.put(flux.actions.updateDetails(payload));
     flux.saveState(utils.Routes.DETAILS);
   }
 }

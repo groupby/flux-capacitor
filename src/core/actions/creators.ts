@@ -1,4 +1,4 @@
-import { Results } from 'groupby-api';
+import { Record, Results, Template } from 'groupby-api';
 import Actions from '.';
 import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';
@@ -392,22 +392,22 @@ namespace ActionCreators {
 
   /**
    * Updates the details product in the store.
-   * @param  {Store.Product}         product - The product to use as the details
+   * @param  {Store.Details}         details - The product to use as the details
    * product.
-   * @return {Actions.UpdateDetails}         - Action with product.
+   * @return {Actions.UpdateDetails}         - Action with details.
    */
-  export function updateDetails(product: Store.Product): Actions.UpdateDetails {
-    return createAction(Actions.UPDATE_DETAILS, product);
+  export function updateDetails(details: Store.Details): Actions.UpdateDetails {
+    return createAction(Actions.UPDATE_DETAILS, details);
   }
 
   /**
    * Sets the details product in the store, doing some additional emits and state changes.
-   * @param  {Store.Product}         product - The product to use as the details
-   * product.
-   * @return {Actions.SetDetails}         - Action with product.
+   * @param  {Record}         product - The product to use as the details product.
+   * @param  {Template}         template - The template to use as the details template.
+   * @return {Actions.SetDetails}         - Action with details.
    */
-  export function setDetails(product: Store.Product): Actions.SetDetails {
-    return createAction(Actions.SET_DETAILS, product);
+  export function setDetails(product: Record, template: Template): Actions.SetDetails {
+    return createAction(Actions.SET_DETAILS, { data: product, template: SearchAdapter.extractTemplate(template) });
   }
 
   /**

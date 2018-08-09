@@ -97,12 +97,12 @@ suite('product details saga', ({ expect, spy, stub }) => {
         const record = { allMeta: { e: 'f' }, id: '123' };
         const flux: any = { emit, saveState, actions: { updateDetails } };
 
-        const task = Tasks.receiveDetailsProduct(flux, <any>{ payload: record });
+        const task = Tasks.receiveDetailsProduct(flux, <any>{ payload: { data: record } });
 
         expect(task.next().value).to.eql(effects.put(updateDetailsAction));
         expect(emit).to.be.calledWith(Events.BEACON_VIEW_PRODUCT, record);
         task.next();
-        expect(updateDetails).to.be.calledWith(record.allMeta);
+        expect(updateDetails).to.be.calledWith({ data: record.allMeta });
         expect(saveState).to.be.called;
       });
 
@@ -114,12 +114,12 @@ suite('product details saga', ({ expect, spy, stub }) => {
         const record = { id: '123' };
         const flux: any = { emit, saveState, actions: { updateDetails } };
 
-        const task = Tasks.receiveDetailsProduct(flux, <any>{ payload: record });
+        const task = Tasks.receiveDetailsProduct(flux, <any>{ payload: { data: record } });
 
         expect(task.next().value).to.eql(effects.put(updateDetailsAction));
         expect(emit).to.not.be.called;
         task.next();
-        expect(updateDetails).to.be.calledWith(record);
+        expect(updateDetails).to.be.calledWith({ data: record });
         expect(saveState).to.be.called;
       });
     });
