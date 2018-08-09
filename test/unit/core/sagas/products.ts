@@ -130,7 +130,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
       it('should call receiveDetailsProduct when only a single result', () => {
         const receiveProductsAction: any = { c: 'd' };
         const receiveNavigationsAction: any = { e: 'f' };
-        const setDetailsAction: any = { j: 'e' };
+        const setDetailsAction: any = 'action';
         const record: any = { g: 'h' };
         const receiveRedirect = spy(() => receiveProductsAction);
         const receiveProducts = spy(() => receiveNavigationsAction);
@@ -151,7 +151,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         const task = Tasks.fetchProducts(<any>flux, false, <any>{});
         task.next();
         task.next([{ redirect: false, totalRecordCount: 1, records: [record] }, undefined]);
-        task.next(config).value['CALL'].fn();
+        expect(task.next(config).value).to.eql(effects.take(setDetailsAction));
         expect(detailsWithRouting).to.be.calledWith(record);
         task.next();
       });
