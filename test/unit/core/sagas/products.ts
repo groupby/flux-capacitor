@@ -135,6 +135,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         const receiveRedirect = spy(() => receiveProductsAction);
         const receiveProducts = spy(() => receiveNavigationsAction);
         const setDetails = spy(() => setDetailsAction);
+        const detailsWithRouting = spy(() => setDetailsAction);
         const config = {
           search: {
             redirectSingleResult: true
@@ -143,15 +144,15 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         const flux: any = {
           actions: { receiveProducts, receiveRedirect, setDetails },
           emit: () => undefined,
-          saveState: () => undefined
+          saveState: () => undefined,
+          detailsWithRouting,
         };
 
         const task = Tasks.fetchProducts(<any>flux, false, <any>{});
         task.next();
         task.next([{ redirect: false, totalRecordCount: 1, records: [record] }, undefined]);
-        expect(task.next(config).value)
-          .to.eql(effects.put(setDetailsAction));
-        expect(setDetails).to.be.calledWith(record);
+        task.next(config).value['CALL'].fn();
+        expect(detailsWithRouting).to.be.calledWith(record);
         task.next();
       });
 

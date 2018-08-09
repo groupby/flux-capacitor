@@ -2,6 +2,7 @@ import {
   Navigation,
   PageInfo,
   RangeRefinement,
+  Record,
   Results,
   SelectedRefinement,
   SortType,
@@ -147,7 +148,7 @@ namespace Adapter {
       case 'Record': return {
         name: zone.name,
         query: zone.query,
-        products: zone.records.map((record) => record.allMeta),
+        products: zone.records.map((record) => extractAllMeta(record)),
         type: Store.Zone.Type.PRODUCTS,
       };
     }
@@ -183,6 +184,9 @@ namespace Adapter {
 
   export const extractData = (products: Store.ProductWithMetadata[]) =>
     products.map(({ data }) => data);
+
+  export const extractAllMeta = (product: Store.Product | Record) =>
+    (<Record>product).allMeta || product;
 
   export const augmentProducts = (results: Results) => {
     const startIndex = results.pageInfo.recordStart;

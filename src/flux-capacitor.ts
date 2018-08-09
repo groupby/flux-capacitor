@@ -1,10 +1,11 @@
 import { EventEmitter } from 'eventemitter3';
-import { BrowserBridge } from 'groupby-api';
+import { BrowserBridge, Record } from 'groupby-api';
 import { Action as ReduxAction, Store as ReduxStore } from 'redux';
 import { Sayt } from 'sayt';
 import Actions from './core/actions';
 import ActionCreators from './core/actions/creators';
 import Adapter from './core/adapters/configuration';
+import SearchAdapter from './core/adapters/search';
 import Configuration from './core/configuration';
 import Events from './core/events';
 import Observer from './core/observer';
@@ -98,8 +99,10 @@ class FluxCapacitor extends EventEmitter {
     this.store.dispatch(this.actions.deselectRefinement(navigationName, index));
   }
 
-  detailsWithRouting(product: Store.Product) {
-    this.store.dispatch(this.actions.fetchProductDetails(product.id));
+  detailsWithRouting(product: Store.Product | Record) {
+    return this.config.details.alwaysFetch
+      ? this.store.dispatch(this.actions.fetchProductDetails(SearchAdapter.extractAllMeta(product).id))
+      : this.store.dispatch(this.actions.setDetails(product));
   }
 
   switchCollection(collection: string) {

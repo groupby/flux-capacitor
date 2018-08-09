@@ -402,11 +402,11 @@ namespace ActionCreators {
 
   /**
    * Sets the details product in the store, doing some additional emits and state changes.
-   * @param  {Record}         product - The product to use as the details product.
+   * @param  {Record | Store.Product}         product - The product to use as the details product.
    * @param  {Template}         template - The template to use as the details template.
    * @return {Actions.SetDetails}         - Action with details.
    */
-  export function setDetails(product: Record, template: Template): Actions.SetDetails {
+  export function setDetails(product: Record | Store.Product, template?: Template): Actions.SetDetails {
     return createAction(Actions.SET_DETAILS, { data: product, template: SearchAdapter.extractTemplate(template) });
   }
 

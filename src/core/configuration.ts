@@ -44,6 +44,11 @@ interface Configuration {
   recommendations?: Configuration.Recommendations;
 
   /**
+   * state initial configuration for details Searchandiser requests
+   */
+   details?: Configuration.Details;
+
+  /**
    * network request configuration
    */
   network?: Configuration.Bridge;
@@ -400,6 +405,10 @@ namespace Configuration {
     export interface Pinned {
       [id: string]: string[];
     }
+  }
+
+  export interface Details {
+    alwaysFetch: boolean;
   }
 
   export namespace Personalization {
