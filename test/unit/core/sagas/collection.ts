@@ -31,8 +31,7 @@ suite('collection saga', ({ expect, spy, stub }) => {
         const flux: any = { clients: { bridge }, actions: { receiveCollectionCount } };
         const recordCount = 89;
         const request = { e: 'f' };
-        const response = { g: 'h' };
-        const extractRecordCount = stub(Adapters.Search, 'extractRecordCount').returns(recordCount);
+        const response = { g: 'h', totalRecordCount: recordCount };
 
         const task = Tasks.fetchCount(flux, <any>{ payload: collection });
 
@@ -40,7 +39,6 @@ suite('collection saga', ({ expect, spy, stub }) => {
         expect(task.next(request).value).to.eql(effects.call([bridge, search], { e: 'f', collection }));
         expect(task.next(response).value).to.eql(effects.put(receiveCollectionCountAction));
         expect(receiveCollectionCount).to.be.calledWithExactly({ collection, count: recordCount });
-        expect(extractRecordCount).to.be.calledWith(response);
         task.next();
       });
 

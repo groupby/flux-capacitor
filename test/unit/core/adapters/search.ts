@@ -481,11 +481,11 @@ suite('Search Adapter', ({ expect, stub }) => {
     it('should return the totalRecordCount', () => {
       const totalRecordCount = 43;
 
-      expect(Adapter.extractRecordCount(<any>{ totalRecordCount })).to.eq(totalRecordCount);
+      expect(Adapter.extractRecordCount(totalRecordCount)).to.eq(totalRecordCount);
     });
 
     it('should return the maximum total record count', () => {
-      expect(Adapter.extractRecordCount(<any>{ totalRecordCount: MAX_RECORDS + 1 })).to.eq(MAX_RECORDS);
+      expect(Adapter.extractRecordCount(MAX_RECORDS + 1)).to.eq(MAX_RECORDS);
     });
   });
 

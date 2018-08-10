@@ -550,7 +550,7 @@ namespace Selectors {
     (Selectors.uiTagStates(state, tagName) || {})[id];
 
   /**
-   * Helper function to get selected navigations from an array of navigations
+   * Helper function to get selected navigations from an array of navigations.
    */
   export const getSelected = (allNavigations: Store.Navigation[]): SelectedRefinement[] =>
     allNavigations.reduce((allRefinements, nav) =>
@@ -561,6 +561,14 @@ namespace Selectors {
             ? { navigationName: nav.field, type: 'Range', high, low }
             : { navigationName: nav.field, type: 'Value', value }), [])), []);
 
+  /**
+   * Helper function to display record count limited by the max records we can
+   * return from the database.
+   */
+  export const getLimitedCountDisplay = (count: number): string => {
+    const limitedCount = Search.extractRecordCount(count);
+    return count <= limitedCount ? `${count}` : `${limitedCount}+`;
+  };
 }
 
 export default Selectors;

@@ -339,7 +339,8 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const result = [1, 2, 3];
         const request = { c: 3 };
         const transformedNav = ['f'];
-        const productData = { selectedNavigation: [2, 3, 5], };
+        const totalRecordCount = 100;
+        const productData = { selectedNavigation: [2, 3, 5], totalRecordCount };
         const currentPage = 2;
         const pageSize = 18;
         const augmentProducts = stub(SearchAdapter, 'augmentProducts').returns(productData);
@@ -361,8 +362,8 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(task.next([]).value).to.be.undefined;
 
         expect(augmentProducts).to.be.calledWithExactly(productData);
-        expect(extractRecordCount).to.be.calledWithExactly(productData);
         expect(receivePastPurchasePage).to.be.calledWithExactly(productData, currentPage);
+        expect(extractRecordCount).to.be.calledWithExactly(productData.totalRecordCount);
         expect(pastPurchasePage).to.be.calledWithExactly(flux.store.getState());
         expect(saveState).to.be.calledWithExactly(utils.Routes.PAST_PURCHASE);
       });

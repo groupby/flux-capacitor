@@ -1052,4 +1052,38 @@ suite('selectors', ({ expect, stub }) => {
       expect(() => Selectors.uiTagState(state, tagName, id)).to.not.throw();
     });
   });
+
+  describe('getSelected()', () => {
+    it('should return an array of selected refinements', () => {
+      const navigationName1 = 'Department';
+      const navigationName2 = 'Category';
+      const high = 10;
+      const low = 1;
+      const value = 'Shirt';
+      const allNavigations: any[] = [
+        { selected: [0], field: navigationName1, range: true, refinements: [{ high, low }] },
+        { selected: [1], field: navigationName2, refinements: [{ high: 100, low: 2 }, { value }] },
+        { selected: [], field: 'Color', refinements: [] },
+      ];
+      const selectedNavigations = [
+        { navigationName: navigationName1, low, high, type: 'Range' },
+        { navigationName: navigationName2, value, type: 'Value' },
+      ];
+
+      expect(Selectors.getSelected(allNavigations)).to.eql(selectedNavigations);
+    });
+  });
+
+  describe('getLimitedCountDisplay()', () => {
+    it('should return the given count as a string', () => {
+      expect(Selectors.getLimitedCountDisplay(10000)).to.eq('10000');
+      expect(Selectors.getLimitedCountDisplay(1)).to.eq('1');
+    });
+
+    it('should return the string 1000+', () => {
+      const randomNum = (Math.random() * (Number.MAX_SAFE_INTEGER - 1) + 1) + 10000;
+      expect(Selectors.getLimitedCountDisplay(10001)).to.eq('10000+');
+      expect(Selectors.getLimitedCountDisplay(randomNum)).to.eq('10000+');
+    });
+  });
 });

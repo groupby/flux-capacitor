@@ -733,7 +733,8 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const receivePageFunc = () => receivePageAction;
         const receiveTemplateAction = { mm: 'nn' };
         const products = ['x', 'x'];
-        const results: any = {};
+        const totalRecordCount = 1000;
+        const results: any = { totalRecordCount };
         const query: any = { e: 'f' };
         const state: any = { g: 'h' };
         const navigations: any[] = ['k', 'l'];
@@ -764,11 +765,11 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         expect(receiveQuery).to.be.calledWith(query);
         expect(receiveProductRecords).to.be.calledWith(['x', 'x']);
         expect(receiveNavigations).to.be.calledWith(prunedNavigations);
-        expect(receiveRecordCount).to.be.calledWith(recordCount);
+        expect(receiveRecordCount).to.be.calledWith(totalRecordCount);
         expect(receiveTemplate).to.be.calledWith(template);
         expect(receiveCollectionCount).to.be.calledWith({ collection, count: recordCount });
         expect(receivePage).to.be.calledWith(recordCount);
-        expect(extractRecordCount).to.be.calledWith(results);
+        expect(extractRecordCount).to.be.calledWith(results.totalRecordCount);
         expect(extractQuery).to.be.calledWith(results);
         expect(augmentProducts).to.be.calledWith(results);
         expect(combineNavigations).to.be.calledWith(results);
