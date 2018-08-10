@@ -482,7 +482,7 @@ namespace ActionCreators {
           ActionCreators.receiveRecordCount(res.totalRecordCount),
           ActionCreators.receiveCollectionCount({
             collection: Selectors.collection(state),
-            count: limitedRecordCount
+            count: res.totalRecordCount
           }),
           ActionCreators.receivePage(limitedRecordCount)(state),
           ActionCreators.receiveTemplate(SearchAdapter.extractTemplate(res.template)),

@@ -767,7 +767,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         expect(receiveNavigations).to.be.calledWith(prunedNavigations);
         expect(receiveRecordCount).to.be.calledWith(totalRecordCount);
         expect(receiveTemplate).to.be.calledWith(template);
-        expect(receiveCollectionCount).to.be.calledWith({ collection, count: recordCount });
+        expect(receiveCollectionCount).to.be.calledWith({ collection, count: totalRecordCount });
         expect(receivePage).to.be.calledWith(recordCount);
         expect(extractRecordCount).to.be.calledWith(results.totalRecordCount);
         expect(extractQuery).to.be.calledWith(results);
