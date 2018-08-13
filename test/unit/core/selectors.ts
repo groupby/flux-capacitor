@@ -1080,7 +1080,7 @@ suite('selectors', ({ expect, stub }) => {
       expect(Selectors.getLimitedCountDisplay(1)).to.eq('1');
     });
 
-    it('should return the string 1000+', () => {
+    it('should return the string 10000+', () => {
       const randomNum = (Math.random() * (Number.MAX_SAFE_INTEGER - 1) + 1) + 10000;
       expect(Selectors.getLimitedCountDisplay(10001)).to.eq('10000+');
       expect(Selectors.getLimitedCountDisplay(randomNum)).to.eq('10000+');
