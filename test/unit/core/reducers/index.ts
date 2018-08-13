@@ -82,7 +82,7 @@ suite('reducers', ({ expect, stub }) => {
     const payload = {
       a: 'b',
       data: {
-        past: [{}],
+        past: [],
         present: { personalization: { biasing: 2 }, autocomplete: {}, details: { data: 2 } },
         future: []
       }
@@ -97,7 +97,7 @@ suite('reducers', ({ expect, stub }) => {
       }
     };
 
-    expect(reducer(oldState, { type: Actions.REFRESH_STATE, payload }).data.past).to.eql([{}]);
+    expect(reducer(oldState, { type: Actions.REFRESH_STATE, payload }).data.past).to.eql([]);
   });
 
   it('should advance history on SAVE_STATE', () => {
@@ -110,7 +110,7 @@ suite('reducers', ({ expect, stub }) => {
     }, <any>{ type: Actions.SAVE_STATE });
 
     expect(updated.data.future).to.eql([]);
-    expect(updated.data.past).to.eql([{}]);
+    expect(updated.data.past).to.eql([]);
     expect(updated.data.present).to.be.an('object');
   });
 

@@ -23,7 +23,7 @@ export const undoWithoutHistory = (store) => {
     /* istanbul ignore next */
     if (historyLength === 0) {
       // reset past
-      return { ...newState, past: [{}] };
+      return { ...newState, past: [] };
     }
 
     /* istanbul ignore next */
@@ -52,7 +52,7 @@ export const updateState = (state: Store.State, { payload }: Actions.RefreshStat
   const pastLength = payload.data.past.length;
   const truncatedPast = payload.data.past.length < historyLength ? payload.data.past : payload.data.past.slice(1);
   // tslint:disable-next-line:max-line-length
-  const past = historyLength ? [...truncatedPast, payload.data.present] : [{}];
+  const past = historyLength ? [...truncatedPast, payload.data.present] : [];
 
   return {
     ...payload,
