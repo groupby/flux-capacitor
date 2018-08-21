@@ -6,10 +6,11 @@ import PersonalizationAdapter from '../adapters/personalization';
 import RecommendationsAdapter from '../adapters/recommendations';
 import SearchAdapter from '../adapters/search';
 import Events from '../events';
-import Requests from '../requests';
+import RequestBodies from '../requests';
 import Selectors from '../selectors';
 import Store from '../store';
 import * as utils from '../utils';
+import Requests from './requests';
 
 export namespace Tasks {
   export function* fetchProducts(flux: FluxCapacitor, ignoreHistory: boolean = false, action: Actions.FetchProducts) {
@@ -52,10 +53,10 @@ export namespace Tasks {
   }
 
   export function* fetchProductsRequest(flux: FluxCapacitor, action: Actions.FetchProducts) {
-    const request = yield effects.select(Requests.search);
-    const requestWithBiases = yield effects.select(Requests.realTimeBiasing, request);
+    const request = yield effects.select(RequestBodies.search);
+    const requestWithBiases = yield effects.select(RequestBodies.realTimeBiasing, request);
 
-    return yield effects.call([flux.clients.bridge, flux.clients.bridge.search], requestWithBiases);
+    return yield effects.call(Requests.search, flux, requestWithBiases);
   }
 
   export function* fetchNavigations(flux: FluxCapacitor, action: Actions.FetchProducts) {
@@ -64,10 +65,9 @@ export namespace Tasks {
       const iNav = config.recommendations.iNav;
       if (iNav.navigations.sort || iNav.refinements.sort) {
         const query = yield effects.select(Selectors.query);
-        const recommendationsUrl = RecommendationsAdapter.buildUrl(config.customerId, 'refinements', 'Popular');
         const sizeAndWindow = { size: iNav.size, window: iNav.window };
         // tslint:disable-next-line max-line-length
-        const recommendationsResponse = yield effects.call(utils.fetch, recommendationsUrl, RecommendationsAdapter.buildBody({
+        const body = {
           minSize: iNav.minSize || iNav.size,
           sequence: [
             { ...sizeAndWindow,
@@ -78,7 +78,18 @@ export namespace Tasks {
             {
               ...sizeAndWindow,
             }
-          ]}));
+          ]
+        };
+        const recommendationsResponse = yield effects.call(
+          Requests.recommendations,
+          {
+            customerId: config.customerId,
+            endpoint: 'refinements',
+            mode: 'Popular',
+            body
+          }
+        );
+
         const recommendations = yield recommendationsResponse.json();
         return recommendations.result
           .filter(({ values }) => values); // assumes no values key will be empty
@@ -111,14 +122,12 @@ export namespace Tasks {
         yield effects.put(<any>flux.actions.infiniteScrollRequestState({ isFetchingBackward: true }));
       }
 
-      const result = yield effects.call(
-        [flux.clients.bridge, flux.clients.bridge.search],
-        {
-          ...Requests.search(state),
-          pageSize,
-          skip,
-        }
-      );
+      const req = {
+        ...RequestBodies.search(state),
+        pageSize,
+        skip,
+      };
+      const result = yield effects.call(Requests.search, flux, req);
 
       flux.emit(Events.BEACON_SEARCH, result.id);
 

@@ -7,10 +7,11 @@ import PastPurchaseAdapter from '../adapters/pastPurchases';
 import Adapter from '../adapters/recommendations';
 import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';
-import Requests from '../requests';
+import RequestBodies from '../requests';
 import Selectors from '../selectors';
 import Store from '../store';
 import * as utils from '../utils';
+import Requests from './requests';
 
 export class MissingPayloadError extends Error {
   /* istanbul ignore next */
@@ -29,34 +30,35 @@ export namespace Tasks {
       const { idField, productSuggestions: productConfig } = config.recommendations;
       const productCount = productConfig.productCount;
       if (productCount > 0) {
-        // fall back to default mode "popular" if not provided
-        // "popular" default will likely provide the most consistently strong data
-        const mode = Configuration.RECOMMENDATION_MODES[productConfig.mode || 'popular'];
-        const recommendationsUrl = Adapter.buildUrl(config.customerId, 'products', mode);
         const recommendationsRequestBody = {
           size: productConfig.productCount,
           type: 'viewProduct',
           target: idField
         };
+        const recommendationsResponse = yield effects.call(
+          Requests.recommendations,
+          {
+            customerId: config.customerId,
+            endpoint: 'products',
+            // fall back to default mode "popular" if not provided
+            // "popular" default will likely provide the most consistently strong data
+            mode: Configuration.RECOMMENDATION_MODES[productConfig.mode || 'popular'],
+            body: Adapter.addLocationToRequest(recommendationsRequestBody, state)
+          }
+        );
 
-        const recommendationsResponse = yield effects.call(utils.fetch, recommendationsUrl, {
-          method: 'POST',
-          body: JSON.stringify(Adapter.addLocationToRequest(recommendationsRequestBody, state))
-        });
         const recommendations = yield recommendationsResponse.json();
         const refinements = recommendations.result
           .filter(({ productId }) => productId)
           .map(({ productId }) => ({ navigationName: idField, type: 'Value', value: productId }));
-        const results = yield effects.call(
-          [flux.clients.bridge, flux.clients.bridge.search],
-          {
-            ...Requests.search(state),
-            pageSize: productConfig.productCount,
-            includedNavigations: [],
-            skip: 0,
-            refinements
-          }
-        );
+        const req = {
+          ...RequestBodies.search(state),
+          pageSize: productConfig.productCount,
+          includedNavigations: [],
+          skip: 0,
+          refinements
+        };
+        const results = yield effects.call(Requests.search, flux, req);
 
         yield effects.put(flux.actions.receiveRecommendationsProducts(SearchAdapter.augmentProducts(results)));
       }
@@ -68,11 +70,15 @@ export namespace Tasks {
   export function* fetchSkus(config: Configuration, endpoint: string, query?: string) {
     const securedPayload = ConfigAdapter.extractSecuredPayload(config);
     if (securedPayload) {
-      const url = `https://${config.customerId}.groupbycloud.com/orders/v1/public/skus/${endpoint}`;
-      const response = yield effects.call(utils.fetch, url, Adapter.buildBody({
-        securedPayload,
-        query
-      }));
+      const response = yield effects.call(
+        Requests.pastPurchases,
+        {
+          customerId: config.customerId,
+          endpoint,
+          body: { securedPayload, query }
+        }
+      );
+
       const { result } = yield response.json();
       if (!result) {
         throw new MissingPayloadError();
@@ -85,15 +91,15 @@ export namespace Tasks {
   // tslint:disable-next-line max-line-length
   export function* fetchProductsFromSkus(flux: FluxCapacitor, skus: Store.PastPurchases.PastPurchaseProduct[], request: Request) {
     const ids: string[] = skus.map(({ sku }) => sku);
-    return yield effects.call(
-      [flux.clients.bridge, flux.clients.bridge.search],
-      {
-        ...request,
-        biasing: <Biasing>{
-          restrictToIds: ids,
-        },
-        sort: <Sort[]>[{ type: 'ByIds', ids }],
-      });
+    const req = {
+      ...request,
+      biasing: <Biasing>{
+        restrictToIds: ids,
+      },
+      sort: <Sort[]>[{ type: 'ByIds', ids }],
+    };
+
+    return yield effects.call(Requests.search, flux, req);
   }
 
   export function* fetchPastPurchases(flux: FluxCapacitor, action: Actions.FetchPastPurchases) {
@@ -119,7 +125,7 @@ export namespace Tasks {
     try {
       const pastPurchaseSkus: Store.PastPurchases.PastPurchaseProduct[] = yield effects.select(Selectors.pastPurchases);
       if (pastPurchaseSkus.length > 0) {
-        const request = yield effects.select(Requests.pastPurchaseProducts, getNavigations);
+        const request = yield effects.select(RequestBodies.pastPurchaseProducts, getNavigations);
         const results = yield effects.call(fetchProductsFromSkus, flux, pastPurchaseSkus, request);
         if (getNavigations) {
           const navigations = PastPurchaseAdapter.pastPurchaseNavigations(
@@ -161,7 +167,7 @@ export namespace Tasks {
         yield effects.put(<any>flux.actions.infiniteScrollRequestState({ isFetchingBackward: true }));
       }
 
-      const request = yield effects.select(Requests.pastPurchaseProducts, false, { pageSize, skip });
+      const request = yield effects.select(RequestBodies.pastPurchaseProducts, false, { pageSize, skip });
       const result = yield effects.call(fetchProductsFromSkus, flux, pastPurchaseSkus, request);
 
       yield effects.put(<any>[
@@ -183,7 +189,7 @@ export namespace Tasks {
       const config: Configuration = yield effects.select(Selectors.config);
       const pastPurchaseSkus = yield effects.select(Selectors.pastPurchases);
       if (pastPurchaseSkus.length > 0) {
-        const request = yield effects.select(Requests.autocompleteProducts);
+        const request = yield effects.select(RequestBodies.autocompleteProducts);
         const results = yield effects.call(fetchProductsFromSkus, flux, pastPurchaseSkus, {
           ...request,
           query: payload

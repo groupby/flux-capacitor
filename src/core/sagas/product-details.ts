@@ -3,25 +3,25 @@ import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import SearchAdapter from '../adapters/search';
 import Events from '../events';
-import Requests from '../requests';
+import RequestBodies from '../requests';
 import Selectors from '../selectors';
 import Store from '../store';
 import * as utils from '../utils';
+import Requests from './requests';
 
 export namespace Tasks {
   export function* fetchProductDetails(flux: FluxCapacitor, { payload: id }: Actions.FetchProductDetails) {
     try {
-      const request = yield effects.select(Requests.search);
-      const { records, template } = yield effects.call(
-        [flux.clients.bridge, flux.clients.bridge.search],
-        {
-          ...request,
-          query: null,
-          pageSize: 1,
-          skip: 0,
-          refinements: [{ navigationName: 'id', type: 'Value', value: id }]
-        }
-      );
+      const request = yield effects.select(RequestBodies.search);
+      const req = {
+        ...request,
+        query: null,
+        pageSize: 1,
+        skip: 0,
+        refinements: [{ navigationName: 'id', type: 'Value', value: id }]
+      };
+      const { records, template } = yield effects.call(Requests.search, flux, req);
+
       if (records.length !== 0) {
         const [record] = records;
         yield effects.put(flux.actions.setDetails(record, template));

@@ -6,10 +6,11 @@ import ConfigAdapter from '../adapters/configuration';
 import RecommendationsAdapter from '../adapters/recommendations';
 import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';
-import Requests from '../requests';
+import RequestBodies from '../requests';
 import Selectors from '../selectors';
 import Store from '../store';
 import { fetch } from '../utils';
+import Requests from './requests';
 
 export namespace Tasks {
   // tslint:disable-next-line max-line-length
@@ -19,17 +20,14 @@ export namespace Tasks {
       const config = yield effects.select(Selectors.config);
       const field = Selectors.autocompleteCategoryField(state);
       const suggestionsRequest = effects.call(
-        [flux.clients.sayt, flux.clients.sayt.autocomplete],
+        Requests.autocomplete,
+        flux,
         query,
-        Requests.autocompleteSuggestions(config)
+        RequestBodies.autocompleteSuggestions(config)
       );
 
       const recommendationsConfig = config.autocomplete.recommendations;
-      // fall back to default mode "popular" if not provided
-      // "popular" default will likely provide the most consistently strong data
-      const suggestionMode = Configuration.RECOMMENDATION_MODES[recommendationsConfig.suggestionMode || 'popular'];
       // tslint:disable-next-line max-line-length
-      const trendingUrl = RecommendationsAdapter.buildUrl(config.customerId, 'searches', suggestionMode);
       const trendingBody = {
         size: recommendationsConfig.suggestionCount,
         matchPartial: {
@@ -38,11 +36,17 @@ export namespace Tasks {
           }]
         }
       };
-      const trendingRequest = effects.call(fetch, trendingUrl, {
-        method: 'POST',
-        body: JSON.stringify(
-          RecommendationsAdapter.addLocationToRequest(trendingBody, state))
-      });
+      const trendingRequest = effects.call(
+        Requests.recommendations,
+        {
+          customerId: config.customerId,
+          endpoint: 'searches',
+          // fall back to default mode "popular" if not provided
+          // "popular" default will likely provide the most consistently strong data
+          mode: Configuration.RECOMMENDATION_MODES[recommendationsConfig.suggestionMode || 'popular'],
+          body: RecommendationsAdapter.addLocationToRequest(trendingBody, state)
+        }
+      );
       const requests = [suggestionsRequest];
       if (recommendationsConfig.suggestionCount > 0) {
         requests.push(trendingRequest);
@@ -66,19 +70,17 @@ export namespace Tasks {
   // tslint:disable-next-line max-line-length
   export function* fetchProducts(flux: FluxCapacitor, { payload: { query, refinements } }: Actions.FetchAutocompleteProducts) {
     try {
-      const request = yield effects.select(Requests.autocompleteProducts);
+      const request = yield effects.select(RequestBodies.autocompleteProducts);
       const overrideRefinements = request.refinements;
       const originalRefinements = refinements.map(({ field, ...rest }) =>
         ({ type: 'Value', navigationName: field, ...rest }));
       const mergedRefinements = [...originalRefinements, ...overrideRefinements];
-      const res = yield effects.call(
-        [flux.clients.bridge, flux.clients.bridge.search],
-        {
-          ...request,
-          query,
-          refinements: mergedRefinements,
-        }
-      );
+      const req = {
+        ...request,
+        query,
+        refinements: mergedRefinements,
+      };
+      const res = yield effects.call(Requests.search, flux, req);
 
       yield effects.put(<any>flux.actions.receiveAutocompleteProducts(res));
     } catch (e) {

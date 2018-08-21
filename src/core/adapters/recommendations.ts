@@ -10,11 +10,6 @@ namespace Recommendations {
   export const buildUrl = (customerId: string, endpoint: string, mode: string) =>
     `https://${customerId}.groupbycloud.com/wisdom/v2/public/recommendations/${endpoint}/_get${mode}`;
 
-  export const buildBody = (body: RecommendationsBody | RecommendationsRequest | PastPurchaseRequest) => ({
-    method: 'POST',
-    body: JSON.stringify(body)
-  });
-
   export const sortNavigations = ({ results, navigations }: Navigations): Navigation[] =>
     sortBasedOn(results, navigations, (unsorted, sorted) => unsorted.name === sorted.name);
 

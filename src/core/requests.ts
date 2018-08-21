@@ -4,6 +4,7 @@ import Autocomplete from './adapters/autocomplete';
 import Configuration from './adapters/configuration';
 import PastPurchaseAdapter from './adapters/pastPurchases';
 import Personalization from './adapters/personalization';
+import Recommendations from './adapters/recommendations';
 import SearchAdapter, { MAX_RECORDS } from './adapters/search';
 import AppConfig from './configuration';
 import Selectors from './selectors';
@@ -11,6 +12,15 @@ import Store from './store';
 import { normalizeToFunction } from './utils';
 
 namespace Requests {
+  export type RequestBody = Recommendations.RecommendationsBody
+    | Recommendations.RecommendationsRequest
+    | Recommendations.PastPurchaseRequest;
+
+  export const buildPostBody = (body: RequestBody) => ({
+    method: 'POST',
+    body: JSON.stringify(body)
+  });
+
   export interface PastRequests {
     search: Request;
     autocompleteSuggestions: QueryTimeProductSearchConfig;

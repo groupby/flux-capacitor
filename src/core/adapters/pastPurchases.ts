@@ -5,6 +5,9 @@ import ConfigurationAdapter from './configuration';
 
 namespace PastPurchases {
 
+  export const buildUrl = (customerId: string, endpoint: string) =>
+    `https://${customerId}.groupbycloud.com/orders/v1/public/skus/${endpoint}`;
+
 // tslint:disable-next-line max-line-length
   export const pastPurchaseBiasing = (state: Store.State) => {
     const { recommendations: { idField, pastPurchases } } = Selectors.config(state);
