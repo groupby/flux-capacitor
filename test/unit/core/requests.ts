@@ -11,6 +11,17 @@ import * as utils from '../../../src/core/utils';
 import suite from '../_suite';
 
 suite('requests', ({ expect, stub, spy }) => {
+  describe('buildPostBody()', () => {
+    it('should build the body', () => {
+      const body: any = { a: 1 };
+
+      expect(Requests.buildPostBody(body)).to.eql({
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+    });
+  });
+
   describe('override', () => {
     // tslint:disable-next-line max-line-length
     it('should return a function that that calls the given override function with the given request and pastRequest key', () => {

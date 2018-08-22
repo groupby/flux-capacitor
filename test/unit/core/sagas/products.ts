@@ -4,9 +4,10 @@ import Actions from '../../../../src/core/actions';
 import PersonalizationAdapter from '../../../../src/core/adapters/personalization';
 import RecommendationsAdapter from '../../../../src/core/adapters/recommendations';
 import Events from '../../../../src/core/events';
-import Requests from '../../../../src/core/requests';
+import RequestHelpers from '../../../../src/core/requests';
 import { Tasks as productDetailsTasks } from '../../../../src/core/sagas/product-details';
 import sagaCreator, { Tasks } from '../../../../src/core/sagas/products';
+import Requests from '../../../../src/core/sagas/requests';
 import Selectors from '../../../../src/core/selectors';
 import * as utils from '../../../../src/core/utils';
 import suite from '../../_suite';
@@ -454,39 +455,27 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
     describe('fetchProductsRequest()', () => {
       it('should return products', () => {
         const id = '1459';
-        const config: any = { e: 'f', search: { redirectSingleResult: false } };
-        const emit = spy();
-        const saveState = spy();
         const search = () => null;
-        const bridge = { search };
         const payload = { a: 'b' };
         const action: any = { payload };
-        const receiveProductsAction: any = { c: 'd' };
         const biases = ['bias'];
         const request = { e: 'f', biasing: { biases }};
         const searchRequest = <any>{ e: 'f' };
         const response = { id, totalRecordCount: 3 };
-        const receiveProducts = spy(() => receiveProductsAction);
-        const flux: any = { emit, saveState, clients: { bridge }, actions: { receiveProducts }, };
+        const flux: any = { };
+        const searchRequestCall = stub(Requests, 'search').returns(response);
 
         const task = Tasks.fetchProductsRequest(flux, action);
 
-        expect(task.next().value).to.eql(effects.select(Requests.search));
-        expect(task.next(searchRequest).value).to.eql(effects.select(Requests.realTimeBiasing, searchRequest));
-        expect(task.next(request).value).to.eql(effects.call([bridge, search], request));
-        expect(task.next(request).value).to.eql(request);
+        expect(task.next().value).to.eql(effects.select(RequestHelpers.search));
+        expect(task.next(searchRequest).value).to.eql(effects.select(RequestHelpers.realTimeBiasing, searchRequest));
+        expect(task.next(request).value).to.eql(effects.call(searchRequestCall, flux, request));
+        expect(task.next(response).value).to.eql(response);
       });
 
       it('should handle request failure', () => {
         const error = new Error();
-        const receiveProductsAction: any = { a: 'b' };
-        const receiveProducts = spy(() => receiveProductsAction);
-        const flux: any = {
-          emit: () => null,
-          saveState: () => null,
-          clients: { bridge: { search: () => null } },
-          actions: { receiveProducts }
-        };
+        const flux: any = {};
 
         const task = Tasks.fetchProductsRequest(flux, <any>{});
 
@@ -499,9 +488,6 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         const id = '41892';
         const pageSize = 14;
         const emit = spy();
-        const saveState = spy();
-        const search = () => null;
-        const bridge = { search };
         const action: any = { payload: { amount: pageSize, forward: true } };
         const receiveMoreProductsAction: any = { c: 'd' };
         const receiveMoreProducts = spy(() => receiveMoreProductsAction);
@@ -512,11 +498,10 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         const results = { records, id };
         const flux: any = {
           emit,
-          saveState,
-          clients: { bridge },
           actions: { receiveMoreProducts, infiniteScrollRequestState }
         };
-        stub(Requests, 'search').returns({ e: 'f' });
+        const searchRequest = stub(Requests, 'search').returns(results);
+        stub(RequestHelpers, 'search').returns({ e: 'f' });
         stub(Selectors, 'productsWithMetadata').returns([{ index: 1 }, { index: 2 }, { index: 3 }]);
         stub(Selectors, 'recordCount').returns(50);
 
@@ -525,7 +510,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         expect(task.next().value).to.eql(effects.select());
         expect(task.next(state).value).to.eql(effects.put(infiniteScrollRequestStateAction));
         expect(infiniteScrollRequestState).to.be.calledOnce.calledWithExactly({ isFetchingForward: true });
-        expect(task.next().value).to.eql(effects.call([bridge, search], {
+        expect(task.next().value).to.eql(effects.call(searchRequest, flux, {
           e: 'f',
           pageSize,
           skip: 3
@@ -542,9 +527,6 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         const id = '41892';
         const pageSize = 14;
         const emit = spy();
-        const saveState = spy();
-        const search = () => null;
-        const bridge = { search };
         const action: any = { payload: { amount: pageSize, forward: true } };
         const receiveMoreProductsAction: any = { c: 'd' };
         const receiveMoreProducts = spy(() => receiveMoreProductsAction);
@@ -555,11 +537,10 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         const results = { records, id };
         const flux: any = {
           emit,
-          saveState,
-          clients: { bridge },
           actions: { receiveMoreProducts, infiniteScrollRequestState }
         };
-        stub(Requests, 'search').returns({ e: 'f' });
+        const searchRequest = stub(Requests, 'search').returns(results);
+        stub(RequestHelpers, 'search').returns({ e: 'f' });
         stub(Selectors, 'productsWithMetadata').returns([]);
         stub(Selectors, 'recordCount').returns(50);
 
@@ -568,7 +549,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         expect(task.next().value).to.eql(effects.select());
         expect(task.next(state).value).to.eql(effects.put(infiniteScrollRequestStateAction));
         expect(infiniteScrollRequestState).to.be.calledOnce.calledWithExactly({ isFetchingForward: true });
-        expect(task.next().value).to.eql(effects.call([bridge, search], {
+        expect(task.next().value).to.eql(effects.call(searchRequest, flux, {
           e: 'f',
           pageSize,
           skip: 0
@@ -585,9 +566,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         const id = '41892';
         const pageSize = 14;
         const emit = spy();
-        const saveState = spy();
         const search = () => null;
-        const bridge = { search };
         const action: any = { payload: { amount: pageSize, forward: false } };
         const receiveMoreProductsAction: any = { c: 'd' };
         const receiveMoreProducts = spy(() => receiveMoreProductsAction);
@@ -598,11 +577,10 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         const results = { records, id };
         const flux: any = {
           emit,
-          saveState,
-          clients: { bridge },
           actions: { receiveMoreProducts, infiniteScrollRequestState }
         };
-        stub(Requests, 'search').returns({ e: 'f' });
+        const searchRequest = stub(Requests, 'search').returns(results);
+        stub(RequestHelpers, 'search').returns({ e: 'f' });
         stub(Selectors, 'productsWithMetadata').returns([{ index: 15 }, { index: 16 }, { index: 17 }]);
         stub(Selectors, 'recordCount').returns(50);
 
@@ -611,7 +589,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         expect(task.next().value).to.eql(effects.select());
         expect(task.next(state).value).to.eql(effects.put(infiniteScrollRequestStateAction));
         expect(infiniteScrollRequestState).to.be.calledOnce.calledWithExactly({ isFetchingBackward: true });
-        expect(task.next().value).to.eql(effects.call([bridge, search], {
+        expect(task.next().value).to.eql(effects.call(searchRequest, flux, {
           e: 'f',
           pageSize,
           skip: 0
@@ -712,9 +690,8 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
     });
 
     describe('fetchNavigations()', () => {
-      it('should return two actions', () => {
+      it('should return navigations', () => {
         const customerId = 'id';
-        const state = 1;
         const config = {
           customerId,
           recommendations: {
@@ -729,7 +706,6 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
             }
           },
         };
-        const url = 'url';
         const body = { a: 'b' };
         const recommendations = {
           result: [{ values: 'truthy' }, { values: false }, { values: 'literally truthy' }]
@@ -737,30 +713,31 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         const returnVal: any = [{ values: 'truthy' }, { values: 'literally truthy' }];
         const jsonResult = 'hello';
 
-        const buildUrl = stub(RecommendationsAdapter, 'buildUrl').returns(url);
-        const buildBody = stub(RecommendationsAdapter, 'buildBody').returns(body);
-        const fetch = stub(utils, 'fetch');
         const task = Tasks.fetchNavigations(<any>{}, <any>{ payload: {} });
         const query = stub(Selectors, 'query');
         const queryReturn = 2;
+        const recommendationsRequest = stub(Requests, 'recommendations').returns(recommendations);
 
         expect(task.next().value).to.eql(effects.select(Selectors.config));
         expect(task.next(config).value).to.eql(effects.select(Selectors.query));
-        expect(task.next(queryReturn).value).to.eql(effects.call(fetch, url, body));
-        expect(buildUrl).to.be.calledWith(customerId, 'refinements', 'Popular');
+        expect(task.next(queryReturn).value).to.eql(effects.call(recommendationsRequest, {
+          customerId,
+          endpoint: 'refinements',
+          mode: 'Popular',
+          body: {
+            minSize: iNavDefaults.minSize,
+            sequence: [{
+              size: iNavDefaults.size,
+              window: iNavDefaults.window,
+              matchPartial: { and: [{ search: { query: queryReturn } }] }
+            },
+            {
+              size: iNavDefaults.size,
+              window: iNavDefaults.window,
+            }]
+          }
+        }));
         expect(task.next({ json: () => jsonResult }).value).to.eql(jsonResult);
-        expect(buildBody).to.be.calledWith({
-          minSize: iNavDefaults.minSize,
-          sequence: [{
-            size: iNavDefaults.size,
-            window: iNavDefaults.window,
-            matchPartial: { and: [{ search: { query: queryReturn } }] }
-          },
-          {
-            size: iNavDefaults.size,
-            window: iNavDefaults.window,
-          }]
-        });
         expect(task.next(recommendations).value).to.eql(returnVal);
         task.next();
       });
@@ -782,38 +759,37 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
             }
           },
         };
-        const url = 'url';
-        const body = { a: 'b' };
         const recommendations = {
           result: [{ values: 'truthy' }, { values: false }, { values: 'literally truthy' }]
         };
         const returnVal: any = [{ values: 'truthy' }, { values: 'literally truthy' }];
         const jsonResult = 'hello';
 
-        const buildUrl = stub(RecommendationsAdapter, 'buildUrl').returns(url);
-        const buildBody = stub(RecommendationsAdapter, 'buildBody').returns(body);
-        const fetch = stub(utils, 'fetch');
         const task = Tasks.fetchNavigations(<any>{}, <any>{ payload: {} });
         const queryReturn = 2;
         const query = stub(Selectors, 'query');
+        const recommendationsRequest = stub(Requests, 'recommendations').returns(recommendations);
 
         task.next();
         task.next(config);
-        expect(task.next(queryReturn).value).to.eql(effects.call(fetch, url, body));
-        expect(buildUrl).to.be.calledWith(customerId, 'refinements', 'Popular');
+        expect(task.next(queryReturn).value).to.eql(effects.call(recommendationsRequest, {
+          customerId,
+          endpoint: 'refinements',
+          mode: 'Popular',
+          body: {
+            minSize: iNavDefaults.size,
+            sequence: [{
+              size: iNavDefaults.size,
+              window: iNavDefaults.window,
+              matchPartial: { and: [{ search: { query: queryReturn } }] }
+            },
+            {
+              size: iNavDefaults.size,
+              window: iNavDefaults.window,
+            }]
+          }
+        }));
         expect(task.next({ json: () => jsonResult }).value).to.eql(jsonResult);
-        expect(buildBody).to.be.calledWith({
-          minSize: iNavDefaults.size,
-          sequence: [{
-            size: iNavDefaults.size,
-            window: iNavDefaults.window,
-            matchPartial: { and: [{ search: { query: queryReturn } }] }
-          },
-          {
-            size: iNavDefaults.size,
-            window: iNavDefaults.window,
-          }]
-        });
         expect(task.next(recommendations).value).to.eql(returnVal);
         task.next();
       });
@@ -833,22 +809,18 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
             }
           },
         };
-        const url = 'url';
-        const body = { a: 'b' };
         const recommendations = {
           result: [{ values: 'truthy' }, { values: false }, { values: 'literally truthy' }]
         };
         const returnVal: any = [{ values: 'truthy' }, { values: 'literally truthy' }];
         const jsonResult = 'hello';
 
-        const buildUrl = stub(RecommendationsAdapter, 'buildUrl').returns(url);
-        const buildBody = stub(RecommendationsAdapter, 'buildBody').returns(body);
-        const fetch = stub(utils, 'fetch');
         const task = Tasks.fetchNavigations(<any>{}, <any>{ payload: {} });
 
         task.next();
         expect(task.next(config).value).to.eql([]);
       });
+
       it('should not call any actions when both navigations and refinements sort are off', () => {
         const receiveNavigationSort = spy((val) => val);
         const receiveRecommendationsRefinements = spy((val) => val);
@@ -872,17 +844,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
             receiveRecommendationsRefinements
           }
         };
-        const url = 'url';
-        const body = { a: 'b' };
-        const recommendations = {
-          result: [{ values: 'truthy' }, { values: false }, { values: 'literally truthy' }]
-        };
-        const returnVal: any = [{ values: 'truthy' }, { values: 'literally truthy' }];
-        const jsonResult = 'hello';
 
-        const buildUrl = stub(RecommendationsAdapter, 'buildUrl').returns(url);
-        const buildBody = stub(RecommendationsAdapter, 'buildBody').returns(body);
-        const fetch = stub(utils, 'fetch');
         const task = Tasks.fetchNavigations(flux, <any>{ payload: {} });
 
         task.next();

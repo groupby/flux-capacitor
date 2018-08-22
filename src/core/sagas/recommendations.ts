@@ -7,7 +7,7 @@ import PastPurchaseAdapter from '../adapters/pastPurchases';
 import Adapter from '../adapters/recommendations';
 import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';
-import RequestBodies from '../requests';
+import RequestHelpers from '../requests';
 import Selectors from '../selectors';
 import Store from '../store';
 import * as utils from '../utils';
@@ -52,7 +52,7 @@ export namespace Tasks {
           .filter(({ productId }) => productId)
           .map(({ productId }) => ({ navigationName: idField, type: 'Value', value: productId }));
         const req = {
-          ...RequestBodies.search(state),
+          ...RequestHelpers.search(state),
           pageSize: productConfig.productCount,
           includedNavigations: [],
           skip: 0,
@@ -125,7 +125,7 @@ export namespace Tasks {
     try {
       const pastPurchaseSkus: Store.PastPurchases.PastPurchaseProduct[] = yield effects.select(Selectors.pastPurchases);
       if (pastPurchaseSkus.length > 0) {
-        const request = yield effects.select(RequestBodies.pastPurchaseProducts, getNavigations);
+        const request = yield effects.select(RequestHelpers.pastPurchaseProducts, getNavigations);
         const results = yield effects.call(fetchProductsFromSkus, flux, pastPurchaseSkus, request);
         if (getNavigations) {
           const navigations = PastPurchaseAdapter.pastPurchaseNavigations(
@@ -167,7 +167,7 @@ export namespace Tasks {
         yield effects.put(<any>flux.actions.infiniteScrollRequestState({ isFetchingBackward: true }));
       }
 
-      const request = yield effects.select(RequestBodies.pastPurchaseProducts, false, { pageSize, skip });
+      const request = yield effects.select(RequestHelpers.pastPurchaseProducts, false, { pageSize, skip });
       const result = yield effects.call(fetchProductsFromSkus, flux, pastPurchaseSkus, request);
 
       yield effects.put(<any>[
@@ -189,7 +189,7 @@ export namespace Tasks {
       const config: Configuration = yield effects.select(Selectors.config);
       const pastPurchaseSkus = yield effects.select(Selectors.pastPurchases);
       if (pastPurchaseSkus.length > 0) {
-        const request = yield effects.select(RequestBodies.autocompleteProducts);
+        const request = yield effects.select(RequestHelpers.autocompleteProducts);
         const results = yield effects.call(fetchProductsFromSkus, flux, pastPurchaseSkus, {
           ...request,
           query: payload

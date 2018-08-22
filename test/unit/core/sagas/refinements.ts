@@ -4,8 +4,9 @@ import * as utils from '../../../../src/core/actions/utils';
 import RecommendationsAdapter from '../../../../src/core/adapters/recommendations';
 import Adapter from '../../../../src/core/adapters/refinements';
 import Events from '../../../../src/core/events';
-import Requests from '../../../../src/core/requests';
+import RequestHelpers from '../../../../src/core/requests';
 import sagaCreator, { Tasks } from '../../../../src/core/sagas/refinements';
+import Requests from '../../../../src/core/sagas/requests';
 import Selectors from '../../../../src/core/selectors';
 import suite from '../../_suite';
 
@@ -40,7 +41,6 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         const mergedRefinements = ['k', 'l'];
         const selected = ['m', 'n'];
         const refinements = () => null;
-        const bridge = { refinements };
         const receiveMoreRefinementsAction: any = { c: 'd' };
         const receiveMoreRefinements = spy(() => receiveMoreRefinementsAction);
         const request = { g: 'h' };
@@ -48,8 +48,9 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         const store = { getState: () => 1 };
         const results = { navigation: { sort: false, pinned: false }};
         const emit = spy();
-        const flux: any = { clients: { bridge }, actions: { receiveMoreRefinements }, store, emit };
-        const searchRequest = stub(Requests, 'search').returns(request);
+        const flux: any = { actions: { receiveMoreRefinements }, store, emit };
+        const refinementsRequest = stub(Requests, 'refinements').returns(results);
+        const searchRequest = stub(RequestHelpers, 'search').returns(request);
         const mergeRefinements = stub(Adapter, 'mergeRefinements').returns({
           navigationId,
           refinements: mergedRefinements,
@@ -62,7 +63,7 @@ suite('refinements saga', ({ expect, spy, stub }) => {
 
         expect(task.next().value).to.eql(effects.select());
         expect(task.next(state).value).to.eql(effects.select(Selectors.config));
-        expect(task.next(config).value).to.eql(effects.call([bridge, refinements], request, navigationId));
+        expect(task.next(config).value).to.eql(effects.call(refinementsRequest, flux, request, navigationId));
         expect(task.next(results).value).to.eql(effects.put(receiveMoreRefinementsAction));
         expect(searchRequest).to.be.calledWithExactly(state);
         expect(mergeRefinements).to.be.calledWithExactly(results, state);
@@ -88,7 +89,6 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         const mergedRefinements = ['k', 'l'];
         const selected = ['m', 'n'];
         const refinements = () => null;
-        const bridge = { refinements };
         const receiveMoreRefinementsAction: any = { c: 'd' };
         const receiveMoreRefinements = spy(() => receiveMoreRefinementsAction);
         const sortAndPinNavigations = stub(RecommendationsAdapter, 'sortAndPinNavigations').returnsArg(0);
@@ -99,8 +99,8 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         };
         const navigation = 'navigation';
         const results = { navigation };
-        const flux: any = { clients: { bridge }, actions: { receiveMoreRefinements }, store, emit: () => 1 };
-        const searchRequest = stub(Requests, 'search').returns(request);
+        const flux: any = { actions: { receiveMoreRefinements }, store, emit: () => 1 };
+        const searchRequest = stub(RequestHelpers, 'search').returns(request);
         const mergeRefinements = stub(Adapter, 'mergeRefinements').returns({
           navigationId,
           refinements: mergedRefinements,
@@ -122,9 +122,7 @@ suite('refinements saga', ({ expect, spy, stub }) => {
       it('should handle request failure', () => {
         const error = new Error();
         const receiveMoreRefinementsAction: any = { a: 'b' };
-        const flux: any = {
-          clients: { bridge: { search: () => null } }
-        };
+        const flux: any = {};
         const action = stub(utils, 'createAction').returns(receiveMoreRefinementsAction);
 
         const task = Tasks.fetchMoreRefinements(flux, <any>{});

@@ -3,7 +3,7 @@ import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import SearchAdapter from '../adapters/search';
 import Events from '../events';
-import RequestBodies from '../requests';
+import RequestHelpers from '../requests';
 import Selectors from '../selectors';
 import Store from '../store';
 import * as utils from '../utils';
@@ -12,7 +12,7 @@ import Requests from './requests';
 export namespace Tasks {
   export function* fetchProductDetails(flux: FluxCapacitor, { payload: id }: Actions.FetchProductDetails) {
     try {
-      const request = yield effects.select(RequestBodies.search);
+      const request = yield effects.select(RequestHelpers.search);
       const req = {
         ...request,
         query: null,

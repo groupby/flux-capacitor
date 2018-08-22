@@ -6,7 +6,7 @@ import PersonalizationAdapter from '../adapters/personalization';
 import RecommendationsAdapter from '../adapters/recommendations';
 import SearchAdapter from '../adapters/search';
 import Events from '../events';
-import RequestBodies from '../requests';
+import RequestHelpers from '../requests';
 import Selectors from '../selectors';
 import Store from '../store';
 import * as utils from '../utils';
@@ -53,8 +53,8 @@ export namespace Tasks {
   }
 
   export function* fetchProductsRequest(flux: FluxCapacitor, action: Actions.FetchProducts) {
-    const request = yield effects.select(RequestBodies.search);
-    const requestWithBiases = yield effects.select(RequestBodies.realTimeBiasing, request);
+    const request = yield effects.select(RequestHelpers.search);
+    const requestWithBiases = yield effects.select(RequestHelpers.realTimeBiasing, request);
 
     return yield effects.call(Requests.search, flux, requestWithBiases);
   }
@@ -123,7 +123,7 @@ export namespace Tasks {
       }
 
       const req = {
-        ...RequestBodies.search(state),
+        ...RequestHelpers.search(state),
         pageSize,
         skip,
       };

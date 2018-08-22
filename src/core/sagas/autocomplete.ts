@@ -6,7 +6,7 @@ import ConfigAdapter from '../adapters/configuration';
 import RecommendationsAdapter from '../adapters/recommendations';
 import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';
-import RequestBodies from '../requests';
+import RequestHelpers from '../requests';
 import Selectors from '../selectors';
 import Store from '../store';
 import { fetch } from '../utils';
@@ -23,7 +23,7 @@ export namespace Tasks {
         Requests.autocomplete,
         flux,
         query,
-        RequestBodies.autocompleteSuggestions(config)
+        RequestHelpers.autocompleteSuggestions(config)
       );
 
       const recommendationsConfig = config.autocomplete.recommendations;
@@ -70,7 +70,7 @@ export namespace Tasks {
   // tslint:disable-next-line max-line-length
   export function* fetchProducts(flux: FluxCapacitor, { payload: { query, refinements } }: Actions.FetchAutocompleteProducts) {
     try {
-      const request = yield effects.select(RequestBodies.autocompleteProducts);
+      const request = yield effects.select(RequestHelpers.autocompleteProducts);
       const overrideRefinements = request.refinements;
       const originalRefinements = refinements.map(({ field, ...rest }) =>
         ({ type: 'Value', navigationName: field, ...rest }));

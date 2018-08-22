@@ -5,7 +5,7 @@ import * as utils from '../actions/utils';
 import RecommendationsAdapter from '../adapters/recommendations';
 import Adapter from '../adapters/refinements';
 import Events from '../events';
-import RequestBodies from '../requests';
+import RequestHelpers from '../requests';
 import Selectors from '../selectors';
 import Store from '../store';
 import Requests from './requests';
@@ -15,7 +15,7 @@ export namespace Tasks {
     try {
       const state: Store.State = yield effects.select();
       const config = yield effects.select(Selectors.config);
-      const res = yield effects.call(Requests.refinements, flux, RequestBodies.search(state), action.payload);
+      const res = yield effects.call(Requests.refinements, flux, RequestHelpers.search(state), action.payload);
 
       flux.emit(Events.BEACON_MORE_REFINEMENTS, action.payload);
       res.navigation = RecommendationsAdapter.sortAndPinNavigations(

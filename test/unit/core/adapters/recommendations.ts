@@ -12,17 +12,6 @@ suite('Recommendations Adapter', ({ expect, stub }) => {
     });
   });
 
-  describe('buildBody()', () => {
-    it('should build the body', () => {
-      const body: any = { a: 1 };
-
-      expect(RecommendationsAdapter.buildBody(body)).to.eql({
-        method: 'POST',
-        body: JSON.stringify(body),
-      });
-    });
-  });
-
   describe('pinNavigations() ', () => {
     it('should pin navigations', () => {
       const results: any = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
