@@ -73,7 +73,7 @@ suite('requests saga', ({ expect, spy, stub }) => {
           mode,
           body
         };
-        const url = 'https://storefront.groupbycloud.com/wisdom/v2/public/recommendations/products/_getPopular';
+        const url = 'www.google.ca';
         const resultingBody: any = { c: 'd' };
         const fetch = stub(utils, 'fetch');
         stub(RecommendationsAdapter, 'buildUrl').withArgs(customerId, endpoint, mode).returns(url);
@@ -98,7 +98,7 @@ suite('requests saga', ({ expect, spy, stub }) => {
           endpoint,
           body
         };
-        const url = 'https://storefront.groupbycloud.com/orders/v1/public/skus/recommendations';
+        const url = 'www.reddit.com';
         const resultingBody: any = { c: 'd' };
         const fetch = stub(utils, 'fetch');
         stub(PastPurchasesAdapter, 'buildUrl').withArgs(customerId, endpoint).returns(url);
