@@ -29,7 +29,7 @@ suite('requests saga', ({ expect, spy, stub }) => {
 
     describe('autocomplete()', () => {
       it('should call sayt and autocomplete with query, config and callback', () => {
-        const flux: any = { clients: { sayt: { autocomplete:   () => null } } };
+        const flux: any = { clients: { sayt: { autocomplete: () => null } } };
         const query = 'dress';
         const config: any = { a: 'b' };
         const callback = spy();
