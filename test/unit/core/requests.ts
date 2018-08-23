@@ -2,7 +2,7 @@ import { Request } from 'groupby-api';
 import * as sinon from 'sinon';
 import Autocomplete from '../../../src/core/adapters/autocomplete';
 import ConfigAdapter from '../../../src/core/adapters/configuration';
-import PastPurchaseAdapter from '../../../src/core/adapters/pastPurchases';
+import PastPurchaseAdapter from '../../../src/core/adapters/past-purchases';
 import PersonalizationAdapter from '../../../src/core/adapters/personalization';
 import SearchAdapter, { MAX_RECORDS } from '../../../src/core/adapters/search';
 import Requests from '../../../src/core/requests';

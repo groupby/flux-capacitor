@@ -3,7 +3,7 @@ import * as effects from 'redux-saga/effects';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import ConfigAdapter from '../adapters/configuration';
-import PastPurchaseAdapter from '../adapters/pastPurchases';
+import PastPurchaseAdapter from '../adapters/past-purchases';
 import Adapter from '../adapters/recommendations';
 import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';

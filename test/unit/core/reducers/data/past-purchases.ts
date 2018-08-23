@@ -1,8 +1,8 @@
 import { Actions, Store } from '../../../../../src/core';
-import Adapter from '../../../../../src/core/adapters/pastPurchases';
+import Adapter from '../../../../../src/core/adapters/past-purchases';
 import * as navigations from '../../../../../src/core/reducers/data/navigations';
 import * as page from '../../../../../src/core/reducers/data/page';
-import pastPurchases, * as past from '../../../../../src/core/reducers/data/pastPurchases';
+import pastPurchases, * as past from '../../../../../src/core/reducers/data/past-purchases';
 import * as products from '../../../../../src/core/reducers/data/products';
 import suite from '../../../_suite';
 

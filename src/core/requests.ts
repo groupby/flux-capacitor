@@ -2,7 +2,7 @@ import { Request } from 'groupby-api';
 import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt';
 import Autocomplete from './adapters/autocomplete';
 import Configuration from './adapters/configuration';
-import PastPurchaseAdapter from './adapters/pastPurchases';
+import PastPurchaseAdapter from './adapters/past-purchases';
 import Personalization from './adapters/personalization';
 import Recommendations from './adapters/recommendations';
 import SearchAdapter, { MAX_RECORDS } from './adapters/search';
@@ -11,7 +11,7 @@ import Selectors from './selectors';
 import Store from './store';
 import { normalizeToFunction } from './utils';
 
-namespace Requests {
+namespace RequestHelpers {
   export type RequestBody = Recommendations.RecommendationsBody
     | Recommendations.RecommendationsRequest
     | Recommendations.PastPurchaseRequest;
@@ -27,17 +27,17 @@ namespace Requests {
     autocompleteProducts: QueryTimeProductSearchConfig;
   }
 
-  export const pastReqs: Requests.PastRequests = {
+  export const pastReqs: RequestHelpers.PastRequests = {
     search: <Request>{},
     autocompleteSuggestions: <QueryTimeProductSearchConfig>{},
     autocompleteProducts: <QueryTimeProductSearchConfig>{}
   };
 
   // tslint:disable-next-line max-line-length
-  export const override = <T>(overrideConfig: (currReq: T, prevReq: T) => T, pastReq: keyof Requests.PastRequests): ((r: T) => T) =>
+  export const override = <T>(overrideConfig: (currReq: T, prevReq: T) => T, pastReq: keyof RequestHelpers.PastRequests): ((r: T) => T) =>
     (r: T) => overrideConfig(r, <T>pastReqs[pastReq]);
 
-  export const setPastState = <T>(pastReq: keyof Requests.PastRequests): ((request: T) => T) =>
+  export const setPastState = <T>(pastReq: keyof RequestHelpers.PastRequests): ((request: T) => T) =>
     (request) => pastReqs[pastReq] = request;
 
   export const search = (state: Store.State, addOverride: boolean = true): Request => {
@@ -70,12 +70,12 @@ namespace Requests {
 
     if (addOverride) {
       requestTransformer.push(
-        Requests.override(Configuration.searchOverrides(config), 'search'),
-        Requests.setPastState('search')
+        RequestHelpers.override(Configuration.searchOverrides(config), 'search'),
+        RequestHelpers.setPastState('search')
       );
     }
 
-    return <Request>Requests.chain(...requestTransformer);
+    return <Request>RequestHelpers.chain(...requestTransformer);
   };
 
   // tslint:disable-next-line max-line-length
@@ -105,11 +105,11 @@ namespace Requests {
       fuzzyMatch: Configuration.isAutocompleteMatchingFuzzily(config)
     });
 
-    return Requests.chain(
+    return RequestHelpers.chain(
       Configuration.autocompleteSuggestionsDefaults(config),
       normalizedRequest,
-      Requests.override(Configuration.autocompleteSuggestionsOverrides(config), 'autocompleteSuggestions'),
-      Requests.setPastState('autocompleteSuggestions')
+      RequestHelpers.override(Configuration.autocompleteSuggestionsOverrides(config), 'autocompleteSuggestions'),
+      RequestHelpers.setPastState('autocompleteSuggestions')
     );
   };
 
@@ -117,7 +117,7 @@ namespace Requests {
     const config = Selectors.config(state);
 
     let request: Request = {
-      ...Requests.search(state, false),
+      ...RequestHelpers.search(state, false),
       refinements: [],
       skip: 0,
       sort: undefined,
@@ -127,14 +127,14 @@ namespace Requests {
     };
 
     if (config.personalization.realTimeBiasing.autocomplete) {
-      request = Requests.realTimeBiasing(state, request);
+      request = RequestHelpers.realTimeBiasing(state, request);
     }
 
-    return Requests.chain(
+    return RequestHelpers.chain(
       Configuration.autocompleteProductsDefaults(config),
       normalizeToFunction(request),
-      Requests.override(Configuration.autocompleteProductsOverrides(config), 'autocompleteProducts'),
-      Requests.setPastState('autocompleteProducts')
+      RequestHelpers.override(Configuration.autocompleteProductsOverrides(config), 'autocompleteProducts'),
+      RequestHelpers.setPastState('autocompleteProducts')
     );
   };
 
@@ -153,6 +153,14 @@ namespace Requests {
 
   export const chain = <T>(...fns: Array<(...obj: any[]) => T>): T =>
     fns.reduce((final, fn) => fn(final) || final, <T>{});
+
+  export const composeRequest = (defaultFn, req, overrideFn, pastStateKey) =>
+    RequestHelpers.chain(
+      defaultFn,
+      normalizeToFunction(req),
+      RequestHelpers.override(overrideFn, pastStateKey),
+      RequestHelpers.setPastState(pastStateKey)
+    );
 }
 
-export default Requests;
+export default RequestHelpers;

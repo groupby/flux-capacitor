@@ -3,7 +3,7 @@ import * as effects from 'redux-saga/effects';
 import { QueryTimeAutocompleteConfig, SearchCallback } from 'sayt';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
-import PastPurchasesAdapter from '../adapters/pastPurchases';
+import PastPurchasesAdapter from '../adapters/past-purchases';
 import RecommendationsAdapter from '../adapters/recommendations';
 import Events from '../events';
 import RequestHelpers from '../requests';

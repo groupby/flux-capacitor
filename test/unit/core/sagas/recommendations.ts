@@ -1,7 +1,7 @@
 import * as effects from 'redux-saga/effects';
 import Actions from '../../../../src/core/actions';
 import ConfigAdapter from '../../../../src/core/adapters/configuration';
-import PastPurchaseAdapter from '../../../../src/core/adapters/pastPurchases';
+import PastPurchaseAdapter from '../../../../src/core/adapters/past-purchases';
 import RecommendationsAdapter from '../../../../src/core/adapters/recommendations';
 import SearchAdapter from '../../../../src/core/adapters/search';
 import { receivePage } from '../../../../src/core/reducers/data/page';

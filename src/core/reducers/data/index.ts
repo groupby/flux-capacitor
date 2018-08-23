@@ -7,7 +7,7 @@ import details from './details';
 import infiniteScroll from './infinite-scroll';
 import navigations from './navigations';
 import page from './page';
-import pastPurchases from './pastPurchases';
+import pastPurchases from './past-purchases';
 import personalization from './personalization';
 import products from './products';
 import productsLoaded from './productsLoaded';

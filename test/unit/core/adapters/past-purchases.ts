@@ -1,5 +1,5 @@
 import ConfigurationAdapter from '../../../../src/core/adapters/configuration';
-import PastPurchaseAdapter from '../../../../src/core/adapters/pastPurchases';
+import PastPurchaseAdapter from '../../../../src/core/adapters/past-purchases';
 import Selectors from '../../../../src/core/selectors';
 import suite from '../../_suite';
 

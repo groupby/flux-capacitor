@@ -3,7 +3,7 @@ import SearchAdapter from '../../../../src/core/adapters/search';
 import { DEFAULT_AREA } from '../../../../src/core/reducers/data/area';
 import { DEFAULT_COLLECTION } from '../../../../src/core/reducers/data/collections';
 import * as PageReducer from '../../../../src/core/reducers/data/page';
-import * as PastPurchaseReducer from '../../../../src/core/reducers/data/pastPurchases';
+import * as PastPurchaseReducer from '../../../../src/core/reducers/data/past-purchases';
 import suite from '../../_suite';
 
 suite('Configuration Adapter', ({ expect, stub }) => {

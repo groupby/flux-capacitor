@@ -5,7 +5,7 @@ import * as AreaReducer from '../reducers/data/area';
 import * as AutocompleteReducer from '../reducers/data/autocomplete';
 import * as CollectionsReducer from '../reducers/data/collections';
 import * as PageReducer from '../reducers/data/page';
-import * as PastPurchaseReducer from '../reducers/data/pastPurchases';
+import * as PastPurchaseReducer from '../reducers/data/past-purchases';
 import * as PersonalizationAdapter from '../reducers/data/personalization';
 import Store from '../store';
 import { normalizeToFunction } from '../utils';
