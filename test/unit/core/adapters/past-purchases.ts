@@ -4,6 +4,16 @@ import Selectors from '../../../../src/core/selectors';
 import suite from '../../_suite';
 
 suite('PastPurchase Adapter', ({ expect, stub }) => {
+  describe('buildUrl()', () => {
+    it('should build a correct past purchase url', () => {
+      const customerId = 'storefront';
+      const endpoint = 'pastPurchases';
+
+      expect(PastPurchaseAdapter.buildUrl(customerId, endpoint))
+        .to.eq(`https://${customerId}.groupbycloud.com/orders/v1/public/skus/${endpoint}`);
+    });
+  });
+
   describe('pastPurchaseBiasing()', () => {
     const idField = 'productId';
     const biasInfluence = 8;
