@@ -154,9 +154,8 @@ namespace RequestHelpers {
   export const chain = <T>(...fns: Array<(...obj: any[]) => T>): T =>
     fns.reduce((final, fn) => fn(final) || final, <T>{});
 
-  export const composeRequest = (defaultFn, req, overrideFn, pastStateKey) =>
+  export const composeRequest = (req, overrideFn, pastStateKey) =>
     RequestHelpers.chain(
-      defaultFn,
       normalizeToFunction(req),
       RequestHelpers.override(overrideFn, pastStateKey),
       RequestHelpers.setPastState(pastStateKey)

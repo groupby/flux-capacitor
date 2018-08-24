@@ -376,7 +376,6 @@ suite('requests helpers', ({ expect, stub, spy }) => {
 
   describe('composeRequest()', () => {
     it('should combine default, request, and override, and call setPastState', () => {
-      const defaultFn = stub();
       const req = { a: 'b' };
       const overrideFn = () => null;
       const pastStateKey = 'search';
@@ -386,9 +385,9 @@ suite('requests helpers', ({ expect, stub, spy }) => {
       stub(utils, 'normalizeToFunction').withArgs(req).returns(normalizedReq);
       stub(RequestHelpers, 'override').withArgs(overrideFn, pastStateKey).returns(override);
       stub(RequestHelpers, 'setPastState').withArgs(pastStateKey).returns(setPastState);
-      stub(RequestHelpers, 'chain').withArgs(defaultFn, normalizedReq, override, setPastState);
+      stub(RequestHelpers, 'chain').withArgs(normalizedReq, override, setPastState);
 
-      RequestHelpers.composeRequest(defaultFn, req, overrideFn, pastStateKey);
+      RequestHelpers.composeRequest(req, overrideFn, pastStateKey);
     });
   });
 });
