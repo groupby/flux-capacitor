@@ -112,16 +112,6 @@ suite('requests helpers', ({ expect, stub, spy }) => {
       expect(pastPurchaseBiasing).to.be.calledWithExactly(state);
     });
 
-    it('should apply defaults', () => {
-      const defaults = { a: 'b', c: 'd' };
-      stub(Selectors, 'config').returns({ search: { defaults } });
-
-      const request: any = RequestHelpers.search(<any>{});
-
-      expect(request.a).to.eq('b');
-      expect(request.c).to.eq('d');
-    });
-
     it('should apply overrides', () => {
       const pageSize = 32;
       const skip = 22;
@@ -146,14 +136,12 @@ suite('requests helpers', ({ expect, stub, spy }) => {
       expect(request.skip).to.eq(originalSkip);
     });
 
-    it('should override defaults and set past state', () => {
-      const defaults = { a: 'b', c: 'd' };
+    it('should apply override and set past state', () => {
       const overrides = { c: 'd1' };
-      stub(Selectors, 'config').returns({ search: { defaults, overrides } });
+      stub(Selectors, 'config').returns({ search: { overrides } });
 
       const request: any = RequestHelpers.search(<any>{});
 
-      expect(request.a).to.eq('b');
       expect(request.c).to.eq('d1');
       expect(RequestHelpers.pastReqs.search).to.eq(request);
     });
@@ -228,7 +216,6 @@ suite('requests helpers', ({ expect, stub, spy }) => {
       const sortAlphabetically = true;
       const fuzzyMatch = false;
       const normalized = { e: 'f' };
-      const defaults = { a: 'b' };
       const overrides = { c: 'd' };
       const overrideFn = () => null;
       const setPastStateFn = () => null;
@@ -238,7 +225,6 @@ suite('requests helpers', ({ expect, stub, spy }) => {
       const normalizer = stub(utils, 'normalizeToFunction').returns(normalized);
       const override = stub(RequestHelpers, 'override').returns(overrideFn);
       const setPastState = stub(RequestHelpers, 'setPastState').returns(setPastStateFn);
-      stub(ConfigAdapter, 'autocompleteSuggestionsDefaults').withArgs(config).returns(defaults);
       stub(ConfigAdapter, 'autocompleteSuggestionsOverrides').withArgs(config).returns(overrides);
       stub(Autocomplete, 'extractLanguage').withArgs(config).returns(language);
       stub(ConfigAdapter, 'extractAutocompleteSuggestionCount').withArgs(config).returns(numSearchTerms);
@@ -254,7 +240,7 @@ suite('requests helpers', ({ expect, stub, spy }) => {
       });
       expect(override).to.be.calledWithExactly(overrides, 'autocompleteSuggestions');
       expect(setPastState).to.be.calledWithExactly('autocompleteSuggestions');
-      expect(chain).to.be.calledWithExactly(defaults, normalized, overrideFn, setPastStateFn);
+      expect(chain).to.be.calledWithExactly(normalized, overrideFn, setPastStateFn);
     });
   });
 
@@ -271,7 +257,6 @@ suite('requests helpers', ({ expect, stub, spy }) => {
     const area = 'myArea';
     const language = 'en';
     const pageSize = 41;
-    const defaults = { c: 'd' };
     const overrides = { e: 'f' };
     const searchReq = { g: 'h' };
     const chained = { i: 'j' };
@@ -295,7 +280,6 @@ suite('requests helpers', ({ expect, stub, spy }) => {
       stub(Autocomplete, 'extractProductLanguage').withArgs(config).returns(language);
       stub(Autocomplete, 'extractProductArea').withArgs(config).returns(area);
       stub(ConfigAdapter, 'extractAutocompleteProductCount').withArgs(config).returns(pageSize);
-      stub(ConfigAdapter, 'autocompleteProductsDefaults').withArgs(config).returns(defaults);
       stub(ConfigAdapter, 'autocompleteProductsOverrides').withArgs(config).returns(overrides);
       stub(RequestHelpers, 'override').withArgs(overrides, 'autocompleteProducts').returns(overrideFn);
       stub(RequestHelpers, 'setPastState').withArgs('autocompleteProducts').returns(setPastState);
@@ -306,7 +290,7 @@ suite('requests helpers', ({ expect, stub, spy }) => {
 
       RequestHelpers.autocompleteProducts(state);
 
-      expect(chain).to.be.calledWithExactly(defaults, normalizedRequest, overrideFn, setPastState);
+      expect(chain).to.be.calledWithExactly(normalizedRequest, overrideFn, setPastState);
     });
 
     it('should create a products request with realTimeBiasing bias', () => {
@@ -317,7 +301,7 @@ suite('requests helpers', ({ expect, stub, spy }) => {
 
       RequestHelpers.autocompleteProducts(state);
 
-      expect(chain).to.be.calledWithExactly(defaults, normalizedRequest, overrideFn, setPastState);
+      expect(chain).to.be.calledWithExactly(normalizedRequest, overrideFn, setPastState);
     });
   });
 

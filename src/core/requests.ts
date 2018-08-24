@@ -66,7 +66,7 @@ namespace RequestHelpers {
       request.biasing = PastPurchaseAdapter.pastPurchaseBiasing(state);
     }
 
-    const requestTransformer = [Configuration.searchDefaults(config), normalizeToFunction(request)];
+    const requestTransformer = [normalizeToFunction(request)];
 
     if (addOverride) {
       requestTransformer.push(
@@ -106,7 +106,6 @@ namespace RequestHelpers {
     });
 
     return RequestHelpers.chain(
-      Configuration.autocompleteSuggestionsDefaults(config),
       normalizedRequest,
       RequestHelpers.override(Configuration.autocompleteSuggestionsOverrides(config), 'autocompleteSuggestions'),
       RequestHelpers.setPastState('autocompleteSuggestions')
@@ -131,7 +130,6 @@ namespace RequestHelpers {
     }
 
     return RequestHelpers.chain(
-      Configuration.autocompleteProductsDefaults(config),
       normalizeToFunction(request),
       RequestHelpers.override(Configuration.autocompleteProductsOverrides(config), 'autocompleteProducts'),
       RequestHelpers.setPastState('autocompleteProducts')
