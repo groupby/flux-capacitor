@@ -19,11 +19,16 @@ export namespace Tasks {
       const state = yield effects.select();
       const config = yield effects.select(Selectors.config);
       const field = Selectors.autocompleteCategoryField(state);
+      const requestBody = RequestHelpers.composeRequest(
+        RequestHelpers.autocompleteSuggestions(config),
+        ConfigAdapter.autocompleteSuggestionsOverrides(config),
+        'autocompleteSuggestions'
+      );
       const suggestionsRequest = effects.call(
         Requests.autocomplete,
         flux,
         query,
-        RequestHelpers.autocompleteSuggestions(config)
+        requestBody
       );
 
       const recommendationsConfig = config.autocomplete.recommendations;

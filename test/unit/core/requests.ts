@@ -130,7 +130,7 @@ suite('requests helpers', ({ expect, stub, spy }) => {
       const overrides = { pageSize, skip };
       stub(Selectors, 'config').returns({ search: { overrides } });
 
-      const request = RequestHelpers.search(<any>{}, false);
+      const request = RequestHelpers.search(<any>{});
 
       expect(request.pageSize).to.eq(remainingRecords);
       expect(request.skip).to.eq(originalSkip);
