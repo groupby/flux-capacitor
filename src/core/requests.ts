@@ -21,74 +21,6 @@ namespace RequestHelpers {
     body: JSON.stringify(body)
   });
 
-  export interface PastRequests {
-    search: Request;
-    autocompleteSuggestions: QueryTimeProductSearchConfig;
-    autocompleteProducts: QueryTimeProductSearchConfig;
-  }
-
-  export const pastReqs: RequestHelpers.PastRequests = {
-    search: <Request>{},
-    autocompleteSuggestions: <QueryTimeProductSearchConfig>{},
-    autocompleteProducts: <QueryTimeProductSearchConfig>{}
-  };
-
-  // export const autocompleteSuggestionsBuilder = {
-  //   build: RequestHelpers.autocompleteSuggestions,
-  //   pastRequest: <QueryTimeProductSearchConfig>{},
-  // };
-
-  // export const requestBuilder = {
-    // autocompleteProducts: {
-    //   build: RequestHelpers.autocompleteProducts,
-    //   pastRequest: <QueryTimeProductSearchConfig>{},
-    // },
-    // autocompleteSuggestions: {
-    //   build: RequestHelpers.autocompleteSuggestions,
-    //   pastRequest: <QueryTimeProductSearchConfig>{},
-    // },
-    // collection: {
-    //   build: RequestHelpers.collection,
-    //   pastRequest: <Request>{},
-    // },
-    // pastPurchaseSkus: {
-    //   build: RequestHelpers.skus,
-    //   pastRequest: {},
-    // },
-    // pastPurchaseProducts: {
-    //   build: RequestHelpers.pastPurchaseProducts,
-    //   pastRequest: <Request>{},
-    // },
-    // productDetails: {
-    //   build: RequestHelpers.productDetails,
-    //   pastRequest: <Request>{},
-    // },
-    // products: {
-    //   build: RequestHelpers.products,
-    //   pastRequest: <Request>{},
-    // },
-    // recommendationsNavigations: {
-    //   build: RequestHelpers.recommendationsNavigations,
-    //   pastRequest: {},
-    // },
-    // recommendationsProductIds: {
-    //   build: RequestHelpers.recommendationsProductIds,
-    //   pastRequest: {},
-    // },
-    // recommendationsProducts: {
-    //   build: RequestHelpers.recommendationsProducts,
-    //   pastRequest: <Request>{},
-    // },
-    // recommendationsSuggestions: {
-    //   build: RequestHelpers.recommendationsSuggestions,
-    //   pastRequest: {},
-    // },
-    // refinements: {
-    //   build: RequestHelpers.refinements,
-    //   pastRequest: {},
-    // },
-  // };
-
   // tslint:disable-next-line max-line-length
   export const override = <T>(overrideConfig: (currReq: T, prevReq: T) => T, requestSection): ((r: T) => T) =>
     (r: T) => overrideConfig(r, <T>requestSection.pastRequest);
@@ -96,7 +28,7 @@ namespace RequestHelpers {
   export const setPastState = <T>(requestSection): ((request: T) => T) =>
     (request) => requestSection.pastRequest = request;
 
-  export const search = (state: Store.State): Request => {
+  export const search = (state: Store.State, overrideState: any = {}): Request => {
     const config = Selectors.config(state);
     const sort = Selectors.sort(state);
     const pageSize = Selectors.pageSize(state);
@@ -122,18 +54,7 @@ namespace RequestHelpers {
       request.biasing = PastPurchaseAdapter.pastPurchaseBiasing(state);
     }
 
-    return <Request>request;
-
-    // const requestTransformer = [normalizeToFunction(request)];
-    //
-    // // if (addOverride) {
-    // //   requestTransformer.push(
-    // //     RequestHelpers.override(Configuration.searchOverrides(config), 'search'),
-    // //     RequestHelpers.setPastState('search')
-    // //   );
-    // // }
-    // //
-    // // return <Request>RequestHelpers.chain(...requestTransformer);
+    return <Request>{ ...request, ...overrideState };
   };
 
   // tslint:disable-next-line max-line-length
@@ -142,7 +63,7 @@ namespace RequestHelpers {
     skip = skip || Selectors.pastPurchasePageSize(state) * (Selectors.pastPurchasePage(state) - 1);
 
     const request: Partial<Request> = {
-      ...search(state),
+      ...RequestHelpers.search(state),
       pageSize,
       query: getNavigations ? '' : Selectors.pastPurchaseQuery(state),
       refinements: getNavigations ? [] : Selectors.pastPurchaseSelectedRefinements(state),
@@ -155,52 +76,59 @@ namespace RequestHelpers {
   };
 
   // tslint:disable-next-line
-  export const autocompleteSuggestions = (config: AppConfig): QueryTimeAutocompleteConfig => ({
-    language: Autocomplete.extractLanguage(config),
-    numSearchTerms: Configuration.extractAutocompleteSuggestionCount(config),
-    numNavigations: Configuration.extractAutocompleteNavigationCount(config),
-    sortAlphabetically: Configuration.isAutocompleteAlphabeticallySorted(config),
-    fuzzyMatch: Configuration.isAutocompleteMatchingFuzzily(config)
-  });
-
-    // const normalizedRequest = normalizeToFunction({
-    //   language: Autocomplete.extractLanguage(config),
-    //   numSearchTerms: Configuration.extractAutocompleteSuggestionCount(config),
-    //   numNavigations: Configuration.extractAutocompleteNavigationCount(config),
-    //   sortAlphabetically: Configuration.isAutocompleteAlphabeticallySorted(config),
-    //   fuzzyMatch: Configuration.isAutocompleteMatchingFuzzily(config)
-    // });
-    //
-    // return RequestHelpers.chain(
-    //   normalizedRequest,
-    //   RequestHelpers.override(Configuration.autocompleteSuggestionsOverrides(config), 'autocompleteSuggestions'),
-    //   RequestHelpers.setPastState('autocompleteSuggestions')
-    // );
-
-  export const autocompleteProducts = (state: Store.State): Request => {
+  export const autocompleteSuggestions = (state: Store.State, overrideState: any = {}): QueryTimeAutocompleteConfig => {
     const config = Selectors.config(state);
 
-    let request: Request = {
-      ...RequestHelpers.search(state),
+    return {
+      language: Autocomplete.extractLanguage(config),
+      numSearchTerms: Configuration.extractAutocompleteSuggestionCount(config),
+      numNavigations: Configuration.extractAutocompleteNavigationCount(config),
+      sortAlphabetically: Configuration.isAutocompleteAlphabeticallySorted(config),
+      fuzzyMatch: Configuration.isAutocompleteMatchingFuzzily(config),
+      ...overrideState
+    };
+  };
+
+  export const autocompleteProducts = (state: Store.State, overrideState: any = {}): Request => {
+    const config = Selectors.config(state);
+
+    let request: Request = RequestHelpers.search(state, {
       refinements: [],
       skip: 0,
       sort: undefined,
       language: Autocomplete.extractProductLanguage(config),
       area: Autocomplete.extractProductArea(config),
       pageSize: Configuration.extractAutocompleteProductCount(config)
-    };
+    });
 
     if (config.personalization.realTimeBiasing.autocomplete) {
       request = RequestHelpers.realTimeBiasing(state, request);
     }
 
-    return request;
+    const overrideRefinements = request.refinements;
+    const originalRefinements = overrideState.refinements.map(({ field, ...rest }) =>
+      ({ type: 'Value', navigationName: field, ...rest }));
+    const mergedRefinements = [...originalRefinements, ...overrideRefinements];
+    const finalRequest = {
+      ...request,
+      ...overrideState,
+      refinements: mergedRefinements
+    };
 
-    // return RequestHelpers.chain(
-    //   normalizeToFunction(request),
-    //   RequestHelpers.override(Configuration.autocompleteProductsOverrides(config), 'autocompleteProducts'),
-    //   RequestHelpers.setPastState('autocompleteProducts')
-    // );
+    return finalRequest;
+  };
+
+  export const recommendationsSuggestions = (state: any, overrideState: any = {}) => {
+    const config = Selectors.config(state);
+
+    return {
+      // size: config.autocomplete.recommendations,
+      // matchPartial: {
+      //   and: [{
+      //     search: { query }
+      //   }]
+      // }
+    };
   };
 
   // tslint:disable-next-line max-line-length
@@ -219,15 +147,68 @@ namespace RequestHelpers {
   export const chain = <T>(...fns: Array<(...obj: any[]) => T>): T =>
     fns.reduce((final, fn) => fn(final) || final, <T>{});
 
-  export const autocompleteSuggestionsBuilder = {
-    build: RequestHelpers.autocompleteSuggestions,
-    pastRequest: <QueryTimeProductSearchConfig>{},
+  export const requestBuilder = {
+    autocompleteProducts: {
+      build: RequestHelpers.autocompleteProducts,
+      pastRequest: <QueryTimeProductSearchConfig>{},
+      override: (state) => Configuration.autocompleteProductsOverrides(Selectors.config(state)),
+    },
+    autocompleteSuggestions: {
+      build: RequestHelpers.autocompleteSuggestions,
+      pastRequest: <QueryTimeProductSearchConfig>{},
+      override: (state) => Configuration.autocompleteSuggestionsOverrides(Selectors.config(state)),
+    },
+    collection: {
+      build: RequestHelpers.search,
+      pastRequest: <Request>{},
+      override: (state) => Configuration.collectionOverrides(Selectors.config(state))
+    },
+    // pastPurchaseSkus: {
+    //   build: RequestHelpers.skus,
+    //   pastRequest: {},
+    // },
+    // pastPurchaseProducts: {
+    //   build: RequestHelpers.pastPurchaseProducts,
+    //   pastRequest: <Request>{},
+    // },
+    productDetails: {
+      build: RequestHelpers.search,
+      pastRequest: <Request>{},
+      override: (state) => Configuration.detailsOverrides(Selectors.config(state)),
+    },
+    products: {
+      build: RequestHelpers.search,
+      pastRequest: <Request>{},
+      override: (state) => Configuration.searchOverrides(Selectors.config(state)),
+    },
+    // recommendationsNavigations: {
+    //   build: RequestHelpers.recommendationsNavigations,
+    //   pastRequest: {},
+    // },
+    // recommendationsProductIds: {
+    //   build: RequestHelpers.recommendationsProductIds,
+    //   pastRequest: {},
+    // },
+    // recommendationsProducts: {
+    //   build: RequestHelpers.recommendationsProducts,
+    //   pastRequest: <Request>{},
+    // },
+    // recommendationsSuggestions: {
+    //   build: RequestHelpers.recommendationsSuggestions,
+    //   pastRequest: {},
+    //   override: () => ({}),
+    // },
+    refinements: {
+      build: RequestHelpers.search,
+      pastRequest: {},
+      override: (state) => Configuration.refinementsOverrides(Selectors.config(state)),
+    },
   };
 
-  export const composeRequest = (requestSection, overrideFn = () => ({})) => {
+  export const composeRequest = (requestSection, state: any, overrideState?: any) => {
     return RequestHelpers.chain(
-      normalizeToFunction(requestSection.build),
-      RequestHelpers.override(overrideFn, requestSection),
+      normalizeToFunction(requestSection.build(state, overrideState)),
+      RequestHelpers.override(requestSection.override(state), requestSection),
       RequestHelpers.setPastState(requestSection)
     );
   };

@@ -53,7 +53,8 @@ export namespace Tasks {
   }
 
   export function* fetchProductsRequest(flux: FluxCapacitor, action: Actions.FetchProducts) {
-    const request = yield effects.select(RequestHelpers.search);
+    const state = yield effects.select();
+    const request = RequestHelpers.composeRequest(RequestHelpers.requestBuilder.products, state);
     const requestWithBiases = yield effects.select(RequestHelpers.realTimeBiasing, request);
 
     return yield effects.call(Requests.search, flux, requestWithBiases);
@@ -122,12 +123,12 @@ export namespace Tasks {
         yield effects.put(<any>flux.actions.infiniteScrollRequestState({ isFetchingBackward: true }));
       }
 
-      const req = {
-        ...RequestHelpers.search(state),
-        pageSize,
-        skip,
-      };
-      const result = yield effects.call(Requests.search, flux, req);
+      const requestBody = RequestHelpers.composeRequest(
+        RequestHelpers.requestBuilder.products,
+        state,
+        { pageSize, skip }
+      );
+      const result = yield effects.call(Requests.search, flux, requestBody);
 
       flux.emit(Events.BEACON_SEARCH, result.id);
 

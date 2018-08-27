@@ -9,8 +9,13 @@ import Requests from './requests';
 export namespace Tasks {
   export function* fetchCount(flux: FluxCapacitor, { payload: collection }: Actions.FetchCollectionCount) {
     try {
-      const request = yield effects.select(RequestHelpers.search);
-      const res = yield effects.call(Requests.search, flux, { ...request, collection });
+      const state = yield effects.select();
+      const requestBody = RequestHelpers.composeRequest(
+        RequestHelpers.requestBuilder.collection,
+        state,
+        { collection }
+      );
+      const res = yield effects.call(Requests.search, flux, requestBody);
 
       yield effects.put(flux.actions.receiveCollectionCount({
         collection,

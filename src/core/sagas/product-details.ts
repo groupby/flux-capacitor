@@ -12,15 +12,18 @@ import Requests from './requests';
 export namespace Tasks {
   export function* fetchProductDetails(flux: FluxCapacitor, { payload: id }: Actions.FetchProductDetails) {
     try {
-      const request = yield effects.select(RequestHelpers.search);
-      const req = {
-        ...request,
-        query: null,
-        pageSize: 1,
-        skip: 0,
-        refinements: [{ navigationName: 'id', type: 'Value', value: id }]
-      };
-      const { records, template } = yield effects.call(Requests.search, flux, req);
+      const state = yield effects.select();
+      const requestBody = RequestHelpers.composeRequest(
+        RequestHelpers.requestBuilder.productDetails,
+        state,
+        {
+          query: null,
+          pageSize: 1,
+          skip: 0,
+          refinements: [{ navigationName: 'id', type: 'Value', value: id }]
+        }
+      );
+      const { records, template } = yield effects.call(Requests.search, flux, requestBody);
 
       if (records.length !== 0) {
         const [record] = records;

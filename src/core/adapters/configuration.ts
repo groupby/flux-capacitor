@@ -202,6 +202,15 @@ namespace Adapter {
 
   export const autocompleteProductsOverrides = (config: Configuration) =>
     normalizeToFunction(config.autocomplete.overrides.products);
+
+  export const collectionOverrides = (config: Configuration) =>
+    normalizeToFunction(<any>(config['collections'] || <any>{}).overrides);
+
+  export const detailsOverrides = (config: Configuration) =>
+    normalizeToFunction(<any>(config.details || <any>{}).overrides);
+
+  export const refinementsOverrides = (config: Configuration) =>
+    normalizeToFunction(<any>(config['refinements'] || <any>{}).overrides);
 }
 
 export default Adapter;

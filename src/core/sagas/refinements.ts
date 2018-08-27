@@ -15,7 +15,11 @@ export namespace Tasks {
     try {
       const state: Store.State = yield effects.select();
       const config = yield effects.select(Selectors.config);
-      const res = yield effects.call(Requests.refinements, flux, RequestHelpers.search(state), action.payload);
+      const requestBody = RequestHelpers.composeRequest(
+        RequestHelpers.requestBuilder.refinements,
+        state,
+      );
+      const res = yield effects.call(Requests.refinements, flux, requestBody, action.payload);
 
       flux.emit(Events.BEACON_MORE_REFINEMENTS, action.payload);
       res.navigation = RecommendationsAdapter.sortAndPinNavigations(

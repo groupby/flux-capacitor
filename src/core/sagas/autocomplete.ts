@@ -20,9 +20,8 @@ export namespace Tasks {
       const config = yield effects.select(Selectors.config);
       const field = Selectors.autocompleteCategoryField(state);
       const requestBody = RequestHelpers.composeRequest(
-        RequestHelpers.autocompleteSuggestions(config),
-        ConfigAdapter.autocompleteSuggestionsOverrides(config),
-        'autocompleteSuggestions'
+        RequestHelpers.requestBuilder.autocompleteSuggestions,
+        state
       );
       const suggestionsRequest = effects.call(
         Requests.autocomplete,
@@ -75,17 +74,13 @@ export namespace Tasks {
   // tslint:disable-next-line max-line-length
   export function* fetchProducts(flux: FluxCapacitor, { payload: { query, refinements } }: Actions.FetchAutocompleteProducts) {
     try {
-      const request = yield effects.select(RequestHelpers.autocompleteProducts);
-      const overrideRefinements = request.refinements;
-      const originalRefinements = refinements.map(({ field, ...rest }) =>
-        ({ type: 'Value', navigationName: field, ...rest }));
-      const mergedRefinements = [...originalRefinements, ...overrideRefinements];
-      const req = {
-        ...request,
-        query,
-        refinements: mergedRefinements,
-      };
-      const res = yield effects.call(Requests.search, flux, req);
+      const state = yield effects.select();
+      const requestBody = RequestHelpers.composeRequest(
+        RequestHelpers.requestBuilder.autocompleteProducts,
+        state,
+        { refinements, query }
+      );
+      const res = yield effects.call(Requests.search, flux, requestBody);
 
       yield effects.put(<any>flux.actions.receiveAutocompleteProducts(res));
     } catch (e) {
