@@ -62,25 +62,14 @@ export namespace Tasks {
 
   export function* fetchNavigations(flux: FluxCapacitor, action: Actions.FetchProducts) {
     try {
+      const state = yield effects.select();
       const config = yield effects.select(Selectors.config);
       const iNav = config.recommendations.iNav;
       if (iNav.navigations.sort || iNav.refinements.sort) {
-        const query = yield effects.select(Selectors.query);
-        const sizeAndWindow = { size: iNav.size, window: iNav.window };
-        // tslint:disable-next-line max-line-length
-        const body = {
-          minSize: iNav.minSize || iNav.size,
-          sequence: [
-            { ...sizeAndWindow,
-              matchPartial: {
-                and: [{ search: { query } }]
-              },
-            },
-            {
-              ...sizeAndWindow,
-            }
-          ]
-        };
+        const body = RequestHelpers.composeRequest(
+          RequestHelpers.requestBuilder.recommendationsNavigations,
+          state,
+        );
         const recommendationsResponse = yield effects.call(
           Requests.recommendations,
           {

@@ -30,11 +30,10 @@ export namespace Tasks {
       const { idField, productSuggestions: productConfig } = config.recommendations;
       const productCount = productConfig.productCount;
       if (productCount > 0) {
-        const recommendationsRequestBody = {
-          size: productConfig.productCount,
-          type: 'viewProduct',
-          target: idField
-        };
+        const body = RequestHelpers.composeRequest(
+          RequestHelpers.requestBuilder.recommendationsProductIDs,
+          state,
+        );
         const recommendationsResponse = yield effects.call(
           Requests.recommendations,
           {
@@ -43,7 +42,7 @@ export namespace Tasks {
             // fall back to default mode "popular" if not provided
             // "popular" default will likely provide the most consistently strong data
             mode: Configuration.RECOMMENDATION_MODES[productConfig.mode || 'popular'],
-            body: Adapter.addLocationToRequest(recommendationsRequestBody, state)
+            body
           }
         );
 
@@ -51,14 +50,17 @@ export namespace Tasks {
         const refinements = recommendations.result
           .filter(({ productId }) => productId)
           .map(({ productId }) => ({ navigationName: idField, type: 'Value', value: productId }));
-        const req = {
-          ...RequestHelpers.search(state),
-          pageSize: productConfig.productCount,
-          includedNavigations: [],
-          skip: 0,
-          refinements
-        };
-        const results = yield effects.call(Requests.search, flux, req);
+        const requestBody = RequestHelpers.composeRequest(
+          RequestHelpers.requestBuilder.recommendationsProducts,
+          state,
+          {
+            pageSize: productConfig.productCount,
+            includedNavigations: [],
+            skip: 0,
+            refinements
+          }
+        );
+        const results = yield effects.call(Requests.search, flux, requestBody);
 
         yield effects.put(flux.actions.receiveRecommendationsProducts(SearchAdapter.augmentProducts(results)));
       }

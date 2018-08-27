@@ -72,18 +72,69 @@ namespace RequestHelpers {
     return <Request>{ ...request, ...overrideState };
   };
 
+  export const recommendationsSuggestions = (state: Store.State, overrideState: any = {}) => {
+    const config = Selectors.config(state);
+
+    const request = Recommendations.addLocationToRequest({
+      size: config.autocomplete.recommendations.suggestionCount,
+      matchPartial: {
+        and: [{
+          search: {
+            query: overrideState.query || Selectors.query(state),
+          }
+        }]
+      }
+    }, state);
+
+    return { ...request, ...overrideState };
+  };
+
+  export const recommendationsNavigations = (state: Store.State, overrideState: any = {}) => {
+    const query = Selectors.query(state);
+    const iNav = Selectors.config(state).recommendations.iNav;
+    const sizeAndWindow = { size: iNav.size, window: iNav.window };
+    // tslint:disable-next-line max-line-length
+    const request = {
+      minSize: iNav.minSize || iNav.size,
+      sequence: [
+        { ...sizeAndWindow,
+          matchPartial: {
+            and: [{ search: { query } }]
+          },
+        },
+        {
+          ...sizeAndWindow,
+        }
+      ]
+    };
+
+    return { ...request, ...overrideState };
+  };
+
+  export const recommendationsProductIDs = (state: Store.State, overrideState: any = {}) => {
+    const config = Selectors.config(state);
+
+    const request = Recommendations.addLocationToRequest({
+      size: config.recommendations.productSuggestions.productCount,
+      type: 'viewProduct',
+      target: config.recommendations.idField
+    }, state);
+
+    return { ...request, ...overrideState };
+  };
+
   // tslint:disable-next-line
   export const autocompleteSuggestions = (state: Store.State, overrideState: any = {}): QueryTimeAutocompleteConfig => {
     const config = Selectors.config(state);
-
-    return {
+    const request = {
       language: Autocomplete.extractLanguage(config),
       numSearchTerms: Configuration.extractAutocompleteSuggestionCount(config),
       numNavigations: Configuration.extractAutocompleteNavigationCount(config),
       sortAlphabetically: Configuration.isAutocompleteAlphabeticallySorted(config),
       fuzzyMatch: Configuration.isAutocompleteMatchingFuzzily(config),
-      ...overrideState
     };
+
+    return { ...request, ...overrideState };
   };
 
   export const autocompleteProducts = (state: Store.State, overrideState: any = {}): Request => {
@@ -165,26 +216,26 @@ namespace RequestHelpers {
       pastRequest: <Request>{},
       override: (state) => Configuration.searchOverrides(Selectors.config(state)),
     },
-    // recommendationsNavigations: {
-    //   build: RequestHelpers.recommendationsNavigations,
-    //   pastRequest: {},
-    //   override: (state) => normalizeToFunction({}),
-    // },
-    // recommendationsProductIds: {
-    //   build: RequestHelpers.recommendationsProductIds,
-    //   pastRequest: {},
-    //   override: (state) => normalizeToFunction({}),
-    // },
-    // recommendationsProducts: {
-    //   build: RequestHelpers.recommendationsProducts,
-    //   pastRequest: <Request>{},
-    //   override: (state) => normalizeToFunction({}),
-    // },
-    // recommendationsSuggestions: {
-    //   build: RequestHelpers.recommendationsSuggestions,
-    //   pastRequest: {},
-    //   override: (state) => normalizeToFunction({}),
-    // },
+    recommendationsNavigations: {
+      build: RequestHelpers.recommendationsNavigations,
+      pastRequest: {},
+      override: (state) => normalizeToFunction({}),
+    },
+    recommendationsProductIDs: {
+      build: RequestHelpers.recommendationsProductIDs,
+      pastRequest: <Request>{},
+      override: (state) => normalizeToFunction({}),
+    },
+    recommendationsProducts: {
+      build: RequestHelpers.search,
+      pastRequest: <Request>{},
+      override: (state) => normalizeToFunction({}),
+    },
+    recommendationsSuggestions: {
+      build: RequestHelpers.recommendationsSuggestions,
+      pastRequest: {},
+      override: (state) => normalizeToFunction({}),
+    },
     refinements: {
       build: RequestHelpers.search,
       pastRequest: {},

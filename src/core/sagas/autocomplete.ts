@@ -31,15 +31,12 @@ export namespace Tasks {
       );
 
       const recommendationsConfig = config.autocomplete.recommendations;
-      // tslint:disable-next-line max-line-length
-      const trendingBody = {
-        size: recommendationsConfig.suggestionCount,
-        matchPartial: {
-          and: [{
-            search: { query }
-          }]
-        }
-      };
+
+      const body = RequestHelpers.composeRequest(
+        RequestHelpers.requestBuilder.recommendationsSuggestions,
+        state,
+        { query }
+      );
       const trendingRequest = effects.call(
         Requests.recommendations,
         {
@@ -48,7 +45,7 @@ export namespace Tasks {
           // fall back to default mode "popular" if not provided
           // "popular" default will likely provide the most consistently strong data
           mode: Configuration.RECOMMENDATION_MODES[recommendationsConfig.suggestionMode || 'popular'],
-          body: RecommendationsAdapter.addLocationToRequest(trendingBody, state)
+          body
         }
       );
       const requests = [suggestionsRequest];
