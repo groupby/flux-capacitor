@@ -125,7 +125,12 @@ export namespace Tasks {
     try {
       const pastPurchaseSkus: Store.PastPurchases.PastPurchaseProduct[] = yield effects.select(Selectors.pastPurchases);
       if (pastPurchaseSkus.length > 0) {
-        const request = yield effects.select(RequestHelpers.pastPurchaseProducts, getNavigations);
+        const state = yield effects.select();
+        const request = RequestHelpers.composeRequest(
+          RequestHelpers.requestBuilder.pastPurchaseProducts,
+          state,
+          { query: '', refinements: [] }
+        );
         const results = yield effects.call(fetchProductsFromSkus, flux, pastPurchaseSkus, request);
         if (getNavigations) {
           const navigations = PastPurchaseAdapter.pastPurchaseNavigations(
@@ -167,7 +172,11 @@ export namespace Tasks {
         yield effects.put(<any>flux.actions.infiniteScrollRequestState({ isFetchingBackward: true }));
       }
 
-      const request = yield effects.select(RequestHelpers.pastPurchaseProducts, false, { pageSize, skip });
+      const request = RequestHelpers.composeRequest(
+        RequestHelpers.requestBuilder.pastPurchaseProducts,
+        state,
+        { pageSize, skip }
+      );
       const result = yield effects.call(fetchProductsFromSkus, flux, pastPurchaseSkus, request);
 
       yield effects.put(<any>[

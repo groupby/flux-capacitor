@@ -58,21 +58,18 @@ namespace RequestHelpers {
   };
 
   // tslint:disable-next-line max-line-length
-  export const pastPurchaseProducts = (state: Store.State, getNavigations: boolean = false, { pageSize, skip }: { pageSize?: number, skip?: number } = {}): Request => {
-    pageSize = pageSize || Selectors.pastPurchasePageSize(state);
-    skip = skip || Selectors.pastPurchasePageSize(state) * (Selectors.pastPurchasePage(state) - 1);
-
+  export const pastPurchaseProducts = (state: Store.State, overrideState: any = {}): Request => {
     const request: Partial<Request> = {
       ...RequestHelpers.search(state),
-      pageSize,
-      query: getNavigations ? '' : Selectors.pastPurchaseQuery(state),
-      refinements: getNavigations ? [] : Selectors.pastPurchaseSelectedRefinements(state),
-      skip,
+      pageSize: Selectors.pastPurchasePageSize(state),
+      query: Selectors.pastPurchaseQuery(state),
+      refinements: Selectors.pastPurchaseSelectedRefinements(state),
+      skip: Selectors.pastPurchasePageSize(state) * (Selectors.pastPurchasePage(state) - 1),
       // no sort needed, saves backend from processing this
       sort: undefined,
     };
 
-    return <Request>request;
+    return <Request>{ ...request, ...overrideState };
   };
 
   // tslint:disable-next-line
@@ -105,30 +102,15 @@ namespace RequestHelpers {
       request = RequestHelpers.realTimeBiasing(state, request);
     }
 
-    const overrideRefinements = request.refinements;
-    const originalRefinements = overrideState.refinements.map(({ field, ...rest }) =>
+    if (overrideState.refinements) {
+      const overrideRefinements = request.refinements;
+      const originalRefinements = overrideState.refinements.map(({ field, ...rest }) =>
       ({ type: 'Value', navigationName: field, ...rest }));
-    const mergedRefinements = [...originalRefinements, ...overrideRefinements];
-    const finalRequest = {
-      ...request,
-      ...overrideState,
-      refinements: mergedRefinements
-    };
 
-    return finalRequest;
-  };
+      request.refinements = [...originalRefinements, ...overrideRefinements];
+    }
 
-  export const recommendationsSuggestions = (state: any, overrideState: any = {}) => {
-    const config = Selectors.config(state);
-
-    return {
-      // size: config.autocomplete.recommendations,
-      // matchPartial: {
-      //   and: [{
-      //     search: { query }
-      //   }]
-      // }
-    };
+    return { ...request, ...overrideState };
   };
 
   // tslint:disable-next-line max-line-length
@@ -166,11 +148,13 @@ namespace RequestHelpers {
     // pastPurchaseSkus: {
     //   build: RequestHelpers.skus,
     //   pastRequest: {},
+    //   override: (state) => normalizeToFunction({}),
     // },
-    // pastPurchaseProducts: {
-    //   build: RequestHelpers.pastPurchaseProducts,
-    //   pastRequest: <Request>{},
-    // },
+    pastPurchaseProducts: {
+      build: RequestHelpers.pastPurchaseProducts,
+      pastRequest: <Request>{},
+      override: (state) => normalizeToFunction({}),
+    },
     productDetails: {
       build: RequestHelpers.search,
       pastRequest: <Request>{},
@@ -184,19 +168,22 @@ namespace RequestHelpers {
     // recommendationsNavigations: {
     //   build: RequestHelpers.recommendationsNavigations,
     //   pastRequest: {},
+    //   override: (state) => normalizeToFunction({}),
     // },
     // recommendationsProductIds: {
     //   build: RequestHelpers.recommendationsProductIds,
     //   pastRequest: {},
+    //   override: (state) => normalizeToFunction({}),
     // },
     // recommendationsProducts: {
     //   build: RequestHelpers.recommendationsProducts,
     //   pastRequest: <Request>{},
+    //   override: (state) => normalizeToFunction({}),
     // },
     // recommendationsSuggestions: {
     //   build: RequestHelpers.recommendationsSuggestions,
     //   pastRequest: {},
-    //   override: () => ({}),
+    //   override: (state) => normalizeToFunction({}),
     // },
     refinements: {
       build: RequestHelpers.search,
