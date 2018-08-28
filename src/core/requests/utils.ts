@@ -1,15 +1,15 @@
 import { Request } from 'groupby-api';
 import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt';
-import Autocomplete from './adapters/autocomplete';
-import Configuration from './adapters/configuration';
-import PastPurchaseAdapter from './adapters/past-purchases';
-import Personalization from './adapters/personalization';
-import Recommendations from './adapters/recommendations';
-import SearchAdapter, { MAX_RECORDS } from './adapters/search';
-import AppConfig from './configuration';
-import Selectors from './selectors';
-import Store from './store';
-import { normalizeToFunction } from './utils';
+import Autocomplete from '../adapters/autocomplete';
+import Configuration from '../adapters/configuration';
+import PastPurchaseAdapter from '../adapters/past-purchases';
+import Personalization from '../adapters/personalization';
+import Recommendations from '../adapters/recommendations';
+import SearchAdapter, { MAX_RECORDS } from '../adapters/search';
+import AppConfig from '../configuration';
+import Selectors from '../selectors';
+import Store from '../store';
+import { normalizeToFunction } from '../utils';
 
 namespace RequestHelpers {
   export type RequestBody = Recommendations.RecommendationsBody
@@ -22,11 +22,11 @@ namespace RequestHelpers {
   });
 
   // tslint:disable-next-line max-line-length
-  export const override = <T>(overrideConfig: (currReq: T, prevReq: T) => T, requestSection): ((r: T) => T) =>
-    (r: T) => overrideConfig(r, <T>requestSection.pastRequest);
-
-  export const setPastState = <T>(requestSection): ((request: T) => T) =>
-    (request) => requestSection.pastRequest = request;
+  // export const override = <T>(overrideConfig: (currReq: T, prevReq: T) => T, requestSection): ((r: T) => T) =>
+  //   (r: T) => overrideConfig(r, <T>requestSection.pastRequest);
+  //
+  // export const setPastState = <T>(requestSection): ((request: T) => T) =>
+  //   (request) => requestSection.pastRequest = request;
 
   export const search = (state: Store.State, overrideState: any = {}): Request => {
     const config = Selectors.config(state);
@@ -208,7 +208,7 @@ namespace RequestHelpers {
   export const autocompleteRequestBuilder = new RequestBuilder<QueryTimeProductSearchConfig>(RequestType.AUTOCOMPLETE_PRODUCTS, () => null, () => null);
 
   export const requestBuilder: Record<RequestType, any> = {
-    [RequestType.AUTOCOMPLETE_PRODUCTS]: {
+    autocompleteSuggestions: {
       build: RequestHelpers.autocompleteProducts,
       pastRequest: <QueryTimeProductSearchConfig>{},
       override: (state) => Configuration.autocompleteProductsOverrides(Selectors.config(state)),
@@ -270,13 +270,13 @@ namespace RequestHelpers {
     },
   };
 
-  export const composeRequest = (requestSection, state: any, overrideState?: any) => {
-    return RequestHelpers.chain(
-      normalizeToFunction(requestSection.build(state, overrideState)),
-      RequestHelpers.override(requestSection.override(state), requestSection),
-      RequestHelpers.setPastState(requestSection)
-    );
-  };
+  // export const composeRequest = (requestSection, state: any, overrideState?: any) => {
+  //   return RequestHelpers.chain(
+  //     normalizeToFunction(requestSection.build(state, overrideState)),
+  //     RequestHelpers.override(requestSection.override(state), requestSection),
+  //     RequestHelpers.setPastState(requestSection)
+  //   );
+  // };
 }
 
 export default RequestHelpers;

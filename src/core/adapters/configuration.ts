@@ -194,22 +194,24 @@ namespace Adapter {
     }
   };
 
-  export const searchOverrides = (config: Configuration) =>
+  export type Override<T = object> = (config: Configuration) => (...arg: T[]) => T;
+
+  export const searchOverrides: Override = (config) =>
     normalizeToFunction(config.search.overrides);
 
-  export const autocompleteSuggestionsOverrides = (config: Configuration) =>
+  export const autocompleteSuggestionsOverrides: Override = (config) =>
     normalizeToFunction(config.autocomplete.overrides.suggestions);
 
-  export const autocompleteProductsOverrides = (config: Configuration) =>
+  export const autocompleteProductsOverrides: Override = (config) =>
     normalizeToFunction(config.autocomplete.overrides.products);
 
-  export const collectionOverrides = (config: Configuration) =>
+  export const collectionOverrides: Override = (config) =>
     normalizeToFunction(<any>(config['collections'] || <any>{}).overrides);
 
-  export const detailsOverrides = (config: Configuration) =>
+  export const detailsOverrides: Override = (config) =>
     normalizeToFunction(<any>(config.details || <any>{}).overrides);
 
-  export const refinementsOverrides = (config: Configuration) =>
+  export const refinementsOverrides: Override = (config) =>
     normalizeToFunction(<any>(config['refinements'] || <any>{}).overrides);
 }
 
