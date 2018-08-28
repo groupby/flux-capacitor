@@ -6,7 +6,7 @@ import Actions from '../actions';
 import PastPurchasesAdapter from '../adapters/past-purchases';
 import RecommendationsAdapter from '../adapters/recommendations';
 import Events from '../events';
-import RequestHelpers from '../requests';
+import RequestHelpers from '../requests/utils';
 import Selectors from '../selectors';
 import Store from '../store';
 import { fetch } from '../utils';

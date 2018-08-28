@@ -4,10 +4,14 @@ import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import ConfigAdapter from '../adapters/configuration';
 import PastPurchaseAdapter from '../adapters/past-purchases';
-import Adapter from '../adapters/recommendations';
 import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';
-import RequestHelpers from '../requests';
+import {
+  pastPurchaseProductsRequest,
+  recommendationsProductsRequest,
+  recommendationsProductIDsRequest
+} from '../requests';
+import RequestHelpers from '../requests/utils';
 import Selectors from '../selectors';
 import Store from '../store';
 import * as utils from '../utils';
@@ -30,10 +34,7 @@ export namespace Tasks {
       const { idField, productSuggestions: productConfig } = config.recommendations;
       const productCount = productConfig.productCount;
       if (productCount > 0) {
-        const body = RequestHelpers.composeRequest(
-          RequestHelpers.requestBuilder.recommendationsProductIDs,
-          state,
-        );
+        const body = recommendationsProductIDsRequest.composeRequest(state);
         const recommendationsResponse = yield effects.call(
           Requests.recommendations,
           {
@@ -50,8 +51,7 @@ export namespace Tasks {
         const refinements = recommendations.result
           .filter(({ productId }) => productId)
           .map(({ productId }) => ({ navigationName: idField, type: 'Value', value: productId }));
-        const requestBody = RequestHelpers.composeRequest(
-          RequestHelpers.requestBuilder.recommendationsProducts,
+        const requestBody = recommendationsProductsRequest.composeRequest(
           state,
           {
             pageSize: productConfig.productCount,
@@ -128,11 +128,7 @@ export namespace Tasks {
       const pastPurchaseSkus: Store.PastPurchases.PastPurchaseProduct[] = yield effects.select(Selectors.pastPurchases);
       if (pastPurchaseSkus.length > 0) {
         const state = yield effects.select();
-        const request = RequestHelpers.composeRequest(
-          RequestHelpers.requestBuilder.pastPurchaseProducts,
-          state,
-          { query: '', refinements: [] }
-        );
+        const request = pastPurchaseProductsRequest.composeRequest(state, { query: '', refinements: [] });
         const results = yield effects.call(fetchProductsFromSkus, flux, pastPurchaseSkus, request);
         if (getNavigations) {
           const navigations = PastPurchaseAdapter.pastPurchaseNavigations(
@@ -174,11 +170,7 @@ export namespace Tasks {
         yield effects.put(<any>flux.actions.infiniteScrollRequestState({ isFetchingBackward: true }));
       }
 
-      const request = RequestHelpers.composeRequest(
-        RequestHelpers.requestBuilder.pastPurchaseProducts,
-        state,
-        { pageSize, skip }
-      );
+      const request = pastPurchaseProductsRequest.composeRequest(state, { pageSize, skip });
       const result = yield effects.call(fetchProductsFromSkus, flux, pastPurchaseSkus, request);
 
       yield effects.put(<any>[

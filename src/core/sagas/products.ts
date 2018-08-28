@@ -2,11 +2,10 @@ import { Results } from 'groupby-api';
 import * as effects from 'redux-saga/effects';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
-import PersonalizationAdapter from '../adapters/personalization';
 import RecommendationsAdapter from '../adapters/recommendations';
 import SearchAdapter from '../adapters/search';
 import Events from '../events';
-import RequestHelpers from '../requests';
+import { productsRequest, recommendationsNavigationsRequest } from '../requests';
 import Selectors from '../selectors';
 import Store from '../store';
 import * as utils from '../utils';
@@ -54,10 +53,9 @@ export namespace Tasks {
 
   export function* fetchProductsRequest(flux: FluxCapacitor, action: Actions.FetchProducts) {
     const state = yield effects.select();
-    const request = RequestHelpers.composeRequest(RequestHelpers.requestBuilder.products, state);
-    const requestWithBiases = yield effects.select(RequestHelpers.realTimeBiasing, request);
+    const request = productsRequest.composeRequest(state);
 
-    return yield effects.call(Requests.search, flux, requestWithBiases);
+    return yield effects.call(Requests.search, flux, request);
   }
 
   export function* fetchNavigations(flux: FluxCapacitor, action: Actions.FetchProducts) {
@@ -66,10 +64,7 @@ export namespace Tasks {
       const config = yield effects.select(Selectors.config);
       const iNav = config.recommendations.iNav;
       if (iNav.navigations.sort || iNav.refinements.sort) {
-        const body = RequestHelpers.composeRequest(
-          RequestHelpers.requestBuilder.recommendationsNavigations,
-          state,
-        );
+        const body = recommendationsNavigationsRequest.composeRequest(state);
         const recommendationsResponse = yield effects.call(
           Requests.recommendations,
           {
@@ -112,11 +107,7 @@ export namespace Tasks {
         yield effects.put(<any>flux.actions.infiniteScrollRequestState({ isFetchingBackward: true }));
       }
 
-      const requestBody = RequestHelpers.composeRequest(
-        RequestHelpers.requestBuilder.products,
-        state,
-        { pageSize, skip }
-      );
+      const requestBody = productsRequest.composeRequest(state, { pageSize, skip });
       const result = yield effects.call(Requests.search, flux, requestBody);
 
       flux.emit(Events.BEACON_SEARCH, result.id);

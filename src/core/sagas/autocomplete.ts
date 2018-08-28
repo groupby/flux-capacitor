@@ -1,15 +1,16 @@
+import { SelectedRefinement } from 'groupby-api';
 import * as effects from 'redux-saga/effects';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import Adapter from '../adapters/autocomplete';
 import ConfigAdapter from '../adapters/configuration';
-import RecommendationsAdapter from '../adapters/recommendations';
-import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';
-import RequestHelpers from '../requests';
+import {
+  autocompleteProductsRequest,
+  autocompleteSuggestionsRequest,
+  recommendationsSuggestionsRequest
+} from '../requests';
 import Selectors from '../selectors';
-import Store from '../store';
-import { fetch } from '../utils';
 import Requests from './requests';
 
 export namespace Tasks {
@@ -19,10 +20,7 @@ export namespace Tasks {
       const state = yield effects.select();
       const config = yield effects.select(Selectors.config);
       const field = Selectors.autocompleteCategoryField(state);
-      const requestBody = RequestHelpers.composeRequest(
-        RequestHelpers.requestBuilder.autocompleteSuggestions,
-        state
-      );
+      const requestBody = autocompleteSuggestionsRequest.composeRequest(state);
       const suggestionsRequest = effects.call(
         Requests.autocomplete,
         flux,
@@ -32,11 +30,7 @@ export namespace Tasks {
 
       const recommendationsConfig = config.autocomplete.recommendations;
 
-      const body = RequestHelpers.composeRequest(
-        RequestHelpers.requestBuilder.recommendationsSuggestions,
-        state,
-        { query }
-      );
+      const body = recommendationsSuggestionsRequest.composeRequest(state, { query });
       const trendingRequest = effects.call(
         Requests.recommendations,
         {
@@ -72,10 +66,11 @@ export namespace Tasks {
   export function* fetchProducts(flux: FluxCapacitor, { payload: { query, refinements } }: Actions.FetchAutocompleteProducts) {
     try {
       const state = yield effects.select();
-      const requestBody = RequestHelpers.composeRequest(
-        RequestHelpers.requestBuilder.autocompleteProducts,
+      const requestRefinements = refinements.map(({ field, ...rest }) =>
+        (<SelectedRefinement>{ ...rest, type: 'Value', navigationName: field }));
+      const requestBody = autocompleteProductsRequest.composeRequest(
         state,
-        { refinements, query }
+        { refinements: requestRefinements, query }
       );
       const res = yield effects.call(Requests.search, flux, requestBody);
 

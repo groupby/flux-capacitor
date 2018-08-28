@@ -49,6 +49,11 @@ namespace Payload {
   }
 
   export namespace Autocomplete {
+    export interface Products {
+      query: string;
+      refinements: Payload.Autocomplete.Refinement[];
+    }
+
     export interface Suggestions {
       suggestions: Store.Autocomplete.Suggestion[];
       categoryValues: string[];

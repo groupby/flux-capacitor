@@ -97,7 +97,7 @@ namespace Actions {
   export const FETCH_AUTOCOMPLETE_SUGGESTIONS = 'FETCH_AUTOCOMPLETE_SUGGESTIONS';
   export type FetchAutocompleteSuggestions = Action<typeof FETCH_AUTOCOMPLETE_SUGGESTIONS, string>;
   export const FETCH_AUTOCOMPLETE_PRODUCTS = 'FETCH_AUTOCOMPLETE_PRODUCTS';
-  export type FetchAutocompleteProducts = Action<typeof FETCH_AUTOCOMPLETE_PRODUCTS, { query: string, refinements: Payload.Autocomplete.Refinement[] }>;
+  export type FetchAutocompleteProducts = Action<typeof FETCH_AUTOCOMPLETE_PRODUCTS, Payload.Autocomplete.Products>;
   export const FETCH_COLLECTION_COUNT = 'FETCH_COLLECTION_COUNT';
   export type FetchCollectionCount = Action<typeof FETCH_COLLECTION_COUNT, string>;
   export const FETCH_PRODUCT_DETAILS = 'FETCH_PRODUCT_DETAILS';

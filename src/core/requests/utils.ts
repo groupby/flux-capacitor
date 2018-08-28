@@ -1,5 +1,6 @@
 import { Request } from 'groupby-api';
 import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt';
+import Payload from '../actions/payloads';
 import Autocomplete from '../adapters/autocomplete';
 import Configuration from '../adapters/configuration';
 import PastPurchaseAdapter from '../adapters/past-purchases';
@@ -151,7 +152,7 @@ namespace RequestHelpers {
   };
 
   export const autocompleteProducts: BuildFunction<
-    Partial<Request> | any,
+    Partial<Request>,
     Request
   > = (state, overrideState?) => {
     const config = Selectors.config(state);
@@ -169,13 +170,11 @@ namespace RequestHelpers {
       request = RequestHelpers.realTimeBiasing(state, request);
     }
 
-    const refinements = overrideState.refinements
-      ? overrideState.refinements.map(({ field, ...rest }) =>
-        ({ type: 'Value', navigationName: field, ...rest }))
-      : request.refinements;
-
-    return { ...request, ...overrideState, refinements };
+    return <Request>{ ...request, ...overrideState };
   };
+
+  export const products: BuildFunction<Partial<Request>, Request> = (state, overrideState?) =>
+    ({ ...RequestHelpers.realTimeBiasing(state, RequestHelpers.search(state)), ...overrideState });
 
   // tslint:disable-next-line max-line-length
   export const realTimeBiasing = (state: Store.State, request: Request): Request => {

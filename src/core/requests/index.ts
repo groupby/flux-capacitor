@@ -1,5 +1,6 @@
 import { Request } from 'groupby-api';
 import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt';
+import Payload from '../actions/payloads';
 import Configuration from '../adapters/configuration';
 import Recommendations from '../adapters/recommendations';
 import ConfigurationType from '../configuration';
@@ -8,12 +9,12 @@ import Store from '../store';
 import { normalizeToFunction, GenericTransformer } from '../utils';
 import RequestHelpers from './utils';
 
-export default class RequestBuilder<T = any> implements RequestBuilder<T> {
+export default class RequestBuilder<T = any, U = T> {
   pastRequest: T;
   _override: (state: Store.State) => GenericTransformer<T>;
 
   constructor(
-    public build: RequestHelpers.BuildFunction<Partial<T>, T>,
+    public build: RequestHelpers.BuildFunction<Partial<T>, U>,
     _override: Configuration.Override<T> = () => normalizeToFunction({})
   ) {
     this.pastRequest = {} as T;
@@ -28,7 +29,7 @@ export default class RequestBuilder<T = any> implements RequestBuilder<T> {
     return (request) => reference.pastRequest = request;
   }
 
-  composeRequest(state: Store.State, overrideState?: T) {
+  composeRequest(state: Store.State, overrideState?: Partial<T>) {
     return RequestHelpers.chain(
       normalizeToFunction(this.build(state, overrideState)),
       this.override(this._override(state), this),
@@ -43,11 +44,11 @@ export const autocompleteSuggestionsRequest = new RequestBuilder<QueryTimeAutoco
 export const collectionRequest = new RequestBuilder<Request>(RequestHelpers.search, Configuration.collectionOverrides);
 export const pastPurchaseProductsRequest = new RequestBuilder<Request>(RequestHelpers.pastPurchaseProducts);
 export const productDetailsRequest = new RequestBuilder<Request>(RequestHelpers.search, Configuration.detailsOverrides);
-export const productsRequest = new RequestBuilder<Request>(RequestHelpers.search, Configuration.searchOverrides);
+export const productsRequest = new RequestBuilder<Request>(RequestHelpers.products, Configuration.searchOverrides);
 export const recommendationsNavigationsRequest = new RequestBuilder<Recommendations.RecommendationsBody>(RequestHelpers.recommendationsNavigations);
 export const recommendationsProductIDsRequest = new RequestBuilder<Recommendations.RecommendationsRequest>(RequestHelpers.recommendationsProductIDs);
 export const recommendationsProductsRequest = new RequestBuilder<Request>(RequestHelpers.search);
-export const recommendationsSuggestionsRequest = new RequestBuilder<Recommendations.Request>(RequestHelpers.recommendationsSuggestions);
+export const recommendationsSuggestionsRequest = new RequestBuilder<Recommendations.Request & { query: string }, Recommendations.Request>(RequestHelpers.recommendationsSuggestions);
 export const refinementsRequest = new RequestBuilder<Request>(RequestHelpers.search, Configuration.refinementsOverrides);
 /* tslint:enable */
 
