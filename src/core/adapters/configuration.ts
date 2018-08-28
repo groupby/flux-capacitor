@@ -8,7 +8,7 @@ import * as PageReducer from '../reducers/data/page';
 import * as PastPurchaseReducer from '../reducers/data/past-purchases';
 import * as PersonalizationAdapter from '../reducers/data/personalization';
 import Store from '../store';
-import { normalizeToFunction } from '../utils';
+import { normalizeToFunction, GenericTransformer } from '../utils';
 
 namespace Adapter {
 
@@ -194,24 +194,24 @@ namespace Adapter {
     }
   };
 
-  export type Override<T = object> = (config: Configuration) => (...arg: T[]) => T;
+  export type Override<T = object> = (config: Configuration) => GenericTransformer<T>;
 
-  export const searchOverrides: Override = (config) =>
+  export const searchOverrides: Override<Request> = (config) =>
     normalizeToFunction(config.search.overrides);
 
-  export const autocompleteSuggestionsOverrides: Override = (config) =>
+  export const autocompleteSuggestionsOverrides: Override<any> = (config) =>
     normalizeToFunction(config.autocomplete.overrides.suggestions);
 
-  export const autocompleteProductsOverrides: Override = (config) =>
+  export const autocompleteProductsOverrides: Override<any> = (config) =>
     normalizeToFunction(config.autocomplete.overrides.products);
 
-  export const collectionOverrides: Override = (config) =>
+  export const collectionOverrides: Override<Request> = (config) =>
     normalizeToFunction(<any>(config['collections'] || <any>{}).overrides);
 
-  export const detailsOverrides: Override = (config) =>
+  export const detailsOverrides: Override<Request> = (config) =>
     normalizeToFunction(<any>(config.details || <any>{}).overrides);
 
-  export const refinementsOverrides: Override = (config) =>
+  export const refinementsOverrides: Override<Request> = (config) =>
     normalizeToFunction(<any>(config['refinements'] || <any>{}).overrides);
 }
 
