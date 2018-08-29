@@ -6,14 +6,13 @@ import RecommendationsAdapter from '../../../../src/core/adapters/recommendation
 import SearchAdapter from '../../../../src/core/adapters/search';
 import { receivePage } from '../../../../src/core/reducers/data/page';
 import * as RequestBuilders from '../../../../src/core/requests';
-import RequestHelpers from '../../../../src/core/requests/utils';
 import sagaCreator, { MissingPayloadError, Tasks } from '../../../../src/core/sagas/recommendations';
 import Requests from '../../../../src/core/sagas/requests';
 import Selectors from '../../../../src/core/selectors';
 import * as utils from '../../../../src/core/utils';
 import suite from '../../_suite';
 
-suite.only('recommendations saga', ({ expect, spy, stub }) => {
+suite('recommendations saga', ({ expect, spy, stub }) => {
 
   describe('createSaga()', () => {
     it('should return a saga', () => {
@@ -453,7 +452,6 @@ suite.only('recommendations saga', ({ expect, spy, stub }) => {
         const pastPurchasesFromSkus = { e: 'f' };
         const pastPurchaseSkusSelector = stub(Selectors, 'pastPurchases').returns(pastPurchasesFromSkus);
         const searchRequest = stub(Requests, 'search').returns(results);
-        stub(RequestHelpers, 'pastPurchaseProducts').returns(results);
         stub(Selectors, 'pastPurchaseProductsWithMetadata').returns([{ index: 11 }, { index: 12 }, { index: 13 }]);
         stub(Selectors, 'pastPurchasePageSize').returns(10);
         stub(Tasks, 'fetchProductsFromSkus').withArgs(flux, pastPurchaseSkus).returns(pastPurchasesFromSkus);
@@ -497,7 +495,7 @@ suite.only('recommendations saga', ({ expect, spy, stub }) => {
       });
     });
 
-    describe.only('fetchSaytPastPurchases()', () => {
+    describe('fetchSaytPastPurchases()', () => {
       it('should return if data.length is 0', () => {
         const receiveSaytPastPurchases = spy(() => 1);
         const flux: any = { actions: { receiveSaytPastPurchases } };
