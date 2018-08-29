@@ -114,7 +114,7 @@ export namespace Tasks {
       const pastPurchaseSkus: Store.PastPurchases.PastPurchaseProduct[] = yield effects.select(Selectors.pastPurchases);
       if (pastPurchaseSkus.length > 0) {
         const state = yield effects.select();
-        const pastPurchasesFromSkus = fetchProductsFromSkus(flux, pastPurchaseSkus);
+        const pastPurchasesFromSkus = Tasks.fetchProductsFromSkus(flux, pastPurchaseSkus);
         const request = pastPurchaseProductsRequest.composeRequest(state, {
           query: '',
           refinements: [],
@@ -123,7 +123,8 @@ export namespace Tasks {
         const results = yield effects.call(Requests.search, flux, request);
         if (getNavigations) {
           const navigations = PastPurchaseAdapter.pastPurchaseNavigations(
-            yield effects.select(Selectors.config), SearchAdapter.combineNavigations(results));
+            yield effects.select(Selectors.config), SearchAdapter.combineNavigations(results)
+          );
           yield effects.put(<any>[
             flux.actions.receivePastPurchaseAllRecordCount(results.totalRecordCount),
             flux.actions.receivePastPurchaseRefinements(navigations),
@@ -161,7 +162,7 @@ export namespace Tasks {
         yield effects.put(<any>flux.actions.infiniteScrollRequestState({ isFetchingBackward: true }));
       }
 
-      const pastPurchasesFromSkus = fetchProductsFromSkus(flux, pastPurchaseSkus);
+      const pastPurchasesFromSkus = Tasks.fetchProductsFromSkus(flux, pastPurchaseSkus);
       const request = pastPurchaseProductsRequest.composeRequest(state, {
         pageSize,
         skip,
@@ -188,7 +189,7 @@ export namespace Tasks {
       const state = yield effects.select();
       const pastPurchaseSkus = yield effects.select(Selectors.pastPurchases);
       if (pastPurchaseSkus.length > 0) {
-        const request =  autocompletePastPurchaseRequest.composeRequest(state, { query: payload });
+        const request = autocompletePastPurchaseRequest.composeRequest(state, { query: payload });
         const results = yield effects.call(Requests.search, flux, request);
         yield effects.put(flux.actions.receiveSaytPastPurchases(SearchAdapter.augmentProducts(results)));
       } else {
