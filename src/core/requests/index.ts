@@ -41,6 +41,7 @@ export default class RequestBuilder<T = any, U = T> {
 /* tslint:disable max-line-length */
 export const autocompleteProductsRequest = new RequestBuilder<Request>(RequestHelpers.autocompleteProducts, Configuration.autocompleteProductsOverrides);
 export const autocompleteSuggestionsRequest = new RequestBuilder<QueryTimeAutocompleteConfig>(RequestHelpers.autocompleteSuggestions, Configuration.autocompleteSuggestionsOverrides);
+export const autocompletePastPurchaseRequest = new RequestBuilder<Request>(RequestHelpers.autocompleteProducts);
 export const collectionRequest = new RequestBuilder<Request>(RequestHelpers.search, Configuration.collectionOverrides);
 export const pastPurchaseProductsRequest = new RequestBuilder<Request>(RequestHelpers.pastPurchaseProducts);
 export const productDetailsRequest = new RequestBuilder<Request>(RequestHelpers.search, Configuration.detailsOverrides);

@@ -7,6 +7,7 @@ import PastPurchaseAdapter from '../adapters/past-purchases';
 import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';
 import {
+  autocompletePastPurchaseRequest,
   pastPurchaseProductsRequest,
   recommendationsProductsRequest,
   recommendationsProductIDsRequest
@@ -90,20 +91,6 @@ export namespace Tasks {
     throw new MissingPayloadError();
   }
 
-  // tslint:disable-next-line max-line-length
-  export function* fetchProductsFromSkus(flux: FluxCapacitor, skus: Store.PastPurchases.PastPurchaseProduct[], request: Request) {
-    const ids: string[] = skus.map(({ sku }) => sku);
-    const req = {
-      ...request,
-      biasing: <Biasing>{
-        restrictToIds: ids,
-      },
-      sort: <Sort[]>[{ type: 'ByIds', ids }],
-    };
-
-    return yield effects.call(Requests.search, flux, req);
-  }
-
   export function* fetchPastPurchases(flux: FluxCapacitor, action: Actions.FetchPastPurchases) {
     try {
       const config: Configuration = yield effects.select(Selectors.config);
@@ -128,8 +115,13 @@ export namespace Tasks {
       const pastPurchaseSkus: Store.PastPurchases.PastPurchaseProduct[] = yield effects.select(Selectors.pastPurchases);
       if (pastPurchaseSkus.length > 0) {
         const state = yield effects.select();
-        const request = pastPurchaseProductsRequest.composeRequest(state, { query: '', refinements: [] });
-        const results = yield effects.call(fetchProductsFromSkus, flux, pastPurchaseSkus, request);
+        const pastPurchasesFromSkus = fetchProductsFromSkus(flux, pastPurchaseSkus);
+        const request = pastPurchaseProductsRequest.composeRequest(state, {
+          query: '',
+          refinements: [],
+          ...pastPurchasesFromSkus
+        });
+        const results = yield effects.call(Requests.search, flux, request);
         if (getNavigations) {
           const navigations = PastPurchaseAdapter.pastPurchaseNavigations(
             yield effects.select(Selectors.config), SearchAdapter.combineNavigations(results));
@@ -170,8 +162,13 @@ export namespace Tasks {
         yield effects.put(<any>flux.actions.infiniteScrollRequestState({ isFetchingBackward: true }));
       }
 
-      const request = pastPurchaseProductsRequest.composeRequest(state, { pageSize, skip });
-      const result = yield effects.call(fetchProductsFromSkus, flux, pastPurchaseSkus, request);
+      const pastPurchasesFromSkus = fetchProductsFromSkus(flux, pastPurchaseSkus);
+      const request = pastPurchaseProductsRequest.composeRequest(state, {
+        pageSize,
+        skip,
+        ...pastPurchasesFromSkus
+      });
+      const result = yield effects.call(Requests.search, flux, request);
 
       yield effects.put(<any>[
         flux.actions.receivePastPurchaseCurrentRecordCount(result.totalRecordCount),
@@ -189,14 +186,11 @@ export namespace Tasks {
 
   export function* fetchSaytPastPurchases(flux: FluxCapacitor, { payload }: Actions.FetchSaytPastPurchases) {
     try {
-      const config: Configuration = yield effects.select(Selectors.config);
+      const state = yield effects.select();
       const pastPurchaseSkus = yield effects.select(Selectors.pastPurchases);
       if (pastPurchaseSkus.length > 0) {
-        const request = yield effects.select(RequestHelpers.autocompleteProducts);
-        const results = yield effects.call(fetchProductsFromSkus, flux, pastPurchaseSkus, {
-          ...request,
-          query: payload
-        });
+        const request =  autocompletePastPurchaseRequest.composeRequest(state, { query: payload });
+        const results = yield effects.call(Requests.search, flux, request);
         yield effects.put(flux.actions.receiveSaytPastPurchases(SearchAdapter.augmentProducts(results)));
       } else {
         yield effects.put(flux.actions.receiveSaytPastPurchases([]));
@@ -204,6 +198,17 @@ export namespace Tasks {
     } catch (e) {
       return effects.put(flux.actions.receiveSaytPastPurchases(e));
     }
+  }
+
+  export function fetchProductsFromSkus(flux: FluxCapacitor, skus: Store.PastPurchases.PastPurchaseProduct[]) {
+    const ids: string[] = skus.map(({ sku }) => sku);
+
+    return {
+      biasing: <Biasing>{
+        restrictToIds: ids,
+      },
+      sort: <Sort[]>[{ type: 'ByIds', ids }],
+    };
   }
 }
 
