@@ -39,14 +39,24 @@ interface Configuration {
   search?: Configuration.Search;
 
   /**
+   * state initial configuration for the collections Searchandiser request
+   */
+  collections?: Configuration.Collections;
+
+  /**
    * state initial configuration for Recommendations
    */
   recommendations?: Configuration.Recommendations;
 
   /**
-   * state initial configuration for details Searchandiser requests
+   * state initial configuration for details Searchandiser request
    */
-   details?: Configuration.Details;
+  details?: Configuration.Details;
+
+  /**
+   * state initial configuration for the more refinements Searchandiser request
+   */
+  refinements?: Configuration.Refinements;
 
   /**
    * network request configuration
@@ -392,8 +402,17 @@ namespace Configuration {
     }
   }
 
+  export interface Collections {
+    overrides?: Configuration.SearchOverrides;
+  }
+
   export interface Details {
     alwaysFetch: boolean;
+    overrides?: Configuration.SearchOverrides;
+  }
+
+  export interface Refinements {
+    overrides?: Configuration.SearchOverrides;
   }
 
   export namespace Personalization {

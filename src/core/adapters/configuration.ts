@@ -206,13 +206,13 @@ namespace Adapter {
     normalizeToFunction(config.autocomplete.overrides.products);
 
   export const collectionOverrides: Override<Request> = (config) =>
-    normalizeToFunction(<any>(config['collections'] || <any>{}).overrides);
+    normalizeToFunction(config.collections.overrides);
 
   export const detailsOverrides: Override<Request> = (config) =>
-    normalizeToFunction(<any>(config.details || <any>{}).overrides);
+    normalizeToFunction(config.details.overrides);
 
   export const refinementsOverrides: Override<Request> = (config) =>
-    normalizeToFunction(<any>(config['refinements'] || <any>{}).overrides);
+    normalizeToFunction(config.refinements.overrides);
 }
 
 export default Adapter;
