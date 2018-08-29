@@ -2,7 +2,7 @@ import * as effects from 'redux-saga/effects';
 import * as sinon from 'sinon';
 import Actions from '../../../../src/core/actions';
 import Events from '../../../../src/core/events';
-import RequestHelpers from '../../../../src/core/requests';
+import RequestHelpers from '../../../../src/core/requests/utils'
 import sagaCreator, { Tasks } from '../../../../src/core/sagas/product-details';
 import Requests from '../../../../src/core/sagas/requests';
 import Selectors from '../../../../src/core/selectors';

@@ -4,7 +4,7 @@ import Adapter from '../../../../src/core/adapters/autocomplete';
 import ConfigAdapter from '../../../../src/core/adapters/configuration';
 import RecommendationsAdapter from '../../../../src/core/adapters/recommendations';
 import SearchAdapter from '../../../../src/core/adapters/search';
-import RequestHelpers from '../../../../src/core/requests';
+import RequestHelpers from '../../../../src/core/requests/utils';
 import sagaCreator, { Tasks } from '../../../../src/core/sagas/autocomplete';
 import Requests from '../../../../src/core/sagas/requests';
 import Selectors from '../../../../src/core/selectors';

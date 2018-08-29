@@ -4,7 +4,7 @@ import * as utils from '../../../../src/core/actions/utils';
 import RecommendationsAdapter from '../../../../src/core/adapters/recommendations';
 import Adapter from '../../../../src/core/adapters/refinements';
 import Events from '../../../../src/core/events';
-import RequestHelpers from '../../../../src/core/requests';
+import RequestHelpers from '../../../../src/core/requests/utils'
 import sagaCreator, { Tasks } from '../../../../src/core/sagas/refinements';
 import Requests from '../../../../src/core/sagas/requests';
 import Selectors from '../../../../src/core/selectors';

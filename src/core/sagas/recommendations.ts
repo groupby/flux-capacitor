@@ -12,7 +12,6 @@ import {
   recommendationsProductsRequest,
   recommendationsProductIDsRequest
 } from '../requests';
-import RequestHelpers from '../requests/utils';
 import Selectors from '../selectors';
 import Store from '../store';
 import * as utils from '../utils';
