@@ -27,23 +27,24 @@ export namespace Tasks {
         query,
         requestBody
       );
+      const requests = [suggestionsRequest];
 
       const recommendationsConfig = config.autocomplete.recommendations;
 
-      const body = recommendationsSuggestionsRequest.composeRequest(state, { query });
-      const trendingRequest = effects.call(
-        Requests.recommendations,
-        {
-          customerId: config.customerId,
-          endpoint: 'searches',
-          // fall back to default mode "popular" if not provided
-          // "popular" default will likely provide the most consistently strong data
-          mode: Configuration.RECOMMENDATION_MODES[recommendationsConfig.suggestionMode || 'popular'],
-          body
-        }
-      );
-      const requests = [suggestionsRequest];
       if (recommendationsConfig.suggestionCount > 0) {
+        const body = recommendationsSuggestionsRequest.composeRequest(state, { query });
+        const trendingRequest = effects.call(
+          Requests.recommendations,
+          {
+            customerId: config.customerId,
+            endpoint: 'searches',
+            // fall back to default mode "popular" if not provided
+            // "popular" default will likely provide the most consistently strong data
+            mode: Configuration.RECOMMENDATION_MODES[recommendationsConfig.suggestionMode || 'popular'],
+            body
+          }
+        );
+
         requests.push(trendingRequest);
       }
 
