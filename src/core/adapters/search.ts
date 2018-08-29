@@ -22,8 +22,8 @@ export const MAX_RECORDS = 10000;
 namespace Adapter {
 
   // tslint:disable-next-line max-line-length
-  export const extractQuery = ({ correctedQuery: corrected, didYouMean, relatedQueries: related, rewrites }: Results): Actions.Payload.Query =>
-    ({ corrected, didYouMean, related, rewrites });
+  export const extractQuery = ({ correctedQuery: corrected, didYouMean, originalQuery: original, relatedQueries: related, rewrites }: Results): Actions.Payload.Query =>
+    ({ corrected, didYouMean, original, related, rewrites });
 
   export const extractRefinement = ({ type, value, low, high, count: total }: RangeRefinement & ValueRefinement):
     Store.ValueRefinement | Store.RangeRefinement =>

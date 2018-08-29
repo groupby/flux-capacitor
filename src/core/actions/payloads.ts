@@ -34,6 +34,7 @@ namespace Payload {
     related: string[];
     didYouMean: string[];
     rewrites: string[];
+    original: string;
   }
 
   // note: Isn't getting the right type in generated doc for some reason

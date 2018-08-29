@@ -21,5 +21,6 @@ export default function updateQuery(state: State = DEFAULTS, action: Action): St
 export const updateOriginal = (state: State, query: string) =>
   ({ ...state, original: query });
 
-export const receiveQuery = (state: State, { corrected, didYouMean, related, rewrites }: Actions.Payload.Query) =>
-  ({ ...state, corrected, didYouMean, related, rewrites });
+// tslint:disable-next-line max-line-length
+export const receiveQuery = (state: State, { corrected, didYouMean, original, related, rewrites }: Actions.Payload.Query) =>
+  ({ ...state, corrected, didYouMean, original, related, rewrites });
