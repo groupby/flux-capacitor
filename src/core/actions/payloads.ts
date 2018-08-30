@@ -31,10 +31,10 @@ namespace Payload {
 
   export interface Query {
     corrected?: string;
-    related: string[];
-    didYouMean: string[];
-    rewrites: string[];
-    original: string;
+    related?: string[];
+    didYouMean?: string[];
+    rewrites?: string[];
+    original?: string;
   }
 
   // note: Isn't getting the right type in generated doc for some reason

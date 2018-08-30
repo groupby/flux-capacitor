@@ -22,5 +22,5 @@ export const updateOriginal = (state: State, query: string) =>
   ({ ...state, original: query });
 
 // tslint:disable-next-line max-line-length
-export const receiveQuery = (state: State, { corrected, didYouMean, original, related, rewrites }: Actions.Payload.Query) =>
+export const receiveQuery = (state: State, { corrected = state.corrected, didYouMean = state.didYouMean, original = state.original, related = state.related, rewrites = state.rewrites }: Actions.Payload.Query) =>
   ({ ...state, corrected, didYouMean, original, related, rewrites });
