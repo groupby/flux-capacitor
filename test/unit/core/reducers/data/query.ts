@@ -42,6 +42,15 @@ suite('query', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
+    it('should return state for properties that are missing', () => {
+      const payload: any = {
+        corrected: 'lays chips'
+      };
+      const reducer = query(state, { type: Actions.RECEIVE_QUERY, payload });
+
+      expect(reducer).to.eql({ ...state, corrected: payload.corrected });
+    });
+
     it('should return state on default', () => {
       const reducer = query(state, <any>{});
 
