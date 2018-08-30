@@ -27,12 +27,22 @@ namespace Requests {
 
   // tslint:disable-next-line max-line-length
   export function* recommendations({ customerId, endpoint, mode, body }: { customerId: string, endpoint: string, mode: string, body: RequestHelpers.RequestBody }, cb?: (err: any, result: any) => void) {
-    return yield effects.call(fetch, RecommendationsAdapter.buildUrl(customerId, endpoint, mode), RequestHelpers.buildPostBody(body), cb);
+    return yield effects.call(
+      fetch,
+      RecommendationsAdapter.buildUrl(customerId, endpoint, mode),
+      RequestHelpers.buildPostBody(body),
+      cb
+    );
   }
 
   // tslint:disable-next-line max-line-length
   export function* pastPurchases({ customerId, endpoint, body }: { customerId: string, endpoint: string, body: RequestHelpers.RequestBody }, cb?: (err: any, result: any) => void) {
-    return yield effects.call(fetch, PastPurchasesAdapter.buildUrl(customerId, endpoint), RequestHelpers.buildPostBody(body), cb);
+    return yield effects.call(
+      fetch,
+      PastPurchasesAdapter.buildUrl(customerId, endpoint),
+      RequestHelpers.buildPostBody(body),
+      cb
+    );
   }
 }
 
