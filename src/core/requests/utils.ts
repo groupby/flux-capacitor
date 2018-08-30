@@ -67,31 +67,27 @@ namespace RequestHelpers {
     return <Request>{ ...request, ...overrideRequest };
   };
 
-  export const recommendationsSuggestions: BuildFunction<
-    Partial<Recommendations.Request & { query: string }>,
-    Recommendations.Request
-  > = (state, overrideRequest = {}) => {
+  // tslint:disable-next-line max-line-length
+  export const recommendationsSuggestions: BuildFunction<Partial<Recommendations.Request & { query: string }>, Recommendations.Request> = (state, overrideRequest = {}) => {
     const config = Selectors.config(state);
-    const { query = false, ...restOfOverrideState } = overrideRequest;
+    const { query = false, ...restOfOverrideRequest } = overrideRequest;
 
     const request = Recommendations.addLocationToRequest({
       size: config.autocomplete.recommendations.suggestionCount,
       matchPartial: {
         and: [{
           search: {
-            query: query || Selectors.query(state),
+            query: query !== false ? query : Selectors.query(state),
           }
         }]
       }
     }, state);
 
-    return { ...request, ...restOfOverrideState };
+    return { ...request, ...restOfOverrideRequest };
   };
 
-  export const recommendationsNavigations: BuildFunction<
-    Partial<Recommendations.RecommendationsBody>,
-    Recommendations.RecommendationsBody
-  > = (state, overrideRequest = {}) => {
+  // tslint:disable-next-line max-line-length
+  export const recommendationsNavigations: BuildFunction<Partial<Recommendations.RecommendationsBody>, Recommendations.RecommendationsBody> = (state, overrideRequest = {}) => {
     const query = Selectors.query(state);
     const iNav = Selectors.config(state).recommendations.iNav;
     const sizeAndWindow = { size: iNav.size, window: iNav.window };
@@ -99,24 +95,21 @@ namespace RequestHelpers {
     const request = {
       minSize: iNav.minSize || iNav.size,
       sequence: [
-        { ...sizeAndWindow,
+        {
+          ...sizeAndWindow,
           matchPartial: {
             and: [{ search: { query } }]
           },
         },
-        {
-          ...sizeAndWindow,
-        }
+        sizeAndWindow,
       ]
     };
 
     return { ...request, ...overrideRequest };
   };
 
-  export const recommendationsProductIDs: BuildFunction<
-    Partial<Recommendations.RecommendationsRequest>,
-    Recommendations.RecommendationsRequest
-  > = (state, overrideRequest = {}) => {
+  // tslint:disable-next-line max-line-length
+  export const recommendationsProductIDs: BuildFunction<Partial<Recommendations.RecommendationsRequest>, Recommendations.RecommendationsRequest> = (state, overrideRequest = {}) => {
     const config = Selectors.config(state);
 
     const request = Recommendations.addLocationToRequest({
@@ -128,11 +121,8 @@ namespace RequestHelpers {
     return { ...request, ...overrideRequest };
   };
 
-  // tslint:disable-next-line
-  export const autocompleteSuggestions: BuildFunction<
-    Partial<QueryTimeAutocompleteConfig>,
-    QueryTimeAutocompleteConfig
-  > = (state, overrideRequest = {}) => {
+  // tslint:disable-next-line max-line-length
+  export const autocompleteSuggestions: BuildFunction<Partial<QueryTimeAutocompleteConfig>, QueryTimeAutocompleteConfig> = (state, overrideRequest = {}) => {
     const config = Selectors.config(state);
     const request = {
       language: Autocomplete.extractLanguage(config),
@@ -175,7 +165,7 @@ namespace RequestHelpers {
       ...request,
       biasing: {
         ...request.biasing,
-        biases: ((request.biasing ? request.biasing.biases : []) || []).concat(addedBiases),
+        biases: (request.biasing && request.biasing.biases || []).concat(addedBiases),
       }
     };
   };

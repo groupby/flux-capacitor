@@ -22,7 +22,7 @@ export default class RequestBuilder<T = any, U = T> {
   }
 
   override<S>(overrideConfig: (currReq: S, prevReq: S) => S, reference: RequestBuilder): ((r: S) => S) {
-    return (r: S) => overrideConfig(r, <S>reference.pastRequest);
+    return (r) => overrideConfig(r, reference.pastRequest);
   }
 
   setPastState<S>(reference: RequestBuilder): ((request: S) => S) {
