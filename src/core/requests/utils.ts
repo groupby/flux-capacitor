@@ -22,9 +22,9 @@ namespace RequestHelpers {
     body: JSON.stringify(body)
   });
 
-  export type BuildFunction<T, S> = (state: Store.State, overrideState?: T) => S;
+  export type BuildFunction<T, S> = (state: Store.State, overrideRequest?: T) => S;
 
-  export const search: BuildFunction<Partial<Request>, Request> = (state, overrideState?) => {
+  export const search: BuildFunction<Partial<Request>, Request> = (state, overrideRequest = {}) => {
     const config = Selectors.config(state);
     const sort = Selectors.sort(state);
     const pageSize = Selectors.pageSize(state);
@@ -50,10 +50,10 @@ namespace RequestHelpers {
       request.biasing = PastPurchaseAdapter.pastPurchaseBiasing(state);
     }
 
-    return <Request>{ ...request, ...overrideState };
+    return <Request>{ ...request, ...overrideRequest };
   };
 
-  export const pastPurchaseProducts: BuildFunction<Partial<Request>, Request> = (state, overrideState?) => {
+  export const pastPurchaseProducts: BuildFunction<Partial<Request>, Request> = (state, overrideRequest = {}) => {
     const request: Partial<Request> = {
       ...RequestHelpers.search(state),
       pageSize: Selectors.pastPurchasePageSize(state),
@@ -64,33 +64,34 @@ namespace RequestHelpers {
       sort: undefined,
     };
 
-    return <Request>{ ...request, ...overrideState };
+    return <Request>{ ...request, ...overrideRequest };
   };
 
   export const recommendationsSuggestions: BuildFunction<
     Partial<Recommendations.Request & { query: string }>,
     Recommendations.Request
-  > = (state, overrideState?) => {
+  > = (state, overrideRequest = {}) => {
     const config = Selectors.config(state);
+    const { query = false, ...restOfOverrideState } = overrideRequest;
 
     const request = Recommendations.addLocationToRequest({
       size: config.autocomplete.recommendations.suggestionCount,
       matchPartial: {
         and: [{
           search: {
-            query: overrideState.query || Selectors.query(state),
+            query: query || Selectors.query(state),
           }
         }]
       }
     }, state);
 
-    return { ...request, ...overrideState };
+    return { ...request, ...restOfOverrideState };
   };
 
   export const recommendationsNavigations: BuildFunction<
     Partial<Recommendations.RecommendationsBody>,
     Recommendations.RecommendationsBody
-  > = (state, overrideState?) => {
+  > = (state, overrideRequest = {}) => {
     const query = Selectors.query(state);
     const iNav = Selectors.config(state).recommendations.iNav;
     const sizeAndWindow = { size: iNav.size, window: iNav.window };
@@ -109,13 +110,13 @@ namespace RequestHelpers {
       ]
     };
 
-    return { ...request, ...overrideState };
+    return { ...request, ...overrideRequest };
   };
 
   export const recommendationsProductIDs: BuildFunction<
     Partial<Recommendations.RecommendationsRequest>,
     Recommendations.RecommendationsRequest
-  > = (state, overrideState?) => {
+  > = (state, overrideRequest = {}) => {
     const config = Selectors.config(state);
 
     const request = Recommendations.addLocationToRequest({
@@ -124,14 +125,14 @@ namespace RequestHelpers {
       target: config.recommendations.idField
     }, state);
 
-    return { ...request, ...overrideState };
+    return { ...request, ...overrideRequest };
   };
 
   // tslint:disable-next-line
   export const autocompleteSuggestions: BuildFunction<
     Partial<QueryTimeAutocompleteConfig>,
     QueryTimeAutocompleteConfig
-  > = (state, overrideState?) => {
+  > = (state, overrideRequest = {}) => {
     const config = Selectors.config(state);
     const request = {
       language: Autocomplete.extractLanguage(config),
@@ -141,13 +142,10 @@ namespace RequestHelpers {
       fuzzyMatch: Configuration.isAutocompleteMatchingFuzzily(config),
     };
 
-    return { ...request, ...overrideState };
+    return { ...request, ...overrideRequest };
   };
 
-  export const autocompleteProducts: BuildFunction<
-    Partial<Request>,
-    Request
-  > = (state, overrideState?) => {
+  export const autocompleteProducts: BuildFunction<Partial<Request>, Request> = (state, overrideRequest = {}) => {
     const config = Selectors.config(state);
 
     let request: Request = RequestHelpers.search(state, {
@@ -163,11 +161,11 @@ namespace RequestHelpers {
       request = RequestHelpers.realTimeBiasing(state, request);
     }
 
-    return <Request>{ ...request, ...overrideState };
+    return <Request>{ ...request, ...overrideRequest };
   };
 
-  export const products: BuildFunction<Partial<Request>, Request> = (state, overrideState?) =>
-    ({ ...RequestHelpers.realTimeBiasing(state, RequestHelpers.search(state)), ...overrideState });
+  export const products: BuildFunction<Partial<Request>, Request> = (state, overrideRequest = {}) =>
+    ({ ...RequestHelpers.realTimeBiasing(state, RequestHelpers.search(state)), ...overrideRequest });
 
   // tslint:disable-next-line max-line-length
   export const realTimeBiasing = (state: Store.State, request: Request): Request => {

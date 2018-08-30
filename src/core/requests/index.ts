@@ -29,9 +29,9 @@ export default class RequestBuilder<T = any, U = T> {
     return (request) => reference.pastRequest = request;
   }
 
-  composeRequest(state: Store.State, overrideState?: Partial<T>) {
+  composeRequest(state: Store.State, overrideRequest?: Partial<T>) {
     return RequestHelpers.chain(
-      normalizeToFunction(this.build(state, overrideState)),
+      normalizeToFunction(this.build(state, overrideRequest)),
       this.override(this._override(state), this),
       this.setPastState(this)
     );
@@ -52,11 +52,3 @@ export const recommendationsProductsRequest = new RequestBuilder<Request>(Reques
 export const recommendationsSuggestionsRequest = new RequestBuilder<Recommendations.Request & { query: string }, Recommendations.Request>(RequestHelpers.recommendationsSuggestions);
 export const refinementsRequest = new RequestBuilder<Request>(RequestHelpers.search, Configuration.refinementsOverrides);
 /* tslint:enable */
-
-// export const requestBuilder: Record<RequestType, any> = {
-  // pastPurchaseSkus: {
-  //   build: RequestHelpers.skus,
-  //   pastRequest: {},
-  //   override: (state) => normalizeToFunction({}),
-  // },
-// };
