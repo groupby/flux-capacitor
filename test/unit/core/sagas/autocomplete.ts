@@ -120,7 +120,7 @@ suite('autocomplete saga', ({ expect, spy, stub, sinon }) => {
         const suggestionCount = 10;
         const location = { minSize: 10 };
         const recommendations = { suggestionCount, suggestionMode: 'trending' };
-        const config = { a: 'b', customerId, recommendations: { location}, autocomplete: { recommendations } };
+        const config = { a: 'b', customerId, recommendations: { location }, autocomplete: { recommendations } };
         const flux: any = { actions: { receiveAutocompleteSuggestions: () => null } };
         const request = { g: 'h' };
         const matchExact = 'match exact';
@@ -172,10 +172,10 @@ suite('autocomplete saga', ({ expect, spy, stub, sinon }) => {
         const action: any = { payload: { query, refinements } };
         const receiveAutocompleteProductsAction: any = { c: 'd' };
         const receiveAutocompleteProducts = spy(() => receiveAutocompleteProductsAction);
-        // tslint:disable-next-line:max-line-length
         const requestRefinements = { navigationName: 'brand', type: 'Value', value: 'Nike', exclude: true };
-        const overrideRefinements = [requestRefinements, {type: 'Value', navigationName: 'Mill_Name', exclude: true, value: 'Under Armour'}];
-        const request = { g: 'h', refinements: { overrideRefinements }};
+        // tslint:disable-next-line:max-line-length
+        const overrideRefinements = [requestRefinements, { type: 'Value', navigationName: 'Mill_Name', exclude: true, value: 'Under Armour' }];
+        const request = { g: 'h', refinements: { overrideRefinements } };
         const response = { i: 'j' };
         const config: any = { k: 'l' };
         const flux: any = { actions: { receiveAutocompleteProducts } };
@@ -183,7 +183,7 @@ suite('autocomplete saga', ({ expect, spy, stub, sinon }) => {
         const state = { a: 'b' };
         const autocompleteProductsRequest = stub(RequestBuilders.autocompleteProductsRequest, 'composeRequest')
           .withArgs(state, { refinements: [requestRefinements], query }).returns(request);
-        stub(Selectors,'config').returns(config);
+        stub(Selectors, 'config').returns(config);
 
         const task = Tasks.fetchProducts(flux, action);
 
