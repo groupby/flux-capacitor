@@ -519,4 +519,86 @@ suite('Configuration Adapter', ({ expect, stub }) => {
       expect(Adapter.autocompleteProductsOverrides(state)(o)).to.eql({ ...o, ...products });
     });
   });
+
+  describe('searchOverrides()', () => {
+    it('should return a normalized function', () => {
+      const overrides = { a: 'b' };
+      const config: any = {
+        search: {
+          overrides
+        }
+      };
+
+      expect(Adapter.searchOverrides(config)(<any>{})).to.eql(overrides);
+    });
+  });
+
+  describe('autocompleteSuggestionsOverrides()', () => {
+    it('should return a normalized function', () => {
+      const overrides = { c: 'd' };
+      const config: any = {
+        autocomplete: {
+          overrides: {
+            suggestions: overrides
+          }
+        }
+      };
+
+      expect(Adapter.autocompleteSuggestionsOverrides(config)(<any>{})).to.eql(overrides);
+    });
+  });
+
+  describe('autocompleteProductsOverrides()', () => {
+    it('should return a normalized function', () => {
+      const overrides = { a: 'b' };
+      const config: any = {
+        autocomplete: {
+          overrides: {
+            products: overrides
+          }
+        }
+      };
+
+      expect(Adapter.autocompleteProductsOverrides(config)(<any>{})).to.eql(overrides);
+    });
+  });
+
+  describe('collectionOverrides()', () => {
+    it('should return a normalized function', () => {
+      const overrides = { a: 'b' };
+      const config: any = {
+        collections: {
+          overrides
+        }
+      };
+
+      expect(Adapter.collectionOverrides(config)(<any>{})).to.eql(overrides);
+    });
+  });
+
+  describe('detailsOverrides()', () => {
+    it('should return a normalized function', () => {
+      const overrides = { a: 'b' };
+      const config: any = {
+        details: {
+          overrides
+        }
+      };
+
+      expect(Adapter.detailsOverrides(config)(<any>{})).to.eql(overrides);
+    });
+  });
+
+  describe('refinementsOverrides', () => {
+    it('should return a normalized function', () => {
+      const overrides = { a: 'b' };
+      const config: any = {
+        refinements: {
+          overrides
+        }
+      };
+
+      expect(Adapter.refinementsOverrides(config)(<any>{})).to.eql(overrides);
+    });
+  });
 });
