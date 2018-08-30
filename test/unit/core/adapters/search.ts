@@ -13,6 +13,7 @@ suite('Search Adapter', ({ expect, stub }) => {
         didYouMean: ['a', 'b'],
         relatedQueries: ['c', 'd'],
         rewrites: ['e', 'f'],
+        originalQuery: 'ok'
       };
 
       const query = Adapter.extractQuery(results);
@@ -22,6 +23,7 @@ suite('Search Adapter', ({ expect, stub }) => {
         didYouMean: ['a', 'b'],
         related: ['c', 'd'],
         rewrites: ['e', 'f'],
+        original: 'ok',
       });
     });
   });
