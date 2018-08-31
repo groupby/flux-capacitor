@@ -261,7 +261,7 @@ suite('requests helpers', ({ expect, stub, spy }) => {
               and: [{ search: { query } }]
             },
           },
-          sizeAndWindow
+          sizeAndWindow,
         ]
       };
       stub(Selectors, 'config').withArgs(state).returns(config);
@@ -282,7 +282,7 @@ suite('requests helpers', ({ expect, stub, spy }) => {
               and: [{ search: { query } }]
             },
           },
-          sizeAndWindow
+          sizeAndWindow,
         ]
       };
       stub(Selectors, 'config').withArgs(state).returns(config);
