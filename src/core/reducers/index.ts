@@ -10,14 +10,14 @@ import ui from './ui';
 
 export type Action = Actions.RefreshState;
 
-export const undoWithoutHistory = (store) => {
+export const undoWithoutHistory = (store, section) => {
   return (state, action) => {
     const historyLength: number = ConfigAdapter.extractHistoryLength(store);
     const config = {
       limit: historyLength + 1,
       filter: includeAction(Actions.SAVE_STATE),
     };
-    const reducer = undoable(data, config);
+    const reducer = undoable(data(section), config);
     const { history, ...newState } = reducer(state, action);
 
     /* istanbul ignore next */
@@ -35,8 +35,9 @@ export const rootReducer = (state, action) => {
   return redux.combineReducers<Store.State>({
     isRunning,
     session,
-    data: undoWithoutHistory(state),
+    data: undoWithoutHistory(state, Actions.StoreSection.Data),
     ui,
+    staging: data(Actions.StoreSection.Staging),
   })(state, action);
 };
 
