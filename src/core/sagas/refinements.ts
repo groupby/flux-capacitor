@@ -27,7 +27,7 @@ export namespace Tasks {
       const { navigationId, refinements, selected } = Adapter.mergeRefinements(res, state);
       yield effects.put(flux.actions.receiveMoreRefinements(navigationId, refinements, selected));
     } catch (e) {
-      yield effects.put(utils.createAction(Actions.RECEIVE_MORE_REFINEMENTS, e));
+      yield effects.put(utils.createAction({ type: Actions.RECEIVE_MORE_REFINEMENTS, payload: e }));
     }
   }
 }
