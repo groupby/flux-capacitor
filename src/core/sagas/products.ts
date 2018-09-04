@@ -42,9 +42,9 @@ export namespace Tasks {
 
         yield effects.put(<any>actions);
 
-        if (!ignoreHistory) {
-          flux.saveState(utils.Routes.SEARCH);
-        }
+        // if (!ignoreHistory) {
+        //   flux.saveState(utils.Routes.SEARCH);
+        // }
       }
     } catch (e) {
       yield effects.put(<any>flux.actions.receiveProducts(e));

@@ -226,6 +226,26 @@ namespace Observer {
             });
           }
         })(emit(Events.UI_UPDATED)),
+      staging: ((emitSearchUpdated: Observer, emitDetailsUpdated: Observer, emitPastPurchasesUpdated: Observer) =>
+        (oldState: Store.Data, newState: Store.Data, path: string) => {
+          if (oldState !== newState) {
+            const { details: oldDetails, pastPurchases: oldPastPurchases, ...oldSearch } = oldState;
+            const { details: newDetails, pastPurchases: newPastPurchases, ...newSearch } = newState;
+            if (oldSearch !== newSearch) {
+              emitSearchUpdated(oldSearch, newSearch, path);
+            }
+            if (oldDetails !== newDetails) {
+              emitDetailsUpdated(oldDetails, newDetails, path);
+            }
+            if (oldPastPurchases !== newPastPurchases) {
+              emitPastPurchasesUpdated(oldPastPurchases, newPastPurchases, path);
+            }
+          }
+        })(
+          emit(Events.STAGING_SEARCH_UPDATED),
+          emit(Events.STAGING_DETAILS_UPDATED),
+          emit(Events.STAGING_PAST_PURCHASES_UPDATED)
+        ),
     };
   }
 }
