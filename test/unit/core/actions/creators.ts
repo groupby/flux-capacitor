@@ -20,7 +20,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     } else {
       expect(action).to.eq(ACTION);
     }
-    expect(createAction).to.be.calledWith(type, payload);
+    expect(createAction).to.be.calledWith({ type, payload });
   }
 
   // tslint:disable-next-line max-line-length
