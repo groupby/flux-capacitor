@@ -162,12 +162,22 @@ export namespace Middleware {
     };
   }
 
+  export function dataMiddleware(middleware: ReduxMiddleware) {
+    return (store) => (next) => (action) => {
+      if (action.section === Actions.StoreSection.Data) {
+        return middleware(store)(next)(action);
+      } else {
+        return next(action);
+      }
+    };
+  }
+
   export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
     const middleware = [
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
-      Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS),
-      Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
+      Middleware.dataMiddleware(Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS)),
+      Middleware.dataMiddleware(Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS)),
       Middleware.errorHandler(flux),
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,
