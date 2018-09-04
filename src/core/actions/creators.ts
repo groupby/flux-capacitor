@@ -407,8 +407,8 @@ namespace ActionCreators {
    * Sets the current page in the store to page 1, but does not update the search.
    * @return {Actions.ResetPage} - Action with undefined.
    */
-  export function resetPage(section: Actions.StoreSection = Actions.StoreSection.Data): Actions.ResetPage {
-    return createAction({ type: Actions.RESET_PAGE }, {
+  export function resetPage(section?: Actions.StoreSection): Actions.ResetPage {
+    return createAction({ type: Actions.RESET_PAGE, section }, {
       payload: validators.notOnFirstPage
     });
   }
