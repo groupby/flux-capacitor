@@ -9,6 +9,14 @@ import * as validators from './validators';
 
 namespace ActionCreators {
   /**
+   * Does nothing.
+   * @return {Actions.Nop} - Action with undefined
+   */
+  export function nop(): Actions.Nop {
+    return createAction(Actions.NOP);
+  }
+
+  /**
    * Updates state with given state.
    * @param  {any}                  state - The state to use.
    * @return {Actions.RefreshState}       - Action with state.
@@ -398,7 +406,7 @@ namespace ActionCreators {
    * Sets the current page in the store to page 1, but does not update the search.
    * @return {Actions.ResetPage} - Action with undefined.
    */
-  export function resetPage(): Actions.ResetPage {
+  export function resetPage(section: Actions.StoreSection = Actions.StoreSection.Data): Actions.ResetPage {
     return createAction(Actions.RESET_PAGE, undefined, {
       payload: validators.notOnFirstPage
     });

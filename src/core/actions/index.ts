@@ -8,7 +8,13 @@ namespace Actions {
     type: S;
     payload?: T;
     meta?: Metadata;
+    section?: StoreSection;
     error?: boolean;
+  }
+
+  export enum StoreSection {
+    Data = 'data',
+    Staging = 'staging',
   }
 
   export interface Metadata {
@@ -34,6 +40,10 @@ namespace Actions {
   }
 
   export import Payload = Payloads;
+
+  // no-op
+  export const NOP = 'NOP';
+  export type Nop = Action<typeof NOP, undefined>;
 
   // tslint:disable max-line-length
   // update actions

@@ -5,8 +5,8 @@ import Selectors from '../selectors';
 import Store from '../store';
 
 // tslint:disable-next-line max-line-length
-export const createAction = <T extends string, P>(type: T, payload?: P, validator?: object): Actions.Action<T, P> => {
-  const builtAction: Actions.Action<T, P> = { type, meta: { validator: validator || {} } };
+export const createAction = <T, P>({ type, payload, section = Actions.StoreSection.Data }: Actions.Action<T, P>, validator?: object): Actions.Action<T, P> => {
+  const builtAction: Actions.Action<T, P> = { type, section, meta: { validator: validator || {} } };
 
   if (payload !== undefined) {
     builtAction.payload = payload;
