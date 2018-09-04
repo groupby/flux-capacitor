@@ -13,7 +13,7 @@ namespace ActionCreators {
    * @return {Actions.Nop} - Action with undefined
    */
   export function nop(): Actions.Nop {
-    return createAction(Actions.NOP);
+    return createAction({ type: Actions.NOP });
   }
 
   /**
@@ -22,7 +22,7 @@ namespace ActionCreators {
    * @return {Actions.RefreshState}       - Action with state.
    */
   export function refreshState(state: any): Actions.RefreshState {
-    return createAction(Actions.REFRESH_STATE, state);
+    return createAction({ type: Actions.REFRESH_STATE, payload: state });
   }
 
   // fetch action creators
@@ -43,7 +43,7 @@ namespace ActionCreators {
   export function fetchMoreRefinements(options) {
     const opts = typeof options === 'string' ? { navigationId: options } : options;
 
-    return createAction(Actions.FETCH_MORE_REFINEMENTS, opts);
+    return createAction({ type: Actions.FETCH_MORE_REFINEMENTS, payload: opts });
   }
 
   /**
@@ -52,7 +52,7 @@ namespace ActionCreators {
    * @return {Actions.FetchProducts} - Action with `{ request }`.
    */
   export function fetchProducts(options: Actions.Payload.Fetch.Override = {}): Actions.FetchProducts {
-    return createAction(Actions.FETCH_PRODUCTS, options);
+    return createAction({ type: Actions.FETCH_PRODUCTS, payload: options });
   }
 
   /**
@@ -62,7 +62,7 @@ namespace ActionCreators {
    */
   // tslint:disable-next-line max-line-length
   export function fetchProductsWithoutHistory(options: Actions.Payload.Fetch.Override = {}): Actions.FetchProductsWithoutHistory {
-    return createAction(Actions.FETCH_PRODUCTS_WITHOUT_HISTORY, options);
+    return createAction({ type: Actions.FETCH_PRODUCTS_WITHOUT_HISTORY, payload: options });
   }
 
   /**
@@ -72,7 +72,7 @@ namespace ActionCreators {
    */
   // tslint:disable-next-line max-line-length
   export function fetchProductsWhenHydrated(options: Actions.Payload.Fetch.Override = {}): Actions.FetchProductsWhenHydrated {
-    return createAction(Actions.FETCH_PRODUCTS_WHEN_HYDRATED, ActionCreators.fetchProducts(options));
+    return createAction({ type: Actions.FETCH_PRODUCTS_WHEN_HYDRATED, payload: ActionCreators.fetchProducts(options) });
   }
 
   /**
@@ -96,7 +96,7 @@ namespace ActionCreators {
     };
     const opts = typeof options === 'number' ? { amount: options, forward } : { forward, ...options };
 
-    return createAction(Actions.FETCH_MORE_PRODUCTS, opts, validator);
+    return createAction({ type: Actions.FETCH_MORE_PRODUCTS, payload: opts }, validator);
   }
 
   /**
@@ -120,7 +120,7 @@ namespace ActionCreators {
     };
     const opts = typeof options === 'string' ? { query: options } : options;
 
-    return createAction(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, opts, validator);
+    return createAction({ type: Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, payload: opts }, validator);
   }
 
   /**
@@ -148,7 +148,7 @@ namespace ActionCreators {
     };
     const opts = typeof options === 'string' ? { query: options, refinements } : { refinements, ...options };
 
-    return createAction(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, opts, validator);
+    return createAction({ type: Actions.FETCH_AUTOCOMPLETE_PRODUCTS, payload: opts }, validator);
   }
 
   /**
@@ -168,7 +168,7 @@ namespace ActionCreators {
   export function fetchCollectionCount(options): Actions.FetchCollectionCount {
     const opts = typeof options === 'string' ? { collection: options } : options;
 
-    return createAction(Actions.FETCH_COLLECTION_COUNT, opts);
+    return createAction({ type: Actions.FETCH_COLLECTION_COUNT, payload: opts });
   }
 
   /**
@@ -188,7 +188,7 @@ namespace ActionCreators {
   export function fetchProductDetails(options): Actions.FetchProductDetails {
     const opts = typeof options === 'string' ? { id: options } : options;
 
-    return createAction(Actions.FETCH_PRODUCT_DETAILS, opts);
+    return createAction({ type: Actions.FETCH_PRODUCT_DETAILS, payload: opts });
   }
 
   /**
@@ -199,7 +199,7 @@ namespace ActionCreators {
    */
   // tslint:disable-next-line max-line-length
   export function fetchRecommendationsProducts(options: Actions.Payload.Fetch.Override = {}): Actions.FetchRecommendationsProducts {
-    return createAction(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, options);
+    return createAction({ type: Actions.FETCH_RECOMMENDATIONS_PRODUCTS, payload: options });
   }
 
   /**
@@ -219,7 +219,7 @@ namespace ActionCreators {
   export function fetchPastPurchases(options = {}): Actions.FetchPastPurchases {
     const opts = typeof options === 'string' ? { query: options } : options;
 
-    return createAction(Actions.FETCH_PAST_PURCHASES, opts);
+    return createAction({ type: Actions.FETCH_PAST_PURCHASES, payload: opts });
   }
 
   /**
@@ -229,7 +229,7 @@ namespace ActionCreators {
    */
   // tslint:disable-next-line max-line-length
   export function fetchPastPurchaseProducts(options: Actions.Payload.Fetch.PastPurchases = {}): Actions.FetchPastPurchaseProducts {
-    return createAction(Actions.FETCH_PAST_PURCHASE_PRODUCTS, options);
+    return createAction({ type: Actions.FETCH_PAST_PURCHASE_PRODUCTS, payload: options });
   }
 
   /**
@@ -253,7 +253,7 @@ namespace ActionCreators {
   export function fetchMorePastPurchaseProducts(options, forward = true): Actions.FetchMorePastPurchaseProducts {
     const opts = typeof options === 'number' ? { amount: options, forward } : { forward, ...options };
 
-    return createAction(Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS, opts);
+    return createAction({ type: Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS, payload: opts });
   }
 
   /**
@@ -263,7 +263,7 @@ namespace ActionCreators {
    */
   // tslint:disable-next-line max-line-length
   export function fetchPastPurchaseNavigations(options: Actions.Payload.Fetch.Override = {}): Actions.FetchPastPurchaseNavigations {
-    return createAction(Actions.FETCH_PAST_PURCHASE_NAVIGATIONS, options);
+    return createAction({ type: Actions.FETCH_PAST_PURCHASE_NAVIGATIONS, payload: options });
   }
 
   /**
@@ -283,7 +283,7 @@ namespace ActionCreators {
   export function fetchSaytPastPurchases(options): Actions.FetchSaytPastPurchases {
     const opts = typeof options === 'string' ? { query: options } : options;
 
-    return createAction(Actions.FETCH_SAYT_PAST_PURCHASES, opts);
+    return createAction({ type: Actions.FETCH_SAYT_PAST_PURCHASES, payload: opts });
   }
 
   // request action creators
@@ -324,7 +324,7 @@ namespace ActionCreators {
   export function updateQuery(query: string): Actions.ResetPageAndUpdateQuery {
     return [
       ActionCreators.resetPage(),
-      createAction(Actions.UPDATE_QUERY, query && query.trim(), {
+      createAction({ type: Actions.UPDATE_QUERY, payload: query && query.trim() }, {
         payload: validators.isValidQuery,
       })
     ];
@@ -352,7 +352,7 @@ namespace ActionCreators {
   export function addRefinement(field: string, valueOrLow: any, high: any = null): Actions.ResetPageAndAddRefinement {
     return [
       ActionCreators.resetPage(),
-      createAction(Actions.ADD_REFINEMENT, refinementPayload(field, valueOrLow, high), {
+      createAction({ type: Actions.ADD_REFINEMENT, payload: refinementPayload(field, valueOrLow, high) }, {
         navigationId: validators.isString,
         payload: [
           validators.isRangeRefinement,
@@ -392,7 +392,7 @@ namespace ActionCreators {
   export function resetRefinements(field: boolean | string): Actions.ResetPageAndResetRefinements {
     return [
       ActionCreators.resetPage(),
-      createAction(Actions.RESET_REFINEMENTS, field, {
+      createAction({ type: Actions.RESET_REFINEMENTS, payload: field }, {
         payload: [
           validators.isValidClearField,
           validators.hasSelectedRefinements,
@@ -407,7 +407,7 @@ namespace ActionCreators {
    * @return {Actions.ResetPage} - Action with undefined.
    */
   export function resetPage(section: Actions.StoreSection = Actions.StoreSection.Data): Actions.ResetPage {
-    return createAction(Actions.RESET_PAGE, undefined, {
+    return createAction({ type: Actions.RESET_PAGE }, {
       payload: validators.notOnFirstPage
     });
   }
@@ -461,7 +461,7 @@ namespace ActionCreators {
   export function selectRefinement(navigationId: string, index: number): Actions.ResetPageAndSelectRefinement {
     return [
       ActionCreators.resetPage(),
-      createAction(Actions.SELECT_REFINEMENT, { navigationId, index }, {
+      createAction({ type: Actions.SELECT_REFINEMENT, payload: { navigationId, index } }, {
         payload: validators.isRefinementDeselectedByIndex
       })
     ];
@@ -478,7 +478,7 @@ namespace ActionCreators {
   export function deselectRefinement(navigationId: string, index: number): Actions.ResetPageAndDeselectRefinement {
     return [
       ActionCreators.resetPage(),
-      createAction(Actions.DESELECT_REFINEMENT, { navigationId, index }, {
+      createAction({ type: Actions.DESELECT_REFINEMENT, payload: { navigationId, index } }, {
         payload: validators.isRefinementSelectedByIndex
       })
     ];
@@ -490,7 +490,7 @@ namespace ActionCreators {
    * @return {Actions.SelectCollection}    - Action with id.
    */
   export function selectCollection(id: string): Actions.SelectCollection {
-    return createAction(Actions.SELECT_COLLECTION, id, {
+    return createAction({ type: Actions.SELECT_COLLECTION, payload: id }, {
       payload: validators.isCollectionDeselected
     });
   }
@@ -501,7 +501,7 @@ namespace ActionCreators {
    * @return {Actions.SelectSort}       - Action with index.
    */
   export function selectSort(index: number): Actions.SelectSort {
-    return createAction(Actions.SELECT_SORT, index, {
+    return createAction({ type: Actions.SELECT_SORT, payload: index }, {
       payload: validators.isSortDeselected
     });
   }
@@ -513,7 +513,7 @@ namespace ActionCreators {
    * @return {Actions.UpdatePageSize}      - Action with size.
    */
   export function updatePageSize(size: number): Actions.UpdatePageSize {
-    return createAction(Actions.UPDATE_PAGE_SIZE, size, {
+    return createAction({ type: Actions.UPDATE_PAGE_SIZE, payload: size }, {
       payload: validators.isDifferentPageSize
     });
   }
@@ -524,7 +524,7 @@ namespace ActionCreators {
    * @return {Actions.UpdateCurrentPage}      - Action with page.
    */
   export function updateCurrentPage(page: number): Actions.UpdateCurrentPage {
-    return createAction(Actions.UPDATE_CURRENT_PAGE, page, {
+    return createAction({ type: Actions.UPDATE_CURRENT_PAGE, payload: page }, {
       payload: [
         validators.isValidPage,
         validators.isOnDifferentPage
@@ -539,7 +539,7 @@ namespace ActionCreators {
    * @return {Actions.UpdateDetails}         - Action with details.
    */
   export function updateDetails(details: Store.Details): Actions.UpdateDetails {
-    return createAction(Actions.UPDATE_DETAILS, details);
+    return createAction({ type: Actions.UPDATE_DETAILS, payload: details });
   }
 
   /**
@@ -549,7 +549,10 @@ namespace ActionCreators {
    * @return {Actions.SetDetails}         - Action with details.
    */
   export function setDetails(product: Record | Store.Product, template?: Template): Actions.SetDetails {
-    return createAction(Actions.SET_DETAILS, { data: product, template: SearchAdapter.extractTemplate(template) });
+    return createAction({
+      type: Actions.SET_DETAILS,
+      payload: { data: product, template: SearchAdapter.extractTemplate(template) },
+    });
   }
 
   /**
@@ -559,7 +562,7 @@ namespace ActionCreators {
    * @return {Actions.UpdateAutocompleteQuery}       - Action with query.
    */
   export function updateAutocompleteQuery(query: string): Actions.UpdateAutocompleteQuery {
-    return createAction(Actions.UPDATE_AUTOCOMPLETE_QUERY, query, {
+    return createAction({ type: Actions.UPDATE_AUTOCOMPLETE_QUERY, payload: query }, {
       payload: validators.isDifferentAutocompleteQuery
     });
   }
@@ -571,16 +574,19 @@ namespace ActionCreators {
    */
   export function updateBiasing(payload: Actions.Payload.Personalization.Biasing) {
     return (state: Store.State): Actions.UpdateBiasing =>
-      createAction(Actions.UPDATE_BIASING, {
-        ...payload,
-        config: Selectors.config(state).personalization.realTimeBiasing,
+      createAction({
+        type: Actions.UPDATE_BIASING,
+        payload: {
+          ...payload,
+          config: Selectors.config(state).personalization.realTimeBiasing,
+        },
       }, {
         payload: validators.isValidBias
       });
   }
 
   export function updateSecuredPayload(payload: Configuration.Recommendations.SecuredPayload) {
-    return createAction(Actions.UPDATE_SECURED_PAYLOAD, payload);
+    return createAction({ type: Actions.UPDATE_SECURED_PAYLOAD, payload });
   }
 
   /**
@@ -590,7 +596,7 @@ namespace ActionCreators {
    * @return {Actions.ReceiveInfiniteScroll}        - Action with fetching state object.
    */
   export function infiniteScrollRequestState(fetchObj: Actions.Payload.InfiniteScroll): Actions.ReceiveInfiniteScroll {
-    return createAction(Actions.RECEIVE_INFINITE_SCROLL, fetchObj);
+    return createAction({ type: Actions.RECEIVE_INFINITE_SCROLL, payload: fetchObj });
   }
 
   // response action creators
@@ -600,7 +606,7 @@ namespace ActionCreators {
    * @return {Actions.ReceiveQuery}        - Action with query object.
    */
   export function receiveQuery(query: Actions.Payload.Query): Actions.ReceiveQuery {
-    return createAction(Actions.RECEIVE_QUERY, query);
+    return createAction({ type: Actions.RECEIVE_QUERY, payload: query });
   }
 
   /**
@@ -610,7 +616,7 @@ namespace ActionCreators {
    */
   export function receiveProducts(res: Results) {
     return (state: Store.State): Actions.Action<string, any>[] | Actions.ReceiveProducts => {
-      const receiveProductsAction = createAction(Actions.RECEIVE_PRODUCTS, res);
+      const receiveProductsAction = createAction({ type: Actions.RECEIVE_PRODUCTS, payload: res });
 
       return handleError(receiveProductsAction, () => {
         const limitedRecordCount = SearchAdapter.extractRecordCount(res.totalRecordCount);
@@ -640,7 +646,7 @@ namespace ActionCreators {
    * @return {Actions.ReceiveProductRecords}          - Action with products.
    */
   export function receiveProductRecords(products: Store.ProductWithMetadata[]): Actions.ReceiveProductRecords {
-    return createAction(Actions.RECEIVE_PRODUCT_RECORDS, products);
+    return createAction({ type: Actions.RECEIVE_PRODUCT_RECORDS, payload: products });
   }
 
   /**
@@ -650,7 +656,7 @@ namespace ActionCreators {
    * @return {Actions.ReceiveCollectionCount}         - Action with count.
    */
   export function receiveCollectionCount(count: Actions.Payload.Collection.Count): Actions.ReceiveCollectionCount {
-    return createAction(Actions.RECEIVE_COLLECTION_COUNT, count);
+    return createAction({ type: Actions.RECEIVE_COLLECTION_COUNT, payload: count });
   }
 
   /**
@@ -660,7 +666,7 @@ namespace ActionCreators {
    * @return {Actions.ReceiveNavigations}             - Action with navigations.
    */
   export function receiveNavigations(navigations: Store.Navigation[]): Actions.ReceiveNavigations {
-    return createAction(Actions.RECEIVE_NAVIGATIONS, navigations);
+    return createAction({ type: Actions.RECEIVE_NAVIGATIONS, payload: navigations });
   }
 
   /**
@@ -670,7 +676,10 @@ namespace ActionCreators {
    */
   export function receivePage(recordCount: number, current?: number) {
     return (state: Store.State): Actions.ReceivePage => {
-      return createAction(Actions.RECEIVE_PAGE, SearchAdapter.extractPage(state, recordCount, current));
+      return createAction({
+        type: Actions.RECEIVE_PAGE,
+        payload: SearchAdapter.extractPage(state, recordCount, current),
+      });
     };
   }
 
@@ -681,7 +690,7 @@ namespace ActionCreators {
    * @return {Actions.ReceiveTemplate}          - Action with template.
    */
   export function receiveTemplate(template: Store.Template): Actions.ReceiveTemplate {
-    return createAction(Actions.RECEIVE_TEMPLATE, template);
+    return createAction({ type: Actions.RECEIVE_TEMPLATE, payload: template });
   }
 
   /**
@@ -691,7 +700,7 @@ namespace ActionCreators {
    * @return {Actions.ReceiveRecordCount}             - Action with recordCount.
    */
   export function receiveRecordCount(recordCount: number): Actions.ReceiveRecordCount {
-    return createAction(Actions.RECEIVE_RECORD_COUNT, recordCount);
+    return createAction({ type: Actions.RECEIVE_RECORD_COUNT, payload: recordCount });
   }
 
   /**
@@ -701,7 +710,7 @@ namespace ActionCreators {
    * @return {Actions.ReceiveRedirect}          - Action with redirect.
    */
   export function receiveRedirect(redirect: string): Actions.ReceiveRedirect {
-    return createAction(Actions.RECEIVE_REDIRECT, redirect);
+    return createAction({ type: Actions.RECEIVE_REDIRECT, payload: redirect });
   }
 
   /**
@@ -715,7 +724,7 @@ namespace ActionCreators {
    */
   // tslint:disable-next-line max-line-length
   export function receiveMoreRefinements(navigationId: string, refinements: Store.Refinement[], selected: number[]): Actions.ReceiveMoreRefinements {
-    return createAction(Actions.RECEIVE_MORE_REFINEMENTS, { navigationId, refinements, selected });
+    return createAction({ type: Actions.RECEIVE_MORE_REFINEMENTS, payload: { navigationId, refinements, selected } });
   }
 
   /**
@@ -726,7 +735,7 @@ namespace ActionCreators {
    */
   // tslint:disable-next-line max-line-length
   export function receiveAutocompleteSuggestions(suggestions: Actions.Payload.Autocomplete.Suggestions): Actions.ReceiveAutocompleteSuggestions {
-    return createAction(Actions.RECEIVE_AUTOCOMPLETE_SUGGESTIONS, suggestions);
+    return createAction({ type: Actions.RECEIVE_AUTOCOMPLETE_SUGGESTIONS, payload: suggestions });
   }
 
   /**
@@ -738,7 +747,7 @@ namespace ActionCreators {
   export function receiveMoreProducts(res: Results) {
     return (state: Store.State): Actions.ReceiveMoreProducts => {
       // tslint:disable-next-line max-line-length
-      return handleError(createAction(Actions.RECEIVE_MORE_PRODUCTS, res), () => createAction(Actions.RECEIVE_MORE_PRODUCTS, SearchAdapter.augmentProducts(res)));
+      return handleError(createAction({ type: Actions.RECEIVE_MORE_PRODUCTS, payload: res }), () => createAction({ type: Actions.RECEIVE_MORE_PRODUCTS, payload: SearchAdapter.augmentProducts(res) }));
     };
   }
 
@@ -749,7 +758,7 @@ namespace ActionCreators {
    */
   export function receiveAutocompleteProducts(res: Results) {
     return (state: Store.State): Actions.Action<string, any>[] | Actions.ReceiveAutocompleteProducts => {
-      const receiveProductsAction = createAction(Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, res);
+      const receiveProductsAction = createAction({ type: Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, payload: res });
 
       return handleError(receiveProductsAction, () => [
         receiveProductsAction,
@@ -767,7 +776,7 @@ namespace ActionCreators {
    */
   // tslint:disable-next-line max-line-length
   export function receiveAutocompleteProductRecords(products: Store.ProductWithMetadata[]): Actions.ReceiveAutocompleteProductRecords {
-    return createAction(Actions.RECEIVE_AUTOCOMPLETE_PRODUCT_RECORDS, products);
+    return createAction({ type: Actions.RECEIVE_AUTOCOMPLETE_PRODUCT_RECORDS, payload: products });
   }
 
   /**
@@ -777,7 +786,7 @@ namespace ActionCreators {
    * @return {Actions.ReceiveAutocompleteTemplate}          - Action with template.
    */
   export function receiveAutocompleteTemplate(template: Store.Template): Actions.ReceiveAutocompleteTemplate {
-    return createAction(Actions.RECEIVE_AUTOCOMPLETE_TEMPLATE, template);
+    return createAction({ type: Actions.RECEIVE_AUTOCOMPLETE_TEMPLATE, payload: template });
   }
 
   /**
@@ -787,7 +796,7 @@ namespace ActionCreators {
    */
   // tslint:disable-next-line max-line-length
   export function receiveRecommendationsProducts(products: Store.ProductWithMetadata[]): Actions.ReceiveRecommendationsProducts {
-    return createAction(Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, products);
+    return createAction({ type: Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, payload: products });
   }
 
   /**
@@ -797,44 +806,44 @@ namespace ActionCreators {
    */
   // tslint:disable-next-line max-line-length
   export function receiveNavigationSort(navigations: Store.Recommendations.Navigation[]): Actions.ReceiveNavigationSort {
-    return createAction(Actions.RECEIVE_NAVIGATION_SORT, navigations);
+    return createAction({ type: Actions.RECEIVE_NAVIGATION_SORT, payload: navigations });
   }
 
   // tslint:disable-next-line max-line-length
   export function receivePastPurchaseSkus(products: Store.PastPurchases.PastPurchaseProduct[]): Actions.ReceivePastPurchaseSkus {
-    return createAction(Actions.RECEIVE_PAST_PURCHASE_SKUS, products);
+    return createAction({ type: Actions.RECEIVE_PAST_PURCHASE_SKUS, payload: products });
   }
 
   // tslint:disable-next-line max-line-length
   export function receiveSaytPastPurchases(products: Store.ProductWithMetadata[]): Actions.ReceiveSaytPastPurchases {
-    return createAction(Actions.RECEIVE_SAYT_PAST_PURCHASES, products);
+    return createAction({ type: Actions.RECEIVE_SAYT_PAST_PURCHASES, payload: products });
   }
 
   // tslint:disable-next-line max-line-length
   export function receivePastPurchaseProducts(products: Store.ProductWithMetadata[]): Actions.ReceivePastPurchaseProducts {
-    return createAction(Actions.RECEIVE_PAST_PURCHASE_PRODUCTS, products);
+    return createAction({ type: Actions.RECEIVE_PAST_PURCHASE_PRODUCTS, payload: products });
   }
 
   export function receiveMorePastPurchaseProducts(res: Results) {
     return (state: Store.State): Actions.ReceiveMorePastPurchaseProducts => {
       // tslint:disable-next-line max-line-length
-      return handleError(createAction(Actions.RECEIVE_MORE_PAST_PURCHASE_PRODUCTS, res), () => createAction(Actions.RECEIVE_MORE_PAST_PURCHASE_PRODUCTS, SearchAdapter.augmentProducts(res)));
+      return handleError(createAction({ type: Actions.RECEIVE_MORE_PAST_PURCHASE_PRODUCTS, payload: res }), () => createAction({ type: Actions.RECEIVE_MORE_PAST_PURCHASE_PRODUCTS, payload: SearchAdapter.augmentProducts(res) }));
     };
   }
 
   // tslint:disable-next-line max-line-length
   export function receivePastPurchaseAllRecordCount(count: number): Actions.ReceivePastPurchaseAllRecordCount {
-    return createAction(Actions.RECEIVE_PAST_PURCHASE_ALL_RECORD_COUNT, count);
+    return createAction({ type: Actions.RECEIVE_PAST_PURCHASE_ALL_RECORD_COUNT, payload: count });
   }
 
   // tslint:disable-next-line max-line-length
   export function receivePastPurchaseCurrentRecordCount(count: number): Actions.ReceivePastPurchaseCurrentRecordCount {
-    return createAction(Actions.RECEIVE_PAST_PURCHASE_CURRENT_RECORD_COUNT, count);
+    return createAction({ type: Actions.RECEIVE_PAST_PURCHASE_CURRENT_RECORD_COUNT, payload: count });
   }
 
   // tslint:disable-next-line max-line-length
   export function receivePastPurchaseRefinements(refinements: Store.Navigation[]): Actions.ReceivePastPurchaseRefinements {
-    return createAction(Actions.RECEIVE_PAST_PURCHASE_REFINEMENTS, refinements);
+    return createAction({ type: Actions.RECEIVE_PAST_PURCHASE_REFINEMENTS, payload: refinements });
   }
 
   /**
@@ -842,7 +851,7 @@ namespace ActionCreators {
    * @return {Actions.ResetPastPurchasePage} - Action with undefined.
    */
   export function resetPastPurchasePage(): Actions.ResetPastPurchasePage {
-    return createAction(Actions.RESET_PAST_PURCHASE_PAGE, undefined, {
+    return createAction({ type: Actions.RESET_PAST_PURCHASE_PAGE }, {
       payload: validators.notOnFirstPastPurchasePage
     });
   }
@@ -855,7 +864,10 @@ namespace ActionCreators {
    */
   export function receivePastPurchasePage(recordCount: number, current?: number) {
     return (state: Store.State): Actions.ReceivePastPurchasePage => {
-      return createAction(Actions.RECEIVE_PAST_PURCHASE_PAGE, SearchAdapter.extractPage(state, recordCount, current));
+      return createAction({
+        type: Actions.RECEIVE_PAST_PURCHASE_PAGE,
+        payload: SearchAdapter.extractPage(state, recordCount, current),
+      });
     };
   }
 
@@ -871,7 +883,7 @@ namespace ActionCreators {
   export function selectPastPurchaseRefinement(navigationId: string, index: number): Actions.PastPurchaseSelect {
     return [
       ActionCreators.resetPastPurchasePage(),
-      createAction(Actions.SELECT_PAST_PURCHASE_REFINEMENT, { navigationId, index }, {
+      createAction({ type: Actions.SELECT_PAST_PURCHASE_REFINEMENT, payload: { navigationId, index } }, {
         payload: validators.isPastPurchaseRefinementDeselectedByIndex
       })
     ];
@@ -907,7 +919,7 @@ namespace ActionCreators {
   export function deselectPastPurchaseRefinement(navigationId: string, index: number): Actions.PastPurchaseDeselect {
     return [
       ActionCreators.resetPastPurchasePage(),
-      createAction(Actions.DESELECT_PAST_PURCHASE_REFINEMENT, { navigationId, index }, {
+      createAction({ type: Actions.DESELECT_PAST_PURCHASE_REFINEMENT, payload: { navigationId, index } }, {
         payload: validators.isPastPurchaseRefinementSelectedByIndex
       })
     ];
@@ -922,7 +934,7 @@ namespace ActionCreators {
   export function resetPastPurchaseRefinements(field?: boolean | string): Actions.PastPurchaseReset {
     return [
       ActionCreators.resetPastPurchasePage(),
-      createAction(Actions.RESET_PAST_PURCHASE_REFINEMENTS, field, {
+      createAction({ type: Actions.RESET_PAST_PURCHASE_REFINEMENTS, payload: field }, {
         payload: [
           validators.isValidClearField,
           validators.hasSelectedPastPurchaseRefinements,
@@ -935,7 +947,7 @@ namespace ActionCreators {
   export function updatePastPurchaseQuery(query: string): Actions.PastPurchaseQuery {
     return <Actions.PastPurchaseQuery>[
       ...ActionCreators.resetPastPurchaseRefinements(true),
-      createAction(Actions.UPDATE_PAST_PURCHASE_QUERY, query),
+      createAction({ type: Actions.UPDATE_PAST_PURCHASE_QUERY, payload: query }),
     ];
   }
 
@@ -946,7 +958,7 @@ namespace ActionCreators {
    * @return {Actions.UpdatePastPurchasePageSize}      - Action with size.
    */
   export function updatePastPurchasePageSize(size: number): Actions.UpdatePastPurchasePageSize {
-    return createAction(Actions.UPDATE_PAST_PURCHASE_PAGE_SIZE, size, {
+    return createAction({ type: Actions.UPDATE_PAST_PURCHASE_PAGE_SIZE, payload: size }, {
       payload: validators.isDifferentPastPurchasePageSize
     });
   }
@@ -957,7 +969,7 @@ namespace ActionCreators {
    * @return {Actions.UpdatePastPurchaseCurrentPage}      - Action with page.
    */
   export function updatePastPurchaseCurrentPage(page: number): Actions.UpdatePastPurchaseCurrentPage {
-    return createAction(Actions.UPDATE_PAST_PURCHASE_CURRENT_PAGE, page, {
+    return createAction({ type: Actions.UPDATE_PAST_PURCHASE_CURRENT_PAGE, payload: page }, {
       payload: [
         validators.isValidPastPurchasePage,
         validators.isOnDifferentPastPurchasePage
@@ -968,7 +980,7 @@ namespace ActionCreators {
   export function selectPastPurchasesSort(index: number): Actions.PastPurchaseSortActions {
     return [
       ActionCreators.resetPastPurchasePage(),
-      createAction(Actions.SELECT_PAST_PURCHASE_SORT, index, {
+      createAction({ type: Actions.SELECT_PAST_PURCHASE_SORT, payload: index }, {
         payload: validators.isPastPurchasesSortDeselected
       })
     ];
@@ -984,7 +996,7 @@ namespace ActionCreators {
    */
   // tslint:disable-next-line max-line-length
   export function createComponentState(tagName: string, id: string, state: any = {}): Actions.CreateComponentState {
-    return createAction(Actions.CREATE_COMPONENT_STATE, { tagName, id, state });
+    return createAction({ type: Actions.CREATE_COMPONENT_STATE, payload: { tagName, id, state } });
   }
 
   /**
@@ -994,7 +1006,7 @@ namespace ActionCreators {
    * @return {Actions.RemoveComponentState}         Action with tagName and id.
    */
   export function removeComponentState(tagName: string, id: string): Actions.RemoveComponentState {
-    return createAction(Actions.REMOVE_COMPONENT_STATE, { tagName, id });
+    return createAction({ type: Actions.REMOVE_COMPONENT_STATE, payload: { tagName, id } });
   }
 
   // session action creators
@@ -1004,7 +1016,7 @@ namespace ActionCreators {
    * @return {Actions.UpdateLocation}          - Action with location.
    */
   export function updateLocation(location: Store.Geolocation): Actions.UpdateLocation {
-    return createAction(Actions.UPDATE_LOCATION, location);
+    return createAction({ type: Actions.UPDATE_LOCATION, payload: location });
   }
 
   // app action creators
@@ -1013,7 +1025,7 @@ namespace ActionCreators {
    * @return {Actions.StartApp} - Action with undefined.
    */
   export function startApp(): Actions.StartApp {
-    return createAction(Actions.START_APP, undefined);
+    return createAction({ type: Actions.START_APP });
   }
 }
 
