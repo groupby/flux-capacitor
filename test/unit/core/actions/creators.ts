@@ -20,12 +20,12 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     } else {
       expect(action).to.eq(ACTION);
     }
-    expect(createAction).to.be.calledWith({ type, payload });
+    expect(createAction).to.be.calledWith(payload !== undefined ? { type, payload } : { type });
   }
 
   // tslint:disable-next-line max-line-length
   function expectValidators<T>(action: Actions.Action<T, any> | Actions.Action<T, any>[], type: T, validator: object) {
-    const args: any[] = [type, sinon.match.any];
+    const args: any[] = [sinon.match.any];
     args.push(sinon.match((actionValidator) => Object.keys(validator)
       .reduce((allValid, key) => {
         if (Array.isArray(validator[key]) !== Array.isArray(actionValidator[key])) {
@@ -761,7 +761,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         const batchAction = ActionCreators.receiveProducts(results)(state);
 
-        expect(createAction).to.be.calledWith(Actions.RECEIVE_PRODUCTS, results);
+        expect(createAction).to.be.calledWith({ type: Actions.RECEIVE_PRODUCTS, payload: results });
         expect(receiveQuery).to.be.calledWith(query);
         expect(receiveProductRecords).to.be.calledWith(['x', 'x']);
         expect(receiveNavigations).to.be.calledWith(prunedNavigations);
@@ -795,7 +795,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         const batchAction = ActionCreators.receiveProducts(results)(null);
 
-        expect(createAction).to.be.calledWith(Actions.RECEIVE_PRODUCTS, results);
+        expect(createAction).to.be.calledWith({ type: Actions.RECEIVE_PRODUCTS, payload: results });
         expect(batchAction).to.eql(action);
       });
     });
@@ -931,7 +931,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         const batchAction = ActionCreators.receiveAutocompleteProducts(response)(null);
 
-        expect(createAction).to.be.calledWith(Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, response);
+        expect(createAction).to.be.calledWith({ type: Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, payload: response });
         expect(receiveAutocompleteProductRecords).to.be.calledWith(products);
         expect(receiveAutocompleteTemplate).to.be.calledWith(template);
         expect(augmentProducts).to.be.calledWithExactly(response);
@@ -949,7 +949,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         const batchAction = ActionCreators.receiveAutocompleteProducts(results)(null);
 
-        expect(createAction).to.be.calledWith(Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, results);
+        expect(createAction).to.be.calledWith({ type: Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, payload: results });
         expect(batchAction).to.eql(action);
       });
     });
