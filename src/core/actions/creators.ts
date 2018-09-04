@@ -321,10 +321,10 @@ namespace ActionCreators {
    * @param  {string}                          query - Search term to use.
    * @return {Actions.ResetPageAndUpdateQuery}       - Actions with relevant data.
    */
-  export function updateQuery(query: string): Actions.ResetPageAndUpdateQuery {
+  export function updateQuery(query: string, section?: Actions.StoreSection): Actions.ResetPageAndUpdateQuery {
     return [
       ActionCreators.resetPage(),
-      createAction({ type: Actions.UPDATE_QUERY, payload: query && query.trim() }, {
+      createAction({ type: Actions.UPDATE_QUERY, payload: query && query.trim(), section }, {
         payload: validators.isValidQuery,
       })
     ];
@@ -389,10 +389,11 @@ namespace ActionCreators {
    * or navigationId to reset all refinements on a specific navigation.
    * @return {Actions.ResetPageAndResetRefinements}   - Actions with relevant data.
    */
-  export function resetRefinements(field: boolean | string): Actions.ResetPageAndResetRefinements {
+  // tslint:disable-next-line max-line-length
+  export function resetRefinements(field: boolean | string, section?: Actions.StoreSection): Actions.ResetPageAndResetRefinements {
     return [
       ActionCreators.resetPage(),
-      createAction({ type: Actions.RESET_REFINEMENTS, payload: field }, {
+      createAction({ type: Actions.RESET_REFINEMENTS, payload: field, section }, {
         payload: [
           validators.isValidClearField,
           validators.hasSelectedRefinements,
@@ -420,12 +421,15 @@ namespace ActionCreators {
    */
   export function search(query?: string) {
     return (state: Store.State): Actions.Search => {
-      const actions: any = [ActionCreators.resetPage()];
+      const actions: any = [ActionCreators.resetPage(Actions.StoreSection.Staging)];
       if (Selectors.config(state).search.useDefaultCollection) {
-        actions.push(ActionCreators.selectCollection(Selectors.defaultCollection(state)));
+        actions.push(ActionCreators.selectCollection(Selectors.defaultCollection(state), Actions.StoreSection.Staging));
       }
       // tslint:disable-next-line max-line-length
-      actions.push(...ActionCreators.resetRefinements(true), ...ActionCreators.updateQuery(query || Selectors.query(state)));
+      actions.push(
+        ...ActionCreators.resetRefinements(true, Actions.StoreSection.Staging),
+        ...ActionCreators.updateQuery(query || Selectors.query(state), Actions.StoreSection.Staging)
+      );
 
       return actions;
     };
@@ -489,8 +493,8 @@ namespace ActionCreators {
    * @param  {string}                   id - The id of the selected collection.
    * @return {Actions.SelectCollection}    - Action with id.
    */
-  export function selectCollection(id: string): Actions.SelectCollection {
-    return createAction({ type: Actions.SELECT_COLLECTION, payload: id }, {
+  export function selectCollection(id: string, section?: Actions.StoreSection): Actions.SelectCollection {
+    return createAction({ type: Actions.SELECT_COLLECTION, payload: id, section }, {
       payload: validators.isCollectionDeselected
     });
   }
