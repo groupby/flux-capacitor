@@ -1,4 +1,3 @@
-import { reduxBatch } from '@manaflair/redux-batch';
 import * as cuid from 'cuid';
 import { applyMiddleware, compose, createStore, Middleware as ReduxMiddleware, Store } from 'redux';
 import { ActionCreators as ReduxActionCreators } from 'redux-undo';

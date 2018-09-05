@@ -1,4 +1,3 @@
-import { reduxBatch } from '@manaflair/redux-batch';
 import * as redux from 'redux';
 import reduxLogger from 'redux-logger';
 import { ActionCreators as ReduxActionCreators } from 'redux-undo';
