@@ -57,7 +57,11 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const applyMiddleware = stub(redux, 'applyMiddleware');
       applyMiddleware.withArgs().returns(batchMiddleware);
       applyMiddleware.withArgs(Middleware.batchMiddleware, Middleware.validator).returns(thunkMiddleware);
-      applyMiddleware.withArgs(Middleware.batchMiddleware, Middleware.saveStateAnalyzer, Middleware.pastPurchaseProductAnalyzer).returns(simpleMiddleware);
+      applyMiddleware.withArgs(
+        Middleware.batchMiddleware,
+        Middleware.saveStateAnalyzer,
+        Middleware.pastPurchaseProductAnalyzer
+      ).returns(simpleMiddleware);
 
       const middleware = Middleware.create(sagaMiddleware, flux);
 
@@ -441,6 +445,26 @@ suite('Middleware', ({ expect, spy, stub }) => {
       expect(thunkEvaluator).to.be.calledTwice;
       expect(next).to.be.calledWith(actions[0]);
       expect(next).to.be.calledWith(actions[1]);
+    });
+
+    it('should flatten nested arrays', () => {
+      const store: any = { getState: () => null };
+      const actions: any = [
+        [{ a: 'b' }],
+        { c: 'd' },
+        () => ({ e: 'f' }),
+        [() => ({ g: 'h' }), [{ i: 'j' }, { k: 'l' }]]
+      ];
+      const thunkEvaluator = spy(Middleware, 'thunkEvaluator');
+
+      Middleware.batchMiddleware(store)(next)(actions);
+
+      expect(next.getCall(0)).to.be.calledWith(actions[0][0]);
+      expect(next.getCall(1)).to.be.calledWith(actions[1]);
+      expect(next.getCall(2)).to.be.calledWith(actions[2]());
+      expect(next.getCall(3)).to.be.calledWith(actions[3][0]());
+      expect(next.getCall(4)).to.be.calledWith(actions[3][1][0]);
+      expect(next.getCall(5)).to.be.calledWith(actions[3][1][1]);
     });
   });
 });
