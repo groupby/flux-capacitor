@@ -158,7 +158,7 @@ export namespace Middleware {
       if (Array.isArray(action)) {
         return action.map(batchMiddleware(store)(next));
       } else {
-        return thunkEvaluator(store)(next)(action);
+        return Middleware.thunkEvaluator(store)(next)(action);
       }
     };
   }

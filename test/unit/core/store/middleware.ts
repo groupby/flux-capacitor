@@ -419,4 +419,29 @@ suite('Middleware', ({ expect, spy, stub }) => {
       expect(updateBiasing).to.be.calledWithExactly(extracted);
     });
   });
+
+  describe('batchMiddleware()', () => {
+    it('should call thunkEvaluator on the action', () => {
+      const store: any = { s: 't' };
+      const action = { a: 'b' };
+      const thunkEvaluator = spy(Middleware, 'thunkEvaluator');
+
+      Middleware.batchMiddleware(store)(next)(action);
+
+      expect(thunkEvaluator).to.be.calledOnce;
+      expect(next).to.be.calledWith(action);
+    });
+
+    it('should call thunkEvaluator on each action in the array', () => {
+      const store: any = { s: 't' };
+      const actions = [{ a: 'b' }, { c: 'd' }];
+      const thunkEvaluator = spy(Middleware, 'thunkEvaluator');
+
+      Middleware.batchMiddleware(store)(next)(actions);
+
+      expect(thunkEvaluator).to.be.calledTwice;
+      expect(next).to.be.calledWith(actions[0]);
+      expect(next).to.be.calledWith(actions[1]);
+    });
+  });
 });
