@@ -1,7 +1,6 @@
 import { reduxBatch } from '@manaflair/redux-batch';
 import * as cuid from 'cuid';
 import { applyMiddleware, compose, createStore, Middleware as ReduxMiddleware, Store } from 'redux';
-import { batchActions, batchMiddleware, batchStoreEnhancer } from 'redux-batch-enhancer';
 import { ActionCreators as ReduxActionCreators } from 'redux-undo';
 import * as validatorMiddleware from 'redux-validator';
 import FluxCapacitor from '../../flux-capacitor';
@@ -127,16 +126,6 @@ export namespace Middleware {
     return Middleware.insertAction(HISTORY_UPDATE_ACTIONS, { type: Actions.SAVE_STATE });
   }
 
-  export function thunkEvaluator(store: Store<any>) {
-    return (next) => (thunkAction) => {
-      if (typeof thunkAction === 'function') {
-        return next(thunkAction(store.getState()));
-      } else {
-        return next(thunkAction);
-      }
-    };
-  }
-
   export function personalizationAnalyzer(store: Store<any>) {
     return (next) => (action) => {
       const state = store.getState();
@@ -164,35 +153,37 @@ export namespace Middleware {
   //   };
   // }
 
-  export function arrayToBatchAction(store: Store<any>) {
+  export function thunkEvaluator(store: Store<any>) {
+    return (next) => (thunkAction) => {
+      if (typeof thunkAction === 'function') {
+        return next(thunkAction(store.getState()));
+      } else {
+        return next(thunkAction);
+      }
+    };
+  }
+
+  export function batchMiddleware(store: Store<any>) {
     return (next) => (action) => {
       if (Array.isArray(action)) {
-        // debugger;
-        return next(batchActions(action));
+        return action.map(batchMiddleware(store)(next));
       } else {
-        next(action);
+        return thunkEvaluator(store)(next)(action);
       }
     };
   }
 
   export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
     const middleware = [
-      thunkEvaluator,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
-      // Middleware.sectionMiddleware(
-      //   Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS),
-      //   Actions.StoreSection.Data
-      // ),
-      // Middleware.sectionMiddleware(
-      //   Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
-      //   Actions.StoreSection.Staging
-      // ),
+      Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS),
+      Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
       Middleware.errorHandler(flux),
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,
       personalizationAnalyzer,
-      thunkEvaluator,
+      batchMiddleware,
       saveStateAnalyzer,
     ];
 
@@ -205,23 +196,18 @@ export namespace Middleware {
 
     return composeEnhancers(
       applyMiddleware(
-        arrayToBatchAction,
         batchMiddleware,
-        thunkEvaluator,
         saveStateAnalyzer,
         pastPurchaseProductAnalyzer
       ),
-      batchStoreEnhancer,
-      // reduxBatch,
-      applyMiddleware(arrayToBatchAction, batchMiddleware, ...middleware),
-      // reduxBatch,
       applyMiddleware(
-        arrayToBatchAction,
         batchMiddleware,
-        thunkEvaluator,
+        ...middleware
+      ),
+      applyMiddleware(
+        batchMiddleware,
         Middleware.validator
       ),
-      // reduxBatch,
     );
   }
 }
