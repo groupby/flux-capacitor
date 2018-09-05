@@ -43,7 +43,7 @@ export namespace Tasks {
         yield effects.put(<any>actions);
 
         if (!ignoreHistory) {
-          flux.replaceState(utils.Routes.SEARCH);
+          flux.saveState(utils.Routes.SEARCH);
         }
       }
     } catch (e) {

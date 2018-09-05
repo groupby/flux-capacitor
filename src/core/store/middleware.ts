@@ -1,6 +1,7 @@
 import { reduxBatch } from '@manaflair/redux-batch';
 import * as cuid from 'cuid';
 import { applyMiddleware, compose, createStore, Middleware as ReduxMiddleware, Store } from 'redux';
+import { batchActions, batchMiddleware, batchStoreEnhancer } from 'redux-batch-enhancer';
 import { ActionCreators as ReduxActionCreators } from 'redux-undo';
 import * as validatorMiddleware from 'redux-validator';
 import FluxCapacitor from '../../flux-capacitor';
@@ -35,13 +36,13 @@ export const PAST_PURCHASE_SKU_ACTIONS = [
   Actions.FETCH_SAYT_PAST_PURCHASES,
 ];
 
-// export const SEARCH_CHANGE_ACTIONS = [
-//   ...RECALL_CHANGE_ACTIONS,
-//   Actions.SELECT_COLLECTION,
-//   Actions.SELECT_SORT,
-//   Actions.UPDATE_PAGE_SIZE,
-//   Actions.UPDATE_CURRENT_PAGE,
-// ];
+export const SEARCH_CHANGE_ACTIONS = [
+  ...RECALL_CHANGE_ACTIONS,
+  Actions.SELECT_COLLECTION,
+  Actions.SELECT_SORT,
+  Actions.UPDATE_PAGE_SIZE,
+  Actions.UPDATE_CURRENT_PAGE,
+];
 
 export const PAST_PURCHASES_SEARCH_CHANGE_ACTIONS = [
   Actions.UPDATE_PAST_PURCHASE_QUERY,
@@ -153,15 +154,22 @@ export namespace Middleware {
     };
   }
 
-  export function dataMiddleware(middleware: ReduxMiddleware) {
+  export function sectionMiddleware(middleware: ReduxMiddleware, section: Actions.StoreSection) {
     return (store) => (next) => (action) => {
-      // if (action.type === Actions.RECEIVE_PRODUCTS) {
-        debugger;
-      // }
-      if (action.section === Actions.StoreSection.Data) {
+      if (action.section === section) {
         return middleware(store)(next)(action);
       } else {
         return next(action);
+      }
+    };
+  }
+
+  export function arrayToBatchAction(store: Store<any>) {
+    return (next) => (action) => {
+      if (Array.isArray(action)) {
+        return next(batchActions(action));
+      } else {
+        next(action);
       }
     };
   }
@@ -171,8 +179,14 @@ export namespace Middleware {
       thunkEvaluator,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
-      Middleware.dataMiddleware(Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS)),
-      Middleware.dataMiddleware(Middleware.idGenerator('searchId', [Actions.RECEIVE_PRODUCTS])),
+      // Middleware.sectionMiddleware(
+      //   Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS),
+      //   Actions.StoreSection.Data
+      // ),
+      // Middleware.sectionMiddleware(
+      //   Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
+      //   Actions.StoreSection.Staging
+      // ),
       Middleware.errorHandler(flux),
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,
@@ -189,12 +203,23 @@ export namespace Middleware {
     const composeEnhancers = global && global['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;
 
     return composeEnhancers(
-      applyMiddleware(thunkEvaluator, saveStateAnalyzer, pastPurchaseProductAnalyzer),
-      reduxBatch,
-      applyMiddleware(...middleware),
-      reduxBatch,
-      applyMiddleware(thunkEvaluator, Middleware.validator),
-      reduxBatch,
+      applyMiddleware(
+        arrayToBatchAction,
+        batchMiddleware,
+        thunkEvaluator,
+        saveStateAnalyzer,
+        pastPurchaseProductAnalyzer
+      ),
+      // reduxBatch,
+      applyMiddleware(arrayToBatchAction, batchMiddleware, ...middleware),
+      // reduxBatch,
+      applyMiddleware(
+        arrayToBatchAction,
+        batchMiddleware,
+        thunkEvaluator,
+        Middleware.validator
+      ),
+      // reduxBatch,
     );
   }
 }
