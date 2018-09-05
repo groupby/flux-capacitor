@@ -35,13 +35,13 @@ export const PAST_PURCHASE_SKU_ACTIONS = [
   Actions.FETCH_SAYT_PAST_PURCHASES,
 ];
 
-export const SEARCH_CHANGE_ACTIONS = [
-  ...RECALL_CHANGE_ACTIONS,
-  Actions.SELECT_COLLECTION,
-  Actions.SELECT_SORT,
-  Actions.UPDATE_PAGE_SIZE,
-  Actions.UPDATE_CURRENT_PAGE,
-];
+// export const SEARCH_CHANGE_ACTIONS = [
+//   ...RECALL_CHANGE_ACTIONS,
+//   Actions.SELECT_COLLECTION,
+//   Actions.SELECT_SORT,
+//   Actions.UPDATE_PAGE_SIZE,
+//   Actions.UPDATE_CURRENT_PAGE,
+// ];
 
 export const PAST_PURCHASES_SEARCH_CHANGE_ACTIONS = [
   Actions.UPDATE_PAST_PURCHASE_QUERY,
@@ -155,6 +155,9 @@ export namespace Middleware {
 
   export function dataMiddleware(middleware: ReduxMiddleware) {
     return (store) => (next) => (action) => {
+      // if (action.type === Actions.RECEIVE_PRODUCTS) {
+        debugger;
+      // }
       if (action.section === Actions.StoreSection.Data) {
         return middleware(store)(next)(action);
       } else {
@@ -169,7 +172,7 @@ export namespace Middleware {
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       Middleware.dataMiddleware(Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS)),
-      Middleware.dataMiddleware(Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS)),
+      Middleware.dataMiddleware(Middleware.idGenerator('searchId', [Actions.RECEIVE_PRODUCTS])),
       Middleware.errorHandler(flux),
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,

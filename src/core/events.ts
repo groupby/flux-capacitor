@@ -355,6 +355,20 @@ namespace Events {
    * returns true
    */
   export const PERSONALIZATION_BIASING_REHYDRATED = 'personalization:biasing_rehydrated';
+
+  // staging events
+  /**
+   * Triggered when the staging search section is updated.
+   */
+  export const STAGING_SEARCH_UPDATED = 'staging:search_updated';
+  /**
+   * Triggered when the staging details section is updated.
+   */
+  export const STAGING_DETAILS_UPDATED = 'staging:details_updated';
+  /**
+   * Triggered when the staging past purchases section is updated.
+   */
+  export const STAGING_PAST_PURCHASES_UPDATED = 'staging:past_purchases_updated';
 }
 
 export default Events;

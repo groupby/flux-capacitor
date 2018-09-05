@@ -51,6 +51,7 @@ namespace Store {
       future: Data[];
     };
     ui: UI;
+    staging: Data;
   }
 
   export interface Data {
