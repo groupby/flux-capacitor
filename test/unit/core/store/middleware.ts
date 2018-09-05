@@ -424,12 +424,20 @@ suite('Middleware', ({ expect, spy, stub }) => {
   });
 
   describe('batchMiddleware()', () => {
-    it('should call thunkEvaluator on the action', () => {
-      const store: any = { s: 't' };
+    it('should call next on the action', () => {
       const action = { a: 'b' };
       const thunkEvaluator = spy(Middleware, 'thunkEvaluator');
 
-      Middleware.batchMiddleware(store)(next)(action);
+      Middleware.batchMiddleware(<any>{})(next)(action);
+
+      expect(next).to.be.calledWith(action);
+    });
+
+    it('should call thunkEvaluator on a thunked action', () => {
+      const action = { a: 'b' };
+      const thunkEvaluator = spy(Middleware, 'thunkEvaluator');
+
+      Middleware.batchMiddleware(<any>{ getState: () => null })(next)(action);
 
       expect(thunkEvaluator).to.be.calledOnce;
       expect(next).to.be.calledWith(action);
