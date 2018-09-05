@@ -127,16 +127,6 @@ export namespace Middleware {
     return Middleware.insertAction(HISTORY_UPDATE_ACTIONS, { type: Actions.SAVE_STATE });
   }
 
-  export function thunkEvaluator(store: Store<any>) {
-    return (next) => (thunkAction) => {
-      if (typeof thunkAction === 'function') {
-        return next(thunkAction(store.getState()));
-      } else {
-        return next(thunkAction);
-      }
-    };
-  }
-
   export function personalizationAnalyzer(store: Store<any>) {
     return (next) => (action) => {
       const state = store.getState();
@@ -164,19 +154,28 @@ export namespace Middleware {
     };
   }
 
-  export function arrayToBatchAction(store: Store<any>) {
+  export function thunkEvaluator(store: Store<any>) {
+    return (next) => (thunkAction) => {
+      if (typeof thunkAction === 'function') {
+        return next(thunkAction(store.getState()));
+      } else {
+        return next(thunkAction);
+      }
+    };
+  }
+
+  export function batchMiddleware(store: Store<any>) {
     return (next) => (action) => {
       if (Array.isArray(action)) {
-        return next(batchActions(action));
+        return action.map(batchMiddleware(store)(next));
       } else {
-        next(action);
+        return thunkEvaluator(store)(next)(action);
       }
     };
   }
 
   export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
     const middleware = [
-      thunkEvaluator,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       // Middleware.sectionMiddleware(
@@ -191,7 +190,7 @@ export namespace Middleware {
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,
       personalizationAnalyzer,
-      thunkEvaluator,
+      batchMiddleware,
       saveStateAnalyzer,
     ];
 
@@ -204,22 +203,18 @@ export namespace Middleware {
 
     return composeEnhancers(
       applyMiddleware(
-        arrayToBatchAction,
         batchMiddleware,
-        thunkEvaluator,
         saveStateAnalyzer,
         pastPurchaseProductAnalyzer
       ),
-      // reduxBatch,
-      applyMiddleware(arrayToBatchAction, batchMiddleware, ...middleware),
-      // reduxBatch,
       applyMiddleware(
-        arrayToBatchAction,
         batchMiddleware,
-        thunkEvaluator,
+        ...middleware
+      ),
+      applyMiddleware(
+        batchMiddleware,
         Middleware.validator
       ),
-      // reduxBatch,
     );
   }
 }
