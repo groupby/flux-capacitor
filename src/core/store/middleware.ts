@@ -143,16 +143,6 @@ export namespace Middleware {
     };
   }
 
-  // export function sectionMiddleware(middleware: ReduxMiddleware, section: Actions.StoreSection) {
-  //   return (store) => (next) => (action) => {
-  //     if (action.section === section) {
-  //       return middleware(store)(next)(action);
-  //     } else {
-  //       return next(action);
-  //     }
-  //   };
-  // }
-
   export function thunkEvaluator(store: Store<any>) {
     return (next) => (thunkAction) => {
       if (typeof thunkAction === 'function') {
