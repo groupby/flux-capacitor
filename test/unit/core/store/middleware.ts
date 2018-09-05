@@ -30,7 +30,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
     const checkPastPurchaseSkusMiddleware = { m: 'n' };
     const validatorMiddleware = { m: 'n' };
     const allMiddleware = () => [
-      Middleware.thunkEvaluator,
+      Middleware.batchMiddleware,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       idGeneratorMiddleware,
@@ -39,7 +39,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
       checkPastPurchaseSkusMiddleware,
       sagaMiddleware,
       Middleware.personalizationAnalyzer,
-      Middleware.thunkEvaluator,
+      Middleware.batchMiddleware,
       Middleware.saveStateAnalyzer
     ];
 
@@ -57,8 +57,8 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const compose = stub(redux, 'compose').returns(composed);
       const applyMiddleware = stub(redux, 'applyMiddleware');
       applyMiddleware.withArgs().returns(batchMiddleware);
-      applyMiddleware.withArgs(Middleware.thunkEvaluator, Middleware.validator).returns(thunkMiddleware);
-      applyMiddleware.withArgs(Middleware.thunkEvaluator, Middleware.saveStateAnalyzer).returns(simpleMiddleware);
+      applyMiddleware.withArgs(Middleware.batchMiddleware, Middleware.validator).returns(thunkMiddleware);
+      applyMiddleware.withArgs(Middleware.batchMiddleware, Middleware.saveStateAnalyzer, Middleware.pastPurchaseProductAnalyzer).returns(simpleMiddleware);
 
       const middleware = Middleware.create(sagaMiddleware, flux);
 
@@ -69,11 +69,8 @@ suite('Middleware', ({ expect, spy, stub }) => {
       expect(applyMiddleware).to.be.calledWithExactly(...allMiddleware());
       expect(compose).to.be.calledWithExactly(
         simpleMiddleware,
-        reduxBatch,
         batchMiddleware,
-        reduxBatch,
         thunkMiddleware,
-        reduxBatch,
       );
       expect(middleware).to.eql(composed);
     });
