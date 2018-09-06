@@ -1,3 +1,4 @@
+import * as cuid from 'cuid';
 import { Record, Results, Template } from 'groupby-api';
 import Actions from '.';
 import SearchAdapter from '../adapters/search';
@@ -1021,6 +1022,15 @@ namespace ActionCreators {
    */
   export function updateLocation(location: Store.Geolocation): Actions.UpdateLocation {
     return createAction({ type: Actions.UPDATE_LOCATION, payload: location });
+  }
+
+  /**
+   * Updates the session id in the store for the given key.
+   * @param  {string}      key - The key to update.
+   * @return {Actions.UpdateSessionId}          - Action with the session id and key.
+   */
+  export function updateSessionId(key: string): Actions.UpdateSessionId {
+    return createAction({ type: Actions.UPDATE_SESSION_ID, payload: { id: cuid(), key } });
   }
 
   // app action creators

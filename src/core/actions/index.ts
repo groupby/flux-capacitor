@@ -215,6 +215,8 @@ namespace Actions {
   // session
   export const UPDATE_LOCATION = 'UPDATE_LOCATION';
   export type UpdateLocation = Action<typeof UPDATE_LOCATION, Store.Geolocation>;
+  export const UPDATE_SESSION_ID = 'UPDATE_SESSION_ID';
+  export type UpdateSessionId = Action<typeof UPDATE_SESSION_ID, { id: string, key: string }>;
 
   // app
   export const START_APP = 'START_APP';
