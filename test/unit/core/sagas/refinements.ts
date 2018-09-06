@@ -59,7 +59,7 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         stub(RecommendationsAdapter, 'sortAndPinNavigations')
           .withArgs([results.navigation], [], config).returns(results);
 
-        const task = Tasks.fetchMoreRefinements(flux, <any>{ payload: navigationId });
+        const task = Tasks.fetchMoreRefinements(flux, <any>{ payload: { navigationId } });
 
         expect(task.next().value).to.eql(effects.select());
         expect(task.next(state).value).to.eql(effects.select(Selectors.config));

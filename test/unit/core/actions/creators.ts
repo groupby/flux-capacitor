@@ -59,7 +59,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         const action = ActionCreators.fetchMoreRefinements(navigationId);
 
-        expectAction(action, Actions.FETCH_MORE_REFINEMENTS, navigationId);
+        expectAction(action, Actions.FETCH_MORE_REFINEMENTS, { navigationId });
       });
     });
 

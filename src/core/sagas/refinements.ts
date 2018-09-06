@@ -11,14 +11,15 @@ import Store from '../store';
 import Requests from './requests';
 
 export namespace Tasks {
-  export function* fetchMoreRefinements(flux: FluxCapacitor, action: Actions.FetchMoreRefinements) {
+  // tslint:disable-next-line max-line-length
+  export function* fetchMoreRefinements(flux: FluxCapacitor, { payload }: Actions.FetchMoreRefinements) {
     try {
       const state: Store.State = yield effects.select();
       const config = yield effects.select(Selectors.config);
       const requestBody = refinementsRequest.composeRequest(state);
-      const res = yield effects.call(Requests.refinements, flux, requestBody, action.payload.navigationId);
+      const res = yield effects.call(Requests.refinements, flux, requestBody, payload.navigationId);
 
-      flux.emit(Events.BEACON_MORE_REFINEMENTS, action.payload);
+      flux.emit(Events.BEACON_MORE_REFINEMENTS, payload.navigationId);
       res.navigation = RecommendationsAdapter.sortAndPinNavigations(
         [res.navigation],
         Selectors.navigationSort(flux.store.getState()),
