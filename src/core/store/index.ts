@@ -164,6 +164,11 @@ namespace Store {
     };
   }
 
+  export enum SessionIdKey {
+    recallId = 'recallId',
+    searchId = 'searchId',
+  }
+
   export interface Session {
     recallId?: string;
     searchId?: string;
