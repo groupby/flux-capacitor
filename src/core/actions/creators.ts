@@ -20,12 +20,25 @@ namespace ActionCreators {
   // fetch action creators
   /**
    * Makes a request for more refinements for given navigation.
+   * @param  {Actions.Payload.Fetch.Refinements}                       navigationId - The navigationId for
+   * the navigation to fetch more refinements against.
+   * @return {Actions.FetchMoreRefinements}              - Action with navigationId.
+   */
+  export function fetchMoreRefinements(options: Actions.Payload.Fetch.Refinements): Actions.FetchMoreRefinements;
+  /**
+   * Makes a request for more refinements for given navigation.
    * @param  {string}                       navigationId - The navigationId for
    * the navigation to fetch more refinements against.
    * @return {Actions.FetchMoreRefinements}              - Action with navigationId.
    */
-  export function fetchMoreRefinements(navigationId: string): Actions.FetchMoreRefinements {
-    return createAction(Actions.FETCH_MORE_REFINEMENTS, navigationId);
+  export function fetchMoreRefinements(navigationId: string): Actions.FetchMoreRefinements;
+  // tslint:disable-next-line
+  export function fetchMoreRefinements(options) {
+    if (typeof options === 'string') {
+      return createAction(Actions.FETCH_MORE_REFINEMENTS, { navigationId: options });
+    } else {
+      return createAction(Actions.FETCH_MORE_REFINEMENTS, options);
+    }
   }
 
   /**

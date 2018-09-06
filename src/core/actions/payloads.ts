@@ -2,6 +2,14 @@ import Configuration from '../configuration';
 import Store from '../store';
 
 namespace Payload {
+  export namespace Fetch {
+    export interface Override {
+      request?: any;
+    }
+
+    export interface Refinements extends NavigationId, Override {}
+  }
+
   export namespace Personalization {
     export interface Biasing {
       field: string;
@@ -67,14 +75,16 @@ namespace Payload {
     }
   }
 
+  export interface NavigationId {
+    navigationId: string;
+  }
+
   export namespace Navigation {
-    export interface Refinement {
-      navigationId: string;
+    export interface Refinement extends NavigationId {
       index: number;
     }
 
-    export interface AddRefinement {
-      navigationId: string;
+    export interface AddRefinement extends NavigationId {
       range?: boolean;
 
       // used to add new value refinement
@@ -85,8 +95,7 @@ namespace Payload {
       high?: number;
     }
 
-    export interface MoreRefinements {
-      navigationId: string;
+    export interface MoreRefinements extends NavigationId {
       refinements: Store.Refinement[];
       selected: number[];
     }

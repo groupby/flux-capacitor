@@ -85,7 +85,7 @@ namespace Actions {
 
   // fetch actions
   export const FETCH_MORE_REFINEMENTS = 'FETCH_MORE_REFINEMENTS';
-  export type FetchMoreRefinements = Action<typeof FETCH_MORE_REFINEMENTS, string>;
+  export type FetchMoreRefinements = Action<typeof FETCH_MORE_REFINEMENTS, Payload.Fetch.Refinements>;
   export const FETCH_PRODUCTS = 'FETCH_PRODUCTS';
   export type FetchProducts = Action<typeof FETCH_PRODUCTS>;
   export const FETCH_PRODUCTS_WITHOUT_HISTORY = 'FETCH_PRODUCTS_WITHOUT_HISTORY';
