@@ -138,6 +138,12 @@ namespace Payload {
     isFetchingForward?: boolean;
     isFetchingBackward?: boolean;
   }
-}
 
+  export namespace Session {
+    export interface SessionId {
+      key: string;
+      id: string;
+    }
+  }
+}
 export default Payload;
