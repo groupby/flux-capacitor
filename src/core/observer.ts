@@ -231,13 +231,13 @@ namespace Observer {
           if (oldState !== newState) {
             const { details: oldDetails, pastPurchases: oldPastPurchases, ...oldSearch } = oldState;
             const { details: newDetails, pastPurchases: newPastPurchases, ...newSearch } = newState;
-            if (oldSearch !== newSearch) {
+            if (Object.keys(newSearch).length && oldSearch !== newSearch) {
               emitSearchUpdated(oldSearch, newSearch, path);
             }
-            if (oldDetails !== newDetails) {
+            if (newDetails && oldDetails !== newDetails) {
               emitDetailsUpdated(oldDetails, newDetails, path);
             }
-            if (oldPastPurchases !== newPastPurchases) {
+            if (newPastPurchases && oldPastPurchases !== newPastPurchases) {
               emitPastPurchasesUpdated(oldPastPurchases, newPastPurchases, path);
             }
           }
