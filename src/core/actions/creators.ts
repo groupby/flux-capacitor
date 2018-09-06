@@ -1,5 +1,5 @@
 import * as cuid from 'cuid';
-import * as deepEqual from 'fast-deep-equal';
+import * as deepEqual from 'deep-equal';
 import { Record, Results, Template } from 'groupby-api';
 import Actions from '.';
 import SearchAdapter from '../adapters/search';
