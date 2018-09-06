@@ -140,8 +140,13 @@ namespace Payload {
   }
 
   export namespace Session {
+    export enum IdKey {
+      recallId = 'recallId',
+      searchId = 'searchId',
+    }
+
     export interface SessionId {
-      key: string;
+      key: IdKey;
       id: string;
     }
   }
