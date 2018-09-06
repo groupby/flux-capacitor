@@ -117,6 +117,13 @@ export namespace Middleware {
     };
   }
 
+  export function searchIdAnalyzer() {
+    return Middleware.insertAction(
+      SEARCH_CHANGE_ACTIONS,
+      ActionCreators.updateSessionId(Actions.Payload.Session.IdKey.searchId)
+    );
+  }
+
   export function pastPurchaseProductAnalyzer() {
     return Middleware.insertAction(PAST_PURCHASES_SEARCH_CHANGE_ACTIONS, ActionCreators.fetchPastPurchaseProducts());
   }
@@ -162,9 +169,9 @@ export namespace Middleware {
     };
   }
 
-  export function dataMiddleware(middleware: ReduxMiddleware) {
+  export function sectionMiddleware(section: Actions.StoreSection, middleware: ReduxMiddleware) {
     return (store) => (next) => (action) => {
-      if (action.section === Actions.StoreSection.Data) {
+      if (action.section === section) {
         return middleware(store)(next)(action);
       } else {
         return next(action);
@@ -176,8 +183,11 @@ export namespace Middleware {
     const middleware = [
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
-      Middleware.dataMiddleware(Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS)),
-      Middleware.dataMiddleware(Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS)),
+      // Middleware.sectionMiddleware(Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS)),
+      Middleware.sectionMiddleware(
+        Actions.StoreSection.Staging,
+        Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS)
+      ),
       Middleware.errorHandler(flux),
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,

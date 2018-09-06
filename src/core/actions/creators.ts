@@ -1,4 +1,5 @@
 import * as cuid from 'cuid';
+import * as deepEqual from 'fast-deep-equal';
 import { Record, Results, Template } from 'groupby-api';
 import Actions from '.';
 import SearchAdapter from '../adapters/search';
@@ -492,12 +493,12 @@ namespace ActionCreators {
       return handleError(receiveProductsAction, () => {
         const limitedRecordCount = SearchAdapter.extractRecordCount(res.totalRecordCount);
         const query = SearchAdapter.extractQuery(res);
+        const navigations = SearchAdapter.pruneRefinements(SearchAdapter.combineNavigations(res), state);
         const actions: Array<Actions.Action<string, any>> = [
           receiveProductsAction,
           ActionCreators.receiveQuery(query),
           ActionCreators.receiveProductRecords(SearchAdapter.augmentProducts(res)),
-          ActionCreators.receiveNavigations(
-            SearchAdapter.pruneRefinements(SearchAdapter.combineNavigations(res), state)),
+          ActionCreators.receiveNavigations(navigations),
           ActionCreators.receiveRecordCount(res.totalRecordCount),
           ActionCreators.receiveCollectionCount({
             collection: Selectors.collection(state),
@@ -507,8 +508,10 @@ namespace ActionCreators {
           ActionCreators.receiveTemplate(SearchAdapter.extractTemplate(res.template)),
         ];
 
-        if (query.original !== Selectors.query(state)) {
-          actions.push(ActionCreators.updateSessionId(Store.SessionIdKey.recallId));
+        const queryChanged = query.original !== Selectors.query(state);
+        const refinementsChanged = !deepEqual(Selectors.getSelected(navigations), Selectors.selectedRefinements(state));
+        if (queryChanged || refinementsChanged) {
+          actions.push(ActionCreators.updateSessionId(Actions.Payload.Session.IdKey.recallId));
         }
 
         return actions;
@@ -898,10 +901,10 @@ namespace ActionCreators {
 
   /**
    * Updates the session id in the store for the given key.
-   * @param  {string}      key - The key to update.
+   * @param  {Actions.Payload.Session.IdKey}      key - The key to update.
    * @return {Actions.UpdateSessionId}          - Action with the session id and key.
    */
-  export function updateSessionId(key: string): Actions.UpdateSessionId {
+  export function updateSessionId(key: Actions.Payload.Session.IdKey): Actions.UpdateSessionId {
     return createAction({ type: Actions.UPDATE_SESSION_ID, payload: { id: cuid(), key } });
   }
 
