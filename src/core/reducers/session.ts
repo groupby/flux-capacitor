@@ -13,10 +13,10 @@ export default function updateSession(state: State = {}, action: Action): State 
     default: {
       if (action.meta) {
         if ('recallId' in action.meta) {
-          state = updateRecallId(state, action.meta);
+          state = updateRecallId(state, action.payload.id);
         }
         if ('searchId' in action.meta) {
-          state = updateSearchId(state, action.meta);
+          state = updateSearchId(state, action.payload.id);
         }
         if ('tag' in action.meta) {
           state = updateOrigin(state, action.meta);
@@ -45,10 +45,10 @@ export const updateSecuredPayload = (state, securedPayload: Configuration.Recomm
 export const updateLocation = (state: State, location: Store.Geolocation) =>
   ({ ...state, location });
 
-export const updateRecallId = (state: State, { recallId }: Actions.Metadata) =>
+export const updateRecallId = (state: State, { id: recallId }) =>
   ({ ...state, recallId });
 
-export const updateSearchId = (state: State, { searchId }: Actions.Metadata) =>
+export const updateSearchId = (state: State, { id: searchId }) =>
   ({ ...state, searchId });
 
 export const updateOrigin = (state: State, { tag: origin }: Actions.Metadata) =>
