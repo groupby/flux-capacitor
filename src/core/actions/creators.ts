@@ -625,10 +625,10 @@ namespace ActionCreators {
 
       return handleError(receiveProductsAction, () => {
         const limitedRecordCount = SearchAdapter.extractRecordCount(res.totalRecordCount);
-
-        return [
+        const query = SearchAdapter.extractQuery(res);
+        const actions: Array<Actions.Action<string, any>> = [
           receiveProductsAction,
-          ActionCreators.receiveQuery(SearchAdapter.extractQuery(res)),
+          ActionCreators.receiveQuery(query),
           ActionCreators.receiveProductRecords(SearchAdapter.augmentProducts(res)),
           ActionCreators.receiveNavigations(
             SearchAdapter.pruneRefinements(SearchAdapter.combineNavigations(res), state)),
@@ -640,6 +640,12 @@ namespace ActionCreators {
           ActionCreators.receivePage(limitedRecordCount)(state),
           ActionCreators.receiveTemplate(SearchAdapter.extractTemplate(res.template)),
         ];
+
+        if (query.original !== Selectors.query(state)) {
+          actions.push(ActionCreators.updateSessionId(Store.SessionIdKey.recallId));
+        }
+
+        return actions;
       });
     };
   }
