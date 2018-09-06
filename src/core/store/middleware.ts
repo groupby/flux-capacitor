@@ -184,10 +184,7 @@ export namespace Middleware {
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       // Middleware.sectionMiddleware(Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS)),
-      Middleware.sectionMiddleware(
-        Actions.StoreSection.Staging,
-        Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS)
-      ),
+      Middleware.sectionMiddleware(Actions.StoreSection.Staging, Middleware.searchIdAnalyzer),
       Middleware.errorHandler(flux),
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,
