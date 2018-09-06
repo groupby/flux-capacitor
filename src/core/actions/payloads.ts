@@ -7,7 +7,7 @@ namespace Payload {
       request?: any;
     }
 
-    export interface Refinements extends NavigationId, Override {}
+    export interface MoreRefinements extends NavigationId, Override {}
   }
 
   export namespace Personalization {

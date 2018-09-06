@@ -53,7 +53,7 @@ export namespace Tasks {
 
   export function* fetchProductsRequest(flux: FluxCapacitor, action: Actions.FetchProducts) {
     const state = yield effects.select();
-    const request = productsRequest.composeRequest(state);
+    const request = productsRequest.composeRequest(state, action.payload.request);
 
     return yield effects.call(Requests.search, flux, request);
   }
@@ -64,7 +64,7 @@ export namespace Tasks {
       const config = yield effects.select(Selectors.config);
       const iNav = config.recommendations.iNav;
       if (iNav.navigations.sort || iNav.refinements.sort) {
-        const body = recommendationsNavigationsRequest.composeRequest(state);
+        const body = recommendationsNavigationsRequest.composeRequest(state, action.payload.request);
         const recommendationsResponse = yield effects.call(
           Requests.recommendations,
           {

@@ -16,7 +16,7 @@ export namespace Tasks {
     try {
       const state: Store.State = yield effects.select();
       const config = yield effects.select(Selectors.config);
-      const requestBody = refinementsRequest.composeRequest(state);
+      const requestBody = refinementsRequest.composeRequest(state, payload.request);
       const res = yield effects.call(Requests.refinements, flux, requestBody, payload.navigationId);
 
       flux.emit(Events.BEACON_MORE_REFINEMENTS, payload.navigationId);

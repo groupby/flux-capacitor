@@ -20,16 +20,15 @@ namespace ActionCreators {
   // fetch action creators
   /**
    * Makes a request for more refinements for given navigation.
-   * @param  {Actions.Payload.Fetch.Refinements}                       navigationId - The navigationId for
-   * the navigation to fetch more refinements against.
-   * @return {Actions.FetchMoreRefinements}              - Action with navigationId.
+   * @param  {Actions.Payload.Fetch.MoreRefinements} options - An object with the navigationId for
+   * the navigation to fetch more refinements against and a request object for override.
+   * @return {Actions.FetchMoreRefinements} - Action with navigationId.
    */
-  export function fetchMoreRefinements(options: Actions.Payload.Fetch.Refinements): Actions.FetchMoreRefinements;
+  export function fetchMoreRefinements(options: Actions.Payload.Fetch.MoreRefinements): Actions.FetchMoreRefinements;
   /**
    * Makes a request for more refinements for given navigation.
-   * @param  {string}                       navigationId - The navigationId for
-   * the navigation to fetch more refinements against.
-   * @return {Actions.FetchMoreRefinements}              - Action with navigationId.
+   * @param  {string} navigationId - The navigationId for the navigation to fetch more refinements against.
+   * @return {Actions.FetchMoreRefinements} - Action with navigationId.
    */
   export function fetchMoreRefinements(navigationId: string): Actions.FetchMoreRefinements;
   // tslint:disable-next-line
@@ -43,33 +42,41 @@ namespace ActionCreators {
 
   /**
    * Makes a request for products.
+   * @param {Actions.Payload.Fetch.Override} options - An object with a request object for override.
    * @return {Actions.FetchProducts} - Action with null.
    */
-  export function fetchProducts(): Actions.FetchProducts {
-    return createAction(Actions.FETCH_PRODUCTS, null);
+  export function fetchProducts(options: Actions.Payload.Fetch.Override = {}): Actions.FetchProducts {
+    return createAction(Actions.FETCH_PRODUCTS, options);
   }
 
   /**
    * Makes a request for products without history being set afterwards.
+   * @param {Actions.Payload.Fetch.Override} options - An object with a request object for override.
    * @return {Actions.FetchProductsWithoutHistory} - Action with null.
    */
-  export function fetchProductsWithoutHistory(): Actions.FetchProductsWithoutHistory {
-    return createAction(Actions.FETCH_PRODUCTS_WITHOUT_HISTORY, null);
+  // tslint:disable-next-line max-line-length
+  export function fetchProductsWithoutHistory(options: Actions.Payload.Fetch.Override = {}): Actions.FetchProductsWithoutHistory {
+    return createAction(Actions.FETCH_PRODUCTS_WITHOUT_HISTORY, options);
   }
 
   /**
    * Wrapper for fetchProducts, dispatches it within saga when store is rehydrated
+   * @param {Actions.Payload.Fetch.Override} options - An object with a request object for override.
    * @return {Actions.FetchProductsWhenHydrated} - Action with null.
    */
-  export function fetchProductsWhenHydrated(): Actions.FetchProductsWhenHydrated {
-    return createAction(Actions.FETCH_PRODUCTS_WHEN_HYDRATED, fetchProducts());
+  // tslint:disable-next-line max-line-length
+  export function fetchProductsWhenHydrated(options: Actions.Payload.Fetch.Override = {}): Actions.FetchProductsWhenHydrated {
+    return createAction(Actions.FETCH_PRODUCTS_WHEN_HYDRATED, fetchProducts(options));
   }
+
   /**
    * Makes a request for additional products beyond currently requested products.
    * @param  {number}                    amount - Amount of more products to fetch.
    * @return {Actions.FetchMoreProducts}        - Action with amount.
    */
-  export function fetchMoreProducts(amount: number, forward: boolean = true): Actions.FetchMoreProducts {
+  export function fetchMoreProducts(options: Actions.Payload.Fetch.MoreProducts): Actions.FetchMoreProducts;
+  export function fetchMoreProducts(amount: number, forward: boolean = true): Actions.FetchMoreProducts;
+  export function fetchMoreProducts(options) {
     return createAction(Actions.FETCH_MORE_PRODUCTS, { amount, forward }, {
       forward: validators.isNotFetching,
     });
