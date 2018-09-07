@@ -85,7 +85,7 @@ namespace Actions {
 
   // fetch actions
   export const FETCH_MORE_REFINEMENTS = 'FETCH_MORE_REFINEMENTS';
-  export type FetchMoreRefinements = Action<typeof FETCH_MORE_REFINEMENTS, Payload.Fetch.Refinements>;
+  export type FetchMoreRefinements = Action<typeof FETCH_MORE_REFINEMENTS, Payload.Fetch.MoreRefinements>;
   export const FETCH_PRODUCTS = 'FETCH_PRODUCTS';
   export type FetchProducts = Action<typeof FETCH_PRODUCTS, Payload.Fetch.Override>;
   export const FETCH_PRODUCTS_WITHOUT_HISTORY = 'FETCH_PRODUCTS_WITHOUT_HISTORY';
@@ -93,7 +93,7 @@ namespace Actions {
   export const FETCH_PRODUCTS_WHEN_HYDRATED = 'FETCH_PRODUCTS_WHEN_HYDRATED';
   export type FetchProductsWhenHydrated = Action<typeof FETCH_PRODUCTS_WHEN_HYDRATED, Actions.FetchProducts>;
   export const FETCH_MORE_PRODUCTS = 'FETCH_MORE_PRODUCTS';
-  export type FetchMoreProducts = Action<typeof FETCH_MORE_PRODUCTS, { amount: number, forward: boolean }>;
+  export type FetchMoreProducts = Action<typeof FETCH_MORE_PRODUCTS, Payload.Fetch.MoreProducts>;
   export const FETCH_AUTOCOMPLETE_SUGGESTIONS = 'FETCH_AUTOCOMPLETE_SUGGESTIONS';
   export type FetchAutocompleteSuggestions = Action<typeof FETCH_AUTOCOMPLETE_SUGGESTIONS, string>;
   export const FETCH_AUTOCOMPLETE_PRODUCTS = 'FETCH_AUTOCOMPLETE_PRODUCTS';

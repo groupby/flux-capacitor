@@ -8,6 +8,11 @@ namespace Payload {
     }
 
     export interface MoreRefinements extends NavigationId, Override {}
+
+    export interface MoreProducts extends Override {
+      amount: number;
+      forward: boolean;
+    }
   }
 
   export namespace Personalization {

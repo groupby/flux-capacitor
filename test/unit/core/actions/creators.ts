@@ -65,7 +65,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
     describe('fetchProducts()', () => {
       it('should return an action', () => {
-        expectAction(ActionCreators.fetchProducts(), Actions.FETCH_PRODUCTS, null);
+        expectAction(ActionCreators.fetchProducts(), Actions.FETCH_PRODUCTS, {});
       });
     });
 

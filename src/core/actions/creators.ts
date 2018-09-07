@@ -31,7 +31,7 @@ namespace ActionCreators {
    * @return {Actions.FetchMoreRefinements} - Action with navigationId.
    */
   export function fetchMoreRefinements(navigationId: string): Actions.FetchMoreRefinements;
-  // tslint:disable-next-line
+  // tslint:disable-next-line typedef
   export function fetchMoreRefinements(options) {
     if (typeof options === 'string') {
       return createAction(Actions.FETCH_MORE_REFINEMENTS, { navigationId: options });
@@ -74,12 +74,20 @@ namespace ActionCreators {
    * @param  {number}                    amount - Amount of more products to fetch.
    * @return {Actions.FetchMoreProducts}        - Action with amount.
    */
-  export function fetchMoreProducts(options: Actions.Payload.Fetch.MoreProducts): Actions.FetchMoreProducts;
-  export function fetchMoreProducts(amount: number, forward: boolean = true): Actions.FetchMoreProducts;
-  export function fetchMoreProducts(options) {
-    return createAction(Actions.FETCH_MORE_PRODUCTS, { amount, forward }, {
+  // tslint:disable-next-line max-line-length
+  export function fetchMoreProducts(options: Actions.Payload.Fetch.MoreProducts);
+  export function fetchMoreProducts(amount: number, forward?: boolean);
+  // tslint:disable-next-line typedef
+  export function fetchMoreProducts(options, forward = true) {
+    const validator = {
       forward: validators.isNotFetching,
-    });
+    };
+
+    if (typeof options === 'number') {
+      return createAction(Actions.FETCH_MORE_PRODUCTS, { amount: options, forward }, validator);
+    } else {
+      return createAction(Actions.FETCH_MORE_PRODUCTS, options, validator);
+    }
   }
 
   /**
