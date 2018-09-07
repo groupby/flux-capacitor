@@ -96,10 +96,19 @@ namespace ActionCreators {
    * autocomplete suggestions against.
    * @return {Actions.FetchAutocompleteSuggestions}       - Action with query.
    */
-  export function fetchAutocompleteSuggestions(query: string): Actions.FetchAutocompleteSuggestions {
-    return createAction(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, query, {
+  // tslint:disable-next-line max-line-length
+  export function fetchAutocompleteSuggestions(options: Actions.Payload.Fetch.AutocompleteSuggestions): Actions.FetchAutocompleteSuggestions;
+  export function fetchAutocompleteSuggestions(query: string): Actions.FetchAutocompleteSuggestions;
+  // tslint:disable-next-line typedef
+  export function fetchAutocompleteSuggestions(options): Actions.FetchAutocompleteSuggestions {
+    const validator = {
       payload: validators.isString,
-    });
+    };
+    if (typeof options === 'string') {
+      return createAction(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, { query: options }, validator);
+    } else {
+      return createAction(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, options, validator);
+    }
   }
 
   /**

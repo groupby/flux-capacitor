@@ -13,6 +13,10 @@ namespace Payload {
       amount: number;
       forward: boolean;
     }
+
+    export interface AutocompleteSuggestions extends Override {
+      query: string;
+    }
   }
 
   export namespace Personalization {

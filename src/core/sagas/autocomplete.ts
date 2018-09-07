@@ -15,7 +15,7 @@ import Requests from './requests';
 
 export namespace Tasks {
   // tslint:disable-next-line max-line-length
-  export function* fetchSuggestions(flux: FluxCapacitor, { payload: query }: Actions.FetchAutocompleteSuggestions) {
+  export function* fetchSuggestions(flux: FluxCapacitor, { payload: { query } }: Actions.FetchAutocompleteSuggestions) {
     try {
       const state = yield effects.select();
       const config = yield effects.select(Selectors.config);

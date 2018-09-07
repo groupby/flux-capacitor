@@ -148,7 +148,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         const action = ActionCreators.fetchAutocompleteSuggestions(query);
 
-        expectAction(action, Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, query);
+        expectAction(action, Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, { query });
       });
 
       it('should apply validators to FETCH_AUTOCOMPLETE_SUGGESTIONS', () => {

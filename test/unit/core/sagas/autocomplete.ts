@@ -61,7 +61,7 @@ suite('autocomplete saga', ({ expect, spy, stub, sinon }) => {
         stub(RequestBuilders.recommendationsSuggestionsRequest, 'composeRequest')
           .withArgs(state, { query }).returns(matchExact);
 
-        const task = Tasks.fetchSuggestions(flux, <any>{ payload: query });
+        const task = Tasks.fetchSuggestions(flux, <any>{ payload: { query } });
 
         expect(task.next().value).to.eql(effects.select());
         expect(task.next(state).value).to.eql(effects.select(Selectors.config));
@@ -104,7 +104,7 @@ suite('autocomplete saga', ({ expect, spy, stub, sinon }) => {
         stub(Selectors, 'autocompleteCategoryField');
         stub(Adapter, 'extractSuggestions').returns(suggestions);
 
-        const task = Tasks.fetchSuggestions(flux, <any>{ payload: query });
+        const task = Tasks.fetchSuggestions(flux, <any>{ payload: { query } });
 
         task.next();
         task.next(state);
@@ -132,7 +132,7 @@ suite('autocomplete saga', ({ expect, spy, stub, sinon }) => {
           .withArgs(state, { query }).returns(matchExact);
         stub(Selectors, 'autocompleteCategoryField');
 
-        const task = Tasks.fetchSuggestions(flux, <any>{ payload: query });
+        const task = Tasks.fetchSuggestions(flux, <any>{ payload: { query } });
 
         task.next();
         task.next(state);
@@ -156,7 +156,7 @@ suite('autocomplete saga', ({ expect, spy, stub, sinon }) => {
           actions: { receiveAutocompleteSuggestions }
         };
 
-        const task = Tasks.fetchSuggestions(flux, <any>{});
+        const task = Tasks.fetchSuggestions(flux, <any>{ payload: { query: 'rain boots' } });
 
         task.next();
         expect(task.throw(error).value).to.eql(effects.put(receiveAutocompleteSuggestionsAction));
