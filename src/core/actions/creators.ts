@@ -108,8 +108,9 @@ namespace ActionCreators {
   // tslint:disable-next-line typedef
   export function fetchAutocompleteSuggestions(options): Actions.FetchAutocompleteSuggestions {
     const validator = {
-      payload: validators.isString,
+      query: validators.isString,
     };
+
     if (typeof options === 'string') {
       return createAction(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, { query: options }, validator);
     } else {

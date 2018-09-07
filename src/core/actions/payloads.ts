@@ -18,7 +18,7 @@ namespace Payload {
       query: string;
     }
 
-    export interface AutocompleteProducts extends Autocomplete.Products, Override {};
+    export interface AutocompleteProducts extends Autocomplete.Products, Override {}
   }
 
   export namespace Personalization {

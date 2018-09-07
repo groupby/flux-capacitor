@@ -20,7 +20,7 @@ export namespace Tasks {
       const state = yield effects.select();
       const config = yield effects.select(Selectors.config);
       const field = Selectors.autocompleteCategoryField(state);
-      const requestBody = autocompleteSuggestionsRequest.composeRequest(state);
+      const requestBody = autocompleteSuggestionsRequest.composeRequest(state, request);
       const suggestionsRequest = effects.call(
         Requests.autocomplete,
         flux,
@@ -64,14 +64,14 @@ export namespace Tasks {
   }
 
   // tslint:disable-next-line max-line-length
-  export function* fetchProducts(flux: FluxCapacitor, { payload: { query, refinements } }: Actions.FetchAutocompleteProducts) {
+  export function* fetchProducts(flux: FluxCapacitor, { payload: { query, refinements, request } }: Actions.FetchAutocompleteProducts) {
     try {
       const state = yield effects.select();
       const requestRefinements = refinements.map(({ field, ...rest }) =>
         (<SelectedRefinement>{ ...rest, type: 'Value', navigationName: field }));
       const requestBody = autocompleteProductsRequest.composeRequest(
         state,
-        { refinements: requestRefinements, query }
+        { refinements: requestRefinements, query, ...request }
       );
       const res = yield effects.call(Requests.search, flux, requestBody);
 
