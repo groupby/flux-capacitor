@@ -71,11 +71,17 @@ namespace ActionCreators {
 
   /**
    * Makes a request for additional products beyond currently requested products.
-   * @param  {number}                    amount - Amount of more products to fetch.
+   * @param  {Actions.Payload.Fetch.MoreProducts} options - An object with the
+   * amount and forward values, and a request object for override
    * @return {Actions.FetchMoreProducts}        - Action with amount.
    */
-  // tslint:disable-next-line max-line-length
   export function fetchMoreProducts(options: Actions.Payload.Fetch.MoreProducts);
+  /**
+   * Makes a request for additional products beyond currently requested products.
+   * @param  {number}                    amount - Amount of more products to fetch.
+   * @param  {boolean}                   forward - `true` to fetch forward
+   * @return {Actions.FetchMoreProducts}        - Action with amount.
+   */
   export function fetchMoreProducts(amount: number, forward?: boolean);
   // tslint:disable-next-line typedef
   export function fetchMoreProducts(options, forward = true) {
@@ -113,6 +119,15 @@ namespace ActionCreators {
 
   /**
    * Makes a request for autocomplete products.
+   * @param  {Actions.Payload.Fetch.AutocompleteProducts} query - An object
+   * with the query and refinements, and a request object for override.
+   * @return {Actions.FetchAutocompleteProducts}                          - Action with
+   * query and refinements.
+   */
+  // tslint:disable-next-line max-line-length
+  export function fetchAutocompleteProducts(options: Actions.Payload.Fetch.AutocompleteProducts): Actions.FetchAutocompleteProducts;
+  /**
+   * Makes a request for autocomplete products.
    * @param  {string}                                       query         - Search term
    * to fetch autocomplete products against.
    * @param  {Actions.Payload.Autocomplete.Refinement[]=[]} refinements   - The applied
@@ -121,10 +136,18 @@ namespace ActionCreators {
    * query and refinements.
    */
   // tslint:disable-next-line max-line-length
-  export function fetchAutocompleteProducts(query: string, refinements: Actions.Payload.Autocomplete.Refinement[] = []): Actions.FetchAutocompleteProducts {
-    return createAction(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { query, refinements }, {
+  export function fetchAutocompleteProducts(query: string, refinements?: Actions.Payload.Autocomplete.Refinement[]): Actions.FetchAutocompleteProducts;
+  // tslint:disable-next-line typedef
+  export function fetchAutocompleteProducts(options, refinements = []): Actions.FetchAutocompleteProducts {
+    const validator = {
       query: validators.isValidQuery,
-    });
+    };
+
+    if (typeof options === 'string') {
+      return createAction(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { query: options, refinements }, validator);
+    } else {
+      return createAction(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, options, validator);
+    }
   }
 
   /**

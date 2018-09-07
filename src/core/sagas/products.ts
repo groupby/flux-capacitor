@@ -107,7 +107,7 @@ export namespace Tasks {
         yield effects.put(<any>flux.actions.infiniteScrollRequestState({ isFetchingBackward: true }));
       }
 
-      const requestBody = productsRequest.composeRequest(state, { pageSize, skip });
+      const requestBody = productsRequest.composeRequest(state, { pageSize, skip, ...action.payload.request });
       const result = yield effects.call(Requests.search, flux, requestBody);
 
       flux.emit(Events.BEACON_SEARCH, result.id);
