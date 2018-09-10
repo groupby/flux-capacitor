@@ -40,6 +40,15 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     expect(createAction).to.be.calledWithExactly(...args);
   }
 
+  // tslint:disable-next-line max-line-length
+  function itShouldAcceptAnOptionsObject<T>(creator: (options: object) => Actions.Action<T, any> | Actions.Action<T, any>[], expectedActionType: T, additionalProperties: object = {}) {
+    it('should accept an options object', () => {
+      const options: any = { a: 'b' };
+
+      expectAction(creator(options), expectedActionType, { ...additionalProperties, ...options });
+    });
+  }
+
   beforeEach(() => createAction = stub(utils, 'createAction').returns(ACTION));
 
   describe('application action creators', () => {
@@ -54,6 +63,8 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
   describe('fetch action creators', () => {
     describe('fetchMoreRefinements()', () => {
+      itShouldAcceptAnOptionsObject(ActionCreators.fetchMoreRefinements, Actions.FETCH_MORE_REFINEMENTS);
+
       it('should return an action', () => {
         const navigationId = 'brand';
 
@@ -64,6 +75,8 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
 
     describe('fetchProducts()', () => {
+      itShouldAcceptAnOptionsObject(ActionCreators.fetchProducts, Actions.FETCH_PRODUCTS);
+
       it('should return an action', () => {
         expectAction(ActionCreators.fetchProducts(), Actions.FETCH_PRODUCTS, {});
       });
@@ -73,9 +86,21 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         expectAction(ActionCreators.fetchProductsWhenHydrated(), Actions.FETCH_PRODUCTS_WHEN_HYDRATED, ACTION);
       });
+
+      it('should accept an options object', () => {
+        const options: any = { a: 'b' };
+        const fetchProducts = stub(ActionCreators, 'fetchProducts').returns(ACTION);
+
+        const action = ActionCreators.fetchProductsWhenHydrated(options);
+
+        expect(fetchProducts).to.be.calledWith(options);
+        expectAction(action, Actions.FETCH_PRODUCTS_WHEN_HYDRATED, ACTION);
+      });
     });
 
     describe('fetchMoreProducts()', () => {
+      itShouldAcceptAnOptionsObject(ActionCreators.fetchMoreProducts, Actions.FETCH_MORE_PRODUCTS, { forward: true });
+
       it('should return an action', () => {
         const amount = 15;
 
@@ -84,6 +109,8 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
 
     describe('fetchPastPurchases()', () => {
+      itShouldAcceptAnOptionsObject(ActionCreators.fetchPastPurchases, Actions.FETCH_PAST_PURCHASES);
+
       it('should return an action with an empty object', () => {
         expectAction(ActionCreators.fetchPastPurchases(), Actions.FETCH_PAST_PURCHASES, {});
       });
@@ -96,6 +123,8 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
 
     describe('fetchPastPurchaseProducts()', () => {
+      itShouldAcceptAnOptionsObject(ActionCreators.fetchPastPurchaseProducts, Actions.FETCH_PAST_PURCHASE_PRODUCTS);
+
       it('should return an action with an empty object', () => {
         expectAction(ActionCreators.fetchPastPurchaseProducts(), Actions.FETCH_PAST_PURCHASE_PRODUCTS, {});
       });

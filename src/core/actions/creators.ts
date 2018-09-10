@@ -66,7 +66,7 @@ namespace ActionCreators {
    */
   // tslint:disable-next-line max-line-length
   export function fetchProductsWhenHydrated(options: Actions.Payload.Fetch.Override = {}): Actions.FetchProductsWhenHydrated {
-    return createAction(Actions.FETCH_PRODUCTS_WHEN_HYDRATED, fetchProducts(options));
+    return createAction(Actions.FETCH_PRODUCTS_WHEN_HYDRATED, ActionCreators.fetchProducts(options));
   }
 
   /**
