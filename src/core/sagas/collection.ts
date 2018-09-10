@@ -5,10 +5,10 @@ import { collectionRequest } from '../requests';
 import Requests from './requests';
 
 export namespace Tasks {
-  export function* fetchCount(flux: FluxCapacitor, { payload: collection }: Actions.FetchCollectionCount) {
+  export function* fetchCount(flux: FluxCapacitor, { payload: { collection, request } }: Actions.FetchCollectionCount) {
     try {
       const state = yield effects.select();
-      const requestBody = collectionRequest.composeRequest(state, { collection });
+      const requestBody = collectionRequest.composeRequest(state, { collection, ...request });
       const res = yield effects.call(Requests.search, flux, requestBody);
 
       yield effects.put(flux.actions.receiveCollectionCount({

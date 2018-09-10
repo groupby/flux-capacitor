@@ -9,16 +9,24 @@ namespace Payload {
 
     export interface MoreRefinements extends NavigationId, Override {}
 
-    export interface MoreProducts extends Override {
-      amount: number;
-      forward: boolean;
-    }
+    export interface MoreProducts extends More, Override {}
 
-    export interface AutocompleteSuggestions extends Override {
-      query: string;
-    }
+    export interface AutocompleteSuggestions extends SimpleQuery, Override {}
 
     export interface AutocompleteProducts extends Autocomplete.Products, Override {}
+
+    export interface CollectionCount extends Collection.Name, Override {}
+
+    export interface Details extends Id, Override {}
+
+    export interface PastPurchases extends Partial<SimpleQuery>, Override {}
+
+    export interface MorePastPurchases extends More, Override {}
+  }
+
+  export interface More {
+    amount: number;
+    forward: boolean;
   }
 
   export namespace Personalization {
@@ -30,10 +38,14 @@ namespace Payload {
     }
   }
 
+  export interface Id {
+    id: string;
+  }
+
   export namespace Component {
-    export interface Identifier {
+
+    export interface Identifier extends Id {
       tagName: string;
-      id: string;
     }
 
     export interface State extends Identifier {
@@ -42,10 +54,17 @@ namespace Payload {
   }
 
   export namespace Collection {
-    export interface Count {
+    export interface Name {
       collection: string;
+    }
+
+    export interface Count extends Name {
       count: number;
     }
+  }
+
+  export interface SimpleQuery {
+    query: string;
   }
 
   export interface Query {
@@ -57,8 +76,10 @@ namespace Payload {
   }
 
   // note: Isn't getting the right type in generated doc for some reason
-  export interface Search extends Partial<Navigation.Refinement>, Partial<Navigation.AddRefinement> {
-    query?: string;
+  export interface Search
+    extends Partial<SimpleQuery>,
+    Partial<Navigation.Refinement>,
+    Partial<Navigation.AddRefinement> {
 
     /**
      * only for refinements
@@ -69,8 +90,7 @@ namespace Payload {
   }
 
   export namespace Autocomplete {
-    export interface Products {
-      query: string;
+    export interface Products extends SimpleQuery {
       refinements: Payload.Autocomplete.Refinement[];
     }
 
