@@ -35,7 +35,7 @@ suite('collection saga', ({ expect, spy, stub }) => {
         const state = { a: 'b' };
         stub(collectionRequest, 'composeRequest').withArgs(state, { collection }).returns(request);
 
-        const task = Tasks.fetchCount(flux, <any>{ payload: collection });
+        const task = Tasks.fetchCount(flux, <any>{ payload: { collection } });
 
         expect(task.next().value).to.eql(effects.select());
         expect(task.next(state).value).to.eql(effects.call(searchRequest, flux, request));
@@ -52,7 +52,7 @@ suite('collection saga', ({ expect, spy, stub }) => {
           actions: { receiveCollectionCount }
         };
 
-        const task = Tasks.fetchCount(flux, <any>{});
+        const task = Tasks.fetchCount(flux, <any>{ payload: {} });
 
         task.next();
         expect(task.throw(error).value).to.eql(effects.put(receiveCollectionCountAction));

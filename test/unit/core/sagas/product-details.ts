@@ -42,7 +42,7 @@ suite('product details saga', ({ expect, spy, stub }) => {
           refinements: [{ navigationName: 'id', type: 'Value', value: id }]
         }).returns(request);
 
-        const task = Tasks.fetchProductDetails(flux, <any>{ payload: id });
+        const task = Tasks.fetchProductDetails(flux, <any>{ payload: { id } });
 
         expect(task.next().value).to.eql(effects.select());
         expect(task.next(state).value).to.eql(effects.call(searchRequest, flux, request));
@@ -62,7 +62,7 @@ suite('product details saga', ({ expect, spy, stub }) => {
         };
         stub(productDetailsRequest, 'composeRequest').returns({ records: [] });
 
-        const task = Tasks.fetchProductDetails(flux, <any>{});
+        const task = Tasks.fetchProductDetails(flux, <any>{ payload: {} });
 
         task.next();
         task.next();
@@ -79,7 +79,7 @@ suite('product details saga', ({ expect, spy, stub }) => {
           actions: { updateDetails }
         };
 
-        const task = Tasks.fetchProductDetails(flux, <any>{});
+        const task = Tasks.fetchProductDetails(flux, <any>{ payload: {} });
 
         task.next();
         expect(task.throw(error).value).to.eql(effects.put(updateDetailsAction));

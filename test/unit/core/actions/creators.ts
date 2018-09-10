@@ -84,26 +84,20 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
 
     describe('fetchPastPurchases()', () => {
-      it('should return an action with null', () => {
-        expectAction(ActionCreators.fetchPastPurchases(), Actions.FETCH_PAST_PURCHASES, null);
+      it('should return an action with an empty object', () => {
+        expectAction(ActionCreators.fetchPastPurchases(), Actions.FETCH_PAST_PURCHASES, {});
       });
 
       it('should return an action with query', () => {
         const query = 'hat';
 
-        expectAction(ActionCreators.fetchPastPurchases(query), Actions.FETCH_PAST_PURCHASES, query);
+        expectAction(ActionCreators.fetchPastPurchases(query), Actions.FETCH_PAST_PURCHASES, { query });
       });
     });
 
     describe('fetchPastPurchaseProducts()', () => {
-      it('should return an action with null', () => {
-        expectAction(ActionCreators.fetchPastPurchaseProducts(), Actions.FETCH_PAST_PURCHASE_PRODUCTS, null);
-      });
-
-      it('should return an action with query', () => {
-        const query = 'hat';
-
-        expectAction(ActionCreators.fetchPastPurchaseProducts(query), Actions.FETCH_PAST_PURCHASE_PRODUCTS, query);
+      it('should return an action with an empty object', () => {
+        expectAction(ActionCreators.fetchPastPurchaseProducts(), Actions.FETCH_PAST_PURCHASE_PRODUCTS, {});
       });
     });
 
@@ -130,7 +124,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
     describe('fetchPastPurchaseNavigations()', () => {
       it('should return an action', () => {
-        expectAction(ActionCreators.fetchPastPurchaseNavigations(), Actions.FETCH_PAST_PURCHASE_NAVIGATIONS, null);
+        expectAction(ActionCreators.fetchPastPurchaseNavigations(), Actions.FETCH_PAST_PURCHASE_NAVIGATIONS, {});
       });
     });
 
@@ -138,7 +132,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const query = 'hat';
 
-        expectAction(ActionCreators.fetchSaytPastPurchases(query), Actions.FETCH_SAYT_PAST_PURCHASES, query);
+        expectAction(ActionCreators.fetchSaytPastPurchases(query), Actions.FETCH_SAYT_PAST_PURCHASES, { query });
       });
     });
 
@@ -153,7 +147,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
       it('should apply validators to FETCH_AUTOCOMPLETE_SUGGESTIONS', () => {
         expectValidators(ActionCreators.fetchAutocompleteSuggestions(''), Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, {
-          payload: validators.isString
+          query: validators.isString
         });
       });
     });
@@ -185,7 +179,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const collection = 'products';
 
-        expectAction(ActionCreators.fetchCollectionCount(collection), Actions.FETCH_COLLECTION_COUNT, collection);
+        expectAction(ActionCreators.fetchCollectionCount(collection), Actions.FETCH_COLLECTION_COUNT, { collection });
       });
     });
 
@@ -193,23 +187,24 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const id = '12345';
 
-        expectAction(ActionCreators.fetchProductDetails(id), Actions.FETCH_PRODUCT_DETAILS, id);
+        expectAction(ActionCreators.fetchProductDetails(id), Actions.FETCH_PRODUCT_DETAILS, { id });
       });
     });
 
     describe('fetchRecommendationsProducts()', () => {
       it('should return an action', () => {
-        expectAction(ActionCreators.fetchRecommendationsProducts(), Actions.FETCH_RECOMMENDATIONS_PRODUCTS, null);
+        expectAction(ActionCreators.fetchRecommendationsProducts(), Actions.FETCH_RECOMMENDATIONS_PRODUCTS, {});
       });
     });
 
     describe('fetchPastPurchases()', () => {
       it('should return an action', () => {
-        expectAction(ActionCreators.fetchPastPurchases('query'), Actions.FETCH_PAST_PURCHASES, 'query');
+        const query = 'query';
+        expectAction(ActionCreators.fetchPastPurchases(query), Actions.FETCH_PAST_PURCHASES, { query });
       });
 
-      it('should return an action when query is null', () => {
-        expectAction(ActionCreators.fetchPastPurchases(), Actions.FETCH_PAST_PURCHASES, null);
+      it('should return an action when no arguments are given', () => {
+        expectAction(ActionCreators.fetchPastPurchases(), Actions.FETCH_PAST_PURCHASES, {});
       });
     });
   });

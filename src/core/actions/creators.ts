@@ -215,7 +215,7 @@ namespace ActionCreators {
    * and a request object for override.
    * @return {Actions.FetchPastPurchases} - Action with { query, request }.
    */
-  export function fetchPastPurchases(options: Actions.Payload.Fetch.PastPurchases): Actions.FetchPastPurchases;
+  export function fetchPastPurchases(options?: Actions.Payload.Fetch.PastPurchases): Actions.FetchPastPurchases;
   /**
    * Makes a request for past purchases.
    * @param {string} query - A search term
@@ -257,7 +257,7 @@ namespace ActionCreators {
    * @return {Actions.FetchPastPurchaseProducts} - Action with { amount, forward }.
    */
    // tslint:disable-next-line max-line-length
-  export function fetchMorePastPurchaseProducts(amount: number, forward: boolean): Actions.FetchMorePastPurchaseProducts;
+  export function fetchMorePastPurchaseProducts(amount: number, forward?: boolean): Actions.FetchMorePastPurchaseProducts;
   // tslint:disable-next-line typedef
   export function fetchMorePastPurchaseProducts(options, forward = true): Actions.FetchMorePastPurchaseProducts {
     if (typeof options === 'number') {
