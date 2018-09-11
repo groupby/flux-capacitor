@@ -148,6 +148,25 @@ suite('autocomplete saga', ({ expect, spy, stub, sinon }) => {
           ]));
       });
 
+      it('should override request', () => {
+        const query = 'rain boots';
+        const override = { a: 'b' };
+        const flux: any = { actions: { receiveAutocompleteSuggestions: () => ({ y: 'z' }) } };
+        const config: any = { autocomplete: { recommendations: { suggestionCount: 10 } } };
+        const state: any = { c: 'd' };
+        const autocompleteComposeRequest = stub(RequestBuilders.autocompleteSuggestionsRequest, 'composeRequest');
+        const recommendationsComposeRequest = stub(RequestBuilders.recommendationsSuggestionsRequest, 'composeRequest');
+        stub(Selectors, 'autocompleteCategoryField');
+
+        const task = Tasks.fetchSuggestions(flux, <any>{ payload: { query, request: override } });
+
+        task.next();
+        task.next(state);
+        task.next(config);
+        expect(autocompleteComposeRequest).to.be.calledWith(state, override);
+        expect(recommendationsComposeRequest).to.be.calledWith(state, { query, ...override });
+      });
+
       it('should handle request failure', () => {
         const error = new Error();
         const receiveAutocompleteSuggestionsAction: any = { a: 'b' };
@@ -192,6 +211,22 @@ suite('autocomplete saga', ({ expect, spy, stub, sinon }) => {
         expect(task.next(response).value).to.eql(effects.put(receiveAutocompleteProductsAction));
         expect(receiveAutocompleteProducts).to.be.calledWith(response);
         task.next();
+      });
+
+      it('should override request', () => {
+        const query = 'rain boots';
+        const refinements = [{ field: 'brand', value: 'Nike', exclude: true }];
+        const requestRefinements = [{ navigationName: 'brand', type: 'Value', value: 'Nike', exclude: true }];
+        const override = { a: 'b' };
+        const state = { c: 'd' };
+        const composeRequest = stub(RequestBuilders.autocompleteProductsRequest, 'composeRequest');
+
+        // tslint:disable-next-line max-line-length
+        const task = Tasks.fetchProducts(null, <any>{ payload: { query, refinements, request: override } });
+
+        task.next();
+        task.next(state);
+        expect(composeRequest).to.be.calledWith(state, { refinements: requestRefinements, query, ...override });
       });
 
       it('should handle request failure', () => {
