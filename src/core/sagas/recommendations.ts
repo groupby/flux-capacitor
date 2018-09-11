@@ -46,19 +46,26 @@ export namespace Tasks {
             body
           }
         );
-
+        const idMap = {
+          'productId': 'id'
+        };
         const recommendations = yield recommendationsResponse.json();
         const refinements = recommendations.result
           .filter(({ productId }) => productId)
-          .map(({ productId }) => ({ navigationName: idField, type: 'Value', value: productId }));
+          .map(({ productId }) => ({ navigationName: idMap[idField] || idField, type: 'Value', value: productId }));
+        const baseProductRequest = {
+          pageSize: productConfig.productCount,
+          includedNavigations: [],
+          skip: 0,
+          refinements
+        };
+
+        if (refinements.length) {
+          baseProductRequest['orFields'] = ['id'];
+        }
         const requestBody = recommendationsProductsRequest.composeRequest(
           state,
-          {
-            pageSize: productConfig.productCount,
-            includedNavigations: [],
-            skip: 0,
-            refinements
-          }
+          baseProductRequest
         );
         const results = yield effects.call(Requests.search, flux, requestBody);
 
