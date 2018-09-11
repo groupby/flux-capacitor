@@ -52,7 +52,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const augmentProducts = stub(SearchAdapter, 'augmentProducts').returns(['x', 'x', 'x']);
         const matchExact = 'match exact';
         const requestBody = { c: 'd' };
-        stub(RequestBuilders.recommendationsProductIDsRequest, 'composeRequest').withArgs(state).returns(matchExact);
+        stub(RequestBuilders.recommendationsProductIdsRequest, 'composeRequest').withArgs(state).returns(matchExact);
         stub(RequestBuilders.recommendationsProductsRequest, 'composeRequest').withArgs(state, {
           pageSize: productCount,
           includedNavigations: [],
@@ -92,6 +92,20 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         task.next();
         task.next(config);
         expect(task.next(config).value).to.be.undefined;
+      });
+
+      it('should override request', () => {
+        const state = { a: 'b' };
+        const override = { c: 'd' };
+        const config = { recommendations: { productSuggestions: { productCount: 1 } } };
+        const composeRequest = stub(RequestBuilders.recommendationsProductIdsRequest, 'composeRequest');
+
+        const task = Tasks.fetchProducts(null, <any>{ payload: { request: override } });
+
+        task.next();
+        task.next(state);
+        task.next(config);
+        expect(composeRequest).to.be.calledWith(state, override);
       });
 
       it('should handle request failure', () => {
@@ -166,7 +180,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
       });
     });
 
-    describe('fetchProductsFromSkus()', () => {
+    describe('buildRequestFromSkus()', () => {
       it('should fetch products from skus', () => {
         const sku1 = 123;
         const sku2 = 234;
@@ -180,7 +194,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
           sort: [{ type: 'ByIds', ids }],
         };
 
-        const req = Tasks.fetchProductsFromSkus(flux, skus);
+        const req = Tasks.buildRequestFromSkus(flux, skus);
 
         expect(req).to.eql(newRequest);
       });
@@ -263,6 +277,26 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(task.next([]).value).to.be.undefined;
       });
 
+      it('should override request', () => {
+        const state = { a: 'b' };
+        const override = { c: 'd' };
+        const pastPurchaseFromSkus = { e: 'f' };
+        const composeRequest = stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest');
+        stub(Tasks, 'buildRequestFromSkus').returns(pastPurchaseFromSkus);
+
+        const task = Tasks.fetchPastPurchaseProducts(null, true, <any>{ payload: { request: override } });
+
+        task.next();
+        task.next(['a']);
+        task.next(state);
+        expect(composeRequest).to.be.calledWith(state, {
+          query: '',
+          refinements: [],
+          ...pastPurchaseFromSkus,
+          ...override
+        });
+      });
+
       it('should handle request failure', () => {
         const error = new Error();
         const receivePastPurchaseProducts = spy(() => 1);
@@ -301,7 +335,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const extractRecordCount = stub(SearchAdapter, 'extractRecordCount').returns(productData);
         const pastPurchasePage = stub(Selectors, 'pastPurchasePage').returns(currentPage);
         const searchRequest = stub(Requests, 'search').returns(result);
-        stub(Tasks, 'fetchProductsFromSkus').withArgs(flux, pastPurchaseSkus).returns(pastPurchasesFromSkus);
+        stub(Tasks, 'buildRequestFromSkus').withArgs(flux, pastPurchaseSkus).returns(pastPurchasesFromSkus);
         stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest')
           .withArgs(state, {
             query: '',
@@ -350,7 +384,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const combineNavigations = stub(SearchAdapter, 'combineNavigations').returns(productData);
         const navigations = stub(PastPurchaseAdapter, 'pastPurchaseNavigations').returns(transformedNav);
         const searchRequest = stub(Requests, 'search').returns(result);
-        stub(Tasks, 'fetchProductsFromSkus').withArgs(flux, pastPurchaseSkus).returns(pastPurchasesFromSkus);
+        stub(Tasks, 'buildRequestFromSkus').withArgs(flux, pastPurchaseSkus).returns(pastPurchasesFromSkus);
         stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest')
           .withArgs(state, {
             query: '',
@@ -402,7 +436,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const pastPurchaseSkusSelector = stub(Selectors, 'pastPurchases').returns(pastPurchaseSkus);
         const searchRequest = stub(Requests, 'search').returns(results);
         stub(Selectors, 'pastPurchaseProductsWithMetadata').returns([{ index: 1 }, { index: 2 }, { index: 3 }]);
-        stub(Tasks, 'fetchProductsFromSkus').withArgs(flux, pastPurchaseSkus).returns(pastPurchasesFromSkus);
+        stub(Tasks, 'buildRequestFromSkus').withArgs(flux, pastPurchaseSkus).returns(pastPurchasesFromSkus);
         stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest').withArgs(state, {
           pageSize,
           skip: 3,
@@ -454,7 +488,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const searchRequest = stub(Requests, 'search').returns(results);
         stub(Selectors, 'pastPurchaseProductsWithMetadata').returns([{ index: 11 }, { index: 12 }, { index: 13 }]);
         stub(Selectors, 'pastPurchasePageSize').returns(10);
-        stub(Tasks, 'fetchProductsFromSkus').withArgs(flux, pastPurchaseSkus).returns(pastPurchasesFromSkus);
+        stub(Tasks, 'buildRequestFromSkus').withArgs(flux, pastPurchaseSkus).returns(pastPurchasesFromSkus);
         stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest').withArgs(state, {
           pageSize,
           skip: 0,
@@ -475,6 +509,26 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(task.next().value).to.eql(effects.put(infiniteScrollRequestStateAction));
         expect(infiniteScrollRequestState).to.be.calledTwice.calledWithExactly({ isFetchingBackward: false });
         task.next();
+      });
+
+      it('should override request', () => {
+        const state = { a: 'b' };
+        const override = { c: 'd' };
+        const flux = {
+          actions: {
+          },
+        };
+
+        const task = Tasks.fetchMorePastPurchaseProducts(flux, /* TODO */);
+        // TODO
+
+        task.next();
+        expect(composeRequest).to.be.calledWith(state, {
+          pageSize,
+          skip,
+          ...pastPurchaseFromSkus,
+          ...override,
+        });
       });
 
       it('should throw error on failure', () => {

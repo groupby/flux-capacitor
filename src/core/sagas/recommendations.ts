@@ -10,7 +10,7 @@ import {
   autocompletePastPurchaseRequest,
   pastPurchaseProductsRequest,
   recommendationsProductsRequest,
-  recommendationsProductIDsRequest
+  recommendationsProductIdsRequest
 } from '../requests';
 import Selectors from '../selectors';
 import Store from '../store';
@@ -34,7 +34,7 @@ export namespace Tasks {
       const { idField, productSuggestions: productConfig } = config.recommendations;
       const productCount = productConfig.productCount;
       if (productCount > 0) {
-        const body = recommendationsProductIDsRequest.composeRequest(state, action.payload.request);
+        const body = recommendationsProductIdsRequest.composeRequest(state, action.payload.request);
         const recommendationsResponse = yield effects.call(
           Requests.recommendations,
           {
@@ -114,7 +114,7 @@ export namespace Tasks {
       const pastPurchaseSkus: Store.PastPurchases.PastPurchaseProduct[] = yield effects.select(Selectors.pastPurchases);
       if (pastPurchaseSkus.length > 0) {
         const state = yield effects.select();
-        const pastPurchasesFromSkus = Tasks.fetchProductsFromSkus(flux, pastPurchaseSkus);
+        const pastPurchasesFromSkus = Tasks.buildRequestFromSkus(flux, pastPurchaseSkus);
         const request = pastPurchaseProductsRequest.composeRequest(state, {
           query: '',
           refinements: [],
@@ -163,7 +163,7 @@ export namespace Tasks {
         yield effects.put(<any>flux.actions.infiniteScrollRequestState({ isFetchingBackward: true }));
       }
 
-      const pastPurchasesFromSkus = Tasks.fetchProductsFromSkus(flux, pastPurchaseSkus);
+      const pastPurchasesFromSkus = Tasks.buildRequestFromSkus(flux, pastPurchaseSkus);
       const request = pastPurchaseProductsRequest.composeRequest(state, {
         pageSize,
         skip,
@@ -203,7 +203,7 @@ export namespace Tasks {
     }
   }
 
-  export function fetchProductsFromSkus(flux: FluxCapacitor, skus: Store.PastPurchases.PastPurchaseProduct[]) {
+  export function buildRequestFromSkus(flux: FluxCapacitor, skus: Store.PastPurchases.PastPurchaseProduct[]): Partial<Request> {
     const ids: string[] = skus.map(({ sku }) => sku);
 
     return {
