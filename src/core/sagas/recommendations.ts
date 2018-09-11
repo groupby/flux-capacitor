@@ -47,7 +47,7 @@ export namespace Tasks {
           }
         );
         const idMap = {
-          'productId': 'id'
+          productId: 'id'
         };
         const recommendations = yield recommendationsResponse.json();
         const refinements = recommendations.result
