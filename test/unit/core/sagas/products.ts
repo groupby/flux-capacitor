@@ -3,6 +3,7 @@ import { ActionCreators } from 'redux-undo';
 import Actions from '../../../../src/core/actions';
 import PersonalizationAdapter from '../../../../src/core/adapters/personalization';
 import RecommendationsAdapter from '../../../../src/core/adapters/recommendations';
+import SearchAdapter from '../../../../src/core/adapters/search';
 import Events from '../../../../src/core/events';
 import { productsRequest, recommendationsNavigationsRequest } from '../../../../src/core/requests';
 import { Tasks as productDetailsTasks } from '../../../../src/core/sagas/product-details';
@@ -474,6 +475,18 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         task.next();
       });
 
+      it('should override request', () => {
+        const state = { a: 'b' };
+        const override = { c: 'd' };
+        const composeRequest = stub(productsRequest, 'composeRequest');
+
+        const task = Tasks.fetchProductsRequest(null, <any>{ payload: { request: override } });
+
+        task.next();
+        task.next(state);
+        expect(composeRequest).to.be.calledWith(state, override);
+      });
+
       it('should handle request failure', () => {
         const error = new Error();
         const flux: any = {};
@@ -675,6 +688,32 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         task.next();
       });
 
+      it('should override request', () => {
+        const state = { a: 'b' };
+        const pageSize = 14;
+        const skip = 0;
+        const flux: any = {
+          actions: {
+            infiniteScrollRequestState: () => ({}),
+            receiveMoreProducts: () => ({}),
+          }
+        };
+        const override = { c: 'd' };
+        const composeRequest = stub(productsRequest, 'composeRequest');
+        stub(Selectors, 'productsWithMetadata').returns([]);
+        stub(Selectors, 'recordCount');
+        stub(SearchAdapter, 'extractRecordCount');
+
+        const task = Tasks.fetchMoreProducts(flux, <any>{
+          payload: { forward: true, amount: pageSize, request: override }
+        });
+
+        task.next();
+        task.next(state);
+        task.next();
+        expect(composeRequest).to.be.calledWith(state, { pageSize, skip, ...override });
+      });
+
       it('should throw error on failure', () => {
         const error = new Error();
         const receiveMoreProductsAction: any = { a: 'b' };
@@ -858,6 +897,27 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         expect(receiveRecommendationsRefinements).to.not.be.called;
         expect(receiveNavigationSort).to.not.be.called;
         task.next();
+      });
+
+      it('should override request', () => {
+        const state = { a: 'b' };
+        const override = { c: 'd' };
+        const config = {
+          recommendations: {
+            iNav: {
+              navigations: { sort: true },
+              refinements: { sort: true }
+            }
+          }
+        };
+        const composeRequest = stub(recommendationsNavigationsRequest, 'composeRequest');
+
+        const task = Tasks.fetchNavigations(null, <any>{ payload: { request: override } });
+
+        task.next();
+        task.next(state);
+        task.next(config);
+        expect(composeRequest).to.be.calledWith(state, override);
       });
 
       it('should return error on failure', () => {
