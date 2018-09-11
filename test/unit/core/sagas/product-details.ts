@@ -71,6 +71,25 @@ suite('product details saga', ({ expect, spy, stub }) => {
         task.next();
       });
 
+      it('should override request', () => {
+        const id = '123';
+        const state = { a: 'b' };
+        const override = { c: 'd' };
+        const composeRequest = stub(productDetailsRequest, 'composeRequest');
+
+        const task = Tasks.fetchProductDetails(null, <any>{ payload: { id, request: override } });
+
+        task.next();
+        task.next(state);
+        expect(composeRequest).to.be.calledWith(state, {
+          query: null,
+          pageSize: 1,
+          skip: 0,
+          refinements: [{ navigationName: 'id', type: 'Value', value: id }],
+          ...override,
+        });
+      });
+
       it('should handle request failure', () => {
         const error = new Error();
         const updateDetailsAction: any = { a: 'b' };
