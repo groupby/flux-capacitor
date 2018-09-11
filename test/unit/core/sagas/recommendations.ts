@@ -514,18 +514,34 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
       it('should override request', () => {
         const state = { a: 'b' };
         const override = { c: 'd' };
-        const flux = {
+        const pageSize = 20;
+        const pastPurchaseFromSkus = { e: 'f' };
+        const infiniteScrollRequestState = spy(() => ({}));
+        const flux: any = {
           actions: {
+            infiniteScrollRequestState
           },
         };
+        const action: any = {
+          payload: {
+            forward: true,
+            request: override,
+            amount: pageSize,
+          }
+        };
+        const composeRequest = stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest');
+        stub(Tasks, 'buildRequestFromSkus').returns(pastPurchaseFromSkus);
+        stub(Selectors, 'pastPurchaseProductsWithMetadata').returns([{ index: 13 }]);
 
-        const task = Tasks.fetchMorePastPurchaseProducts(flux, /* TODO */);
-        // TODO
+        const task = Tasks.fetchMorePastPurchaseProducts(flux, action);
 
+        task.next();
+        task.next(state);
+        task.next();
         task.next();
         expect(composeRequest).to.be.calledWith(state, {
           pageSize,
-          skip,
+          skip: 13,
           ...pastPurchaseFromSkus,
           ...override,
         });
@@ -591,6 +607,26 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(task.next().value).to.be.undefined;
         expect(receiveSaytPastPurchases).to.be.calledWithExactly(productData);
         expect(augmentProducts).to.be.calledWithExactly(productData);
+      });
+
+      it('should override request', () => {
+        const query = 'hello';
+        const override = { a: 'b' };
+        const state = { c: 'd' };
+        const action: any = {
+          payload: {
+            query,
+            request: override
+          }
+        };
+        const composeRequest = stub(RequestBuilders.autocompletePastPurchaseRequest, 'composeRequest');
+
+        const task = Tasks.fetchSaytPastPurchases(<any>{}, action);
+
+        task.next();
+        task.next(state);
+        task.next(['a']);
+        expect(composeRequest).to.be.calledWith(state, { query, ...override });
       });
 
       it('should handle request failure', () => {

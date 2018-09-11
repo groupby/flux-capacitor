@@ -203,6 +203,7 @@ export namespace Tasks {
     }
   }
 
+  // tslint:disable-next-line max-line-length
   export function buildRequestFromSkus(flux: FluxCapacitor, skus: Store.PastPurchases.PastPurchaseProduct[]): Partial<Request> {
     const ids: string[] = skus.map(({ sku }) => sku);
 

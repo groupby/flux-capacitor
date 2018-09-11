@@ -71,6 +71,24 @@ suite('refinements saga', ({ expect, spy, stub }) => {
         task.next();
       });
 
+      it('should override request', () => {
+        const state = { c: 'd' };
+        const override = { a: 'b' };
+        const action: any = {
+          payload: {
+            request: override
+          }
+        };
+        const composeRequest = stub(refinementsRequest, 'composeRequest');
+
+        const task = Tasks.fetchMoreRefinements(<any>{}, action);
+
+        task.next();
+        task.next(state);
+        task.next();
+        expect(composeRequest).to.be.calledWith(state, override);
+      });
+
       it('should handle request failure', () => {
         const error = new Error();
         const receiveMoreRefinementsAction: any = { a: 'b' };
