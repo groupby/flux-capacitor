@@ -131,6 +131,12 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
 
     describe('fetchMorePastPurchaseProducts()', () => {
+      itShouldAcceptAnOptionsObject(
+        ActionCreators.fetchMorePastPurchaseProducts,
+        Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS,
+        { forward: true }
+      );
+
       it('should return an action with amount and forward true', () => {
         const amount = 50;
 
@@ -152,12 +158,19 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
 
     describe('fetchPastPurchaseNavigations()', () => {
+      itShouldAcceptAnOptionsObject(
+        ActionCreators.fetchPastPurchaseNavigations,
+        Actions.FETCH_PAST_PURCHASE_NAVIGATIONS
+      );
+
       it('should return an action', () => {
         expectAction(ActionCreators.fetchPastPurchaseNavigations(), Actions.FETCH_PAST_PURCHASE_NAVIGATIONS, {});
       });
     });
 
     describe('fetchSaytPastPurchases()', () => {
+      itShouldAcceptAnOptionsObject(ActionCreators.fetchSaytPastPurchases, Actions.FETCH_SAYT_PAST_PURCHASES);
+
       it('should return an action', () => {
         const query = 'hat';
 
@@ -166,6 +179,11 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
 
     describe('fetchAutocompleteSuggestions()', () => {
+      itShouldAcceptAnOptionsObject(
+        ActionCreators.fetchAutocompleteSuggestions,
+        Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS
+      );
+
       it('should return an action', () => {
         const query = 'barbie';
 
@@ -182,6 +200,12 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
 
     describe('fetchAutocompleteProducts()', () => {
+      itShouldAcceptAnOptionsObject(
+        ActionCreators.fetchAutocompleteProducts,
+        Actions.FETCH_AUTOCOMPLETE_PRODUCTS,
+        { refinements: [] }
+      );
+
       it('should return an action', () => {
         const query = 'barbie';
         const refinements: any[] = ['a', 'b'];
@@ -205,6 +229,8 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
 
     describe('fetchCollectionCount()', () => {
+      itShouldAcceptAnOptionsObject(ActionCreators.fetchCollectionCount, Actions.FETCH_COLLECTION_COUNT);
+
       it('should return an action', () => {
         const collection = 'products';
 
@@ -213,6 +239,8 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
 
     describe('fetchProductDetails()', () => {
+      itShouldAcceptAnOptionsObject(ActionCreators.fetchProductDetails, Actions.FETCH_PRODUCT_DETAILS);
+
       it('should return an action', () => {
         const id = '12345';
 
@@ -221,12 +249,19 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
 
     describe('fetchRecommendationsProducts()', () => {
+      itShouldAcceptAnOptionsObject(
+        ActionCreators.fetchRecommendationsProducts,
+        Actions.FETCH_RECOMMENDATIONS_PRODUCTS
+      );
+
       it('should return an action', () => {
         expectAction(ActionCreators.fetchRecommendationsProducts(), Actions.FETCH_RECOMMENDATIONS_PRODUCTS, {});
       });
     });
 
     describe('fetchPastPurchases()', () => {
+      itShouldAcceptAnOptionsObject(ActionCreators.fetchPastPurchases, Actions.FETCH_PAST_PURCHASES);
+
       it('should return an action', () => {
         const query = 'query';
         expectAction(ActionCreators.fetchPastPurchases(query), Actions.FETCH_PAST_PURCHASES, { query });
