@@ -89,7 +89,7 @@ namespace Actions {
   export const FETCH_PRODUCTS = 'FETCH_PRODUCTS';
   export type FetchProducts = Action<typeof FETCH_PRODUCTS, Payload.Fetch.Override>;
   export const FETCH_PRODUCTS_WITHOUT_HISTORY = 'FETCH_PRODUCTS_WITHOUT_HISTORY';
-  export type FetchProductsWithoutHistory = Action<typeof FETCH_PRODUCTS_WITHOUT_HISTORY>;
+  export type FetchProductsWithoutHistory = Action<typeof FETCH_PRODUCTS_WITHOUT_HISTORY, Payload.Fetch.Override>;
   export const FETCH_PRODUCTS_WHEN_HYDRATED = 'FETCH_PRODUCTS_WHEN_HYDRATED';
   export type FetchProductsWhenHydrated = Action<typeof FETCH_PRODUCTS_WHEN_HYDRATED, Actions.FetchProducts>;
   export const FETCH_MORE_PRODUCTS = 'FETCH_MORE_PRODUCTS';
