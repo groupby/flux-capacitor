@@ -33,11 +33,9 @@ namespace ActionCreators {
   export function fetchMoreRefinements(navigationId: string): Actions.FetchMoreRefinements;
   // tslint:disable-next-line typedef
   export function fetchMoreRefinements(options) {
-    if (typeof options === 'string') {
-      return createAction(Actions.FETCH_MORE_REFINEMENTS, { navigationId: options });
-    } else {
-      return createAction(Actions.FETCH_MORE_REFINEMENTS, options);
-    }
+    const opts = typeof options === 'string' ? { navigationId: options } : options;
+
+    return createAction(Actions.FETCH_MORE_REFINEMENTS, opts);
   }
 
   /**
@@ -88,12 +86,9 @@ namespace ActionCreators {
     const validator = {
       forward: validators.isNotFetching,
     };
+    const opts = typeof options === 'number' ? { amount: options, forward } : { forward, ...options };
 
-    if (typeof options === 'number') {
-      return createAction(Actions.FETCH_MORE_PRODUCTS, { amount: options, forward }, validator);
-    } else {
-      return createAction(Actions.FETCH_MORE_PRODUCTS, { forward, ...options }, validator);
-    }
+    return createAction(Actions.FETCH_MORE_PRODUCTS, opts, validator);
   }
 
   /**
@@ -115,12 +110,9 @@ namespace ActionCreators {
     const validator = {
       query: validators.isString,
     };
+    const opts = typeof options === 'string' ? { query: options } : options;
 
-    if (typeof options === 'string') {
-      return createAction(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, { query: options }, validator);
-    } else {
-      return createAction(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, options, validator);
-    }
+    return createAction(Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, opts, validator);
   }
 
   /**
@@ -146,12 +138,9 @@ namespace ActionCreators {
     const validator = {
       query: validators.isValidQuery,
     };
+    const opts = typeof options === 'string' ? { query: options, refinements } : { refinements, ...options };
 
-    if (typeof options === 'string') {
-      return createAction(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { query: options, refinements }, validator);
-    } else {
-      return createAction(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { refinements, ...options }, validator);
-    }
+    return createAction(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, opts, validator);
   }
 
   /**
@@ -169,11 +158,9 @@ namespace ActionCreators {
   export function fetchCollectionCount(collection: string): Actions.FetchCollectionCount;
   // tslint:disable-next-line typedef
   export function fetchCollectionCount(options): Actions.FetchCollectionCount {
-    if (typeof options === 'string') {
-      return createAction(Actions.FETCH_COLLECTION_COUNT, { collection: options });
-    } else {
-      return createAction(Actions.FETCH_COLLECTION_COUNT, options);
-    }
+    const opts = typeof options === 'string' ? { collection: options } : options;
+
+    return createAction(Actions.FETCH_COLLECTION_COUNT, opts);
   }
 
   /**
@@ -191,11 +178,9 @@ namespace ActionCreators {
   export function fetchProductDetails(id: string): Actions.FetchProductDetails;
   // tslint:disable-next-line typedef
   export function fetchProductDetails(options): Actions.FetchProductDetails {
-    if (typeof options === 'string') {
-      return createAction(Actions.FETCH_PRODUCT_DETAILS, { id: options });
-    } else {
-      return createAction(Actions.FETCH_PRODUCT_DETAILS, options);
-    }
+    const opts = typeof options === 'string' ? { id: options } : options;
+
+    return createAction(Actions.FETCH_PRODUCT_DETAILS, opts);
   }
 
   /**
@@ -224,11 +209,9 @@ namespace ActionCreators {
   export function fetchPastPurchases(query: string): Actions.FetchPastPurchases;
   // tslint:disable-next-line typedef
   export function fetchPastPurchases(options = {}): Actions.FetchPastPurchases {
-    if (typeof options === 'string') {
-      return createAction(Actions.FETCH_PAST_PURCHASES, { query: options });
-    } else {
-      return createAction(Actions.FETCH_PAST_PURCHASES, options);
-    }
+    const opts = typeof options === 'string' ? { query: options } : options;
+
+    return createAction(Actions.FETCH_PAST_PURCHASES, opts);
   }
 
   /**
@@ -260,11 +243,9 @@ namespace ActionCreators {
   export function fetchMorePastPurchaseProducts(amount: number, forward?: boolean): Actions.FetchMorePastPurchaseProducts;
   // tslint:disable-next-line typedef
   export function fetchMorePastPurchaseProducts(options, forward = true): Actions.FetchMorePastPurchaseProducts {
-    if (typeof options === 'number') {
-      return createAction(Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS, { amount: options, forward });
-    } else {
-      return createAction(Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS, { forward, ...options });
-    }
+    const opts = typeof options === 'number' ? { amount: options, forward } : { forward, ...options };
+
+    return createAction(Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS, opts);
   }
 
   /**
@@ -292,11 +273,9 @@ namespace ActionCreators {
   export function fetchSaytPastPurchases(query: string): Actions.FetchSaytPastPurchases;
   // tslint:disable-next-line typedef
   export function fetchSaytPastPurchases(options): Actions.FetchSaytPastPurchases {
-    if (typeof options === 'string') {
-      return createAction(Actions.FETCH_SAYT_PAST_PURCHASES, { query: options });
-    } else {
-      return createAction(Actions.FETCH_SAYT_PAST_PURCHASES, options);
-    }
+    const opts = typeof options === 'string' ? { query: options } : options;
+
+    return createAction(Actions.FETCH_SAYT_PAST_PURCHASES, opts);
   }
 
   // request action creators
