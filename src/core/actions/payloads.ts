@@ -7,20 +7,13 @@ namespace Payload {
       request?: any;
     }
 
-    export interface MoreRefinements extends NavigationId, Override {}
-
+    export interface MoreRefinements extends Navigation.Id, Override {}
     export interface MoreProducts extends More, Override {}
-
     export interface AutocompleteSuggestions extends SimpleQuery, Override {}
-
     export interface AutocompleteProducts extends Autocomplete.Products, Override {}
-
     export interface CollectionCount extends Collection.Name, Override {}
-
     export interface Details extends Id, Override {}
-
     export interface PastPurchases extends Partial<SimpleQuery>, Override {}
-
     export interface MorePastPurchases extends More, Override {}
   }
 
@@ -43,7 +36,6 @@ namespace Payload {
   }
 
   export namespace Component {
-
     export interface Identifier extends Id {
       tagName: string;
     }
@@ -106,16 +98,16 @@ namespace Payload {
     }
   }
 
-  export interface NavigationId {
-    navigationId: string;
-  }
-
   export namespace Navigation {
-    export interface Refinement extends NavigationId {
+    export interface Id {
+      navigationId: string;
+    }
+
+    export interface Refinement extends Navigation.Id {
       index: number;
     }
 
-    export interface AddRefinement extends NavigationId {
+    export interface AddRefinement extends Navigation.Id {
       range?: boolean;
 
       // used to add new value refinement
@@ -126,7 +118,7 @@ namespace Payload {
       high?: number;
     }
 
-    export interface MoreRefinements extends NavigationId {
+    export interface MoreRefinements extends Navigation.Id {
       refinements: Store.Refinement[];
       selected: number[];
     }
