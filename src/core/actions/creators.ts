@@ -22,13 +22,13 @@ namespace ActionCreators {
    * Makes a request for more refinements for given navigation.
    * @param  {Actions.Payload.Fetch.MoreRefinements} options - An object with the navigationId for
    * the navigation to fetch more refinements against and a request object for override.
-   * @return {Actions.FetchMoreRefinements} - Action with { navigationId, request }.
+   * @return {Actions.FetchMoreRefinements} - Action with `{ navigationId, request }`.
    */
   export function fetchMoreRefinements(options: Actions.Payload.Fetch.MoreRefinements): Actions.FetchMoreRefinements;
   /**
    * Makes a request for more refinements for given navigation.
    * @param  {string} navigationId - The navigationId for the navigation to fetch more refinements against.
-   * @return {Actions.FetchMoreRefinements} - Action with { navigationId }.
+   * @return {Actions.FetchMoreRefinements} - Action with `{ navigationId }`.
    */
   export function fetchMoreRefinements(navigationId: string): Actions.FetchMoreRefinements;
   // tslint:disable-next-line typedef
@@ -41,7 +41,7 @@ namespace ActionCreators {
   /**
    * Makes a request for products.
    * @param {Actions.Payload.Fetch.Override} options - An object with a request object for override.
-   * @return {Actions.FetchProducts} - Action with { request }.
+   * @return {Actions.FetchProducts} - Action with `{ request }`.
    */
   export function fetchProducts(options: Actions.Payload.Fetch.Override = {}): Actions.FetchProducts {
     return createAction(Actions.FETCH_PRODUCTS, options);
@@ -50,7 +50,7 @@ namespace ActionCreators {
   /**
    * Makes a request for products without history being set afterwards.
    * @param {Actions.Payload.Fetch.Override} options - An object with a request object for override.
-   * @return {Actions.FetchProductsWithoutHistory} - Action with { request }.
+   * @return {Actions.FetchProductsWithoutHistory} - Action with `{ request }`.
    */
   // tslint:disable-next-line max-line-length
   export function fetchProductsWithoutHistory(options: Actions.Payload.Fetch.Override = {}): Actions.FetchProductsWithoutHistory {
@@ -60,7 +60,7 @@ namespace ActionCreators {
   /**
    * Wrapper for fetchProducts, dispatches it within saga when store is rehydrated
    * @param {Actions.Payload.Fetch.Override} options - An object with a request object for override.
-   * @return {Actions.FetchProductsWhenHydrated} - Action with { request }.
+   * @return {Actions.FetchProductsWhenHydrated} - Action with `{ request }`.
    */
   // tslint:disable-next-line max-line-length
   export function fetchProductsWhenHydrated(options: Actions.Payload.Fetch.Override = {}): Actions.FetchProductsWhenHydrated {
@@ -71,14 +71,14 @@ namespace ActionCreators {
    * Makes a request for additional products beyond currently requested products.
    * @param  {Actions.Payload.Fetch.MoreProducts} options - An object with the
    * amount and forward values, and a request object for override
-   * @return {Actions.FetchMoreProducts} - Action with { amount, forward, request }.
+   * @return {Actions.FetchMoreProducts} - Action with `{ amount, forward, request }`.
    */
   export function fetchMoreProducts(options: Actions.Payload.Fetch.MoreProducts);
   /**
    * Makes a request for additional products beyond currently requested products.
    * @param  {number} amount - Amount of more products to fetch.
    * @param  {boolean} forward - `true` to fetch forward
-   * @return {Actions.FetchMoreProducts} - Action with { amount, forward }.
+   * @return {Actions.FetchMoreProducts} - Action with `{ amount, forward }`.
    */
   export function fetchMoreProducts(amount: number, forward?: boolean);
   // tslint:disable-next-line typedef
@@ -95,14 +95,14 @@ namespace ActionCreators {
    * Makes a request for autocomplete suggestions.
    * @param  {Actions.Payload.Fetch.AutocompleteSuggestions} options - An object
    * with the query term to fetch autocomplete suggestions against, and a request object for override.
-   * @return {Actions.FetchAutocompleteSuggestions} - Action with { query, request }.
+   * @return {Actions.FetchAutocompleteSuggestions} - Action with `{ query, request }`.
    */
   // tslint:disable-next-line max-line-length
   export function fetchAutocompleteSuggestions(options: Actions.Payload.Fetch.AutocompleteSuggestions): Actions.FetchAutocompleteSuggestions;
   /**
    * Makes a request for autocomplete suggestions.
    * @param  {string} query - Search term to fetch autocomplete suggestions against.
-   * @return {Actions.FetchAutocompleteSuggestions} - Action with { query }.
+   * @return {Actions.FetchAutocompleteSuggestions} - Action with `{ query }`.
    */
   export function fetchAutocompleteSuggestions(query: string): Actions.FetchAutocompleteSuggestions;
   // tslint:disable-next-line typedef
@@ -119,7 +119,7 @@ namespace ActionCreators {
    * Makes a request for autocomplete products.
    * @param  {Actions.Payload.Fetch.AutocompleteProducts} options - An object
    * with the query and refinements, and a request object for override.
-   * @return {Actions.FetchAutocompleteProducts} - Action with { query, refinements, request }.
+   * @return {Actions.FetchAutocompleteProducts} - Action with `{ query, refinements, request }`.
    */
   // tslint:disable-next-line max-line-length
   export function fetchAutocompleteProducts(options: Actions.Payload.Fetch.AutocompleteProducts): Actions.FetchAutocompleteProducts;
@@ -129,7 +129,7 @@ namespace ActionCreators {
    * to fetch autocomplete products against.
    * @param  {Actions.Payload.Autocomplete.Refinement[]=[]} refinements - The applied
    * refinements.
-   * @return {Actions.FetchAutocompleteProducts} - Action with { query, refinements }.
+   * @return {Actions.FetchAutocompleteProducts} - Action with `{ query, refinements }`.
    */
   // tslint:disable-next-line max-line-length
   export function fetchAutocompleteProducts(query: string, refinements?: Actions.Payload.Autocomplete.Refinement[]): Actions.FetchAutocompleteProducts;
@@ -147,13 +147,13 @@ namespace ActionCreators {
    * Makes a request for the collection count for a given collection.
    * @param  {Actions.Payload.Fetch.CollectionCount} options - An object with the collection name,
    * and a request object for override.
-   * @return {Actions.FetchCollectionCount} - Action with { collection, request }.
+   * @return {Actions.FetchCollectionCount} - Action with `{ collection, request }`.
    */
   export function fetchCollectionCount(options: Actions.Payload.Fetch.CollectionCount): Actions.FetchCollectionCount;
   /**
    * Makes a request for the collection count for a given collection.
    * @param  {string} collection - Collection name.
-   * @return {Actions.FetchCollectionCount} - Action with { collection }.
+   * @return {Actions.FetchCollectionCount} - Action with `{ collection }`.
    */
   export function fetchCollectionCount(collection: string): Actions.FetchCollectionCount;
   // tslint:disable-next-line typedef
@@ -167,13 +167,13 @@ namespace ActionCreators {
    * Makes a request for the details for a given product.
    * @param  {Actions.Payload.Fetch.Details} options - An object with the id for a specific product,
    * and a request object for override.
-   * @return {Actions.FetchProductDetails} - Action with { id, request }.
+   * @return {Actions.FetchProductDetails} - Action with `{ id, request }`.
    */
   export function fetchProductDetails(options: Actions.Payload.Fetch.Details): Actions.FetchProductDetails;
   /**
    * Makes a request for the details for a given product.
    * @param  {string} id - The id for a specific product.
-   * @return {Actions.FetchProductDetails} - Action with { id }.
+   * @return {Actions.FetchProductDetails} - Action with `{ id }`.
    */
   export function fetchProductDetails(id: string): Actions.FetchProductDetails;
   // tslint:disable-next-line typedef
@@ -187,7 +187,7 @@ namespace ActionCreators {
    * Makes a request for recommendations products.
    * @param {Actions.Fetch.Override} options - An object with a
    * request object for override.
-   * @return {Actions.FetchRecommendationsProducts} - Action with { request }.
+   * @return {Actions.FetchRecommendationsProducts} - Action with `{ request }`.
    */
   // tslint:disable-next-line max-line-length
   export function fetchRecommendationsProducts(options: Actions.Payload.Fetch.Override = {}): Actions.FetchRecommendationsProducts {
@@ -198,13 +198,13 @@ namespace ActionCreators {
    * Makes a request for past purchases.
    * @param {Actions.Payload.Fetch.PastPurchases} options - An object with a query string,
    * and a request object for override.
-   * @return {Actions.FetchPastPurchases} - Action with { query, request }.
+   * @return {Actions.FetchPastPurchases} - Action with `{ query, request }`.
    */
   export function fetchPastPurchases(options?: Actions.Payload.Fetch.PastPurchases): Actions.FetchPastPurchases;
   /**
    * Makes a request for past purchases.
    * @param {string} query - A search term
-   * @return {Actions.FetchPastPurchases} - Action with { query }.
+   * @return {Actions.FetchPastPurchases} - Action with `{ query }`.
    */
   export function fetchPastPurchases(query: string): Actions.FetchPastPurchases;
   // tslint:disable-next-line typedef
@@ -217,7 +217,7 @@ namespace ActionCreators {
   /**
    * Makes a request for past purchase products.
    * @param {Actions.Payload.Fetch.PastPurchases} options - An object with a request object for override.
-   * @return {Actions.FetchPastPurchaseProducts} - Action with { query, request }.
+   * @return {Actions.FetchPastPurchaseProducts} - Action with `{ query, request }`.
    */
   // tslint:disable-next-line max-line-length
   export function fetchPastPurchaseProducts(options: Actions.Payload.Fetch.PastPurchases = {}): Actions.FetchPastPurchaseProducts {
@@ -228,7 +228,7 @@ namespace ActionCreators {
    * Makes a request for more past purchase products.
    * @param {Actions.Payload.Fetch.MorePastPurchases} options - An object with amount number, forward boolean,
    * and a request object for override.
-   * @return {Actions.FetchPastPurchaseProducts} - Action with { amount, forward, request }.
+   * @return {Actions.FetchPastPurchaseProducts} - Action with `{ amount, forward, request }`.
    */
   // tslint:disable-next-line max-line-length
   export function fetchMorePastPurchaseProducts(options: Actions.Payload.Fetch.MorePastPurchases): Actions.FetchMorePastPurchaseProducts;
@@ -237,7 +237,7 @@ namespace ActionCreators {
    * @param {number} amount - The amount of additional products to fetch.
    * @param {boolean} forward - Whether to fetch the next page or previous page.
    * and a request object for override.
-   * @return {Actions.FetchPastPurchaseProducts} - Action with { amount, forward }.
+   * @return {Actions.FetchPastPurchaseProducts} - Action with `{ amount, forward }`.
    */
    // tslint:disable-next-line max-line-length
   export function fetchMorePastPurchaseProducts(amount: number, forward?: boolean): Actions.FetchMorePastPurchaseProducts;
@@ -251,7 +251,7 @@ namespace ActionCreators {
   /**
    * Makes a request for past purchase navigations.
    * @param {Actions.Payload.Fetch.Override} options - An object with a request object for override.
-   * @return {Actions.FetchPastPurchaseProducts} - Action with { request }.
+   * @return {Actions.FetchPastPurchaseProducts} - Action with `{ request }`.
    */
   // tslint:disable-next-line max-line-length
   export function fetchPastPurchaseNavigations(options: Actions.Payload.Fetch.Override = {}): Actions.FetchPastPurchaseNavigations {
@@ -262,13 +262,13 @@ namespace ActionCreators {
    * Makes a request for sayt past purchases.
    * @param {Actions.Payload.Fetch.PastPurchases} options - An object with a query string,
    * and a request object for override.
-   * @return {Actions.FetchPastPurchaseProducts} - Action with { query, request }.
+   * @return {Actions.FetchPastPurchaseProducts} - Action with `{ query, request }`.
    */
   export function fetchSaytPastPurchases(options: Actions.Payload.Fetch.PastPurchases): Actions.FetchSaytPastPurchases;
   /**
    * Makes a request for sayt past purchases.
    * @param {string} query - A search term.
-   * @return {Actions.FetchPastPurchaseProducts} - Action with { query }.
+   * @return {Actions.FetchPastPurchaseProducts} - Action with `{ query }`.
    */
   export function fetchSaytPastPurchases(query: string): Actions.FetchSaytPastPurchases;
   // tslint:disable-next-line typedef
