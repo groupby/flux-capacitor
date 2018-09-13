@@ -45,5 +45,5 @@ export default function(section: Actions.StoreSection) {
 }
 
 export function wrapReducer<T>(reducer: redux.Reducer<T>, section: Actions.StoreSection) {
-  return (state, action) => reducer(state, action.meta.section === section ? action : ActionCreators.nop());
+  return (state, action) => reducer(state, action.meta && action.meta.section === section ? action : ActionCreators.nop());
 }
