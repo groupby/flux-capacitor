@@ -14,13 +14,13 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
   let createAction: sinon.SinonStub;
 
   // tslint:disable-next-line max-line-length
-  function expectAction<T>(action: Actions.Action<T, any> | Actions.Action<T, any>[], { type, payload, section = undefined }: { type: T, payload?: any, section?: Actions.StoreSection }) {
+  function expectAction<T>(action: Actions.Action<T, any> | Actions.Action<T, any>[], actionArgs: { type: T, payload?: any, section?: Actions.StoreSection }) {
     if (Array.isArray(action)) {
       action.forEach((subAction) => expect(subAction).to.eq(ACTION));
     } else {
       expect(action).to.eq(ACTION);
     }
-    expect(createAction).to.be.calledWith(payload !== undefined ? { type, payload, section } : { type });
+    expect(createAction).to.be.calledWith(actionArgs);
   }
 
   // tslint:disable-next-line max-line-length
@@ -384,12 +384,15 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     describe('updateQuery()', () => {
       const query = 'rambo';
 
-      it.only('should return a batch action with RESET_PAGE', () => {
-        expectAction(ActionCreators.updateQuery(query), { type: Actions.RESET_PAGE });
+      it('should return a batch action with RESET_PAGE', () => {
+        expectAction(ActionCreators.updateQuery(query), { type: Actions.RESET_PAGE, section: undefined });
       });
 
       it('should return a batch action with UPDATE_QUERY', () => {
-        expectAction(ActionCreators.updateQuery(query), { type: Actions.UPDATE_QUERY, payload: query });
+        expectAction(
+          ActionCreators.updateQuery(query),
+          { type: Actions.UPDATE_QUERY, payload: query, section: undefined }
+        );
       });
 
       it('should apply validators to UPDATE_QUERY', () => {
@@ -413,11 +416,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const field = 'brand';
 
       it('should return a batch action with RESET_PAGE', () => {
-        expectAction(ActionCreators.resetRefinements(field), { type: Actions.RESET_PAGE });
+        expectAction(ActionCreators.resetRefinements(field), { type: Actions.RESET_PAGE, section: undefined });
       });
 
       it('should return a batch action with RESET_REFINEMENTS', () => {
-        expectAction(ActionCreators.resetRefinements(field), { type: Actions.RESET_REFINEMENTS, payload: field });
+        expectAction(
+          ActionCreators.resetRefinements(field),
+          { type: Actions.RESET_REFINEMENTS, payload: field, section: undefined }
+        );
       });
 
       it('should apply validators to RESET_REFINEMENTS', () => {
@@ -433,7 +439,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
     describe('resetPage()', () => {
       it('should return an action', () => {
-        expectAction(ActionCreators.resetPage(), { type: Actions.RESET_PAGE, payload: undefined });
+        expectAction(ActionCreators.resetPage(), { type: Actions.RESET_PAGE, section: undefined });
       });
 
       it('should apply validators to action', () => {
@@ -449,7 +455,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const rangeRefinement = { range: true };
 
       it('should return a batch action with RESET_PAGE', () => {
-        expectAction(ActionCreators.addRefinement(navigationId, null), { type: Actions.RESET_PAGE });
+        expectAction(
+          ActionCreators.addRefinement(navigationId, null),
+          { type: Actions.RESET_PAGE, section: undefined }
+        );
       });
 
       it('should return an action with value refinement', () => {
