@@ -552,8 +552,8 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
           ...resetRefinementsReturn,
           ...updateReturn,
         ]);
-        expect(resetRefinements).to.be.calledWithExactly(true);
-        expect(updateQuery).to.be.calledWithExactly(query);
+        expect(resetRefinements).to.be.calledWithExactly(true, Actions.StoreSection.Staging);
+        expect(updateQuery).to.be.calledWithExactly(query, Actions.StoreSection.Staging);
       });
 
       it('should fall back to current query', () => {
@@ -574,8 +574,8 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
           ...resetRefinementsReturn,
           ...updateReturn,
         ]);
-        expect(resetRefinements).to.be.calledWithExactly(true);
-        expect(updateQuery).to.be.calledWithExactly(query);
+        expect(resetRefinements).to.be.calledWithExactly(true, Actions.StoreSection.Staging);
+        expect(updateQuery).to.be.calledWithExactly(query, Actions.StoreSection.Staging);
       });
 
       it('should switch to the default collection if set in the config', () => {
@@ -600,9 +600,9 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
           ...resetRefinementsReturn,
           ...updateReturn,
         ]);
-        expect(resetRefinements).to.be.calledWithExactly(true);
-        expect(selectCollection).to.be.calledWithExactly(defaultCollection);
-        expect(updateQuery).to.be.calledWithExactly(query);
+        expect(resetRefinements).to.be.calledWithExactly(true, Actions.StoreSection.Staging);
+        expect(selectCollection).to.be.calledWithExactly(defaultCollection, Actions.StoreSection.Staging);
+        expect(updateQuery).to.be.calledWithExactly(query, Actions.StoreSection.Staging);
       });
     });
 
@@ -655,7 +655,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const navigationId = 'colour';
 
       it('should return a batch action with RESET_PAGE', () => {
-        expectAction(ActionCreators.selectRefinement(navigationId, null), { type: Actions.RESET_PAGE });
+        expectAction(
+          ActionCreators.selectRefinement(navigationId, null),
+          { type: Actions.RESET_PAGE, section: undefined }
+        );
       });
 
       it('should return a batch action with SELECT_REFINEMENT', () => {
@@ -676,7 +679,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const navigationId = 'colour';
 
       it('should return a batch action with RESET_PAGE', () => {
-        expectAction(ActionCreators.deselectRefinement(navigationId, null), { type: Actions.RESET_PAGE });
+        expectAction(
+          ActionCreators.deselectRefinement(navigationId, null),
+          { type: Actions.RESET_PAGE, section: undefined }
+        );
       });
 
       it('should return a batch action with DESELECT_REFINEMENT', () => {
@@ -701,7 +707,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return a SELECT_COLLECTION action', () => {
         expectAction(
           ActionCreators.selectCollection(collection),
-          { type: Actions.SELECT_COLLECTION, payload: collection }
+          { type: Actions.SELECT_COLLECTION, payload: collection, section: undefined }
         );
       });
 

@@ -4,6 +4,7 @@ import Store from '../store';
 import Payloads from './payloads';
 
 namespace Actions {
+  // flux standard actions
   export interface Action<S = string, T = any> {
     type: S;
     payload?: T;
