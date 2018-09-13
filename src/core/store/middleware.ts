@@ -168,7 +168,7 @@ export namespace Middleware {
 
   export function sectionMiddleware(section: Actions.StoreSection, middleware: ReduxMiddleware) {
     return (store) => (next) => (action) => {
-      if (action.section === section) {
+      if (action.meta.section === section) {
         return middleware(store)(next)(action);
       } else {
         return next(action);

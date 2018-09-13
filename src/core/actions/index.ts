@@ -8,7 +8,6 @@ namespace Actions {
     type: S;
     payload?: T;
     meta?: Metadata;
-    section?: StoreSection;
     error?: boolean;
   }
 
@@ -18,6 +17,7 @@ namespace Actions {
   }
 
   export interface Metadata {
+    section?: StoreSection;
     recallId?: string;
     searchId?: string;
     tag?: Metadata.Tag;
