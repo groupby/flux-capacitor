@@ -8,6 +8,7 @@ import * as PageReducer from '../reducers/data/page';
 import * as PastPurchaseReducer from '../reducers/data/past-purchases';
 import * as PersonalizationAdapter from '../reducers/data/personalization';
 import Store from '../store';
+import StoreDefaults, { DEFAULT_COLLECTION, DEFAULT_PAGE_SIZE } from '../store/data-defaults';
 import { normalizeToFunction, GenericTransformer } from '../utils';
 
 namespace Adapter {
@@ -16,26 +17,26 @@ namespace Adapter {
     ({
       data: <any>{
         present: {
-          area: Adapter.extractArea(config, AreaReducer.DEFAULT_AREA),
+          area: Adapter.extractArea(config, StoreDefaults.area),
           autocomplete: {
-            ...AutocompleteReducer.DEFAULTS,
+            ...StoreDefaults.autocomplete,
             category: {
-              ...AutocompleteReducer.DEFAULTS.category,
+              ...StoreDefaults.autocomplete.category,
               field: Adapter.extractSaytCategoryField(config),
             },
           },
           fields: Adapter.extractFields(config),
-          collections: Adapter.extractCollections(config, CollectionsReducer.DEFAULT_COLLECTION),
+          collections: Adapter.extractCollections(config, DEFAULT_COLLECTION),
           sorts: Adapter.extractSorts(config),
           page: {
-            ...PageReducer.DEFAULTS,
-            sizes: Adapter.extractPageSizes(config, PageReducer.DEFAULT_PAGE_SIZE)
+            ...StoreDefaults.page,
+            sizes: Adapter.extractPageSizes(config, DEFAULT_PAGE_SIZE),
           },
           pastPurchases: {
-            ...PastPurchaseReducer.DEFAULTS,
+            ...StoreDefaults.pastPurchases,
             page: {
-              ...PastPurchaseReducer.DEFAULTS.page,
-              sizes: Adapter.extractPageSizes(config, PastPurchaseReducer.DEFAULT_PAGE_SIZE)
+              ...StoreDefaults.pastPurchases.page,
+              sizes: Adapter.extractPageSizes(config, DEFAULT_PAGE_SIZE),
             }
           }
         }

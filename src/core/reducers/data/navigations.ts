@@ -1,6 +1,7 @@
 import Actions from '../../actions';
 import Adapter from '../../adapters/search';
 import Store from '../../store';
+import Defaults from '../../store/data-defaults';
 
 export type Action = Actions.ResetRefinements
   | Actions.AddRefinement
@@ -17,7 +18,7 @@ export const DEFAULTS: State = {
   sort: [],
 };
 
-export default function updateNavigations(state: State = DEFAULTS, action: Action) {
+export default function updateNavigations(state: State = Defaults.navigations, action: Action) {
   switch (action.type) {
     case Actions.RESET_REFINEMENTS: return resetRefinements(state, action.payload);
     case Actions.RECEIVE_NAVIGATIONS: return receiveNavigations(state, action.payload);

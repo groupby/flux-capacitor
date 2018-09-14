@@ -1,15 +1,11 @@
 import Actions from '../../actions';
 import Store from '../../store';
+import Defaults from '../../store/data-defaults';
 
 export type Action = Actions.ReceiveInfiniteScroll;
 export type State = Store.InfiniteScroll;
 
-export const DEFAULTS: State = {
-  isFetchingForward: false,
-  isFetchingBackward: false,
-};
-
-export default function updateInfiniteScroll(state: State = DEFAULTS, action: Action): State {
+export default function updateInfiniteScroll(state: State = Defaults.infiniteScroll, action: Action): State {
   switch (action.type) {
     case Actions.RECEIVE_INFINITE_SCROLL: return updateFetching(state, action.payload);
     default: return state;

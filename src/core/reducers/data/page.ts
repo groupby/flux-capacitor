@@ -1,5 +1,6 @@
 import Actions from '../../actions';
 import Store from '../../store';
+import Defaults from '../../store/data-defaults';
 
 export type Action = Actions.ResetPage
   | Actions.SelectSort
@@ -9,18 +10,7 @@ export type Action = Actions.ResetPage
   | Actions.ReceivePage;
 export type State = Store.Page;
 
-export const DEFAULT_PAGE_SIZE = 10;
-export const DEFAULTS: State = {
-  current: 1,
-  first: 1,
-  from: 1,
-  sizes: {
-    items: [DEFAULT_PAGE_SIZE],
-    selected: 0
-  },
-};
-
-export default function updatePage(state: State = DEFAULTS, action: Action): State {
+export default function updatePage(state: State = Defaults.page, action: Action): State {
   switch (action.type) {
     case Actions.RESET_PAGE:
     case Actions.SELECT_SORT:

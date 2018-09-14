@@ -1,16 +1,11 @@
 import Actions from '../../actions';
 import Store from '../../store';
+import Defaults from '../../store/data-defaults';
 
 export type Action = Actions.UpdateQuery | Actions.ReceiveQuery;
 export type State = Store.Query;
 
-export const DEFAULTS: State = {
-  didYouMean: [],
-  related: [],
-  rewrites: [],
-};
-
-export default function updateQuery(state: State = DEFAULTS, action: Action): State {
+export default function updateQuery(state: State = Defaults.query, action: Action): State {
   switch (action.type) {
     case Actions.UPDATE_QUERY: return updateOriginal(state, action.payload);
     case Actions.RECEIVE_QUERY: return receiveQuery(state, action.payload);

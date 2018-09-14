@@ -1,6 +1,7 @@
 import Actions from '../../actions';
 import RecommendationsAdapters from '../../adapters/recommendations';
 import Store from '../../store';
+import Defaults from '../../store/data-defaults';
 
 export type Action = Actions.ReceiveRecommendationsProducts;
 export type State = Store.Recommendations;
@@ -11,7 +12,7 @@ export const DEFAULTS: State = <any>{
   },
 };
 
-export default function updateRecommendations(state: State = DEFAULTS, action: Action): State {
+export default function updateRecommendations(state: State = Defaults.recommendations, action: Action): State {
   switch (action.type) {
     case Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS: return updateRecommendationsProducts(state, action);
     default: return state;

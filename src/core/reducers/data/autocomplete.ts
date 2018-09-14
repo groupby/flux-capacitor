@@ -1,5 +1,6 @@
 import Actions from '../../actions';
 import Store from '../../store';
+import Defaults from '../../store/data-defaults';
 
 export type Action = Actions.UpdateAutocompleteQuery
   | Actions.ReceiveAutocompleteSuggestions
@@ -7,17 +8,7 @@ export type Action = Actions.UpdateAutocompleteQuery
   | Actions.ReceiveAutocompleteTemplate;
 export type State = Store.Autocomplete;
 
-export const DEFAULTS: State = {
-  category: { values: [] },
-  showCategoryValuesForFirstMatch: false,
-  products: [],
-  navigations: [],
-  suggestions: [],
-  searchCharMinLimit: 1,
-  template: <any>{},
-};
-
-export default function updateAutocomplete(state: State = DEFAULTS, action: Action): State {
+export default function updateAutocomplete(state: State = Defaults.autocomplete, action: Action): State {
   switch (action.type) {
     case Actions.UPDATE_AUTOCOMPLETE_QUERY: return updateQuery(state, action.payload);
     case Actions.RECEIVE_AUTOCOMPLETE_SUGGESTIONS: return receiveSuggestions(state, action.payload);

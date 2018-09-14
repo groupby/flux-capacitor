@@ -1,11 +1,10 @@
 import Actions from '../../actions';
 import Adapter from '../../adapters/past-purchases';
 import Store from '../../store';
+import Defaults, { SORT_ENUMS } from '../../store/data-defaults';
 import * as navigations from './navigations';
 import * as page from './page';
 import * as products from './products';
-
-export { DEFAULT_PAGE_SIZE } from './page';
 
 export type Action = Actions.ReceivePastPurchaseSkus
   | Actions.ReceivePastPurchaseProducts
@@ -25,46 +24,7 @@ export type Action = Actions.ReceivePastPurchaseSkus
   | Actions.ReceivePastPurchaseCurrentRecordCount;
 export type State = Store.PastPurchase;
 
-export enum SORT_ENUMS {
-  DEFAULT, MOST_PURCHASED, MOST_RECENT
-}
-
-export const DEFAULTS: State = <any>{
-  defaultSkus: [],
-  skus: [],
-  saytPastPurchases: [],
-  products: [],
-  count: {
-    currentRecordCount: 0,
-    allRecordCount: 0,
-  },
-  query: '',
-  sort: {
-    items: [{
-      field: 'Default',
-      descending: true,
-      type: SORT_ENUMS.DEFAULT,
-    },
-    {
-      field: 'Most Recent',
-      descending: true,
-      type: SORT_ENUMS.MOST_RECENT,
-    },
-    {
-      field: 'Most Purchased',
-      descending: true,
-      type: SORT_ENUMS.MOST_PURCHASED,
-    }],
-    selected: 0,
-  },
-  navigations: {
-    byId: {},
-    allIds: [],
-  },
-  page: page.DEFAULTS,
-};
-
-export default function updatePastPurchases(state: State = DEFAULTS, action: Action): State {
+export default function updatePastPurchases(state: State = Defaults.pastPurchases, action: Action): State {
   // tslint:disable max-line-length
   switch (action.type) {
     case Actions.RECEIVE_PAST_PURCHASE_SKUS: return updatePastPurchaseSkus(state, action);

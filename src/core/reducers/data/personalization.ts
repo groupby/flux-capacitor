@@ -4,6 +4,7 @@ import Actions from '../../actions';
 import Adapter from '../../adapters/personalization';
 import Selectors from '../../selectors';
 import Store from '../../store';
+import Defaults from '../../store/data-defaults';
 
 export type Action = Actions.UpdateBiasing;
 export type State = Store.Personalization;
@@ -11,14 +12,7 @@ export type State = Store.Personalization;
 export const STORAGE_KEY = 'gb-personalization';
 export const STORAGE_WHITELIST = ['biasing'];
 
-export const DEFAULT: State = {
-  biasing: {
-    allIds: [],
-    byId: {},
-  }
-};
-
-function updatePersonalization(state: State = DEFAULT, action: Action): State {
+function updatePersonalization(state: State = Defaults.personalization, action: Action): State {
   switch (action.type) {
     case Actions.UPDATE_BIASING: return updateBiasing(state, action.payload);
     default: return state;
