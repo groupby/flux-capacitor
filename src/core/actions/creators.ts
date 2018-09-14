@@ -669,8 +669,9 @@ namespace ActionCreators {
    * collection count to.
    * @return {Actions.ReceiveCollectionCount}         - Action with count.
    */
-  export function receiveCollectionCount(count: Actions.Payload.Collection.Count): Actions.ReceiveCollectionCount {
-    return createAction({ type: Actions.RECEIVE_COLLECTION_COUNT, payload: count });
+  // tslint:disable-next-line max-line-length
+  export function receiveCollectionCount(collectionObj: Actions.Payload.Collection.Count): Actions.ReceiveCollectionCount {
+    return createAction({ type: Actions.RECEIVE_COLLECTION_COUNT, payload: collectionObj });
   }
 
   /**
