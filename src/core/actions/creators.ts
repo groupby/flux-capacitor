@@ -53,7 +53,7 @@ namespace ActionCreators {
    * @param {Actions.Payload.Fetch.Override} options - An object with a request object for override.
    * @return {Actions.FetchProducts} - Action with `{ request }`.
    */
-  export function fetchProducts(options: Actions.Payload.Fetch.Override = {}): Actions.FetchProducts {
+  export function fetchProducts(options: Actions.Payload.Fetch.Search = {}): Actions.FetchProducts {
     return createAction({ type: Actions.FETCH_PRODUCTS, payload: options });
   }
 
@@ -63,7 +63,7 @@ namespace ActionCreators {
    * @return {Actions.FetchProductsWithoutHistory} - Action with `{ request }`.
    */
   // tslint:disable-next-line max-line-length
-  export function fetchProductsWithoutHistory(options: Actions.Payload.Fetch.Override = {}): Actions.FetchProductsWithoutHistory {
+  export function fetchProductsWithoutHistory(options: Actions.Payload.Fetch.Search = {}): Actions.FetchProductsWithoutHistory {
     return createAction({ type: Actions.FETCH_PRODUCTS_WITHOUT_HISTORY, payload: options });
   }
 
@@ -73,7 +73,7 @@ namespace ActionCreators {
    * @return {Actions.FetchProductsWhenHydrated} - Action with `{ request }`.
    */
   // tslint:disable-next-line max-line-length
-  export function fetchProductsWhenHydrated(options: Actions.Payload.Fetch.Override = {}): Actions.FetchProductsWhenHydrated {
+  export function fetchProductsWhenHydrated(options: Actions.Payload.Fetch.Search = {}): Actions.FetchProductsWhenHydrated {
     return createAction({ type: Actions.FETCH_PRODUCTS_WHEN_HYDRATED, payload: ActionCreators.fetchProducts(options) });
   }
 
@@ -200,7 +200,7 @@ namespace ActionCreators {
    * @return {Actions.FetchRecommendationsProducts} - Action with `{ request }`.
    */
   // tslint:disable-next-line max-line-length
-  export function fetchRecommendationsProducts(options: Actions.Payload.Fetch.Override = {}): Actions.FetchRecommendationsProducts {
+  export function fetchRecommendationsProducts(options: Actions.Payload.Fetch.Recommendations = {}): Actions.FetchRecommendationsProducts {
     return createAction({ type: Actions.FETCH_RECOMMENDATIONS_PRODUCTS, payload: options });
   }
 
@@ -264,7 +264,7 @@ namespace ActionCreators {
    * @return {Actions.FetchPastPurchaseProducts} - Action with `{ request }`.
    */
   // tslint:disable-next-line max-line-length
-  export function fetchPastPurchaseNavigations(options: Actions.Payload.Fetch.Override = {}): Actions.FetchPastPurchaseNavigations {
+  export function fetchPastPurchaseNavigations(options: Actions.Payload.Fetch.Search = {}): Actions.FetchPastPurchaseNavigations {
     return createAction({ type: Actions.FETCH_PAST_PURCHASE_NAVIGATIONS, payload: options });
   }
 

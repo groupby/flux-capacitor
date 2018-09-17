@@ -899,27 +899,6 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         task.next();
       });
 
-      it('should override request', () => {
-        const state = { a: 'b' };
-        const override = { c: 'd' };
-        const config = {
-          recommendations: {
-            iNav: {
-              navigations: { sort: true },
-              refinements: { sort: true }
-            }
-          }
-        };
-        const composeRequest = stub(recommendationsNavigationsRequest, 'composeRequest');
-
-        const task = Tasks.fetchNavigations(null, <any>{ payload: { request: override } });
-
-        task.next();
-        task.next(state);
-        task.next(config);
-        expect(composeRequest).to.be.calledWith(state, override);
-      });
-
       it('should return error on failure', () => {
         const error = new Error();
         const receiveRecommendationsNavigationsAction: any = { a: 'b' };

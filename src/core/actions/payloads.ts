@@ -1,20 +1,25 @@
+import { Request } from 'groupby-api';
+import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt';
+import RecommendationsAdapter from '../adapters/recommendations';
 import Configuration from '../configuration';
 import Store from '../store';
 
 namespace Payload {
   export namespace Fetch {
-    export interface Override {
-      request?: any;
+    export interface Override<T> {
+      request?: T;
     }
 
-    export interface MoreRefinements extends Navigation.Id, Override {}
-    export interface MoreProducts extends More, Override {}
-    export interface AutocompleteSuggestions extends SimpleQuery, Override {}
-    export interface AutocompleteProducts extends Autocomplete.Products, Override {}
-    export interface CollectionCount extends Collection.Name, Override {}
-    export interface Details extends Id, Override {}
-    export interface PastPurchases extends Partial<SimpleQuery>, Override {}
-    export interface MorePastPurchases extends More, Override {}
+    export interface MoreRefinements extends Navigation.Id, Override<Request> {}
+    export interface MoreProducts extends More, Override<Request> {}
+    export interface AutocompleteSuggestions extends SimpleQuery, Override<QueryTimeAutocompleteConfig> {}
+    export interface AutocompleteProducts extends Autocomplete.Products, Override<Request> {}
+    export interface CollectionCount extends Collection.Name, Override<Request> {}
+    export interface Details extends Id, Override<Request> {}
+    export interface PastPurchases extends Partial<SimpleQuery>, Override<Request> {}
+    export interface MorePastPurchases extends More, Override<Request> {}
+    export interface Search extends Override<Request> {}
+    export interface Recommendations extends Override<RecommendationsAdapter.RecommendationsRequest> {}
   }
 
   export interface More {

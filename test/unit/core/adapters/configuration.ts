@@ -1,9 +1,12 @@
 import Adapter from '../../../../src/core/adapters/configuration';
 import SearchAdapter from '../../../../src/core/adapters/search';
-import { DEFAULT_AREA } from '../../../../src/core/reducers/data/area';
-import { DEFAULT_COLLECTION } from '../../../../src/core/reducers/data/collections';
 import * as PageReducer from '../../../../src/core/reducers/data/page';
 import * as PastPurchaseReducer from '../../../../src/core/reducers/data/past-purchases';
+import DEFAULT_STORE, {
+  DEFAULT_AREA,
+  DEFAULT_COLLECTION,
+  DEFAULT_PAGE_SIZE
+} from '../../../../src/core/store/data-defaults';
 import suite from '../../_suite';
 
 suite('Configuration Adapter', ({ expect, stub }) => {
@@ -52,19 +55,19 @@ suite('Configuration Adapter', ({ expect, stub }) => {
               items: [sort]
             },
             page: {
-              ...PageReducer.DEFAULTS,
+              ...DEFAULT_STORE.page,
               sizes: {
                 selected: 0,
-                items: [PageReducer.DEFAULT_PAGE_SIZE]
+                items: [DEFAULT_PAGE_SIZE]
               }
             },
             pastPurchases: {
-              ...PastPurchaseReducer.DEFAULTS,
+              ...DEFAULT_STORE.pastPurchases,
               page: {
-                ...PastPurchaseReducer.DEFAULTS.page,
+                ...DEFAULT_STORE.pastPurchases.page,
                 sizes: {
                   selected: 0,
-                  items: [PastPurchaseReducer.DEFAULT_PAGE_SIZE]
+                  items: [DEFAULT_PAGE_SIZE]
                 }
               }
             }
@@ -138,16 +141,16 @@ suite('Configuration Adapter', ({ expect, stub }) => {
               items: sort.options
             },
             page: {
-              ...PageReducer.DEFAULTS,
+              ...DEFAULT_STORE.page,
               sizes: {
                 selected: 2,
                 items: pageSize.options
               }
             },
             pastPurchases: {
-              ...PastPurchaseReducer.DEFAULTS,
+              ...DEFAULT_STORE.pastPurchases,
               page: {
-                ...PastPurchaseReducer.DEFAULTS.page,
+                ...DEFAULT_STORE.pastPurchases.page,
                 sizes: {
                   selected: 2,
                   items: pageSize.options

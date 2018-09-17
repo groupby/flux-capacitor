@@ -64,7 +64,7 @@ export namespace Tasks {
       const config = yield effects.select(Selectors.config);
       const iNav = config.recommendations.iNav;
       if (iNav.navigations.sort || iNav.refinements.sort) {
-        const body = recommendationsNavigationsRequest.composeRequest(state, action.payload.request);
+        const body = recommendationsNavigationsRequest.composeRequest(state);
         const recommendationsResponse = yield effects.call(
           Requests.recommendations,
           {
