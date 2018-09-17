@@ -197,9 +197,6 @@ namespace Adapter {
         data: allMeta,
       }));
   };
-
-  export const requestSort = ({ field, descending }: Store.Sort) =>
-    ({ field, order: descending ? 'Descending' : undefined });
 }
 
 export default Adapter;

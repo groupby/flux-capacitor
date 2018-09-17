@@ -136,12 +136,6 @@ namespace Selectors {
     Selectors.sorts(state).selected;
 
   /**
-   * Returns the request skip needed for the current page and given page size.
-   */
-  export const skip = (state: Store.State, pagesize: number) =>
-    (Selectors.page(state) - 1) * pagesize;
-
-  /**
    * Returns the template.
    */
   export const template = (state: Store.State) =>
