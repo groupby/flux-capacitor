@@ -362,10 +362,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
       it('should apply validators to UPDATE_QUERY', () => {
         expectValidators(ActionCreators.updateQuery(query), Actions.UPDATE_QUERY, {
-          payload: [
-            validators.isValidQuery,
-            validators.isDifferentQuery
-          ]
+          payload: validators.isValidQuery,
         });
       });
     });

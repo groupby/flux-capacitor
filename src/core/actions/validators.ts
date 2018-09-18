@@ -18,11 +18,6 @@ export const isValidQuery: Validator<string> = {
   msg: 'search term is empty'
 };
 
-export const isDifferentQuery: Validator<string> = {
-  func: (query, state) => query !== Selectors.query(state),
-  msg: 'search term is not different'
-};
-
 export const isRangeRefinement: Validator<Actions.Payload.Navigation.AddRefinement> = {
   func: ({ range, low, high }) => !range || (typeof low === 'number' && typeof high === 'number'),
   msg: 'low and high values must be numeric'

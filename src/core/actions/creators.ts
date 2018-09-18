@@ -317,10 +317,7 @@ namespace ActionCreators {
     return [
       ActionCreators.resetPage(),
       createAction(Actions.UPDATE_QUERY, query && query.trim(), {
-        payload: [
-          validators.isValidQuery,
-          validators.isDifferentQuery
-        ]
+        payload: validators.isValidQuery,
       })
     ];
   }

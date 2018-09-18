@@ -32,22 +32,6 @@ suite('validators', ({ expect, spy, stub }) => {
     });
   });
 
-  describe('isDifferentQuery', () => {
-    const query = 'rambo';
-
-    it('should be valid if query will change', () => {
-      stub(Selectors, 'query').returns('shark');
-
-      expect(validators.isDifferentQuery.func(query)).to.be.true;
-    });
-
-    it('should be invalid if query will not change', () => {
-      stub(Selectors, 'query').returns(query);
-
-      expect(validators.isDifferentQuery.func(query)).to.be.false;
-    });
-  });
-
   describe('isValidClearField', () => {
     it('should use isString validator', () => {
       const field = 'brand';
