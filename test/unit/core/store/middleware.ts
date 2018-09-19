@@ -1,5 +1,5 @@
-import { reduxBatch } from '@manaflair/redux-batch';
 import * as redux from 'redux';
+import { batchActions, batchMiddleware, batchStoreEnhancer } from 'redux-batch-enhancer';
 import reduxLogger from 'redux-logger';
 import { ActionCreators as ReduxActionCreators } from 'redux-undo';
 import * as sinon from 'sinon';
@@ -31,6 +31,8 @@ suite('Middleware', ({ expect, spy, stub }) => {
     const validatorMiddleware = { m: 'n' };
     const allMiddleware = () => [
       Middleware.thunkEvaluator,
+      Middleware.arrayMiddleware,
+      batchMiddleware,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       idGeneratorMiddleware,
@@ -40,6 +42,8 @@ suite('Middleware', ({ expect, spy, stub }) => {
       sagaMiddleware,
       Middleware.personalizationAnalyzer,
       Middleware.thunkEvaluator,
+      Middleware.arrayMiddleware,
+      batchMiddleware,
       Middleware.saveStateAnalyzer
     ];
 
@@ -57,8 +61,18 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const compose = stub(redux, 'compose').returns(composed);
       const applyMiddleware = stub(redux, 'applyMiddleware');
       applyMiddleware.withArgs().returns(batchMiddleware);
-      applyMiddleware.withArgs(Middleware.thunkEvaluator, Middleware.validator).returns(thunkMiddleware);
-      applyMiddleware.withArgs(Middleware.thunkEvaluator, Middleware.saveStateAnalyzer).returns(simpleMiddleware);
+      applyMiddleware.withArgs(
+        Middleware.thunkEvaluator,
+        Middleware.arrayMiddleware,
+        batchMiddleware,
+        Middleware.validator
+      ).returns(thunkMiddleware);
+      applyMiddleware.withArgs(
+        Middleware.thunkEvaluator,
+        Middleware.arrayMiddleware,
+        batchMiddleware,
+        Middleware.saveStateAnalyzer
+      ).returns(simpleMiddleware);
 
       const middleware = Middleware.create(sagaMiddleware, flux);
 
@@ -69,11 +83,9 @@ suite('Middleware', ({ expect, spy, stub }) => {
       expect(applyMiddleware).to.be.calledWithExactly(...allMiddleware());
       expect(compose).to.be.calledWithExactly(
         simpleMiddleware,
-        reduxBatch,
         batchMiddleware,
-        reduxBatch,
         thunkMiddleware,
-        reduxBatch,
+        batchStoreEnhancer,
       );
       expect(middleware).to.eql(composed);
     });
@@ -352,6 +364,24 @@ suite('Middleware', ({ expect, spy, stub }) => {
 
       expect(next).to.be.calledWithExactly(action);
       expect(thunk).to.be.calledWithExactly(state);
+    });
+  });
+
+  describe('arrayMiddleware()', () => {
+    it('should pass forward a batch action if the action is an array', () => {
+      const actions = [{ type: 'a' }, { type: 'b' }];
+
+      Middleware.arrayMiddleware()(next)(actions);
+
+      expect(next).to.be.calledWith(batchActions(actions));
+    });
+
+    it('should pass forward the action if it is not an array', () => {
+      const action = { type: 'a' };
+
+      Middleware.arrayMiddleware()(next)(action);
+
+      expect(next).to.be.calledWith(action);
     });
   });
 

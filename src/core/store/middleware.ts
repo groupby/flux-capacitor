@@ -1,4 +1,3 @@
-import { reduxBatch } from '@manaflair/redux-batch';
 import * as cuid from 'cuid';
 import { applyMiddleware, compose, createStore, Middleware as ReduxMiddleware, Store } from 'redux';
 import { batchActions, batchMiddleware, batchStoreEnhancer } from 'redux-batch-enhancer';
@@ -137,7 +136,7 @@ export namespace Middleware {
     };
   }
 
-  export function arrayMiddleware(store: Store<any>) {
+  export function arrayMiddleware() {
     return (next) => (action) => {
       return next(Array.isArray(action) ? batchActions(action) : action);
     };
