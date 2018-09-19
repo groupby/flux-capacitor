@@ -1,6 +1,7 @@
 import { reduxBatch } from '@manaflair/redux-batch';
 import * as cuid from 'cuid';
 import { applyMiddleware, compose, createStore, Middleware as ReduxMiddleware, Store } from 'redux';
+import { batchActions, batchMiddleware, batchStoreEnhancer } from 'redux-batch-enhancer';
 import { ActionCreators as ReduxActionCreators } from 'redux-undo';
 import * as validatorMiddleware from 'redux-validator';
 import FluxCapacitor from '../../flux-capacitor';
@@ -136,6 +137,12 @@ export namespace Middleware {
     };
   }
 
+  export function arrayMiddleware(store: Store<any>) {
+    return (next) => (action) => {
+      return next(Array.isArray(action) ? batchActions(action) : action);
+    };
+  }
+
   export function personalizationAnalyzer(store: Store<any>) {
     return (next) => (action) => {
       const state = store.getState();
@@ -156,6 +163,8 @@ export namespace Middleware {
   export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
     const middleware = [
       thunkEvaluator,
+      arrayMiddleware,
+      batchMiddleware,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS),
@@ -165,6 +174,8 @@ export namespace Middleware {
       sagaMiddleware,
       personalizationAnalyzer,
       thunkEvaluator,
+      arrayMiddleware,
+      batchMiddleware,
       saveStateAnalyzer,
     ];
 
@@ -176,12 +187,10 @@ export namespace Middleware {
     const composeEnhancers = global && global['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;
 
     return composeEnhancers(
-      applyMiddleware(thunkEvaluator, saveStateAnalyzer, pastPurchaseProductAnalyzer),
-      reduxBatch,
+      applyMiddleware(thunkEvaluator, arrayMiddleware, batchMiddleware, saveStateAnalyzer, pastPurchaseProductAnalyzer),
       applyMiddleware(...middleware),
-      reduxBatch,
-      applyMiddleware(thunkEvaluator, Middleware.validator),
-      reduxBatch,
+      applyMiddleware(thunkEvaluator, arrayMiddleware, batchMiddleware, Middleware.validator),
+      batchStoreEnhancer,
     );
   }
 }
