@@ -160,10 +160,13 @@ export namespace Middleware {
   }
 
   export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
-    const middleware = [
+    const normalizingMiddleware = [
       thunkEvaluator,
       arrayMiddleware,
       batchMiddleware,
+    ];
+    const middleware = [
+      ...normalizingMiddleware,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS),
@@ -172,9 +175,7 @@ export namespace Middleware {
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,
       personalizationAnalyzer,
-      thunkEvaluator,
-      arrayMiddleware,
-      batchMiddleware,
+      ...normalizingMiddleware,
       saveStateAnalyzer,
     ];
 
@@ -186,9 +187,9 @@ export namespace Middleware {
     const composeEnhancers = global && global['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;
 
     return composeEnhancers(
-      applyMiddleware(thunkEvaluator, arrayMiddleware, batchMiddleware, saveStateAnalyzer, pastPurchaseProductAnalyzer),
+      applyMiddleware(...normalizingMiddleware, saveStateAnalyzer, pastPurchaseProductAnalyzer),
       applyMiddleware(...middleware),
-      applyMiddleware(thunkEvaluator, arrayMiddleware, batchMiddleware, Middleware.validator),
+      applyMiddleware(...normalizingMiddleware, Middleware.validator),
       batchStoreEnhancer,
     );
   }
