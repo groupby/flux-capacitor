@@ -1,3 +1,4 @@
+import { reduxBatch } from '@manaflair/redux-batch';
 import * as cuid from 'cuid';
 import { applyMiddleware, compose, createStore, Middleware as ReduxMiddleware, Store } from 'redux';
 import { ActionCreators as ReduxActionCreators } from 'redux-undo';
@@ -125,6 +126,16 @@ export namespace Middleware {
     return Middleware.insertAction(HISTORY_UPDATE_ACTIONS, { type: Actions.SAVE_STATE });
   }
 
+  export function thunkEvaluator(store: Store<any>) {
+    return (next) => (thunkAction) => {
+      if (typeof thunkAction === 'function') {
+        return next(thunkAction(store.getState()));
+      } else {
+        return next(thunkAction);
+      }
+    };
+  }
+
   export function personalizationAnalyzer(store: Store<any>) {
     return (next) => (action) => {
       const state = store.getState();
@@ -142,28 +153,9 @@ export namespace Middleware {
     };
   }
 
-  export function thunkEvaluator(store: Store<any>) {
-    return (next) => (thunkAction) => {
-      if (typeof thunkAction === 'function') {
-        return next(thunkAction(store.getState()));
-      } else {
-        return next(thunkAction);
-      }
-    };
-  }
-
-  export function batchMiddleware(store: Store<any>) {
-    return (next) => (action) => {
-      if (Array.isArray(action)) {
-        return action.map(batchMiddleware(store)(next));
-      } else {
-        return Middleware.thunkEvaluator(store)(next)(action);
-      }
-    };
-  }
-
   export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
     const middleware = [
+      thunkEvaluator,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS),
@@ -172,7 +164,7 @@ export namespace Middleware {
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,
       personalizationAnalyzer,
-      batchMiddleware,
+      thunkEvaluator,
       saveStateAnalyzer,
     ];
 
@@ -184,19 +176,12 @@ export namespace Middleware {
     const composeEnhancers = global && global['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;
 
     return composeEnhancers(
-      applyMiddleware(
-        batchMiddleware,
-        saveStateAnalyzer,
-        pastPurchaseProductAnalyzer
-      ),
-      applyMiddleware(
-        batchMiddleware,
-        ...middleware
-      ),
-      applyMiddleware(
-        batchMiddleware,
-        Middleware.validator
-      ),
+      applyMiddleware(thunkEvaluator, saveStateAnalyzer, pastPurchaseProductAnalyzer),
+      reduxBatch,
+      applyMiddleware(...middleware),
+      reduxBatch,
+      applyMiddleware(thunkEvaluator, Middleware.validator),
+      reduxBatch,
     );
   }
 }

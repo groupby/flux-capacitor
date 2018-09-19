@@ -1,3 +1,4 @@
+import { reduxBatch } from '@manaflair/redux-batch';
 import * as redux from 'redux';
 import reduxLogger from 'redux-logger';
 import { ActionCreators as ReduxActionCreators } from 'redux-undo';
@@ -29,7 +30,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
     const checkPastPurchaseSkusMiddleware = { m: 'n' };
     const validatorMiddleware = { m: 'n' };
     const allMiddleware = () => [
-      Middleware.batchMiddleware,
+      Middleware.thunkEvaluator,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       idGeneratorMiddleware,
@@ -38,7 +39,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
       checkPastPurchaseSkusMiddleware,
       sagaMiddleware,
       Middleware.personalizationAnalyzer,
-      Middleware.batchMiddleware,
+      Middleware.thunkEvaluator,
       Middleware.saveStateAnalyzer
     ];
 
@@ -56,12 +57,8 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const compose = stub(redux, 'compose').returns(composed);
       const applyMiddleware = stub(redux, 'applyMiddleware');
       applyMiddleware.withArgs().returns(batchMiddleware);
-      applyMiddleware.withArgs(Middleware.batchMiddleware, Middleware.validator).returns(thunkMiddleware);
-      applyMiddleware.withArgs(
-        Middleware.batchMiddleware,
-        Middleware.saveStateAnalyzer,
-        Middleware.pastPurchaseProductAnalyzer
-      ).returns(simpleMiddleware);
+      applyMiddleware.withArgs(Middleware.thunkEvaluator, Middleware.validator).returns(thunkMiddleware);
+      applyMiddleware.withArgs(Middleware.thunkEvaluator, Middleware.saveStateAnalyzer).returns(simpleMiddleware);
 
       const middleware = Middleware.create(sagaMiddleware, flux);
 
@@ -72,8 +69,11 @@ suite('Middleware', ({ expect, spy, stub }) => {
       expect(applyMiddleware).to.be.calledWithExactly(...allMiddleware());
       expect(compose).to.be.calledWithExactly(
         simpleMiddleware,
+        reduxBatch,
         batchMiddleware,
+        reduxBatch,
         thunkMiddleware,
+        reduxBatch,
       );
       expect(middleware).to.eql(composed);
     });
@@ -420,59 +420,6 @@ suite('Middleware', ({ expect, spy, stub }) => {
       expect(next).to.be.calledWith([action, returnAction]);
       expect(extract).to.be.calledWithExactly(action, state);
       expect(updateBiasing).to.be.calledWithExactly(extracted);
-    });
-  });
-
-  describe('batchMiddleware()', () => {
-    it('should call next on the action', () => {
-      const action = { a: 'b' };
-      const thunkEvaluator = spy(Middleware, 'thunkEvaluator');
-
-      Middleware.batchMiddleware(<any>{})(next)(action);
-
-      expect(next).to.be.calledWith(action);
-    });
-
-    it('should call thunkEvaluator on a thunked action', () => {
-      const action = { a: 'b' };
-      const thunkEvaluator = spy(Middleware, 'thunkEvaluator');
-
-      Middleware.batchMiddleware(<any>{ getState: () => null })(next)(action);
-
-      expect(thunkEvaluator).to.be.calledOnce;
-      expect(next).to.be.calledWith(action);
-    });
-
-    it('should call thunkEvaluator on each action in the array', () => {
-      const store: any = { s: 't' };
-      const actions = [{ a: 'b' }, { c: 'd' }];
-      const thunkEvaluator = spy(Middleware, 'thunkEvaluator');
-
-      Middleware.batchMiddleware(store)(next)(actions);
-
-      expect(thunkEvaluator).to.be.calledTwice;
-      expect(next).to.be.calledWith(actions[0]);
-      expect(next).to.be.calledWith(actions[1]);
-    });
-
-    it('should flatten nested arrays', () => {
-      const store: any = { getState: () => null };
-      const actions: any = [
-        [{ a: 'b' }],
-        { c: 'd' },
-        () => ({ e: 'f' }),
-        [() => ({ g: 'h' }), [{ i: 'j' }, { k: 'l' }]]
-      ];
-      const thunkEvaluator = spy(Middleware, 'thunkEvaluator');
-
-      Middleware.batchMiddleware(store)(next)(actions);
-
-      expect(next.getCall(0)).to.be.calledWith(actions[0][0]);
-      expect(next.getCall(1)).to.be.calledWith(actions[1]);
-      expect(next.getCall(2)).to.be.calledWith(actions[2]());
-      expect(next.getCall(3)).to.be.calledWith(actions[3][0]());
-      expect(next.getCall(4)).to.be.calledWith(actions[3][1][0]);
-      expect(next.getCall(5)).to.be.calledWith(actions[3][1][1]);
     });
   });
 });

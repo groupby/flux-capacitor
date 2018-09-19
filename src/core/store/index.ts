@@ -1,3 +1,4 @@
+import { reduxBatch } from '@manaflair/redux-batch';
 import { applyMiddleware, compose, createStore, Store as ReduxStore } from 'redux';
 import { persistStore } from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
