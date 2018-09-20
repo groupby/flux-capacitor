@@ -22,6 +22,12 @@ namespace Selectors {
     state.data.present.fields;
 
   /**
+   * Returns the query object.
+   */
+  export const queryObj = (state: Store.State) =>
+    state.data.present.query;
+
+  /**
    * Returns the current original query.
    */
   export const query = (state: Store.State) =>

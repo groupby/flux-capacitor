@@ -519,24 +519,34 @@ namespace ActionCreators {
    * Must correspond to a size in the pageSize in the store.
    * @return {Actions.UpdatePageSize}      - Action with size.
    */
-  export function updatePageSize(size: number): Actions.UpdatePageSize {
-    return createAction({ type: Actions.UPDATE_PAGE_SIZE, payload: size }, {
+  export function updatePageSize(size: number, section?: Actions.StoreSection): Actions.UpdatePageSize {
+    return createAction({ type: Actions.UPDATE_PAGE_SIZE, payload: size, section }, {
       payload: validators.isDifferentPageSize
     });
   }
 
   /**
    * Updates the current page to the given page.
-   * @param  {number}                    page - The page to switch to.
-   * @return {Actions.UpdateCurrentPage}      - Action with page.
+   * @param  {number} page - The page to switch to.
+   * @param  {Actions.StoreSection} section - The store section to update.
+   * @return {Actions.UpdateCurrentPage} - Action with page.
    */
-  export function updateCurrentPage(page: number): Actions.UpdateCurrentPage {
-    return createAction({ type: Actions.UPDATE_CURRENT_PAGE, payload: page }, {
-      payload: [
-        validators.isValidPage,
-        validators.isOnDifferentPage
-      ]
-    });
+  // tslint:disable-next-line max-line-length
+  // export function updateCurrentPage(page: number, section: Actions.StoreSection = Actions.StoreSection.Staging): Actions.UpdateCurrentPage {
+  export function updateCurrentPage(page: number, section: Actions.StoreSection = Actions.StoreSection.Staging) {
+    return (state: Store.State) => {
+      return [
+        ActionCreators.receiveQuery(Selectors.queryObj(state), section),
+        ActionCreators.receiveNavigations(Selectors.navigations(state), section),
+        ActionCreators.updatePageSize(Selectors.pageSize(state), section),
+        createAction({ type: Actions.UPDATE_CURRENT_PAGE, payload: page, section }, {
+          payload: [
+            validators.isValidPage,
+            validators.isOnDifferentPage
+          ]
+        }),
+      ];
+    };
   }
 
   /**
@@ -612,8 +622,8 @@ namespace ActionCreators {
    * @param  {Actions.Payload.Query} query - Query object.
    * @return {Actions.ReceiveQuery}        - Action with query object.
    */
-  export function receiveQuery(query: Actions.Payload.Query): Actions.ReceiveQuery {
-    return createAction({ type: Actions.RECEIVE_QUERY, payload: query });
+  export function receiveQuery(query: Actions.Payload.Query, section?: Actions.StoreSection): Actions.ReceiveQuery {
+    return createAction({ type: Actions.RECEIVE_QUERY, payload: query, section });
   }
 
   /**
@@ -629,7 +639,9 @@ namespace ActionCreators {
         const limitedRecordCount = SearchAdapter.extractRecordCount(res.totalRecordCount);
         const query = SearchAdapter.extractQuery(res);
         const navigations = SearchAdapter.pruneRefinements(SearchAdapter.combineNavigations(res), state);
+        // TODO: fix type when api-javascript is updated
         const skip = (<any>res).originalRequest.skip;
+        // TODO: fix type when api-javascript is updated
         const pageSize = (<any>res).originalRequest.pageSize;
         const actions: Array<Actions.Action<string, any>> = [
           receiveProductsAction,
@@ -688,8 +700,9 @@ namespace ActionCreators {
    * state will update to.
    * @return {Actions.ReceiveNavigations}             - Action with navigations.
    */
-  export function receiveNavigations(navigations: Store.Navigation[]): Actions.ReceiveNavigations {
-    return createAction({ type: Actions.RECEIVE_NAVIGATIONS, payload: navigations });
+  // tslint:disable-next-line max-line-length
+  export function receiveNavigations(navigations: Store.Navigation[], section?: Actions.StoreSection): Actions.ReceiveNavigations {
+    return createAction({ type: Actions.RECEIVE_NAVIGATIONS, payload: navigations, section });
   }
 
   /**
