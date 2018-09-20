@@ -539,14 +539,12 @@ namespace ActionCreators {
   // tslint:disable-next-line max-line-length
   // export function updateCurrentPage(page: number, section: Actions.StoreSection = Actions.StoreSection.Staging): Actions.UpdateCurrentPage {
   export function updateCurrentPage(page: number, section: Actions.StoreSection = Actions.StoreSection.Staging) {
-    return (state: Store.State) => {
-      return [
-        ActionCreators.receiveQuery(Selectors.queryObj(state), section),
-        ActionCreators.receiveNavigations(Selectors.navigations(state), section),
-        ActionCreators.updatePageSize(Selectors.pageSize(state), section),
-        ActionCreators.receiveCurrentPage(page, section),
-      ];
-    };
+    return createAction({ type: Actions.UPDATE_CURRENT_PAGE, payload: page, section }, {
+      payload: [
+        validators.isValidPage,
+        validators.isOnDifferentPage
+      ]
+    });
   }
 
   export function receiveCurrentPage(page: number, section?: Actions.StoreSection): Actions.UpdateCurrentPage {

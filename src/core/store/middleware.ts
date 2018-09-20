@@ -115,6 +115,30 @@ export namespace Middleware {
     };
   }
 
+  export function stagingAnalyzer(store: Store<any>) {
+    return (next) => (action: any) => {
+      if (action.meta.stagingAnalyzer) {
+        return next(action);
+      }
+      const state = store.getState();
+      const section = Actions.StoreSection.Staging;
+      const actions = [
+        ActionCreators.receiveQuery(Selectors.queryObj(state), section),
+        ActionCreators.receiveNavigations(Selectors.navigations(state), section),
+        ActionCreators.updatePageSize(Selectors.pageSize(state), section),
+        ActionCreators.updateCurrentPage(Selectors.page(state), section),
+      ];
+      actions.forEach((a) => a.meta['stagingAnalyzed'] = true);
+
+      return insertAction(
+        store,
+        actions.map((a) => a.type),
+        (actions as any).filter((a: any) => (a as any).type !== (action as any).type)
+      )(next)(action);
+      // TODO
+    };
+  }
+
   export function searchIdAnalyzer(store: Store<any>) {
     return Middleware.insertAction(
       store,
