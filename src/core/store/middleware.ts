@@ -108,19 +108,10 @@ export namespace Middleware {
 
   export function insertAction(store: Store<any>, triggerActions: string[], extraAction: Actions.Action) {
     return (next) => (action) => {
-      // const actions = utils.rayify(batchAction);
-      // if (actions.some((action) => triggerActions.includes(action.type)) &&
-      //     !actions.some((action) => action.type === extraAction.type)) {
-      //   return next([...actions, extraAction]);
-      // } else {
-      //   return next(actions);
-      // }
       if (triggerActions.includes(action.type)) {
         store.dispatch(extraAction);
-        return next(action);
-      } else {
-        return next(action);
       }
+      return next(action);
     };
   }
 
@@ -152,11 +143,6 @@ export namespace Middleware {
         const biasing = PersonalizationAdapter.extractBias(action, state);
         if (biasing) {
           store.dispatch(ActionCreators.updateBiasing(biasing));
-          return next(action);
-          // return next([
-          //   action,
-          //   ActionCreators.updateBiasing(biasing)
-          // ]);
         }
       }
       return next(action);
@@ -189,22 +175,13 @@ export namespace Middleware {
     };
   }
 
-  export function testMiddleware() {
-    return (next) => (action) => {
-      console.log(action);
-      return next(action);
-    };
-  }
-
   export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
     const normalizingMiddleware = [
-      // testMiddleware,
       thunkEvaluator,
       arrayMiddleware,
       batchMiddleware,
     ];
     const middleware = [
-      // ...normalizingMiddleware,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       // Middleware.sectionMiddleware(Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS)),
@@ -213,7 +190,6 @@ export namespace Middleware {
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,
       personalizationAnalyzer,
-      // ...normalizingMiddleware,
       saveStateAnalyzer,
     ];
 
@@ -226,10 +202,8 @@ export namespace Middleware {
 
     return composeEnhancers(
       applyMiddleware(...normalizingMiddleware, saveStateAnalyzer, pastPurchaseProductAnalyzer),
-      // applyMiddleware(...normalizingMiddleware),
       applyMiddleware(...middleware),
       applyMiddleware(...normalizingMiddleware, Middleware.validator),
-      applyMiddleware(testMiddleware),
       batchStoreEnhancer,
     );
   }
