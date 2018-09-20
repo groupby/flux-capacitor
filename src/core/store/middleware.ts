@@ -126,22 +126,6 @@ export namespace Middleware {
     return Middleware.insertAction(HISTORY_UPDATE_ACTIONS, { type: Actions.SAVE_STATE });
   }
 
-  export function thunkEvaluator(store: Store<any>) {
-    return (next) => (thunkAction) => {
-      if (typeof thunkAction === 'function') {
-        return next(thunkAction(store.getState()));
-      } else {
-        return next(thunkAction);
-      }
-    };
-  }
-
-  export function arrayMiddleware() {
-    return (next) => (action) => {
-      return next(Array.isArray(action) ? batchActions(action) : action);
-    };
-  }
-
   export function personalizationAnalyzer(store: Store<any>) {
     return (next) => (action) => {
       const state = store.getState();
@@ -156,6 +140,22 @@ export namespace Middleware {
         }
       }
       return next(action);
+    };
+  }
+
+  export function thunkEvaluator(store: Store<any>) {
+    return (next) => (thunkAction) => {
+      if (typeof thunkAction === 'function') {
+        return next(thunkAction(store.getState()));
+      } else {
+        return next(thunkAction);
+      }
+    };
+  }
+
+  export function arrayMiddleware() {
+    return (next) => (action) => {
+      return next(Array.isArray(action) ? batchActions(action) : action);
     };
   }
 
