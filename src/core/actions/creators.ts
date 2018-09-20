@@ -2,6 +2,7 @@ import * as cuid from 'cuid';
 import * as deepEqual from 'deep-equal';
 import { Record, Results, Template } from 'groupby-api';
 import Actions from '.';
+import Page from '../adapters/page';
 import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';
 import Selectors from '../selectors';
@@ -249,7 +250,7 @@ namespace ActionCreators {
    * and a request object for override.
    * @return {Actions.FetchPastPurchaseProducts} - Action with `{ amount, forward }`.
    */
-   // tslint:disable-next-line max-line-length
+  // tslint:disable-next-line max-line-length
   export function fetchMorePastPurchaseProducts(amount: number, forward?: boolean): Actions.FetchMorePastPurchaseProducts;
   // tslint:disable-next-line typedef
   export function fetchMorePastPurchaseProducts(options, forward = true): Actions.FetchMorePastPurchaseProducts {
@@ -587,8 +588,8 @@ namespace ActionCreators {
           config: Selectors.config(state).personalization.realTimeBiasing,
         },
       }, {
-        payload: validators.isValidBias
-      });
+          payload: validators.isValidBias
+        });
   }
 
   export function updateSecuredPayload(payload: Configuration.Recommendations.SecuredPayload) {
@@ -628,6 +629,8 @@ namespace ActionCreators {
         const limitedRecordCount = SearchAdapter.extractRecordCount(res.totalRecordCount);
         const query = SearchAdapter.extractQuery(res);
         const navigations = SearchAdapter.pruneRefinements(SearchAdapter.combineNavigations(res), state);
+        const skip = (<any>res).originalRequest.skip;
+        const pageSize = (<any>res).originalRequest.pageSize;
         const actions: Array<Actions.Action<string, any>> = [
           receiveProductsAction,
           ActionCreators.receiveQuery(query),
@@ -638,7 +641,12 @@ namespace ActionCreators {
             collection: Selectors.collection(state),
             count: res.totalRecordCount
           }),
-          ActionCreators.receivePage(limitedRecordCount)(state),
+          ActionCreators.receivePage(
+            limitedRecordCount,
+            Page.currentPage(skip, pageSize),
+            pageSize,
+          )(state),
+          ActionCreators.updatePageSize(pageSize),
           ActionCreators.receiveTemplate(SearchAdapter.extractTemplate(res.template)),
         ];
 
@@ -689,11 +697,11 @@ namespace ActionCreators {
    * @param  {Actions.Payload.Page} page - The page object state will update to.
    * @return {Actions.ReceivePage}       - Action with page.
    */
-  export function receivePage(recordCount: number, current?: number) {
+  export function receivePage(recordCount: number, current?: number, pageSize?: number) {
     return (state: Store.State): Actions.ReceivePage => {
       return createAction({
         type: Actions.RECEIVE_PAGE,
-        payload: SearchAdapter.extractPage(state, recordCount, current),
+        payload: SearchAdapter.extractPage(state, recordCount, current, pageSize),
       });
     };
   }
