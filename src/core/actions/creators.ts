@@ -653,12 +653,12 @@ namespace ActionCreators {
             collection: Selectors.collection(state),
             count: res.totalRecordCount
           }),
+          ActionCreators.updatePageSize(pageSize),
           ActionCreators.receivePage(
             limitedRecordCount,
             Page.currentPage(skip, pageSize),
             pageSize,
           )(state),
-          ActionCreators.updatePageSize(pageSize),
           ActionCreators.receiveTemplate(SearchAdapter.extractTemplate(res.template)),
         ];
 
