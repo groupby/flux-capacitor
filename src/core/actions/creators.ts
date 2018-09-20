@@ -507,11 +507,15 @@ namespace ActionCreators {
    * @param  {number}             index - The index of the selected sort.
    * @return {Actions.SelectSort}       - Action with index.
    */
-  export function selectSort(index: number): Actions.SelectSort {
-    return createAction({ type: Actions.SELECT_SORT, payload: index }, {
+  // export function selectSort(index: number): Actions.SelectSort {
+  export function selectSort(index: number, section: Actions.StoreSection = Actions.StoreSection.Staging) {
+    return createAction({ type: Actions.SELECT_SORT, payload: index, section }, {
       payload: validators.isSortDeselected
     });
   }
+
+  // export function receiveSort(index: number, section?: Actions.StoreSection): Actions.SelectSort {
+  // }
 
   /**
    * Updates the page size to given size.
@@ -519,7 +523,8 @@ namespace ActionCreators {
    * Must correspond to a size in the pageSize in the store.
    * @return {Actions.UpdatePageSize}      - Action with size.
    */
-  export function updatePageSize(size: number, section?: Actions.StoreSection): Actions.UpdatePageSize {
+  // tslint:disable-next-line max-line-length
+  export function updatePageSize(size: number, section: Actions.StoreSection = Actions.StoreSection.Staging): Actions.UpdatePageSize {
     return createAction({ type: Actions.UPDATE_PAGE_SIZE, payload: size, section }, {
       payload: validators.isDifferentPageSize
     });
@@ -539,14 +544,18 @@ namespace ActionCreators {
         ActionCreators.receiveQuery(Selectors.queryObj(state), section),
         ActionCreators.receiveNavigations(Selectors.navigations(state), section),
         ActionCreators.updatePageSize(Selectors.pageSize(state), section),
-        createAction({ type: Actions.UPDATE_CURRENT_PAGE, payload: page, section }, {
-          payload: [
-            validators.isValidPage,
-            validators.isOnDifferentPage
-          ]
-        }),
+        ActionCreators.receiveCurrentPage(page, section),
       ];
     };
+  }
+
+  export function receiveCurrentPage(page: number, section?: Actions.StoreSection): Actions.UpdateCurrentPage {
+    return createAction({ type: Actions.UPDATE_CURRENT_PAGE, payload: page, section }, {
+      payload: [
+        validators.isValidPage,
+        validators.isOnDifferentPage
+      ]
+    });
   }
 
   /**
@@ -653,7 +662,7 @@ namespace ActionCreators {
             collection: Selectors.collection(state),
             count: res.totalRecordCount
           }),
-          ActionCreators.updatePageSize(pageSize),
+          ActionCreators.updatePageSize(pageSize, Actions.StoreSection.Data),
           ActionCreators.receivePage(
             limitedRecordCount,
             Page.currentPage(skip, pageSize),
