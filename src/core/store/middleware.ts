@@ -106,31 +106,42 @@ export namespace Middleware {
     };
   }
 
-  export function insertAction(triggerActions: string[], extraAction: Actions.Action) {
-    return (next) => (batchAction) => {
-      const actions = utils.rayify(batchAction);
-      if (actions.some((action) => triggerActions.includes(action.type)) &&
-          !actions.some((action) => action.type === extraAction.type)) {
-        return next([...actions, extraAction]);
+  export function insertAction(store: Store<any>, triggerActions: string[], extraAction: Actions.Action) {
+    return (next) => (action) => {
+      // const actions = utils.rayify(batchAction);
+      // if (actions.some((action) => triggerActions.includes(action.type)) &&
+      //     !actions.some((action) => action.type === extraAction.type)) {
+      //   return next([...actions, extraAction]);
+      // } else {
+      //   return next(actions);
+      // }
+      if (triggerActions.includes(action.type)) {
+        store.dispatch(extraAction);
+        return next(action);
       } else {
-        return next(actions);
+        return next(action);
       }
     };
   }
 
-  export function searchIdAnalyzer() {
+  export function searchIdAnalyzer(store: Store<any>) {
     return Middleware.insertAction(
+      store,
       SEARCH_CHANGE_ACTIONS,
       ActionCreators.updateSessionId(Actions.Payload.Session.IdKey.searchId)
     );
   }
 
-  export function pastPurchaseProductAnalyzer() {
-    return Middleware.insertAction(PAST_PURCHASES_SEARCH_CHANGE_ACTIONS, ActionCreators.fetchPastPurchaseProducts());
+  export function pastPurchaseProductAnalyzer(store: Store<any>) {
+    return Middleware.insertAction(
+      store,
+      PAST_PURCHASES_SEARCH_CHANGE_ACTIONS,
+      ActionCreators.fetchPastPurchaseProducts()
+    );
   }
 
-  export function saveStateAnalyzer() {
-    return Middleware.insertAction(HISTORY_UPDATE_ACTIONS, { type: Actions.SAVE_STATE });
+  export function saveStateAnalyzer(store: Store<any>) {
+    return Middleware.insertAction(store, HISTORY_UPDATE_ACTIONS, { type: Actions.SAVE_STATE });
   }
 
   export function personalizationAnalyzer(store: Store<any>) {
@@ -140,10 +151,12 @@ export namespace Middleware {
           PERSONALIZATION_CHANGE_ACTIONS.includes(action.type)) {
         const biasing = PersonalizationAdapter.extractBias(action, state);
         if (biasing) {
-          return next([
-            action,
-            ActionCreators.updateBiasing(biasing)
-          ]);
+          store.dispatch(ActionCreators.updateBiasing(biasing));
+          return next(action);
+          // return next([
+          //   action,
+          //   ActionCreators.updateBiasing(biasing)
+          // ]);
         }
       }
       return next(action);
@@ -176,14 +189,22 @@ export namespace Middleware {
     };
   }
 
+  export function testMiddleware() {
+    return (next) => (action) => {
+      console.log(action);
+      return next(action);
+    };
+  }
+
   export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
     const normalizingMiddleware = [
+      // testMiddleware,
       thunkEvaluator,
       arrayMiddleware,
       batchMiddleware,
     ];
     const middleware = [
-      ...normalizingMiddleware,
+      // ...normalizingMiddleware,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       // Middleware.sectionMiddleware(Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS)),
@@ -192,7 +213,7 @@ export namespace Middleware {
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,
       personalizationAnalyzer,
-      ...normalizingMiddleware,
+      // ...normalizingMiddleware,
       saveStateAnalyzer,
     ];
 
@@ -205,8 +226,10 @@ export namespace Middleware {
 
     return composeEnhancers(
       applyMiddleware(...normalizingMiddleware, saveStateAnalyzer, pastPurchaseProductAnalyzer),
+      // applyMiddleware(...normalizingMiddleware),
       applyMiddleware(...middleware),
       applyMiddleware(...normalizingMiddleware, Middleware.validator),
+      applyMiddleware(testMiddleware),
       batchStoreEnhancer,
     );
   }
