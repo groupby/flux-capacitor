@@ -117,7 +117,7 @@ export namespace Middleware {
 
   export function stagingAnalyzer(store: Store<any>) {
     return (next) => (action: any) => {
-      if (action.meta.stagingAnalyzer) {
+      if (!action.meta || action.meta.stagingAnalyzed) {
         return next(action);
       }
       const state = store.getState();
@@ -128,14 +128,10 @@ export namespace Middleware {
         ActionCreators.updatePageSize(Selectors.pageSize(state), section),
         ActionCreators.updateCurrentPage(Selectors.page(state), section),
       ];
-      actions.forEach((a) => a.meta['stagingAnalyzed'] = true);
+      actions.forEach((a) => a.meta.stagingAnalyzed = true);
+      action.meta.stagingAnalyzed = true;
 
-      return insertAction(
-        store,
-        actions.map((a) => a.type),
-        (actions as any).filter((a: any) => (a as any).type !== (action as any).type)
-      )(next)(action);
-      // TODO
+      return next(batchActions([...actions.filter((a) => a.type !== action.type), action]));
     };
   }
 
@@ -203,7 +199,6 @@ export namespace Middleware {
     const normalizingMiddleware = [
       thunkEvaluator,
       arrayMiddleware,
-      batchMiddleware,
     ];
     const middleware = [
       Middleware.injectStateIntoRehydrate,
@@ -225,9 +220,14 @@ export namespace Middleware {
     const composeEnhancers = global && global['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;
 
     return composeEnhancers(
-      applyMiddleware(...normalizingMiddleware, saveStateAnalyzer, pastPurchaseProductAnalyzer),
+      applyMiddleware(...normalizingMiddleware, batchMiddleware, saveStateAnalyzer, pastPurchaseProductAnalyzer),
       applyMiddleware(...middleware),
-      applyMiddleware(...normalizingMiddleware, Middleware.validator),
+      applyMiddleware(
+        ...normalizingMiddleware,
+        Middleware.sectionMiddleware(Actions.StoreSection.Staging, Middleware.stagingAnalyzer),
+        batchMiddleware,
+        Middleware.validator
+      ),
       batchStoreEnhancer,
     );
   }

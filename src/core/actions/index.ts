@@ -23,6 +23,7 @@ namespace Actions {
     searchId?: string;
     tag?: Metadata.Tag;
     validator?: object;
+    stagingAnalyzed?: boolean;
   }
   export namespace Metadata {
     export interface Tag {
