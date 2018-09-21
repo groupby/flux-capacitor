@@ -100,9 +100,7 @@ class FluxCapacitor extends EventEmitter {
   }
 
   detailsWithRouting(product: Store.Product | Record) {
-    return this.config.details.alwaysFetch
-      ? this.store.dispatch(this.actions.fetchProductDetails(SearchAdapter.extractAllMeta(product).id))
-      : this.store.dispatch(this.actions.setDetails(product));
+    this.store.dispatch(this.actions.updateDetails({ data: product }));
   }
 
   switchCollection(collection: string) {
@@ -139,7 +137,8 @@ class FluxCapacitor extends EventEmitter {
 
   displaySaytPastPurchases() {
     this.store.dispatch(this.actions.receiveAutocompleteProductRecords(
-      this.selectors.saytPastPurchases(this.store.getState())));
+      this.selectors.saytPastPurchases(this.store.getState()))
+    );
   }
 
   /**

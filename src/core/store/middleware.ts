@@ -58,18 +58,22 @@ export const PERSONALIZATION_CHANGE_ACTIONS = [
   Actions.ADD_REFINEMENT,
 ];
 
+export const DETAILS_CHANGE_ACTIONS = [
+  Actions.UPDATE_DETAILS,
+];
+
 export namespace Middleware {
   export const validator = validatorMiddleware();
 
   export function idGenerator(key: string, actions: string[]): ReduxMiddleware {
-    return () => (next) => (action) =>
+    return (store) => (next) => (action) =>
       actions.includes(action.type)
         ? next({ ...action, meta: { ...action.meta, [key]: cuid() } })
         : next(action);
   }
 
   export function errorHandler(flux: FluxCapacitor): ReduxMiddleware {
-    return () => (next) => (action) => {
+    return (store) => (next) => (action) => {
       if (action.error) {
         switch (action.type) {
           case Actions.RECEIVE_PRODUCTS: return next(ReduxActionCreators.undo());
@@ -83,13 +87,13 @@ export namespace Middleware {
     };
   }
 
-  export function injectStateIntoRehydrate(store: Store<any>) {
+  export function injectStateIntoRehydrate({ getState }: Store<any>) {
     return (next) => (action) =>
       action.type === 'persist/REHYDRATE' && action.payload && action.payload.biasing ? next({
         ...action,
         payload: {
           ...action.payload,
-          biasing: PersonalizationAdapter.transformFromBrowser(action.payload.biasing, store.getState())
+          biasing: PersonalizationAdapter.transformFromBrowser(action.payload.biasing, getState())
         }
       }) : next(action);
   }
@@ -118,20 +122,15 @@ export namespace Middleware {
     };
   }
 
-  export function pastPurchaseProductAnalyzer() {
-    return Middleware.insertAction(PAST_PURCHASES_SEARCH_CHANGE_ACTIONS, ActionCreators.fetchPastPurchaseProducts());
-  }
-
   export function saveStateAnalyzer() {
     return Middleware.insertAction(HISTORY_UPDATE_ACTIONS, { type: Actions.SAVE_STATE });
   }
 
-  export function personalizationAnalyzer(store: Store<any>) {
+  export function personalizationAnalyzer({ getState }: Store<any>) {
     return (next) => (action) => {
-      const state = store.getState();
-      if (ConfigurationAdapter.isRealTimeBiasEnabled(Selectors.config(state)) &&
+      if (ConfigurationAdapter.isRealTimeBiasEnabled(Selectors.config(getState())) &&
           PERSONALIZATION_CHANGE_ACTIONS.includes(action.type)) {
-        const biasing = PersonalizationAdapter.extractBias(action, state);
+        const biasing = PersonalizationAdapter.extractBias(action, getState());
         if (biasing) {
           return next([
             action,
@@ -143,10 +142,10 @@ export namespace Middleware {
     };
   }
 
-  export function thunkEvaluator(store: Store<any>) {
+  export function thunkEvaluator({ getState }: Store<any>) {
     return (next) => (thunkAction) => {
       if (typeof thunkAction === 'function') {
-        return next(thunkAction(store.getState()));
+        return next(thunkAction(getState()));
       } else {
         return next(thunkAction);
       }
@@ -171,6 +170,8 @@ export namespace Middleware {
       Middleware.validator,
       Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS),
       Middleware.idGenerator('searchId', SEARCH_CHANGE_ACTIONS),
+      Middleware.idGenerator('pastPurchaseId', PAST_PURCHASES_SEARCH_CHANGE_ACTIONS),
+      Middleware.idGenerator('detailsId', DETAILS_CHANGE_ACTIONS),
       Middleware.errorHandler(flux),
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,
@@ -187,9 +188,9 @@ export namespace Middleware {
     const composeEnhancers = global && global['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;
 
     return composeEnhancers(
-      applyMiddleware(...normalizingMiddleware, saveStateAnalyzer, pastPurchaseProductAnalyzer),
+      applyMiddleware(...normalizingMiddleware, saveStateAnalyzer),
       applyMiddleware(...middleware),
-      applyMiddleware(...normalizingMiddleware, Middleware.validator),
+      applyMiddleware(...normalizingMiddleware),
       batchStoreEnhancer,
     );
   }

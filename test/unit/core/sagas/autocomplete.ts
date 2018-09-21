@@ -164,7 +164,7 @@ suite('autocomplete saga', ({ expect, spy, stub, sinon }) => {
         task.next(state);
         task.next(config);
         expect(autocompleteComposeRequest).to.be.calledWith(state, override);
-        expect(recommendationsComposeRequest).to.be.calledWith(state, { query, ...override });
+        expect(recommendationsComposeRequest).to.be.calledWith(state, { query });
       });
 
       it('should handle request failure', () => {

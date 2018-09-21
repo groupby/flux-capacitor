@@ -6,6 +6,7 @@ import Configuration from '../adapters/configuration';
 import PastPurchaseAdapter from '../adapters/past-purchases';
 import Personalization from '../adapters/personalization';
 import Recommendations from '../adapters/recommendations';
+import RequestAdapter from '../adapters/request';
 import SearchAdapter, { MAX_RECORDS } from '../adapters/search';
 import AppConfig from '../configuration';
 import Selectors from '../selectors';
@@ -27,10 +28,11 @@ namespace RequestHelpers {
   export const search: BuildFunction<Partial<Request>, Request> = (state, overrideRequest = {}) => {
     const config = Selectors.config(state);
     const sort = Selectors.sort(state);
+    const page = Selectors.page(state);
     const pageSize = Selectors.pageSize(state);
-    const skip = Selectors.skip(state, pageSize);
+    const skip = RequestAdapter.extractSkip(page, pageSize);
     const request: Partial<Request> = {
-      pageSize: Math.min(pageSize, MAX_RECORDS - skip),
+      pageSize: RequestAdapter.clampPageSize(page, pageSize),
       area: Selectors.area(state),
       fields: Selectors.fields(state),
       query: Selectors.query(state),
@@ -44,7 +46,7 @@ namespace RequestHelpers {
       request.language = language;
     }
     if (sort) {
-      request.sort = <any>SearchAdapter.requestSort(sort);
+      request.sort = <any>RequestAdapter.extractSort(sort);
     }
     if (Configuration.shouldAddPastPurchaseBias(config)) {
       request.biasing = PastPurchaseAdapter.pastPurchaseBiasing(state);

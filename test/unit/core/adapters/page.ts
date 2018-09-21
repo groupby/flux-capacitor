@@ -2,6 +2,13 @@ import Adapter from '../../../../src/core/adapters/page';
 import suite from '../../_suite';
 
 suite('Page Adapter', ({ expect }) => {
+  describe('currentPage()', () => {
+    it('should return the current page', () => {
+      expect(Adapter.currentPage(0, 10)).to.eq(1);
+      expect(Adapter.currentPage(10, 10)).to.eq(2);
+      expect(Adapter.currentPage(20, 10)).to.eq(3);
+    });
+  });
 
   describe('previousPage()', () => {
     it('should return previous page', () => {

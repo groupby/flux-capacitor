@@ -5,6 +5,7 @@ import ConfigAdapter from '../../../../src/core/adapters/configuration';
 import PastPurchaseAdapter from '../../../../src/core/adapters/past-purchases';
 import PersonalizationAdapter from '../../../../src/core/adapters/personalization';
 import RecommendationsAdapter from '../../../../src/core/adapters/recommendations';
+import RequestAdapter from '../../../../src/core/adapters/request';
 import SearchAdapter, { MAX_RECORDS } from '../../../../src/core/adapters/search';
 import RequestHelpers from '../../../../src/core/requests/utils';
 import Selectors from '../../../../src/core/selectors';
@@ -25,8 +26,9 @@ suite('requests helpers', ({ expect, stub, spy }) => {
 
   describe('search()', () => {
     const remainingRecords = 2;
-    const originalPageSize = MAX_RECORDS - 1;
-    const originalSkip = MAX_RECORDS - remainingRecords;
+    const page = 2;
+    const originalPageSize = MAX_RECORDS - remainingRecords;
+    const originalSkip = RequestAdapter.extractSkip(page, originalPageSize);
     const area = 'ok';
     const fields = 'fields';
     const query = 'dress';
@@ -38,15 +40,15 @@ suite('requests helpers', ({ expect, stub, spy }) => {
 
     beforeEach(() => {
       sortSelector = stub(Selectors, 'sort');
-      requestSortAdapter = stub(SearchAdapter, 'requestSort');
+      requestSortAdapter = stub(RequestAdapter, 'extractSort');
       pastPurchaseBiasingAdapter = stub(ConfigAdapter, 'shouldAddPastPurchaseBias');
       stub(Selectors, 'area').returns(area);
       stub(Selectors, 'fields').returns(fields);
       stub(Selectors, 'query').returns(query);
       stub(Selectors, 'collection').returns(collection);
       stub(Selectors, 'selectedRefinements').returns(refinements);
+      stub(Selectors, 'page').returns(page);
       stub(Selectors, 'pageSize').returns(originalPageSize);
-      stub(Selectors, 'skip').returns(originalSkip);
     });
 
     it('should build out request', () => {

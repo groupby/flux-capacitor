@@ -535,16 +535,6 @@ namespace ActionCreators {
   }
 
   /**
-   * Sets the details product in the store, doing some additional emits and state changes.
-   * @param  {Record | Store.Product}         product - The product to use as the details product.
-   * @param  {Template}         template - The template to use as the details template.
-   * @return {Actions.SetDetails}         - Action with details.
-   */
-  export function setDetails(product: Record | Store.Product, template?: Template): Actions.SetDetails {
-    return createAction(Actions.SET_DETAILS, { data: product, template: SearchAdapter.extractTemplate(template) });
-  }
-
-  /**
    * Updates the autocomplete query with the given term.
    * @param  {string}                          query - The search term to update
    * the autocomplete query to and get suggestions based on.
@@ -792,6 +782,16 @@ namespace ActionCreators {
     return createAction(Actions.RECEIVE_NAVIGATION_SORT, navigations);
   }
 
+  /**
+   * Sets the details product in the store.
+   * @param  {Store.Details}         details - The product to use as the details
+   * product.
+   * @return {Actions.ReceiveDetails}         - Action with details.
+   */
+  export function receiveDetails(details: Store.Details): Actions.ReceiveDetails {
+    return createAction(Actions.RECEIVE_DETAILS, details);
+  }
+
   // tslint:disable-next-line max-line-length
   export function receivePastPurchaseSkus(products: Store.PastPurchases.PastPurchaseProduct[]): Actions.ReceivePastPurchaseSkus {
     return createAction(Actions.RECEIVE_PAST_PURCHASE_SKUS, products);
@@ -845,9 +845,12 @@ namespace ActionCreators {
    * @param  {Actions.Payload.current} current - The current page.
    * @return {Actions.ReceivePage}       - Action with page.
    */
-  export function receivePastPurchasePage(recordCount: number, current?: number) {
+  export function receivePastPurchasePage(recordCount: number, current?: number, pageSize?: number) {
     return (state: Store.State): Actions.ReceivePastPurchasePage => {
-      return createAction(Actions.RECEIVE_PAST_PURCHASE_PAGE, SearchAdapter.extractPage(state, recordCount, current));
+      return createAction(
+        Actions.RECEIVE_PAST_PURCHASE_PAGE,
+        SearchAdapter.extractPage(state, recordCount, current, pageSize)
+      );
     };
   }
 

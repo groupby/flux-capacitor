@@ -14,6 +14,8 @@ namespace Actions {
   export interface Metadata {
     recallId?: string;
     searchId?: string;
+    detailsId?: string;
+    pastPurchaseId?: string;
     tag?: Metadata.Tag;
     validator?: object;
   }
@@ -41,8 +43,6 @@ namespace Actions {
   export type UpdateAutocompleteQuery = Action<typeof UPDATE_AUTOCOMPLETE_QUERY, string>;
   export const UPDATE_DETAILS = 'UPDATE_DETAILS';
   export type UpdateDetails = Action<typeof UPDATE_DETAILS, Store.Details>;
-  export const SET_DETAILS = 'SET_DETAILS';
-  export type SetDetails = Action<typeof SET_DETAILS, Store.Details>;
   export const SELECT_REFINEMENT = 'SELECT_REFINEMENT';
   export type SelectRefinement = Action<typeof SELECT_REFINEMENT, Payload.Navigation.Refinement>;
   export const DESELECT_REFINEMENT = 'DESELECT_REFINEMENT';
@@ -148,6 +148,8 @@ namespace Actions {
   export type ReceiveRedirect = Action<typeof RECEIVE_REDIRECT, string>;
   export const RECEIVE_RECOMMENDATIONS_PRODUCTS = 'RECEIVE_RECOMMENDATIONS_PRODUCTS';
   export type ReceiveRecommendationsProducts = Action<typeof RECEIVE_RECOMMENDATIONS_PRODUCTS, Store.ProductWithMetadata[]>;
+  export const RECEIVE_DETAILS = 'RECEIVE_DETAILS';
+  export type ReceiveDetails = Action<typeof RECEIVE_DETAILS, Store.Details>;
   export const RECEIVE_PAST_PURCHASE_SKUS = 'RECEIVE_PAST_PURCHASE_SKUS';
   export type ReceivePastPurchaseSkus = Action<typeof RECEIVE_PAST_PURCHASE_SKUS, Store.PastPurchases.PastPurchaseProduct[]>;
   export const RECEIVE_SAYT_PAST_PURCHASES = 'RECEIVE_SAYT_PAST_PURCHASES';

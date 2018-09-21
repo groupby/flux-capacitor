@@ -457,6 +457,18 @@ suite('Search Adapter', ({ expect, stub }) => {
     });
   });
 
+  describe('extractAllMeta()', () => {
+    const product = { a: 'b' };
+
+    it('should return product allMeta', () => {
+      expect(Adapter.extractAllMeta(<any>{ allMeta: product })).to.eq(product);
+    });
+
+    it('should return product', () => {
+      expect(Adapter.extractAllMeta(<any>product)).to.eq(product);
+    });
+  });
+
   describe('augmentProducts()', () => {
     it('should return the products remapped, with data, meta, and index', () => {
       const purchase1 = 'idk';
@@ -496,26 +508,6 @@ suite('Search Adapter', ({ expect, stub }) => {
 
     it('should return the maximum total record count', () => {
       expect(Adapter.extractRecordCount(MAX_RECORDS + 1)).to.eq(MAX_RECORDS);
-    });
-  });
-
-  describe('requestSort()', () => {
-    it('should return a descending sort', () => {
-      const field = 'height';
-
-      expect(Adapter.requestSort({ field, descending: true })).to.eql({ field, order: 'Descending' });
-    });
-
-    it('should return an ascending sort when descending is false', () => {
-      const field = 'height';
-
-      expect(Adapter.requestSort({ field, descending: false })).to.eql({ field, order: undefined });
-    });
-
-    it('should return an ascending sort', () => {
-      const field = 'height';
-
-      expect(Adapter.requestSort({ field })).to.eql({ field, order: undefined });
     });
   });
 });

@@ -148,6 +148,16 @@ namespace Events {
    * Returns the searchId.
    */
   export const SEARCH_CHANGED = 'search_changed';
+  /**
+   * Triggered when detailsId changes. Occurs whenever a new details search is fired.
+   * Returns the searchId.
+   */
+  export const DETAILS_CHANGED = 'details_changed';
+  /**
+   * Triggered when pastPurchaseId changes. Occurs whenever a new past purchase search is fired.
+   * Returns the pastPurchaseId.
+   */
+  export const PAST_PURCHASE_CHANGED = 'past_purchase_changed';
 
   // redirect event
   /**

@@ -407,7 +407,6 @@ namespace Configuration {
   }
 
   export interface Details {
-    alwaysFetch: boolean;
     overrides?: Configuration.SearchOverrides;
   }
 

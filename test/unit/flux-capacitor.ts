@@ -112,6 +112,19 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
       });
     });
 
+    describe('replaceState()', () => {
+      it('should emit HISTORY_REPLACE event with state and route', () => {
+        const state = { a: 'b' };
+        const emit = flux.emit = spy();
+        const route = 'search';
+        flux.store = <any>{ getState: () => state };
+
+        flux.replaceState(route);
+
+        expect(emit).to.be.calledWith(Events.HISTORY_REPLACE, { state, route });
+      });
+    });
+
     describe('search()', () => {
       it('should updateSearch() action', () => {
         const query = 'black bear';
@@ -187,18 +200,10 @@ suite('FluxCapacitor', ({ expect, spy, stub }) => {
     });
 
     describe('detailsWithRouting()', () => {
-      it('should call fetchProductDetails() action if alwaysFetch is true', () => {
+      it('should call updateDetails() action with correct shape', () => {
         const product: any = { a: 'b', id: '1235' };
-        stub(flux, 'config').get(() => ({ details: { alwaysFetch: true } }));
 
-        expectDispatch(() => flux.detailsWithRouting(product), 'fetchProductDetails', product.id);
-      });
-
-      it('should call setDetails() action if alwaysFetch is false', () => {
-        const product: any = { a: 'b', id: '1235' };
-        stub(flux, 'config').get(() => ({ details: { alwaysFetch: false } }));
-
-        expectDispatch(() => flux.detailsWithRouting(product), 'setDetails', product);
+        expectDispatch(() => flux.detailsWithRouting(product), 'updateDetails', { data: product });
       });
     });
 

@@ -3,6 +3,7 @@ import * as effects from 'redux-saga/effects';
 import FluxCapacitor from '../../flux-capacitor';
 import Actions from '../actions';
 import ConfigAdapter from '../adapters/configuration';
+import PageAdapter from '../adapters/page';
 import PastPurchaseAdapter from '../adapters/past-purchases';
 import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';
@@ -122,6 +123,7 @@ export namespace Tasks {
           ...action.payload.request
         });
         const results = yield effects.call(Requests.search, flux, request);
+        const pageSize = request.pageSize;
         if (getNavigations) {
           const navigations = PastPurchaseAdapter.pastPurchaseNavigations(
             yield effects.select(Selectors.config), SearchAdapter.combineNavigations(results)
@@ -132,14 +134,16 @@ export namespace Tasks {
           ]);
         } else {
           yield effects.put(<any>[
+            flux.actions.updatePastPurchasePageSize(pageSize),
             flux.actions.receivePastPurchasePage(
               SearchAdapter.extractRecordCount(results.totalRecordCount),
-              Selectors.pastPurchasePage(flux.store.getState()),
+              PageAdapter.currentPage(request.skip, pageSize),
+              pageSize
             ),
             flux.actions.receivePastPurchaseCurrentRecordCount(results.totalRecordCount),
             flux.actions.receivePastPurchaseProducts(SearchAdapter.augmentProducts(results)),
           ]);
-          flux.saveState(utils.Routes.PAST_PURCHASE);
+          flux.replaceState(utils.Routes.PAST_PURCHASE);
         }
       }
     } catch (e) {

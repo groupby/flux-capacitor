@@ -209,6 +209,8 @@ namespace Observer {
       session: {
         recallId: emit(Events.RECALL_CHANGED),
         searchId: emit(Events.SEARCH_CHANGED),
+        detailsId: emit(Events.DETAILS_CHANGED),
+        pastPurchaseId: emit(Events.PAST_PURCHASE_CHANGED),
         location: emit(Events.LOCATION_UPDATED)
       },
       ui: ((emitUiUpdated: Observer) =>

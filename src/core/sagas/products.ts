@@ -24,7 +24,8 @@ export namespace Tasks {
         return yield effects.put(flux.actions.receiveRedirect(result.redirect));
       }
       if (config.search.redirectSingleResult && result.totalRecordCount === 1) {
-        yield effects.take(<any>flux.detailsWithRouting(result.records[0]));
+        flux.once(Events.DETAILS_UPDATED, () => flux.replaceState(utils.Routes.DETAILS));
+        yield effects.put(<any>flux.actions.fetchProductDetails(result.records[0].allMeta.id));
       } else {
         flux.emit(Events.BEACON_SEARCH, result.id);
         const actions: any = [];
@@ -44,7 +45,7 @@ export namespace Tasks {
         yield effects.put(actions);
 
         if (!ignoreHistory) {
-          flux.saveState(utils.Routes.SEARCH);
+          flux.replaceState(utils.Routes.SEARCH);
         }
       }
     } catch (e) {
@@ -65,7 +66,7 @@ export namespace Tasks {
       const config = yield effects.select(Selectors.config);
       const iNav = config.recommendations.iNav;
       if (iNav.navigations.sort || iNav.refinements.sort) {
-        const body = recommendationsNavigationsRequest.composeRequest(state, action.payload.request);
+        const body = recommendationsNavigationsRequest.composeRequest(state);
         const recommendationsResponse = yield effects.call(
           Requests.recommendations,
           {

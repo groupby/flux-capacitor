@@ -2,6 +2,7 @@ import { SelectedRefinement } from 'groupby-api';
 import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig } from 'sayt';
 import Autocomplete from './adapters/autocomplete';
 import Configuration from './adapters/configuration';
+import Request from './adapters/request';
 import Search, { MAX_RECORDS } from './adapters/search';
 import AppConfig from './configuration';
 import Store from './store';
@@ -562,10 +563,8 @@ namespace Selectors {
     allNavigations.reduce((allRefinements, nav) =>
       allRefinements.concat(nav.selected
         .map<any>((refinementIndex) => nav.refinements[refinementIndex])
-        .reduce((refs, { low, high, value }) =>
-          refs.concat(nav.range
-            ? { navigationName: nav.field, type: 'Range', high, low }
-            : { navigationName: nav.field, type: 'Value', value }), [])), []);
+        .reduce((refs, refinement) =>
+          refs.concat(Request.extractRefinement(nav.field, refinement)), [])), []);
 
   /**
    * Helper function to display record count limited by the max records we can

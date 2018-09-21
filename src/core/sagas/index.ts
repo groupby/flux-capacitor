@@ -15,7 +15,7 @@ export const SAGA_CREATORS = [
   productDetails,
   products,
   recommendations,
-  refinements
+  refinements,
 ];
 
 export default function createSagas(sagaCreators: SagaCreator[], flux: FluxCapacitor) {

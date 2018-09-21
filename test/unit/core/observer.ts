@@ -611,6 +611,14 @@ suite('Observer', ({ expect, spy, stub }) => {
       });
     });
 
+    describe('detailsId', () => {
+      it('should emit DETAILS_UPDATED event', () => {
+        observers.session.detailsId(undefined, testObject);
+
+        expect(emit).to.be.calledWith(Events.DETAILS_CHANGED, testObject);
+      });
+    });
+
     describe('location', () => {
       it('should emit LOCATION_UPDATED event', () => {
         observers.session.location(undefined, testObject);

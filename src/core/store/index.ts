@@ -166,6 +166,8 @@ namespace Store {
   export interface Session {
     recallId?: string;
     searchId?: string;
+    pastPurchaseId?: string;
+    detailsId?: string;
     location?: Geolocation;
     origin?: Actions.Metadata.Tag;
     config?: Configuration;

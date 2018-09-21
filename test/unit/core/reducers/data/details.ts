@@ -17,18 +17,21 @@ suite('details', ({ expect }) => {
   const state: Store.Details = {
     data: product
   };
-  const template: any = { c: 'd' };
+  const template: any = { name: 'ok', ruleName: 'something', zones: {} };
 
   describe('updateDetails()', () => {
     it('should update state on UPDATE_DETAILS_ID', () => {
       const newState = {
         data: product2,
-        template
+        template: {
+          name: template.name,
+          rule: template.ruleName,
+          zones: template.zones
+        }
       };
-
       const reducer = details(state, {
         type: Actions.UPDATE_DETAILS,
-        payload: { data: product2, template }
+        payload: { data: product2, template  }
       });
 
       expect(reducer).to.eql(newState);

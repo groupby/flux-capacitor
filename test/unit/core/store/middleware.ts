@@ -10,11 +10,12 @@ import PersonalizationAdapter from '../../../../src/core/adapters/personalizatio
 import Events from '../../../../src/core/events';
 import Selectors from '../../../../src/core/selectors';
 import Middleware, {
-  PERSONALIZATION_CHANGE_ACTIONS,
+  DETAILS_CHANGE_ACTIONS,
   PAST_PURCHASE_SKU_ACTIONS,
+  PAST_PURCHASES_SEARCH_CHANGE_ACTIONS,
+  PERSONALIZATION_CHANGE_ACTIONS,
   RECALL_CHANGE_ACTIONS,
   SEARCH_CHANGE_ACTIONS,
-  PAST_PURCHASES_SEARCH_CHANGE_ACTIONS,
 } from '../../../../src/core/store/middleware';
 import suite from '../../_suite';
 
@@ -35,6 +36,8 @@ suite('Middleware', ({ expect, spy, stub }) => {
       batchMiddleware,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
+      idGeneratorMiddleware,
+      idGeneratorMiddleware,
       idGeneratorMiddleware,
       idGeneratorMiddleware,
       errorHandlerMiddleware,
@@ -76,9 +79,11 @@ suite('Middleware', ({ expect, spy, stub }) => {
 
       const middleware = Middleware.create(sagaMiddleware, flux);
 
-      expect(idGenerator).to.have.callCount(2)
+      expect(idGenerator).to.have.callCount(4)
         .and.calledWithExactly('recallId', RECALL_CHANGE_ACTIONS)
-        .and.calledWithExactly('searchId', SEARCH_CHANGE_ACTIONS);
+        .and.calledWithExactly('searchId', SEARCH_CHANGE_ACTIONS)
+        .and.calledWithExactly('pastPurchaseId', PAST_PURCHASES_SEARCH_CHANGE_ACTIONS)
+        .and.calledWithExactly('detailsId', DETAILS_CHANGE_ACTIONS);
       expect(errorHandler).to.be.calledWithExactly(flux);
       expect(applyMiddleware).to.be.calledWithExactly(...allMiddleware());
       expect(compose).to.be.calledWithExactly(
@@ -248,18 +253,6 @@ suite('Middleware', ({ expect, spy, stub }) => {
     });
   });
 
-  describe('pastPurchaseProductAnalyzer()', () => {
-    it('should call insertAction', () => {
-      const ret = 'middleware';
-      const insert = stub(Middleware, 'insertAction').returns(ret);
-
-      expect(Middleware.pastPurchaseProductAnalyzer()).to.eql(ret);
-
-      expect(insert).to.be.calledWithExactly(PAST_PURCHASES_SEARCH_CHANGE_ACTIONS,
-                                             ActionCreators.fetchPastPurchaseProducts());
-    });
-  });
-
   describe('saveStateAnalyzer()', () => {
     it('should pass through other actions', () => {
       const next = spy();
@@ -349,7 +342,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
     it('should pass forward a plain object action', () => {
       const action = { a: 'b' };
 
-      Middleware.thunkEvaluator(null)(next)(action);
+      Middleware.thunkEvaluator(<any>{ getState: () => null })(next)(action);
 
       expect(next).to.be.calledWithExactly(action);
     });

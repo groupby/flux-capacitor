@@ -77,7 +77,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
           search: { redirectSingleResult: false }
         };
         const emit = spy();
-        const saveState = spy();
+        const replaceState = spy();
         const search = () => null;
         const bridge = { search };
         const payload = { a: 'b' };
@@ -89,7 +89,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         const receiveProducts = spy(() => receiveProductsAction);
         const receiveNavigationSort = spy(() => receiveNavigationsAction);
         // tslint:disable-next-line max-line-length
-        const flux: any = { emit, saveState, clients: { bridge }, actions: { receiveProducts, receiveNavigationSort }, config };
+        const flux: any = { emit, replaceState, clients: { bridge }, actions: { receiveProducts, receiveNavigationSort }, config };
         stub(RecommendationsAdapter, 'sortAndPinNavigations')
           .withArgs(response.availableNavigation, [], config).returns(availableNavigation);
 
@@ -104,7 +104,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         expect(emit).to.be.calledWithExactly(Events.BEACON_SEARCH, id);
         expect(receiveProducts).to.be.calledWithExactly({ ...response, availableNavigation });
         task.next();
-        expect(saveState).to.be.calledWith(utils.Routes.SEARCH);
+        expect(replaceState).to.be.calledWith(utils.Routes.SEARCH);
       });
 
       it('should call actions.receiveRedirect when products.redirect is true', () => {
@@ -131,32 +131,38 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         expect(receiveRedirect).to.be.calledOnce;
       });
 
-      it('should call receiveDetailsProduct when only a single result', () => {
+      it('should replaceState when details update and call fetchProductDetails when only a single result', () => {
         const receiveProductsAction: any = { c: 'd' };
         const receiveNavigationsAction: any = { e: 'f' };
-        const setDetailsAction: any = 'action';
-        const record: any = { g: 'h' };
+        const fetchProductDetailsAction: any = { i: 'j' };
+        const record: any = { g: 'h', allMeta: { id: 1 } };
         const receiveRedirect = spy(() => receiveProductsAction);
         const receiveProducts = spy(() => receiveNavigationsAction);
-        const setDetails = spy(() => setDetailsAction);
-        const detailsWithRouting = spy(() => setDetailsAction);
+        const fetchProductDetails = spy(() => fetchProductDetailsAction);
         const config = {
           search: {
             redirectSingleResult: true
           }
         };
+        const once = spy();
+        const replaceState = spy();
         const flux: any = {
-          actions: { receiveProducts, receiveRedirect, setDetails },
+          once,
+          actions: { receiveProducts, receiveRedirect, fetchProductDetails },
           emit: () => undefined,
           saveState: () => undefined,
-          detailsWithRouting,
+          replaceState,
         };
 
         const task = Tasks.fetchProducts(<any>flux, false, <any>{});
         task.next();
         task.next([{ redirect: false, totalRecordCount: 1, records: [record] }, undefined]);
-        expect(task.next(config).value).to.eql(effects.take(setDetailsAction));
-        expect(detailsWithRouting).to.be.calledWith(record);
+        expect(task.next(config).value).to.eql(effects.put(fetchProductDetailsAction));
+        expect(once).to.be.calledWithExactly(Events.DETAILS_UPDATED, sinon.match((fn) => {
+          fn();
+          expect(replaceState).to.be.calledWithExactly(utils.Routes.DETAILS);
+          return true;
+        }));
         task.next();
       });
 
@@ -899,27 +905,6 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         expect(receiveRecommendationsRefinements).to.not.be.called;
         expect(receiveNavigationSort).to.not.be.called;
         task.next();
-      });
-
-      it('should override request', () => {
-        const state = { a: 'b' };
-        const override = { c: 'd' };
-        const config = {
-          recommendations: {
-            iNav: {
-              navigations: { sort: true },
-              refinements: { sort: true }
-            }
-          }
-        };
-        const composeRequest = stub(recommendationsNavigationsRequest, 'composeRequest');
-
-        const task = Tasks.fetchNavigations(null, <any>{ payload: { request: override } });
-
-        task.next();
-        task.next(state);
-        task.next(config);
-        expect(composeRequest).to.be.calledWith(state, override);
       });
 
       it('should return error on failure', () => {

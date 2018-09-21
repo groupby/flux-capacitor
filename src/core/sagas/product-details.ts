@@ -23,28 +23,22 @@ export namespace Tasks {
       );
       const { records, template } = yield effects.call(Requests.search, flux, requestBody);
 
-      if (records.length !== 0) {
-        const [record] = records;
-        yield effects.put(flux.actions.setDetails(record, template));
+      if (records.length) {
+        let [record] = records;
+        if (record.allMeta) {
+          flux.emit(Events.BEACON_VIEW_PRODUCT, record);
+          record = record.allMeta;
+        }
+        yield effects.put(flux.actions.receiveDetails({ data: record, template }));
       } else {
         throw new Error(`no records found matching id: ${id}`);
       }
     } catch (e) {
-      yield effects.put(flux.actions.updateDetails(e));
+      yield effects.put(flux.actions.receiveDetails(e));
     }
-  }
-
-  export function* receiveDetailsProduct(flux: FluxCapacitor, { payload }: Actions.SetDetails) {
-    if (payload.data.allMeta) {
-      flux.emit(Events.BEACON_VIEW_PRODUCT, payload.data);
-      payload.data = payload.data.allMeta;
-    }
-    yield effects.put(flux.actions.updateDetails(payload));
-    flux.saveState(utils.Routes.DETAILS);
   }
 }
 
 export default (flux: FluxCapacitor) => function* saga() {
   yield effects.takeLatest(Actions.FETCH_PRODUCT_DETAILS, Tasks.fetchProductDetails, flux);
-  yield effects.takeLatest(Actions.SET_DETAILS, Tasks.receiveDetailsProduct, flux);
 };

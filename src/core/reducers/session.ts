@@ -8,18 +8,18 @@ export type State = Store.Session;
 
 export default function updateSession(state: State = {}, action: Action): State {
   switch (action.type) {
-    case Actions.UPDATE_LOCATION: return updateLocation(state, action.payload);
+    case Actions.UPDATE_LOCATION: return updateSection(state, action.payload, 'location');
     case Actions.UPDATE_SECURED_PAYLOAD: return updateSecuredPayload(state, action.payload);
     default: {
       if (action.meta) {
-        if ('recallId' in action.meta) {
-          state = updateRecallId(state, action.meta);
-        }
-        if ('searchId' in action.meta) {
-          state = updateSearchId(state, action.meta);
-        }
+        ['recallId', 'searchId', 'detailsId', 'pastPurchaseId'].forEach((section) => {
+          if (section in action.meta) {
+            state = updateSection(state, action.meta[section], section);
+          }
+        });
+
         if ('tag' in action.meta) {
-          state = updateOrigin(state, action.meta);
+          state = updateSection(state, action.meta.tag, 'origin');
         }
       }
       return state;
@@ -42,14 +42,5 @@ export const updateSecuredPayload = (state, securedPayload: Configuration.Recomm
     }
   });
 
-export const updateLocation = (state: State, location: Store.Geolocation) =>
-  ({ ...state, location });
-
-export const updateRecallId = (state: State, { recallId }: Actions.Metadata) =>
-  ({ ...state, recallId });
-
-export const updateSearchId = (state: State, { searchId }: Actions.Metadata) =>
-  ({ ...state, searchId });
-
-export const updateOrigin = (state: State, { tag: origin }: Actions.Metadata) =>
-  ({ ...state, origin });
+export const updateSection = (state: State, value: any, section: string) =>
+  ({ ...state, [section]: value });

@@ -1,4 +1,6 @@
 namespace Page {
+  export const currentPage = (skip: number, pageSize: number) =>
+    (skip / pageSize) + 1;
 
   export const previousPage = (currentPage: number) =>
     currentPage - 1 >= 1 ? currentPage - 1 : null;

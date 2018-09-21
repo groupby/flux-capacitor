@@ -1,6 +1,7 @@
 import * as effects from 'redux-saga/effects';
 import Actions from '../../../../src/core/actions';
 import ConfigAdapter from '../../../../src/core/adapters/configuration';
+import PageAdapter from '../../../../src/core/adapters/page';
 import PastPurchaseAdapter from '../../../../src/core/adapters/past-purchases';
 import RecommendationsAdapter from '../../../../src/core/adapters/recommendations';
 import SearchAdapter from '../../../../src/core/adapters/search';
@@ -315,25 +316,27 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const receivePastPurchaseProducts = spy(() => 1);
         const receivePastPurchasePage = spy(() => 3);
         const receivePastPurchaseCurrentRecordCount = spy(() => 4);
+        const updatePastPurchasePageSize = spy(() => 3);
         const saveState = spy();
+        const replaceState = spy();
         const actions = {
           receivePastPurchasePage,
           receivePastPurchaseProducts,
           receivePastPurchaseCurrentRecordCount,
+          updatePastPurchasePageSize,
         };
-        const flux: any = { actions, saveState, store: { getState } };
+        const flux: any = { actions, saveState, store: { getState }, replaceState };
         const result = [1, 2, 3];
-        const request = { c: 3 };
+        const pageSize = 30;
+        const request = { c: 3, skip: 5, pageSize };
         const totalRecordCount = 100;
         const productData = { selectedNavigation: [2, 3, 5], totalRecordCount };
         const currentPage = 2;
-        const pageSize = 18;
         const pastPurchaseSkus = [1, 2, 3, 4,];
         const pastPurchasesFromSkus = { a: 'b' };
         const state = { c: 'd' };
         const augmentProducts = stub(SearchAdapter, 'augmentProducts').returns(productData);
         const extractRecordCount = stub(SearchAdapter, 'extractRecordCount').returns(productData);
-        const pastPurchasePage = stub(Selectors, 'pastPurchasePage').returns(currentPage);
         const searchRequest = stub(Requests, 'search').returns(result);
         stub(Tasks, 'buildRequestFromSkus').withArgs(flux, pastPurchaseSkus).returns(pastPurchasesFromSkus);
         stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest')
@@ -343,6 +346,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
             ...pastPurchasesFromSkus,
           })
           .returns(request);
+        stub(PageAdapter, 'currentPage').withArgs(request.skip, request.pageSize).returns(currentPage);
 
         const task = Tasks.fetchPastPurchaseProducts(flux, false, <any>{ payload: {} });
 
@@ -350,6 +354,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(task.next(pastPurchaseSkus).value).to.eql(effects.select());
         expect(task.next(state).value).to.eql(effects.call(searchRequest, flux, request));
         expect(task.next(productData).value).to.eql(effects.put(<any>[
+          updatePastPurchasePageSize(),
           receivePastPurchasePage(),
           receivePastPurchaseCurrentRecordCount(),
           receivePastPurchaseProducts(),
@@ -357,10 +362,9 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         task.next();
 
         expect(augmentProducts).to.be.calledWithExactly(productData);
-        expect(receivePastPurchasePage).to.be.calledWithExactly(productData, currentPage);
+        expect(receivePastPurchasePage).to.be.calledWithExactly(productData, currentPage, pageSize);
         expect(extractRecordCount).to.be.calledWithExactly(productData.totalRecordCount);
-        expect(pastPurchasePage).to.be.calledWithExactly(flux.store.getState());
-        expect(saveState).to.be.calledWithExactly(utils.Routes.PAST_PURCHASE);
+        expect(replaceState).to.be.calledWithExactly(utils.Routes.PAST_PURCHASE);
       });
 
       it('should generate a request when getNavigations is true', () => {

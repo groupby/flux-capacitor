@@ -32,7 +32,7 @@ export namespace Tasks {
       const recommendationsConfig = config.autocomplete.recommendations;
 
       if (recommendationsConfig.suggestionCount > 0) {
-        const body = recommendationsSuggestionsRequest.composeRequest(state, { query, ...request });
+        const body = recommendationsSuggestionsRequest.composeRequest(state, { query });
         const trendingRequest = effects.call(
           Requests.recommendations,
           {

@@ -45,6 +45,30 @@ suite('session', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
+    it('should update state when detailsId in meta', () => {
+      const detailsId = 'new stuffs';
+      const newState = {
+        ...state,
+        detailsId
+      };
+
+      const reducer = session(state, <any>{ meta: { detailsId } });
+
+      expect(reducer).to.eql(newState);
+    });
+
+    it('should update state when pastPurchaseId in meta', () => {
+      const pastPurchaseId = 'new stuffs';
+      const newState = {
+        ...state,
+        pastPurchaseId
+      };
+
+      const reducer = session(state, <any>{ meta: { pastPurchaseId } });
+
+      expect(reducer).to.eql(newState);
+    });
+
     it('should update state when tag in meta', () => {
       const origin = { a: 'b' };
       const newState = {
