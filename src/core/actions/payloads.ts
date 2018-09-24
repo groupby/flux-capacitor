@@ -122,7 +122,7 @@ namespace Payload {
     export interface MoreRefinements extends Navigation.Id {
       refinements: Store.Refinement[];
       selected: number[];
-      show?: number[]
+      show?: number[];
     }
   }
 
