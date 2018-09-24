@@ -199,6 +199,29 @@ suite('navigations', ({ expect }) => {
       expect(reducer).to.eql(newState);
     });
 
+    it('should select all refinements on SELECT_ALL_REFINEMENTS', () => {
+      const newState = {
+        ...state,
+        byId: {
+          Format,
+          Section: {
+            ...Section,
+            selected: [0, 1, 2, 3, 4],
+          },
+          Department,
+        },
+      };
+
+      const reducer = navigations(state, {
+        type: Actions.SELECT_ALL_REFINEMENTS,
+        payload: {
+          navigationId: 'Section'
+        }
+      });
+
+      expect(reducer).to.eql(newState);
+    });
+
     it('should return state on SELECT_REFINEMENT if no navigationId and refinementIndex', () => {
       const reducer = navigations(state, <any>{
         type: Actions.SELECT_REFINEMENT,
@@ -257,8 +280,7 @@ suite('navigations', ({ expect }) => {
         payload: {
           navigationId: 'Brand',
           range: false,
-          value: 'Oakley',
-          clear: true
+          value: 'Oakley'
         }
       });
 
