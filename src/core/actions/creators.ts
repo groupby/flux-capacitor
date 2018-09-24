@@ -470,7 +470,7 @@ namespace ActionCreators {
       ActionCreators.resetPage(),
       createAction(Actions.SELECT_ALL_REFINEMENTS, { navigationId },
       {
-        payload: validators.isRefinementsCategoryDeselected
+        payload: validators.isRefinementsCategoryOrable
       }
       )
     ];

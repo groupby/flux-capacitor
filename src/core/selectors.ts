@@ -267,10 +267,8 @@ namespace Selectors {
    * Finds the refinements based on the given navigationId and returns
    * true if one of them is not selected, false otherwise.
    */
-  export const isRefinementsCategoryDeselected = (state: Store.State, navigationId: string) => {
-    const nav = Selectors.navigation(state, navigationId);
-    return nav.refinements.some((ref, index) => !nav.selected.includes(index));
-  };
+  export const isRefinementsCategoryOrable = (state: Store.State, navigationId: string) =>
+    Selectors.navigation(state, navigationId).or;
 
   /**
    * Finds the refinement based on the given navigationId and index and returns

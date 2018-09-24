@@ -75,9 +75,9 @@ export const isRefinementDeselectedByIndex: Validator<Actions.Payload.Navigation
   msg: 'navigation does not exist or refinement is already selected'
 };
 
-export const isRefinementsCategoryDeselected: Validator<Actions.Payload.Navigation.Id> = {
-  func: ({ navigationId }, state) => Selectors.isRefinementsCategoryDeselected(state, navigationId),
-  msg: 'navigation does not exist or refinements are already selected'
+export const isRefinementsCategoryOrable: Validator<Actions.Payload.Navigation.Id> = {
+  func: ({ navigationId }, state) => Selectors.isRefinementsCategoryOrable(state, navigationId),
+  msg: 'navigation is not orable'
 };
 
 export const isRefinementSelectedByIndex: Validator<Actions.Payload.Navigation.Refinement> = {
