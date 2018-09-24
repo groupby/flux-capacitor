@@ -460,6 +460,23 @@ namespace ActionCreators {
   }
 
   /**
+   * Selects all refinements based on navigationId.
+   * @param  {string}                               navigationId - The navigationId for
+   * the navigation to fetch more refinements against.
+   * @return {Actions.ResetPageAndSelectRefinements}             - Actions with relevant data.
+   */
+  export function selectAllRefinements(navigationId: string): Actions.ResetPageAndSelectRefinements {
+    return [
+      ActionCreators.resetPage(),
+      createAction(Actions.SELECT_ALL_REFINEMENTS, { navigationId },
+      {
+        payload: validators.isRefinementsCategoryDeselected
+      }
+      )
+    ];
+  }
+
+  /**
    * Removes a given refinement based on navigationId and index.
    * @param  {string}                                 navigationId - The navigationId for
    * the navigation to fetch more refinements against.

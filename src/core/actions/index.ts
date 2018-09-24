@@ -45,6 +45,8 @@ namespace Actions {
   export type SetDetails = Action<typeof SET_DETAILS, Store.Details>;
   export const SELECT_REFINEMENT = 'SELECT_REFINEMENT';
   export type SelectRefinement = Action<typeof SELECT_REFINEMENT, Payload.Navigation.Refinement>;
+  export const SELECT_ALL_REFINEMENTS = 'SELECT_ALL_REFINEMENTS';
+  export type SelectAllRefinements = Action<typeof SELECT_ALL_REFINEMENTS, Payload.Navigation.Id>;
   export const DESELECT_REFINEMENT = 'DESELECT_REFINEMENT';
   export type DeselectRefinement = Action<typeof DESELECT_REFINEMENT, Payload.Navigation.Refinement>;
   export const SELECT_COLLECTION = 'SELECT_COLLECTION';
@@ -77,6 +79,7 @@ namespace Actions {
   export type UpdateSearch = Array<Actions.ResetPage | Actions.UpdateQuery | Actions.ResetRefinements | Actions.SelectRefinement | Actions.AddRefinement>;
   export type ResetPageAndResetRefinements = [Actions.ResetPage, Actions.ResetRefinements];
   export type ResetPageAndSelectRefinement = [Actions.ResetPage, Actions.SelectRefinement];
+  export type ResetPageAndSelectRefinements = [Actions.ResetPage, Actions.SelectAllRefinements];
   export type ResetPageAndDeselectRefinement = [Actions.ResetPage, Actions.DeselectRefinement];
   export type ResetPageAndAddRefinement = [Actions.ResetPage, Actions.AddRefinement];
   export type CheckAndResetRefinements = ResetPageAndResetRefinements | Action<any>[];

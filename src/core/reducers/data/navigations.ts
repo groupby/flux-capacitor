@@ -6,6 +6,7 @@ export type Action = Actions.ResetRefinements
   | Actions.AddRefinement
   | Actions.ReceiveNavigations
   | Actions.SelectRefinement
+  | Actions.SelectAllRefinements
   | Actions.DeselectRefinement
   | Actions.ReceiveMoreRefinements
   | Actions.ReceiveNavigationSort;
@@ -23,6 +24,7 @@ export default function updateNavigations(state: State = DEFAULTS, action: Actio
     case Actions.RECEIVE_NAVIGATIONS: return receiveNavigations(state, action.payload);
     case Actions.ADD_REFINEMENT: return addRefinement(state, action.payload);
     case Actions.SELECT_REFINEMENT: return selectRefinement(state, action.payload);
+    case Actions.SELECT_ALL_REFINEMENTS: return selectAllRefinements(state, action.payload);
     case Actions.DESELECT_REFINEMENT: return deselectRefinement(state, action.payload);
     case Actions.RECEIVE_MORE_REFINEMENTS: return receiveMoreRefinements(state, action.payload);
     case Actions.RECEIVE_NAVIGATION_SORT: return receiveNavigationSort(state, action.payload);
@@ -74,6 +76,24 @@ export const selectRefinement = (state: State, { navigationId, index: refinement
         [navigationId]: {
           ...state.byId[navigationId],
           selected: state.byId[navigationId].selected.concat(refinementIndex),
+        },
+      },
+    };
+  } else {
+    return state;
+  }
+};
+
+// tslint:disable-next-line max-line-length
+export const selectAllRefinements = (state: State, { navigationId }: Actions.Payload.Navigation.Id) => {
+  if (navigationId) {
+    return {
+      ...state,
+      byId: {
+        ...state.byId,
+        [navigationId]: {
+          ...state.byId[navigationId],
+          selected: state.byId[navigationId].refinements.map((item, index) => index)
         },
       },
     };

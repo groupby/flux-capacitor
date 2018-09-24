@@ -75,6 +75,11 @@ export const isRefinementDeselectedByIndex: Validator<Actions.Payload.Navigation
   msg: 'navigation does not exist or refinement is already selected'
 };
 
+export const isRefinementsCategoryDeselected: Validator<Actions.Payload.Navigation.Id> = {
+  func: ({ navigationId }, state) => Selectors.isRefinementsCategoryDeselected(state, navigationId),
+  msg: 'navigation does not exist or refinements are already selected'
+};
+
 export const isRefinementSelectedByIndex: Validator<Actions.Payload.Navigation.Refinement> = {
   func: ({ navigationId, index }, state) => Selectors.isRefinementSelected(state, navigationId, index),
   msg: 'navigation does not exist or refinement is not selected'

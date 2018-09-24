@@ -26,6 +26,7 @@ export const RECALL_CHANGE_ACTIONS = [
   Actions.UPDATE_QUERY,
   Actions.ADD_REFINEMENT,
   Actions.SELECT_REFINEMENT,
+  Actions.SELECT_ALL_REFINEMENTS,
   Actions.DESELECT_REFINEMENT,
 ];
 
@@ -54,7 +55,8 @@ export const PAST_PURCHASES_SEARCH_CHANGE_ACTIONS = [
 
 export const PERSONALIZATION_CHANGE_ACTIONS = [
   Actions.SELECT_REFINEMENT,
-  Actions.ADD_REFINEMENT,
+  Actions.SELECT_ALL_REFINEMENTS,
+  Actions.ADD_REFINEMENT
 ];
 
 export namespace Middleware {
