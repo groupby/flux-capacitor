@@ -3,6 +3,7 @@ import {
   PageInfo,
   RangeRefinement,
   Record,
+  Refinement,
   Results,
   SelectedRefinement,
   SortType,
@@ -98,14 +99,18 @@ namespace Adapter {
     }) : navigations;
   };
 
-  export const filterExcludedNavigations = (navigations: Navigation[]): Navigation[] => {
+  export const filterExcludedRefinements = (refinements: Refinement[]): Refinement[] => {
+    return refinements.filter((ref: any) => !ref.exclude);
+  };
+
+  export const filterNavigations = (navigations: Navigation[]): Navigation[] => {
     return navigations
       .map((navigation) => {
-        const refinements = navigation.refinements.filter((ref: any) => !ref.exclude);
+        const refinements = filterExcludedRefinements(navigation.refinements);
         return navigation = { ...navigation, refinements };
       })
       .reduce((acc, cur) => {
-        if (cur.refinements.length > 0) acc = [...acc, cur];
+        if (cur.refinements.length > 0 && !cur.ignored) acc = [...acc, cur];
         return acc;
       }, []);
   };
@@ -115,7 +120,7 @@ namespace Adapter {
     let navigations = available.reduce((map, navigation) =>
       Object.assign(map, { [navigation.name]: Adapter.extractNavigation(navigation) }), {});
 
-    const filteredNavigations = filterExcludedNavigations(selected);
+    const filteredNavigations = filterNavigations(selected);
 
     filteredNavigations.forEach((selectedNav) => {
       const availableNav = navigations[selectedNav.name];

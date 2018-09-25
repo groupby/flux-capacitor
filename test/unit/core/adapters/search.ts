@@ -198,20 +198,28 @@ suite('Search Adapter', ({ expect, stub }) => {
     });
   });
 
-  describe('filterExcludedNavigations()', () => {
-    it('should remove excluded navigations', () => {
+  describe('filterExcludedRefinements()', () => {
+    it('should remove excluded refinements', () => {
+      const resultRefinements = [{ value: 'blue', type: 'Value' }, { value: 'red', type: 'Value' }];
+      const refinements: any = [{exclude: true, value: 'orange', type: 'Value'}, ...resultRefinements];
+
+      const finalRefinements = Adapter.filterExcludedRefinements(refinements);
+
+      expect(finalRefinements).to.eql(resultRefinements);
+    });
+  });
+
+  describe('filterNavigations()', () => {
+    it('should remove filtered excluded refinements and ignored navigations', () => {
       const navigations: any = [
         { name: 'Mill_Name', refinements: [{exclude: true, value: 'Under Armour', type: 'Value'}], more: false },
         { name: 'B', refinements: [{}, {exclude: true}] },
-        { name: 'C', refinements: [{}], more: true }
+        { name: 'C', refinements: [{}], more: true, ignored: true }
       ];
 
-      const navigationResult = Adapter.filterExcludedNavigations(navigations);
+      const finalNavigations = Adapter.filterNavigations(navigations);
 
-      expect(navigationResult).to.eql([
-        { name: 'B', refinements: [{}] },
-        { name: 'C', refinements: [{}], more: true }
-      ]);
+      expect(finalNavigations).to.eql([{ name: 'B', refinements: [{}] }]);
     });
   });
 
