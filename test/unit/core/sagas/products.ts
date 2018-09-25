@@ -125,7 +125,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         task.next();
         task.next([{ redirect: true }, undefined]);
         task.next();
-        task.next();
+        expect(task.next().done).to.be.true;
         expect(receiveRedirect).to.be.calledOnce;
       });
 

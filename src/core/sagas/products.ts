@@ -21,7 +21,7 @@ export namespace Tasks {
       const config = yield effects.select(Selectors.config);
 
       if (result.redirect) {
-        yield effects.put(flux.actions.receiveRedirect(result.redirect));
+        return yield effects.put(flux.actions.receiveRedirect(result.redirect));
       }
       if (config.search.redirectSingleResult && result.totalRecordCount === 1) {
         yield effects.take(<any>flux.detailsWithRouting(result.records[0]));
