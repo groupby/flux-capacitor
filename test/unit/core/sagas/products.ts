@@ -85,11 +85,12 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         const receiveProductsAction: any = { c: 'd' };
         const receiveNavigationsAction: any = { e: 'f' };
         const request = { e: 'f' };
-        const response = { id, totalRecordCount: 3 };
+        const response = { id, totalRecordCount: 3, availableNavigation: [] };
         const receiveProducts = spy(() => receiveProductsAction);
         const receiveNavigationSort = spy(() => receiveNavigationsAction);
         // tslint:disable-next-line max-line-length
         const flux: any = { emit, saveState, clients: { bridge }, actions: { receiveProducts, receiveNavigationSort }, config };
+        stub(RecommendationsAdapter, 'sortAndPinNavigations').withArgs(response.availableNavigation, [], config).returns(availableNavigation);
 
         const task = Tasks.fetchProducts(flux, false, action);
 
@@ -100,7 +101,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         expect(task.next([response, undefined]).value).to.eql(effects.select(Selectors.config));
         expect(task.next(config).value).to.eql(effects.put(<any>[receiveProductsAction]));
         expect(emit).to.be.calledWithExactly(Events.BEACON_SEARCH, id);
-        expect(receiveProducts).to.be.calledWithExactly(response);
+        expect(receiveProducts).to.be.calledWithExactly({ ...response, availableNavigation });
         task.next();
         expect(saveState).to.be.calledWith(utils.Routes.SEARCH);
       });

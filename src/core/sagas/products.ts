@@ -27,18 +27,19 @@ export namespace Tasks {
         yield effects.take(<any>flux.detailsWithRouting(result.records[0]));
       } else {
         flux.emit(Events.BEACON_SEARCH, result.id);
-        const actions: any[] = [flux.actions.receiveProducts(result)];
+        const actions: any[] = [];
         if (navigations && !(navigations instanceof Error)) {
-          actions.unshift(flux.actions.receiveNavigationSort(navigations));
+          actions.push(flux.actions.receiveNavigationSort(navigations));
         } else {
           // if inav navigations is invalid then make it an empty array so it does not sort
           navigations = [];
         }
-        result.availableNavigation = RecommendationsAdapter.sortAndPinNavigations(
+        const availableNavigation = RecommendationsAdapter.sortAndPinNavigations(
           result.availableNavigation,
           navigations,
           config
         );
+        actions.push(flux.actions.receiveProducts({ ...result, availableNavigation }));
 
         yield effects.put(<any>actions);
 
