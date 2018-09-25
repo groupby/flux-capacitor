@@ -218,6 +218,24 @@ suite('validators', ({ expect, spy, stub }) => {
     });
   });
 
+  describe('isRefinementsCategoryOrable', () => {
+    const navigationId = 'brand';
+
+    it('should be valid if navigation is orable', () => {
+      const state: any = { a: 'b' };
+      const isNavigtionOrable = stub(Selectors, 'isRefinementsCategoryOrable').returns(true);
+
+      expect(validators.isRefinementsCategoryOrable.func({ navigationId }, state)).to.be.true;
+      expect(isNavigtionOrable).to.be.calledWithExactly(state, navigationId);
+    });
+
+    it('should be invalid if navigation is not orable', () => {
+      stub(Selectors, 'isRefinementsCategoryOrable').returns(false);
+
+      expect(validators.isRefinementsCategoryOrable.func({ navigationId })).to.be.false;
+    });
+  });
+
   describe('isPastPurchaseRefinementDeselectedByIndex', () => {
     const navigationId = 'colour';
     const index = 8;

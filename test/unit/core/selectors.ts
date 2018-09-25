@@ -52,6 +52,21 @@ suite('selectors', ({ expect, stub }) => {
       expect(Selectors.isRefinementDeselected(<any>{}, 'my navigation', 4)).to.be.true;
     });
   });
+
+  describe('isRefinementsCategoryOrable()', () => {
+    it('should return false if navigation is not orable', () => {
+      const navigation = stub(Selectors, 'navigation').returns({ or: false });
+
+      expect(Selectors.isRefinementsCategoryOrable(<any>{}, 'my navigation')).to.not.be.ok;
+    });
+
+    it('should return true if navigation is orable', () => {
+      const navigationStub = stub(Selectors, 'navigation').returns({ or: true });
+
+      expect(Selectors.isRefinementsCategoryOrable(<any>{}, 'my navigation')).to.be.true;
+    });
+  });
+
   describe('rangeNavigationMin()', () => {
     it('should return the min', () => {
       const min = 4;

@@ -625,6 +625,25 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       });
     });
 
+    describe('selectAllRefinements()', () => {
+      const navigationId = 'colour';
+
+      it('should return a batch action with RESET_PAGE', () => {
+        expectAction(ActionCreators.selectAllRefinements(navigationId), Actions.RESET_PAGE);
+      });
+
+      it('should return a batch action with SELECT_ALL_REFINEMENTS', () => {
+        // tslint:disable-next-line max-line-length
+        expectAction(ActionCreators.selectAllRefinements(navigationId), Actions.SELECT_ALL_REFINEMENTS, { navigationId });
+      });
+
+      it('should apply validators to SELECT_ALL_REFINEMENTS', () => {
+        expectValidators(ActionCreators.selectAllRefinements(navigationId), Actions.SELECT_ALL_REFINEMENTS, {
+          payload: validators.isRefinementsCategoryOrable
+        });
+      });
+    });
+
     describe('deselectRefinement()', () => {
       const navigationId = 'colour';
 
