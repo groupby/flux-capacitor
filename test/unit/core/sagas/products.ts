@@ -90,7 +90,8 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         const receiveNavigationSort = spy(() => receiveNavigationsAction);
         // tslint:disable-next-line max-line-length
         const flux: any = { emit, saveState, clients: { bridge }, actions: { receiveProducts, receiveNavigationSort }, config };
-        stub(RecommendationsAdapter, 'sortAndPinNavigations').withArgs(response.availableNavigation, [], config).returns(availableNavigation);
+        stub(RecommendationsAdapter, 'sortAndPinNavigations')
+          .withArgs(response.availableNavigation, [], config).returns(availableNavigation);
 
         const task = Tasks.fetchProducts(flux, false, action);
 
