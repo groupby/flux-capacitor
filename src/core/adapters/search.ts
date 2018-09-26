@@ -113,10 +113,7 @@ namespace Adapter {
         const refinements = filterExcludedRefinements(navigation.refinements);
         return navigation = { ...navigation, refinements };
       })
-      .reduce((acc, cur) => {
-        if (cur.refinements.length > 0 && !cur.ignored) acc = [...acc, cur];
-        return acc;
-      }, []);
+      .filter((nav) => nav.refinements.length > 0 && !nav.ignored);
   };
 
   // tslint:disable-next-line max-line-length

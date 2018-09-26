@@ -201,7 +201,7 @@ suite('Search Adapter', ({ expect, stub }) => {
   describe('filterExcludedRefinements()', () => {
     it('should remove excluded refinements', () => {
       const resultRefinements = [{ value: 'blue', type: 'Value' }, { value: 'red', type: 'Value' }];
-      const refinements: any = [{exclude: true, value: 'orange', type: 'Value'}, ...resultRefinements];
+      const refinements: any = [{ exclude: true, value: 'orange', type: 'Value' }, ...resultRefinements];
 
       const finalRefinements = Adapter.filterExcludedRefinements(refinements);
 
@@ -212,8 +212,8 @@ suite('Search Adapter', ({ expect, stub }) => {
   describe('filterNavigations()', () => {
     it('should remove filtered excluded refinements and ignored navigations', () => {
       const navigations: any = [
-        { name: 'Mill_Name', refinements: [{exclude: true, value: 'Under Armour', type: 'Value'}], more: false },
-        { name: 'B', refinements: [{}, {exclude: true}] },
+        { name: 'Mill_Name', refinements: [{ exclude: true, value: 'Under Armour', type: 'Value' }], more: false },
+        { name: 'B', refinements: [{}, { exclude: true }] },
         { name: 'C', refinements: [{}], more: true, ignored: true }
       ];
 

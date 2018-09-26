@@ -27,7 +27,7 @@ export namespace Tasks {
         yield effects.take(<any>flux.detailsWithRouting(result.records[0]));
       } else {
         flux.emit(Events.BEACON_SEARCH, result.id);
-        const actions: any[] = [];
+        const actions: any = [];
         if (navigations && !(navigations instanceof Error)) {
           actions.push(flux.actions.receiveNavigationSort(navigations));
         } else {
@@ -41,7 +41,7 @@ export namespace Tasks {
         );
         actions.push(flux.actions.receiveProducts({ ...result, availableNavigation }));
 
-        yield effects.put(<any>actions);
+        yield effects.put(actions);
 
         if (!ignoreHistory) {
           flux.saveState(utils.Routes.SEARCH);
