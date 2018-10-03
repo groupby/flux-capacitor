@@ -8,38 +8,42 @@ const ACTION = 'MY_ACTION';
 suite('Action Utils', ({ expect, spy, stub }) => {
 
   describe('createAction()', () => {
-    it('should build an FSA compliant action with empty meta', () => {
-      expect(utils.createAction(ACTION)).to.eql({ type: ACTION, meta: { validator: {} } });
+    it('should build an FSA compliant action with empty meta and data section', () => {
+      expect(utils.createAction({ type: ACTION })).to.eql({ type: ACTION, meta: { validator: {} }, section: 'data' });
     });
 
-    it('should build an FSA compliant action with empty meta and a payload', () => {
+    it('should build an FSA compliant action with empty meta and a payload and data section', () => {
       const payload = { a: 'b' };
 
-      expect(utils.createAction(ACTION, payload)).to.eql({ type: ACTION, payload, meta: { validator: {} } });
+      expect(utils.createAction({ type: ACTION, payload }))
+        .to.eql({ type: ACTION, payload, meta: { validator: {} }, section: 'data' });
     });
 
-    it('should build an FSA compliant action with meta and a payload', () => {
+    it('should build an FSA compliant action with meta and a payload and data section', () => {
       const payload = { a: 'b' };
       const validator = { e: 'f' };
 
-      expect(utils.createAction(ACTION, payload, validator)).to.eql({ type: ACTION, payload, meta: { validator } });
+      expect(utils.createAction({ type: ACTION, payload }, validator))
+        .to.eql({ type: ACTION, payload, meta: { validator }, section: 'data' });
     });
 
-    it('should build an FSA complaint action with payload when payload is null', () => {
+    it('should build an FSA complaint action with payload and data section when payload is null', () => {
       const payload = null;
 
-      expect(utils.createAction(ACTION, payload)).to.eql({ type: ACTION, payload, meta: { validator: {} } });
+      expect(utils.createAction({ type: ACTION, payload }))
+        .to.eql({ type: ACTION, payload, meta: { validator: {} }, section: 'data' });
     });
 
     it('should add error flag if payload is an Error', () => {
       const payload = new Error('request failed');
       const validator = { e: 'f' };
 
-      expect(utils.createAction(ACTION, payload, validator)).to.eql({
+      expect(utils.createAction({ type: ACTION, payload }, validator)).to.eql({
         payload,
         type: ACTION,
         meta: { validator },
-        error: true
+        error: true,
+        section: 'data',
       });
     });
   });

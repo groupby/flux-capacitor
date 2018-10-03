@@ -10,11 +10,11 @@ import PersonalizationAdapter from '../../../../src/core/adapters/personalizatio
 import Events from '../../../../src/core/events';
 import Selectors from '../../../../src/core/selectors';
 import Middleware, {
-  PERSONALIZATION_CHANGE_ACTIONS,
   PAST_PURCHASE_SKU_ACTIONS,
+  PAST_PURCHASES_SEARCH_CHANGE_ACTIONS,
+  PERSONALIZATION_CHANGE_ACTIONS,
   RECALL_CHANGE_ACTIONS,
   SEARCH_CHANGE_ACTIONS,
-  PAST_PURCHASES_SEARCH_CHANGE_ACTIONS,
 } from '../../../../src/core/store/middleware';
 import suite from '../../_suite';
 

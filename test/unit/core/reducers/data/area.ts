@@ -1,4 +1,5 @@
-import area, { DEFAULT_AREA } from '../../../../../src/core/reducers/data/area';
+import area from '../../../../../src/core/reducers/data/area';
+import { DEFAULT_AREA } from '../../../../../src/core/store/data-defaults';
 import suite from '../../../_suite';
 
 suite('area', ({ expect }) => {

@@ -1,7 +1,6 @@
 import Store from '../../store';
+import Defaults from '../../store/data-defaults';
 
-export const DEFAULT_AREA = 'Production';
-
-export default function updateArea(state: string = DEFAULT_AREA): string {
+export default function updateArea(state: string = Defaults.area): string {
   return state;
 }

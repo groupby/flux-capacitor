@@ -14,18 +14,18 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
   let createAction: sinon.SinonStub;
 
   // tslint:disable-next-line max-line-length
-  function expectAction<T>(action: Actions.Action<T, any> | Actions.Action<T, any>[], type: T, payload?: any) {
+  function expectAction<T>(action: Actions.Action<T, any> | Actions.Action<T, any>[], actionArgs: { type: T, payload?: any, section?: Actions.StoreSection }) {
     if (Array.isArray(action)) {
       action.forEach((subAction) => expect(subAction).to.eq(ACTION));
     } else {
       expect(action).to.eq(ACTION);
     }
-    expect(createAction).to.be.calledWith(type, payload);
+    expect(createAction).to.be.calledWith(actionArgs);
   }
 
   // tslint:disable-next-line max-line-length
   function expectValidators<T>(action: Actions.Action<T, any> | Actions.Action<T, any>[], type: T, validator: object) {
-    const args: any[] = [type, sinon.match.any];
+    const args: any[] = [sinon.match.any];
     args.push(sinon.match((actionValidator) => Object.keys(validator)
       .reduce((allValid, key) => {
         if (Array.isArray(validator[key]) !== Array.isArray(actionValidator[key])) {
@@ -45,7 +45,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     it('should accept an options object', () => {
       const options: any = { a: 'b' };
 
-      expectAction(creator(options), expectedActionType, { ...additionalProperties, ...options });
+      expectAction(creator(options), { type: expectedActionType, payload: { ...additionalProperties, ...options } });
     });
   }
 
@@ -56,7 +56,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
     describe('refreshState()', () => {
       it('should return state with type REFRESH_STATE', () => {
-        expectAction(ActionCreators.refreshState(state), Actions.REFRESH_STATE, state);
+        expectAction(ActionCreators.refreshState(state), { type: Actions.REFRESH_STATE, payload: state });
       });
     });
   });
@@ -70,7 +70,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         const action = ActionCreators.fetchMoreRefinements(navigationId);
 
-        expectAction(action, Actions.FETCH_MORE_REFINEMENTS, { navigationId });
+        expectAction(action, { type: Actions.FETCH_MORE_REFINEMENTS, payload: { navigationId } });
       });
     });
 
@@ -78,13 +78,16 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       itShouldAcceptAnOptionsObject(ActionCreators.fetchProducts, Actions.FETCH_PRODUCTS);
 
       it('should return an action', () => {
-        expectAction(ActionCreators.fetchProducts(), Actions.FETCH_PRODUCTS, {});
+        expectAction(ActionCreators.fetchProducts(), { type: Actions.FETCH_PRODUCTS, payload: {} });
       });
     });
 
     describe('fetchProductsWhenHydrated()', () => {
       it('should return an action', () => {
-        expectAction(ActionCreators.fetchProductsWhenHydrated(), Actions.FETCH_PRODUCTS_WHEN_HYDRATED, ACTION);
+        expectAction(
+          ActionCreators.fetchProductsWhenHydrated(),
+          { type: Actions.FETCH_PRODUCTS_WHEN_HYDRATED, payload: ACTION }
+        );
       });
 
       it('should accept an options object', () => {
@@ -94,7 +97,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const action = ActionCreators.fetchProductsWhenHydrated(options);
 
         expect(fetchProducts).to.be.calledWith(options);
-        expectAction(action, Actions.FETCH_PRODUCTS_WHEN_HYDRATED, ACTION);
+        expectAction(action, { type: Actions.FETCH_PRODUCTS_WHEN_HYDRATED, payload: ACTION });
       });
     });
 
@@ -104,7 +107,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const amount = 15;
 
-        expectAction(ActionCreators.fetchMoreProducts(amount), Actions.FETCH_MORE_PRODUCTS, { amount, forward: true });
+        expectAction(
+          ActionCreators.fetchMoreProducts(amount),
+          { type: Actions.FETCH_MORE_PRODUCTS, payload: { amount, forward: true } }
+        );
       });
     });
 
@@ -112,13 +118,16 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       itShouldAcceptAnOptionsObject(ActionCreators.fetchPastPurchases, Actions.FETCH_PAST_PURCHASES);
 
       it('should return an action with an empty object', () => {
-        expectAction(ActionCreators.fetchPastPurchases(), Actions.FETCH_PAST_PURCHASES, {});
+        expectAction(ActionCreators.fetchPastPurchases(), { type: Actions.FETCH_PAST_PURCHASES, payload: {} });
       });
 
       it('should return an action with query', () => {
         const query = 'hat';
 
-        expectAction(ActionCreators.fetchPastPurchases(query), Actions.FETCH_PAST_PURCHASES, { query });
+        expectAction(
+          ActionCreators.fetchPastPurchases(query),
+          { type: Actions.FETCH_PAST_PURCHASES, payload: { query } }
+        );
       });
     });
 
@@ -126,7 +135,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       itShouldAcceptAnOptionsObject(ActionCreators.fetchPastPurchaseProducts, Actions.FETCH_PAST_PURCHASE_PRODUCTS);
 
       it('should return an action with an empty object', () => {
-        expectAction(ActionCreators.fetchPastPurchaseProducts(), Actions.FETCH_PAST_PURCHASE_PRODUCTS, {});
+        expectAction(
+          ActionCreators.fetchPastPurchaseProducts(),
+          { type: Actions.FETCH_PAST_PURCHASE_PRODUCTS, payload: {} }
+        );
       });
     });
 
@@ -142,7 +154,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         expectAction(
           ActionCreators.fetchMorePastPurchaseProducts(50),
-          Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS, { amount, forward: true }
+          { type: Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS, payload: { amount, forward: true } }
         );
       });
 
@@ -152,7 +164,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         expectAction(
           ActionCreators.fetchMorePastPurchaseProducts(50, forward),
-          Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS, { amount, forward }
+          { type: Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS, payload: { amount, forward } }
         );
       });
     });
@@ -164,7 +176,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       );
 
       it('should return an action', () => {
-        expectAction(ActionCreators.fetchPastPurchaseNavigations(), Actions.FETCH_PAST_PURCHASE_NAVIGATIONS, {});
+        expectAction(
+          ActionCreators.fetchPastPurchaseNavigations(),
+          { type: Actions.FETCH_PAST_PURCHASE_NAVIGATIONS, payload: {} }
+        );
       });
     });
 
@@ -174,7 +189,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const query = 'hat';
 
-        expectAction(ActionCreators.fetchSaytPastPurchases(query), Actions.FETCH_SAYT_PAST_PURCHASES, { query });
+        expectAction(
+          ActionCreators.fetchSaytPastPurchases(query),
+          { type: Actions.FETCH_SAYT_PAST_PURCHASES, payload: { query } }
+        );
       });
     });
 
@@ -189,7 +207,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         const action = ActionCreators.fetchAutocompleteSuggestions(query);
 
-        expectAction(action, Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, { query });
+        expectAction(action, { type: Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS, payload: { query } });
       });
 
       it('should apply validators to FETCH_AUTOCOMPLETE_SUGGESTIONS', () => {
@@ -210,15 +228,20 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const query = 'barbie';
         const refinements: any[] = ['a', 'b'];
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.fetchAutocompleteProducts(query, refinements), Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { query, refinements });
+        expectAction(
+          ActionCreators.fetchAutocompleteProducts(query, refinements),
+          { type: Actions.FETCH_AUTOCOMPLETE_PRODUCTS, payload: { query, refinements } }
+        );
       });
 
       it('should default to an empty array of refinements', () => {
         const query = 'barbie';
 
         // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.fetchAutocompleteProducts(query), Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { query, refinements: [] });
+        expectAction(
+          ActionCreators.fetchAutocompleteProducts(query),
+          { type: Actions.FETCH_AUTOCOMPLETE_PRODUCTS, payload: { query, refinements: [] } }
+        );
       });
 
       it('should apply validators to FETCH_AUTOCOMPLETE_PRODUCTS', () => {
@@ -234,7 +257,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const collection = 'products';
 
-        expectAction(ActionCreators.fetchCollectionCount(collection), Actions.FETCH_COLLECTION_COUNT, { collection });
+        expectAction(
+          ActionCreators.fetchCollectionCount(collection),
+          { type: Actions.FETCH_COLLECTION_COUNT, payload: { collection } }
+        );
       });
     });
 
@@ -244,7 +270,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const id = '12345';
 
-        expectAction(ActionCreators.fetchProductDetails(id), Actions.FETCH_PRODUCT_DETAILS, { id });
+        expectAction(ActionCreators.fetchProductDetails(id), { type: Actions.FETCH_PRODUCT_DETAILS, payload: { id } });
       });
     });
 
@@ -255,7 +281,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       );
 
       it('should return an action', () => {
-        expectAction(ActionCreators.fetchRecommendationsProducts(), Actions.FETCH_RECOMMENDATIONS_PRODUCTS, {});
+        expectAction(
+          ActionCreators.fetchRecommendationsProducts(),
+          { type: Actions.FETCH_RECOMMENDATIONS_PRODUCTS, payload: {} }
+        );
       });
     });
 
@@ -264,11 +293,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
       it('should return an action', () => {
         const query = 'query';
-        expectAction(ActionCreators.fetchPastPurchases(query), Actions.FETCH_PAST_PURCHASES, { query });
+        expectAction(
+          ActionCreators.fetchPastPurchases(query),
+          { type: Actions.FETCH_PAST_PURCHASES, payload: { query } }
+        );
       });
 
       it('should return an action when no arguments are given', () => {
-        expectAction(ActionCreators.fetchPastPurchases(), Actions.FETCH_PAST_PURCHASES, {});
+        expectAction(ActionCreators.fetchPastPurchases(), { type: Actions.FETCH_PAST_PURCHASES, payload: {} });
       });
     });
   });
@@ -353,11 +385,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const query = 'rambo';
 
       it('should return a batch action with RESET_PAGE', () => {
-        expectAction(ActionCreators.updateQuery(query), Actions.RESET_PAGE);
+        expectAction(ActionCreators.updateQuery(query), { type: Actions.RESET_PAGE, section: undefined });
       });
 
       it('should return a batch action with UPDATE_QUERY', () => {
-        expectAction(ActionCreators.updateQuery(query), Actions.UPDATE_QUERY, query);
+        expectAction(
+          ActionCreators.updateQuery(query),
+          { type: Actions.UPDATE_QUERY, payload: query, section: undefined }
+        );
       });
 
       it('should apply validators to UPDATE_QUERY', () => {
@@ -381,11 +416,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const field = 'brand';
 
       it('should return a batch action with RESET_PAGE', () => {
-        expectAction(ActionCreators.resetRefinements(field), Actions.RESET_PAGE);
+        expectAction(ActionCreators.resetRefinements(field), { type: Actions.RESET_PAGE, section: undefined });
       });
 
       it('should return a batch action with RESET_REFINEMENTS', () => {
-        expectAction(ActionCreators.resetRefinements(field), Actions.RESET_REFINEMENTS, field);
+        expectAction(
+          ActionCreators.resetRefinements(field),
+          { type: Actions.RESET_REFINEMENTS, payload: field, section: undefined }
+        );
       });
 
       it('should apply validators to RESET_REFINEMENTS', () => {
@@ -401,7 +439,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
     describe('resetPage()', () => {
       it('should return an action', () => {
-        expectAction(ActionCreators.resetPage(), Actions.RESET_PAGE, undefined);
+        expectAction(ActionCreators.resetPage(), { type: Actions.RESET_PAGE, section: undefined });
       });
 
       it('should apply validators to action', () => {
@@ -417,14 +455,20 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const rangeRefinement = { range: true };
 
       it('should return a batch action with RESET_PAGE', () => {
-        expectAction(ActionCreators.addRefinement(navigationId, null), Actions.RESET_PAGE);
+        expectAction(
+          ActionCreators.addRefinement(navigationId, null),
+          { type: Actions.RESET_PAGE, section: undefined }
+        );
       });
 
       it('should return an action with value refinement', () => {
         const value = 'a';
         const refinementPayload = stub(utils, 'refinementPayload').returns(refinement);
 
-        expectAction(ActionCreators.addRefinement(navigationId, value), Actions.ADD_REFINEMENT, refinement);
+        expectAction(
+          ActionCreators.addRefinement(navigationId, value),
+          { type: Actions.ADD_REFINEMENT, payload: refinement }
+        );
         expect(refinementPayload).to.be.calledWithExactly(navigationId, value, null);
       });
 
@@ -433,7 +477,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const high = 4;
         const refinementPayload = stub(utils, 'refinementPayload').returns(refinement);
 
-        expectAction(ActionCreators.addRefinement(navigationId, low, high), Actions.ADD_REFINEMENT, refinement);
+        expectAction(
+          ActionCreators.addRefinement(navigationId, low, high),
+          { type: Actions.ADD_REFINEMENT, payload: refinement }
+        );
         expect(refinementPayload).to.be.calledWithExactly(navigationId, low, high);
       });
 
@@ -505,8 +552,8 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
           ...resetRefinementsReturn,
           ...updateReturn,
         ]);
-        expect(resetRefinements).to.be.calledWithExactly(true);
-        expect(updateQuery).to.be.calledWithExactly(query);
+        expect(resetRefinements).to.be.calledWithExactly(true, Actions.StoreSection.Staging);
+        expect(updateQuery).to.be.calledWithExactly(query, Actions.StoreSection.Staging);
       });
 
       it('should fall back to current query', () => {
@@ -527,8 +574,8 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
           ...resetRefinementsReturn,
           ...updateReturn,
         ]);
-        expect(resetRefinements).to.be.calledWithExactly(true);
-        expect(updateQuery).to.be.calledWithExactly(query);
+        expect(resetRefinements).to.be.calledWithExactly(true, Actions.StoreSection.Staging);
+        expect(updateQuery).to.be.calledWithExactly(query, Actions.StoreSection.Staging);
       });
 
       it('should switch to the default collection if set in the config', () => {
@@ -553,9 +600,9 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
           ...resetRefinementsReturn,
           ...updateReturn,
         ]);
-        expect(resetRefinements).to.be.calledWithExactly(true);
-        expect(selectCollection).to.be.calledWithExactly(defaultCollection);
-        expect(updateQuery).to.be.calledWithExactly(query);
+        expect(resetRefinements).to.be.calledWithExactly(true, Actions.StoreSection.Staging);
+        expect(selectCollection).to.be.calledWithExactly(defaultCollection, Actions.StoreSection.Staging);
+        expect(updateQuery).to.be.calledWithExactly(query, Actions.StoreSection.Staging);
       });
     });
 
@@ -608,14 +655,17 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const navigationId = 'colour';
 
       it('should return a batch action with RESET_PAGE', () => {
-        expectAction(ActionCreators.selectRefinement(navigationId, null), Actions.RESET_PAGE);
+        expectAction(
+          ActionCreators.selectRefinement(navigationId, null),
+          { type: Actions.RESET_PAGE, section: undefined }
+        );
       });
 
       it('should return a batch action with SELECT_REFINEMENT', () => {
         const index = 30;
 
         // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.selectRefinement(navigationId, index), Actions.SELECT_REFINEMENT, { navigationId, index });
+        expectAction(ActionCreators.selectRefinement(navigationId, index), { type: Actions.SELECT_REFINEMENT, payload: { navigationId, index } });
       });
 
       it('should apply validators to SELECT_REFINEMENT', () => {
@@ -629,14 +679,17 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const navigationId = 'colour';
 
       it('should return a batch action with RESET_PAGE', () => {
-        expectAction(ActionCreators.deselectRefinement(navigationId, null), Actions.RESET_PAGE);
+        expectAction(
+          ActionCreators.deselectRefinement(navigationId, null),
+          { type: Actions.RESET_PAGE, section: undefined }
+        );
       });
 
       it('should return a batch action with DESELECT_REFINEMENT', () => {
         const index = 30;
 
         // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.deselectRefinement(navigationId, index), Actions.DESELECT_REFINEMENT, { navigationId, index });
+        expectAction(ActionCreators.deselectRefinement(navigationId, index), { type: Actions.DESELECT_REFINEMENT, payload: { navigationId, index } });
       });
 
       it('should apply validators to DESELECT_REFINEMENT', () => {
@@ -652,7 +705,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const collection = 'products';
 
       it('should return a SELECT_COLLECTION action', () => {
-        expectAction(ActionCreators.selectCollection(collection), Actions.SELECT_COLLECTION, collection);
+        expectAction(
+          ActionCreators.selectCollection(collection),
+          { type: Actions.SELECT_COLLECTION, payload: collection, section: undefined }
+        );
       });
 
       it('should apply validators to SELECT_COLLECTION', () => {
@@ -666,7 +722,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const index = 9;
 
       it('should return a SELECT_SORT action', () => {
-        expectAction(ActionCreators.selectSort(index), Actions.SELECT_SORT, index);
+        expectAction(ActionCreators.selectSort(index), { type: Actions.SELECT_SORT, payload: index });
       });
 
       it('should apply validators to SELECT_SORT', () => {
@@ -680,7 +736,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const pageSize = 20;
 
       it('should return an UPDATE_PAGE_SIZE action', () => {
-        expectAction(ActionCreators.updatePageSize(pageSize), Actions.UPDATE_PAGE_SIZE, pageSize);
+        expectAction(ActionCreators.updatePageSize(pageSize), { type: Actions.UPDATE_PAGE_SIZE, payload: pageSize });
       });
 
       it('should apply validators to UPDATE_PAGE_SIZE', () => {
@@ -694,7 +750,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const page = 3;
 
       it('should return an UPDATE_CURRENT_PAGE action', () => {
-        expectAction(ActionCreators.updateCurrentPage(page), Actions.UPDATE_CURRENT_PAGE, page);
+        expectAction(ActionCreators.updateCurrentPage(page), { type: Actions.UPDATE_CURRENT_PAGE, payload: page });
       });
 
       it('should apply validators to UPDATE_CURRENT_PAGE', () => {
@@ -711,7 +767,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const product: any = { a: 'b' };
 
-        expectAction(ActionCreators.updateDetails(product), Actions.UPDATE_DETAILS, product);
+        expectAction(ActionCreators.updateDetails(product), { type: Actions.UPDATE_DETAILS, payload: product });
       });
     });
 
@@ -724,8 +780,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         expectAction(
           ActionCreators.setDetails(product, responseTemplate),
-          Actions.SET_DETAILS,
-          { data: product, template }
+          { type: Actions.SET_DETAILS, payload: { data: product, template } }
         );
       });
     });
@@ -734,7 +789,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const query = 'pink elephant';
 
       it('should return an UPDATE_AUTOCOMPLETE_QUERY action', () => {
-        expectAction(ActionCreators.updateAutocompleteQuery(query), Actions.UPDATE_AUTOCOMPLETE_QUERY, query);
+        expectAction(
+          ActionCreators.updateAutocompleteQuery(query),
+          { type: Actions.UPDATE_AUTOCOMPLETE_QUERY, payload: query }
+        );
       });
 
       it('should apply validators to UPDATE_AUTOCOMPLETE_QUERY', () => {
@@ -758,10 +816,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         };
         const selector = stub(Selectors, 'config').returns(config);
 
-        expectAction(ActionCreators.updateBiasing(payload)(state), Actions.UPDATE_BIASING, {
-          ...payload,
-          config: config.personalization.realTimeBiasing
-        });
+        expectAction(
+          ActionCreators.updateBiasing(payload)(state),
+          { type: Actions.UPDATE_BIASING, payload: { ...payload, config: config.personalization.realTimeBiasing } }
+        );
 
         expectValidators(ActionCreators.updateBiasing(payload)(state), Actions.UPDATE_BIASING, {
           payload: validators.isValidBias
@@ -772,7 +830,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an UPDATE_SECURED_PAYLOAD action', () => {
         const payload: any = { a: 'b' };
 
-        expectAction(ActionCreators.updateSecuredPayload(payload), Actions.UPDATE_SECURED_PAYLOAD, payload);
+        expectAction(ActionCreators.updateSecuredPayload(payload), { type: Actions.UPDATE_SECURED_PAYLOAD, payload });
       });
     });
   });
@@ -817,7 +875,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         const batchAction = ActionCreators.receiveProducts(results)(state);
 
-        expect(createAction).to.be.calledWith(Actions.RECEIVE_PRODUCTS, results);
+        expect(createAction).to.be.calledWith({ type: Actions.RECEIVE_PRODUCTS, payload: results });
         expect(receiveQuery).to.be.calledWith(query);
         expect(receiveProductRecords).to.be.calledWith(['x', 'x']);
         expect(receiveNavigations).to.be.calledWith(prunedNavigations);
@@ -851,7 +909,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         const batchAction = ActionCreators.receiveProducts(results)(null);
 
-        expect(createAction).to.be.calledWith(Actions.RECEIVE_PRODUCTS, results);
+        expect(createAction).to.be.calledWith({ type: Actions.RECEIVE_PRODUCTS, payload: results });
         expect(batchAction).to.eql(action);
       });
     });
@@ -860,7 +918,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const query: any = { a: 'b' };
 
-        expectAction(ActionCreators.receiveQuery(query), Actions.RECEIVE_QUERY, query);
+        expectAction(ActionCreators.receiveQuery(query), { type: Actions.RECEIVE_QUERY, payload: query });
       });
     });
 
@@ -868,7 +926,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const fetchObj: any = { a: 'b' };
 
-        expectAction(ActionCreators.infiniteScrollRequestState(fetchObj), Actions.RECEIVE_INFINITE_SCROLL, fetchObj);
+        expectAction(
+          ActionCreators.infiniteScrollRequestState(fetchObj),
+          { type: Actions.RECEIVE_INFINITE_SCROLL, payload: fetchObj }
+        );
       });
     });
 
@@ -876,7 +937,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const products: any = ['a', 'b'];
 
-        expectAction(ActionCreators.receiveProductRecords(products), Actions.RECEIVE_PRODUCT_RECORDS, products);
+        expectAction(
+          ActionCreators.receiveProductRecords(products),
+          { type: Actions.RECEIVE_PRODUCT_RECORDS, payload: products }
+        );
       });
     });
 
@@ -887,8 +951,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
           count: 10
         };
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.receiveCollectionCount(count), Actions.RECEIVE_COLLECTION_COUNT, count);
+        expectAction(
+          ActionCreators.receiveCollectionCount(count),
+          { type: Actions.RECEIVE_COLLECTION_COUNT, payload: count }
+        );
       });
     });
 
@@ -896,7 +962,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const navigations: any[] = ['a', 'b'];
 
-        expectAction(ActionCreators.receiveNavigations(navigations), Actions.RECEIVE_NAVIGATIONS, navigations);
+        expectAction(
+          ActionCreators.receiveNavigations(navigations),
+          { type: Actions.RECEIVE_NAVIGATIONS, payload: navigations }
+        );
       });
     });
 
@@ -908,7 +977,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const current = 2;
         const payload = stub(SearchAdapter, 'extractPage').returns(page);
 
-        expectAction(ActionCreators.receivePage(recordCount, current)(state), Actions.RECEIVE_PAGE, page);
+        expectAction(
+          ActionCreators.receivePage(recordCount, current)(state),
+          { type: Actions.RECEIVE_PAGE, payload: page }
+        );
         expect(payload).to.be.calledWithExactly(state, recordCount, current);
       });
     });
@@ -917,7 +989,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const template: any = { a: 'b' };
 
-        expectAction(ActionCreators.receiveTemplate(template), Actions.RECEIVE_TEMPLATE, template);
+        expectAction(
+          ActionCreators.receiveTemplate(template),
+          { type: Actions.RECEIVE_TEMPLATE, payload: template }
+        );
       });
     });
 
@@ -925,7 +1000,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const recordCount = 49;
 
-        expectAction(ActionCreators.receiveRecordCount(recordCount), Actions.RECEIVE_RECORD_COUNT, recordCount);
+        expectAction(
+          ActionCreators.receiveRecordCount(recordCount),
+          { type: Actions.RECEIVE_RECORD_COUNT, payload: recordCount }
+        );
       });
     });
 
@@ -933,7 +1011,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const redirect = 'page.html';
 
-        expectAction(ActionCreators.receiveRedirect(redirect), Actions.RECEIVE_REDIRECT, redirect);
+        expectAction(ActionCreators.receiveRedirect(redirect), { type: Actions.RECEIVE_REDIRECT, payload: redirect });
       });
     });
 
@@ -944,11 +1022,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const selected = [1, 7];
 
         // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.receiveMoreRefinements(navigationId, refinements, selected), Actions.RECEIVE_MORE_REFINEMENTS, {
-          navigationId,
-          refinements,
-          selected
-        });
+        expectAction(
+          ActionCreators.receiveMoreRefinements(navigationId, refinements, selected),
+          { type: Actions.RECEIVE_MORE_REFINEMENTS, payload: { navigationId, refinements, selected } }
+        );
       });
     });
 
@@ -957,7 +1034,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const suggestions: any = { a: 'b' };
 
         // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.receiveAutocompleteSuggestions(suggestions), Actions.RECEIVE_AUTOCOMPLETE_SUGGESTIONS, suggestions);
+        expectAction(ActionCreators.receiveAutocompleteSuggestions(suggestions), { type: Actions.RECEIVE_AUTOCOMPLETE_SUGGESTIONS, payload: suggestions });
       });
     });
 
@@ -967,7 +1044,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const newProds = { c: 'd' };
         const augmentProducts = stub(SearchAdapter, 'augmentProducts').returns(newProds);
 
-        expectAction(ActionCreators.receiveMoreProducts(products)(null), Actions.RECEIVE_MORE_PRODUCTS, newProds);
+        expectAction(
+          ActionCreators.receiveMoreProducts(products)(null),
+          { type: Actions.RECEIVE_MORE_PRODUCTS, payload: newProds }
+        );
         expect(augmentProducts).to.be.calledWithExactly(products);
       });
     });
@@ -987,7 +1067,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         const batchAction = ActionCreators.receiveAutocompleteProducts(response)(null);
 
-        expect(createAction).to.be.calledWith(Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, response);
+        expect(createAction).to.be.calledWith({ type: Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, payload: response });
         expect(receiveAutocompleteProductRecords).to.be.calledWith(products);
         expect(receiveAutocompleteTemplate).to.be.calledWith(template);
         expect(augmentProducts).to.be.calledWithExactly(response);
@@ -1005,7 +1085,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         const batchAction = ActionCreators.receiveAutocompleteProducts(results)(null);
 
-        expect(createAction).to.be.calledWith(Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, results);
+        expect(createAction).to.be.calledWith({ type: Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS, payload: results });
         expect(batchAction).to.eql(action);
       });
     });
@@ -1014,8 +1094,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const template: any = { a: 'b' };
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.receiveAutocompleteTemplate(template), Actions.RECEIVE_AUTOCOMPLETE_TEMPLATE, template);
+        expectAction(
+          ActionCreators.receiveAutocompleteTemplate(template),
+          { type: Actions.RECEIVE_AUTOCOMPLETE_TEMPLATE, payload: template }
+        );
       });
     });
 
@@ -1023,8 +1105,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const products: any[] = ['a', 'b'];
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.receiveAutocompleteProductRecords(products), Actions.RECEIVE_AUTOCOMPLETE_PRODUCT_RECORDS, products);
+        expectAction(
+          ActionCreators.receiveAutocompleteProductRecords(products),
+          { type: Actions.RECEIVE_AUTOCOMPLETE_PRODUCT_RECORDS, payload: products }
+        );
       });
     });
 
@@ -1032,8 +1116,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const products: any[] = ['a', 'b', 'c'];
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.receiveRecommendationsProducts(products), Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, products);
+        expectAction(
+          ActionCreators.receiveRecommendationsProducts(products),
+          { type: Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS, payload: products }
+        );
       });
     });
 
@@ -1041,8 +1127,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const navigations: any[] = ['a', 'b', 'c'];
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.receiveNavigationSort(navigations), Actions.RECEIVE_NAVIGATION_SORT, navigations);
+        expectAction(
+          ActionCreators.receiveNavigationSort(navigations),
+          { type: Actions.RECEIVE_NAVIGATION_SORT, payload: navigations }
+        );
       });
     });
 
@@ -1050,8 +1138,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const products: any[] = ['a', 'b', 'c'];
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.receivePastPurchaseSkus(products), Actions.RECEIVE_PAST_PURCHASE_SKUS, products);
+        expectAction(
+          ActionCreators.receivePastPurchaseSkus(products),
+          { type: Actions.RECEIVE_PAST_PURCHASE_SKUS, payload: products }
+        );
       });
     });
 
@@ -1059,8 +1149,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const products: any[] = ['a', 'b', 'c'];
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.receiveSaytPastPurchases(products), Actions.RECEIVE_SAYT_PAST_PURCHASES, products);
+        expectAction(
+          ActionCreators.receiveSaytPastPurchases(products),
+          { type: Actions.RECEIVE_SAYT_PAST_PURCHASES, payload: products }
+        );
       });
     });
 
@@ -1068,8 +1160,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const products: any[] = ['a', 'b', 'c'];
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.receivePastPurchaseProducts(products), Actions.RECEIVE_PAST_PURCHASE_PRODUCTS, products);
+        expectAction(
+          ActionCreators.receivePastPurchaseProducts(products),
+          { type: Actions.RECEIVE_PAST_PURCHASE_PRODUCTS, payload: products }
+        );
       });
     });
 
@@ -1081,8 +1175,7 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
 
         expectAction(
           ActionCreators.receiveMorePastPurchaseProducts(products)(null),
-          Actions.RECEIVE_MORE_PAST_PURCHASE_PRODUCTS,
-          newProds
+          { type: Actions.RECEIVE_MORE_PAST_PURCHASE_PRODUCTS, payload: newProds }
         );
         expect(augmentProducts).to.be.calledWithExactly(products);
       });
@@ -1092,9 +1185,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const recordCount = 6;
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.receivePastPurchaseCurrentRecordCount(recordCount),
-          Actions.RECEIVE_PAST_PURCHASE_CURRENT_RECORD_COUNT, recordCount);
+        expectAction(
+          ActionCreators.receivePastPurchaseCurrentRecordCount(recordCount),
+          { type: Actions.RECEIVE_PAST_PURCHASE_CURRENT_RECORD_COUNT, payload: recordCount }
+        );
       });
     });
 
@@ -1102,9 +1196,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const recordCount = 6;
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.receivePastPurchaseAllRecordCount(recordCount),
-          Actions.RECEIVE_PAST_PURCHASE_ALL_RECORD_COUNT, recordCount);
+        expectAction(
+          ActionCreators.receivePastPurchaseAllRecordCount(recordCount),
+          { type: Actions.RECEIVE_PAST_PURCHASE_ALL_RECORD_COUNT, payload: recordCount }
+        );
       });
     });
 
@@ -1112,14 +1207,19 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       it('should return an action', () => {
         const refinements: any[] = ['a', 'b', 'c'];
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.receivePastPurchaseRefinements(refinements), Actions.RECEIVE_PAST_PURCHASE_REFINEMENTS, refinements);
+        expectAction(
+          ActionCreators.receivePastPurchaseRefinements(refinements),
+          { type: Actions.RECEIVE_PAST_PURCHASE_REFINEMENTS, payload: refinements }
+        );
       });
     });
 
     describe('resetPastPurchasePage()', () => {
       it('should return an action', () => {
-        expectAction(ActionCreators.resetPastPurchasePage(), Actions.RESET_PAST_PURCHASE_PAGE, undefined);
+        expectAction(
+          ActionCreators.resetPastPurchasePage(),
+          { type: Actions.RESET_PAST_PURCHASE_PAGE, payload: undefined }
+        );
       });
 
       it('should return an action with validators', () => {
@@ -1136,7 +1236,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const current = 2;
         const payload = stub(SearchAdapter, 'extractPage').returns(page);
 
-        expectAction(ActionCreators.receivePastPurchasePage(page)(state), Actions.RECEIVE_PAST_PURCHASE_PAGE, page);
+        expectAction(
+          ActionCreators.receivePastPurchasePage(page)(state),
+          { type: Actions.RECEIVE_PAST_PURCHASE_PAGE, payload: page }
+        );
       });
     });
 
@@ -1145,13 +1248,17 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const index = 2;
 
       it('should return a batch action with RESET_PAST_PURCHASE_PAGE', () => {
-        expectAction(ActionCreators.selectPastPurchaseRefinement(navigationId, index),
-          Actions.RESET_PAST_PURCHASE_PAGE);
+        expectAction(
+          ActionCreators.selectPastPurchaseRefinement(navigationId, index),
+          { type: Actions.RESET_PAST_PURCHASE_PAGE }
+        );
       });
 
       it('should return a batch action with SELECT_PAST_PURCHASE_REFINEMENT', () => {
-        expectAction(ActionCreators.selectPastPurchaseRefinement(navigationId, index),
-          Actions.SELECT_PAST_PURCHASE_REFINEMENT, { navigationId, index });
+        expectAction(
+          ActionCreators.selectPastPurchaseRefinement(navigationId, index),
+          { type: Actions.SELECT_PAST_PURCHASE_REFINEMENT, payload: { navigationId, index } }
+        );
       });
 
       it('should apply validators to SELECT_PAST_PURCHASE_REFINEMENT', () => {
@@ -1204,13 +1311,17 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const obj: any = { navigationId, index };
 
       it('should return a batch action with RESET_PAST_PURCHASE_PAGE', () => {
-        expectAction(ActionCreators.deselectPastPurchaseRefinement(navigationId, index),
-          Actions.RESET_PAST_PURCHASE_PAGE);
+        expectAction(
+          ActionCreators.deselectPastPurchaseRefinement(navigationId, index),
+          { type: Actions.RESET_PAST_PURCHASE_PAGE }
+        );
       });
 
       it('should return a batch action with DESELECT_PAST_PURCHASE_REFINEMENT', () => {
-        expectAction(ActionCreators.deselectPastPurchaseRefinement(navigationId, index),
-          Actions.DESELECT_PAST_PURCHASE_REFINEMENT, obj);
+        expectAction(
+          ActionCreators.deselectPastPurchaseRefinement(navigationId, index),
+          { type: Actions.DESELECT_PAST_PURCHASE_REFINEMENT, payload: obj }
+        );
       });
 
       it('should apply validators to SELECT_PAST_PURCHASE_REFINEMENT', () => {
@@ -1225,12 +1336,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const field = 'color';
 
       it('should return a batch action with RESET_PAST_PURCHASE_PAGE', () => {
-        expectAction(ActionCreators.resetPastPurchaseRefinements(field), Actions.RESET_PAST_PURCHASE_PAGE);
+        expectAction(ActionCreators.resetPastPurchaseRefinements(field), { type: Actions.RESET_PAST_PURCHASE_PAGE });
       });
 
       it('should return a batch action with RESET_PAST_PURCHASE_REFINEMENTS', () => {
-        expectAction(ActionCreators.resetPastPurchaseRefinements(field),
-          Actions.RESET_PAST_PURCHASE_REFINEMENTS, field);
+        expectAction(
+          ActionCreators.resetPastPurchaseRefinements(field),
+          { type: Actions.RESET_PAST_PURCHASE_REFINEMENTS, payload: field }
+        );
       });
 
       it('should apply validators to RESET_PAST_PURCHASE_REFINEMENTS', () => {
@@ -1259,8 +1372,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       });
 
       it('should return a batch action with UPDATE_PAST_PURCHASE_QUERY', () => {
-        expectAction(<any>ActionCreators.updatePastPurchaseQuery(query),
-          Actions.UPDATE_PAST_PURCHASE_QUERY, query);
+        expectAction(
+          <any>ActionCreators.updatePastPurchaseQuery(query),
+          { type: Actions.UPDATE_PAST_PURCHASE_QUERY, payload: query }
+        );
       });
     });
 
@@ -1268,8 +1383,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const size = 6;
 
       it('should return a batch action with UPDATE_PAST_PURCHASE_PAGE_SIZE', () => {
-        expectAction(ActionCreators.updatePastPurchasePageSize(size),
-          Actions.UPDATE_PAST_PURCHASE_PAGE_SIZE, size);
+        expectAction(
+          ActionCreators.updatePastPurchasePageSize(size),
+          { type: Actions.UPDATE_PAST_PURCHASE_PAGE_SIZE, payload: size }
+        );
       });
 
       it('should apply validators to UPDATE_PAST_PURCHASE_PAGE_SIZE', () => {
@@ -1284,8 +1401,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const page = 2;
 
       it('should return a batch action with UPDATE_PAST_PURCHASE_CURRENT_PAGE', () => {
-        expectAction(ActionCreators.updatePastPurchaseCurrentPage(page),
-          Actions.UPDATE_PAST_PURCHASE_CURRENT_PAGE, page);
+        expectAction(
+          ActionCreators.updatePastPurchaseCurrentPage(page),
+          { type: Actions.UPDATE_PAST_PURCHASE_CURRENT_PAGE, payload: page }
+        );
       });
 
       it('should apply validators to UPDATE_PAST_PURCHASE_CURRENT_PAGE', () => {
@@ -1303,12 +1422,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       const index = 4;
 
       it('should return a batch action with RESET_PAST_PURCHASE_PAGE', () => {
-        expectAction(ActionCreators.selectPastPurchasesSort(index), Actions.RESET_PAST_PURCHASE_PAGE);
+        expectAction(ActionCreators.selectPastPurchasesSort(index), { type: Actions.RESET_PAST_PURCHASE_PAGE });
       });
 
       it('should return a batch action with SELECT_PAST_PURCHASE_SORT', () => {
-        expectAction(ActionCreators.selectPastPurchasesSort(index),
-          Actions.SELECT_PAST_PURCHASE_SORT, index);
+        expectAction(
+          ActionCreators.selectPastPurchasesSort(index),
+          { type: Actions.SELECT_PAST_PURCHASE_SORT, payload: index }
+        );
       });
 
       it('should apply validators to SELECT_PAST_PURCHASE_SORT', () => {
@@ -1327,16 +1448,20 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const id = '123';
         const state = { a: 'b' };
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.createComponentState(tagName, id, state), Actions.CREATE_COMPONENT_STATE, { tagName, id, state });
+        expectAction(
+          ActionCreators.createComponentState(tagName, id, state),
+          { type: Actions.CREATE_COMPONENT_STATE, payload: { tagName, id, state } }
+        );
       });
 
       it('should return an action if no state is passed as an argument', () => {
         const tagName = 'my-tag';
         const id = '123';
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.createComponentState(tagName, id), Actions.CREATE_COMPONENT_STATE, { tagName, id, state: {} });
+        expectAction(
+          ActionCreators.createComponentState(tagName, id),
+          { type: Actions.CREATE_COMPONENT_STATE, payload: { tagName, id, state: {} } }
+        );
       });
     });
 
@@ -1345,8 +1470,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         const tagName = 'my-tag';
         const id = '123';
 
-        // tslint:disable-next-line max-line-length
-        expectAction(ActionCreators.removeComponentState(tagName, id), Actions.REMOVE_COMPONENT_STATE, { tagName, id });
+        expectAction(
+          ActionCreators.removeComponentState(tagName, id),
+          { type: Actions.REMOVE_COMPONENT_STATE, payload: { tagName, id } }
+        );
       });
     });
   });
@@ -1355,7 +1482,10 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     it('should return an action', () => {
       const location: any = { a: 'b' };
 
-      expectAction(ActionCreators.updateLocation(location), Actions.UPDATE_LOCATION, location);
+      expectAction(
+        ActionCreators.updateLocation(location),
+        { type: Actions.UPDATE_LOCATION, payload: location }
+      );
     });
   });
 
@@ -1363,13 +1493,13 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     it('should create a REFRESH_STATE action', () => {
       const payload = { a: 'b' };
 
-      expectAction(ActionCreators.refreshState(payload), Actions.REFRESH_STATE, payload);
+      expectAction(ActionCreators.refreshState(payload), { type: Actions.REFRESH_STATE, payload });
     });
   });
 
   describe('startApp()', () => {
     it('should return an action', () => {
-      expectAction(ActionCreators.startApp(), Actions.START_APP);
+      expectAction(ActionCreators.startApp(), { type: Actions.START_APP });
     });
   });
 });

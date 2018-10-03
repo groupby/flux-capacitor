@@ -99,7 +99,7 @@ suite('refinements saga', ({ expect, spy, stub }) => {
 
         task.next();
         expect(task.throw(error).value).to.eql(effects.put(receiveMoreRefinementsAction));
-        expect(action).to.be.calledWith(Actions.RECEIVE_MORE_REFINEMENTS, error);
+        expect(action).to.be.calledWith({ type: Actions.RECEIVE_MORE_REFINEMENTS, payload: error });
         task.next();
       });
     });

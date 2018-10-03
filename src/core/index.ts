@@ -5,10 +5,9 @@ import Configuration from './configuration';
 import Events from './events';
 import Observer from './observer';
 import reducer from './reducers';
-import { DEFAULT_AREA } from './reducers/data/area';
-import { DEFAULT_COLLECTION } from './reducers/data/collections';
 import Selectors from './selectors';
 import Store, { ReduxStore } from './store';
+import { DEFAULT_AREA, DEFAULT_COLLECTION } from './store/data-defaults';
 import { Routes, StoreSections } from './utils';
 
 export {

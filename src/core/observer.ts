@@ -1,8 +1,10 @@
+import * as shallowEquals from 'is-shallow-equal';
 import { Store as ReduxStore } from 'redux';
 import FluxCapacitor from '../flux-capacitor';
 import SearchAdapter from './adapters/search';
 import Events from './events';
 import Store from './store';
+import DefaultStore from './store/data-defaults';
 import * as utils from './utils';
 
 type Observer = (oldState: any, newState: any, path: string) => void;
@@ -226,6 +228,28 @@ namespace Observer {
             });
           }
         })(emit(Events.UI_UPDATED)),
+      staging: ((emitSearchUpdated: Observer, emitDetailsUpdated: Observer, emitPastPurchasesUpdated: Observer) =>
+        (oldState: Store.Data, newState: Store.Data, path: string) => {
+          if (Object.keys(oldState).length !== 0 && Object.keys(newState).length !== 0 && oldState !== newState) {
+            const { details: oldDetails, pastPurchases: oldPastPurchases, ...oldSearch } = oldState;
+            const { details: newDetails, pastPurchases: newPastPurchases, ...newSearch } = newState;
+            const { details: defaultDetails, pastPurchases: defaultPastPurchases, ...defaultSearch } = DefaultStore;
+
+            if (!shallowEquals(newSearch, defaultSearch) && !shallowEquals(oldSearch, newSearch)) {
+              emitSearchUpdated(oldSearch, newSearch, path);
+            }
+            if (newDetails !== defaultDetails && oldDetails !== newDetails) {
+              emitDetailsUpdated(oldDetails, newDetails, path);
+            }
+            if (newPastPurchases !== defaultPastPurchases && oldPastPurchases !== newPastPurchases) {
+              emitPastPurchasesUpdated(oldPastPurchases, newPastPurchases, path);
+            }
+          }
+        })(
+          emit(Events.STAGING_SEARCH_UPDATED),
+          emit(Events.STAGING_DETAILS_UPDATED),
+          emit(Events.STAGING_PAST_PURCHASES_UPDATED)
+        ),
     };
   }
 }

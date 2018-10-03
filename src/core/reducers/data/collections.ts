@@ -1,16 +1,11 @@
 import Actions from '../../actions';
 import Store from '../../store';
+import Defaults from '../../store/data-defaults';
 
 export type Action = Actions.SelectCollection | Actions.ReceiveCollectionCount;
 export type State = Store.Indexed.Selectable<Store.Collection>;
 
-export const DEFAULT_COLLECTION = 'default';
-export const DEFAULTS: State = {
-  allIds: [DEFAULT_COLLECTION],
-  byId: { [DEFAULT_COLLECTION]: { name: DEFAULT_COLLECTION } },
-};
-
-export default function updateCollections(state: State = DEFAULTS, action: Action): State {
+export default function updateCollections(state: State = Defaults.collections, action: Action): State {
   switch (action.type) {
     case Actions.SELECT_COLLECTION: return updateSelected(state, action.payload);
     case Actions.RECEIVE_COLLECTION_COUNT: return receiveCount(state, action.payload);
