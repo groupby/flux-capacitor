@@ -453,6 +453,12 @@ namespace Selectors {
     state.data.present.pastPurchases.navigations.allIds
       .map((id) => Selectors.pastPurchaseNavigation(state, id));
 
+    /**
+     * Returns the available navigations.
+     */
+    export const availablePastPurchaseNavigations = (state: Store.State) =>
+      Selectors.pastPurchaseNavigations(state).filter((nav) => nav.or || !nav.selected.length);
+
   /**
    * Returns all selected refinements for the past purchase page
    */

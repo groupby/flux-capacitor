@@ -792,6 +792,23 @@ suite('selectors', ({ expect, stub }) => {
       });
     });
 
+    describe('availablePastPurchaseNavigations()', () => {
+      it('should return navigations that are or-able or are not selected', () => {
+        const navs = [
+          { or: false, selected: [] },
+          { or: true, selected: [0, 1] },
+          { or: false, selected: [3] },
+          { or: true, selected: [] },
+        ];
+        const pastPurchaseNavigations = stub(Selectors, 'pastPurchaseNavigations').returns(navs);
+
+        const availableNavigations = Selectors.availablePastPurchaseNavigations(state);
+
+        expect(pastPurchaseNavigations).to.be.calledWith(state);
+        expect(availableNavigations).to.eql([navs[0], navs[1], navs[3]]);
+      });
+    });
+
     describe('pastPurchaseSelectedRefinements()', () => {
       it('should call getSelected with allIds and return the result', () => {
         const getSelected = stub(Selectors, 'getSelected').returns(query);
