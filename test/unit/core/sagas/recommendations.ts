@@ -316,7 +316,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const receivePastPurchasePage = spy(() => 3);
         const receivePastPurchaseCurrentRecordCount = spy(() => 4);
         const updatePastPurchasePageSize = spy(() => 3);
-        const receiveTemplate = spy(() => 5)
+        const receiveTemplate = spy(() => 5);
         const saveState = spy();
         const replaceState = spy();
         const actions = {
