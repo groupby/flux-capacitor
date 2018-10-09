@@ -365,6 +365,68 @@ namespace Events {
    * returns true
    */
   export const PERSONALIZATION_BIASING_REHYDRATED = 'personalization:biasing_rehydrated';
+
+  // fetch Events
+  /**
+   * Triggered when more refinements is fetching
+   * returns true
+   */
+  export const FETCHING_MORE_REFINEMENTS = 'fetching:more_refinements';
+  /**
+   * Triggered when more products is fetching
+   * returns true
+   */
+  export const FETCHING_MORE_PRODUCTS = 'fetching:more_products';
+  /**
+   * Triggered when search is fetching
+   * returns true
+   */
+  export const FETCHING_SEARCH = 'fetching:search';
+  /**
+   * Triggered when autocomplete suggestions is fetching
+   * returns true
+   */
+  export const FETCHING_AUTOCOMPLETE_SUGGESTIONS = 'fetching:autocomplete_suggestions';
+  /**
+   * Triggered when autocomplete products is fetching
+   * returns true
+   */
+  export const FETCHING_AUTOCOMPLETE_PRODUCTS = 'fetching:autocomplete_products';
+  /**
+   * Triggered when more details is fetching
+   * returns true
+   */
+  export const FETCHING_DETAILS = 'fetching:details';
+  /**
+   * Triggered when more refinements is done fetching
+   * returns false
+   */
+  export const DONE_MORE_REFINEMENTS = 'done:more_refinements';
+  /**
+   * Triggered when more products is done fetching
+   * returns false
+   */
+  export const DONE_MORE_PRODUCTS = 'done:more_products';
+  /**
+   * Triggered when search is done fetching
+   * returns false
+   */
+  export const DONE_SEARCH = 'done:search';
+  /**
+   * Triggered when autocomplete suggestions is done fetching
+   * returns false
+   */
+  export const DONE_AUTOCOMPLETE_SUGGESTIONS = 'done:autocomplete_suggestions';
+  /**
+   * Triggered when autocomplete products is done fetching
+   * returns false
+   */
+  export const DONE_AUTOCOMPLETE_PRODUCTS = 'done:autocomplete_products';
+  /**
+   * Triggered when more details is done fetching
+   * returns false
+   */
+  export const DONE_DETAILS = 'done:details';
 }
 
 export default Events;

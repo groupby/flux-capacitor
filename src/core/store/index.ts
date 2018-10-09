@@ -174,12 +174,12 @@ namespace Store {
   }
 
   export interface IsFetching {
-    moreRefinements?: boolean;
-    moreProducts?: boolean;
-    search?: boolean;
-    autocompleteSuggestions?: boolean;
-    autocompleteProducts?: boolean;
-    details?: boolean;
+    moreRefinements: boolean;
+    moreProducts: boolean;
+    search: boolean;
+    autocompleteSuggestions: boolean;
+    autocompleteProducts: boolean;
+    details: boolean;
   }
 
   export type Zone = ContentZone | RichContentZone | ProductsZone;

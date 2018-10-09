@@ -1,21 +1,21 @@
 import Actions from '../actions';
 import Store from '../store';
 
-export type Action = Actions.FETCH_MORE_REFINEMENTS
-  | Actions.FETCH_MORE_PRODUCTS
-  | Actions.FETCH_PRODUCTS
-  | Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS
-  | Actions.FETCH_AUTOCOMPLETE_PRODUCTS
-  | Actions.FETCH_PRODUCT_DETAILS;
+export type Action = Actions.FetchMoreRefinements
+  | Actions.ReceiveMoreRefinements
+  | Actions.FetchMoreProducts
+  | Actions.ReceiveMoreProducts
+  | Actions.FetchProductsWithoutHistory
+  | Actions.FetchProducts
+  | Actions.ReceiveProducts
+  | Actions.FetchAutocompleteSuggestions
+  | Actions.ReceiveAutocompleteSuggestions
+  | Actions.FetchAutocompleteProducts
+  | Actions.ReceiveAutocompleteProducts
+  | Actions.FetchProductDetails
+  | Actions.ReceiveDetails;
 
-export type State = {
-  moreRefinements: boolean;
-  moreProducts: boolean;
-  search: boolean;
-  autocompleteSuggestions: boolean;
-  autocompleteProducts: boolean;
-  details: boolean;
-};
+export type State = Store.IsFetching;
 
 export const DEFAULT_FETCHING = {
   moreRefinements: false,
@@ -28,12 +28,27 @@ export const DEFAULT_FETCHING = {
 
 export default function updateIsFetching(state: State = DEFAULT_FETCHING, action: Action): State {
   switch (action.type) {
-    case Actions.FETCH_MORE_REFINEMENTS: return { ...state, moreRefinements: true };
-    case Actions.FETCH_MORE_PRODUCTS: return { ...state, moreProducts: true };
-    case Actions.FETCH_PRODUCTS: return { ...state, search: true };
-    case Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS: return { ...state, autocompleteSuggestions: true };
-    case Actions.FETCH_AUTOCOMPLETE_PRODUCTS: return { ...state, autocompleteProducts: true };
-    case Actions.FETCH_PRODUCT_DETAILS: return { ...state, details: true };
+    case Actions.FETCH_MORE_REFINEMENTS: return startFetching(state, 'moreRefinements');
+    case Actions.RECEIVE_MORE_REFINEMENTS: return doneFetching(state, 'moreRefinements');
+    case Actions.FETCH_MORE_PRODUCTS: return startFetching(state, 'moreProducts');
+    case Actions.RECEIVE_MORE_PRODUCTS: return doneFetching(state, 'moreProducts');
+    case Actions.FETCH_PRODUCTS_WITHOUT_HISTORY:
+    case Actions.FETCH_PRODUCTS:
+      return startFetching(state, 'search');
+    case Actions.RECEIVE_PRODUCTS:
+      return doneFetching(state, 'search');
+    case Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS: return startFetching(state, 'autocompleteSuggestions');
+    case Actions.RECEIVE_AUTOCOMPLETE_SUGGESTIONS: return doneFetching(state, 'autocompleteSuggestions');
+    case Actions.FETCH_AUTOCOMPLETE_PRODUCTS: return startFetching(state, 'autocompleteProducts');
+    case Actions.RECEIVE_AUTOCOMPLETE_PRODUCTS: return doneFetching(state, 'autocompleteProducts');
+    case Actions.FETCH_PRODUCT_DETAILS: return startFetching(state, 'details');
+    case Actions.RECEIVE_DETAILS: return doneFetching(state, 'details');
     default: return state;
   }
 }
+
+export const startFetching = (state: State, section: string) =>
+  ({ ...state, [section]: true });
+
+export const doneFetching = (state: State, section: string) =>
+  ({ ...state, [section]: false });

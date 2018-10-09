@@ -90,6 +90,18 @@ namespace Observer {
       })(emit(moreProductsAddedEvent), emit(productsUpdatedEvent));
   }
 
+  export function fetch(fetchEvent: string, doneEvent: string, emit: Function) {
+    return (oldState, newState, path) => {
+      if (oldState !== newState) {
+        if (newState === true) {
+          emit(fetchEvent)(oldState, newState, path);
+        } else if (newState === false) {
+          emit(doneEvent)(oldState, newState, path);
+        }
+      }
+    };
+  }
+
   export function create(flux: FluxCapacitor) {
     const emit = (event: string) => (_, value: any, path: string) => {
       flux.emit(event, value);
@@ -198,6 +210,15 @@ namespace Observer {
             }
           },
         },
+      },
+      isFetching: {
+        moreRefinements: fetch(Events.FETCHING_MORE_REFINEMENTS, Events.DONE_MORE_REFINEMENTS, emit),
+        moreProducts: fetch(Events.FETCHING_MORE_PRODUCTS, Events.DONE_MORE_PRODUCTS, emit),
+        search: fetch(Events.FETCHING_SEARCH, Events.DONE_SEARCH, emit),
+        // tslint:disable-next-line max-line-length
+        autocompleteSuggestions: fetch(Events.FETCHING_AUTOCOMPLETE_SUGGESTIONS, Events.DONE_AUTOCOMPLETE_SUGGESTIONS, emit),
+        autocompleteProducts: fetch(Events.FETCHING_AUTOCOMPLETE_PRODUCTS, Events.DONE_AUTOCOMPLETE_PRODUCTS, emit),
+        details: fetch(Events.FETCHING_DETAILS, Events.DONE_DETAILS, emit),
       },
       isRunning: (oldState, newState, path) => {
         if (newState) {
