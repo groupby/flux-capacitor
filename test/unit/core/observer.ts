@@ -170,9 +170,16 @@ suite('Observer', ({ expect, spy, stub }) => {
   describe('create()', () => {
     it('should return an observer tree', () => {
       const observers = Observer.create(<any>{});
-      const { ui, isRunning, session, data: { present } } = observers;
+      const { ui, isRunning, isFetching, session, data: { present } } = observers;
 
       expect(observers).to.be.an('object');
+      expect(isFetching).to.be.an('object');
+      expect(isFetching.moreRefinements).to.be.a('function');
+      expect(isFetching.moreProducts).to.be.a('function');
+      expect(isFetching.search).to.be.a('function');
+      expect(isFetching.autocompleteSuggestions).to.be.a('function');
+      expect(isFetching.autocompleteProducts).to.be.a('function');
+      expect(isFetching.details).to.be.a('function');
       expect(isRunning).to.be.a('function');
       expect(ui).to.be.a('function');
       expect(session).to.be.an('object');
@@ -553,6 +560,100 @@ suite('Observer', ({ expect, spy, stub }) => {
               expect(emit).to.not.be.called;
             });
           });
+        });
+      });
+    });
+
+    describe('isFetching', () => {
+      let emit;
+      let observers;
+
+      beforeEach(() => {
+        emit = spy();
+        observers = Observer.create(<any>{ emit });
+      });
+
+      describe('moreRefinements', () => {
+        it('should emit FETCHING_MORE_REFINEMENTS', () => {
+          observers.isFetching.moreRefinements(false, true);
+
+          expect(emit).to.be.calledWithExactly(Events.FETCHING_MORE_REFINEMENTS, true);
+        });
+
+        it('should emit DONE_MORE_REFINEMENTS', () => {
+          observers.isFetching.moreRefinements(true, false);
+
+          expect(emit).to.be.calledWithExactly(Events.DONE_MORE_REFINEMENTS, false);
+        });
+      });
+
+      describe('moreProducts', () => {
+        it('should emit FETCHING_MORE_PRODUCTS', () => {
+          observers.isFetching.moreProducts(false, true);
+
+          expect(emit).to.be.calledWithExactly(Events.FETCHING_MORE_PRODUCTS, true);
+        });
+
+        it('should emit DONE_MORE_PRODUCTS', () => {
+          observers.isFetching.moreProducts(true, false);
+
+          expect(emit).to.be.calledWithExactly(Events.DONE_MORE_PRODUCTS, false);
+        });
+      });
+
+      describe('search', () => {
+        it('should emit FETCHING_SEARCH', () => {
+          observers.isFetching.search(false, true);
+
+          expect(emit).to.be.calledWithExactly(Events.FETCHING_SEARCH, true);
+        });
+
+        it('should emit DONE_SEARCH', () => {
+          observers.isFetching.search(true, false);
+
+          expect(emit).to.be.calledWithExactly(Events.DONE_SEARCH, false);
+        });
+      });
+
+      describe('autocompleteSuggestions', () => {
+        it('should emit FETCHING_AUTOCOMPLETE_SUGGESTIONS', () => {
+          observers.isFetching.autocompleteSuggestions(false, true);
+
+          expect(emit).to.be.calledWithExactly(Events.FETCHING_AUTOCOMPLETE_SUGGESTIONS, true);
+        });
+
+        it('should emit DONE_AUTOCOMPLETE_SUGGESTIONS', () => {
+          observers.isFetching.autocompleteSuggestions(true, false);
+
+          expect(emit).to.be.calledWithExactly(Events.DONE_AUTOCOMPLETE_SUGGESTIONS, false);
+        });
+      });
+
+      describe('autocompleteProducts', () => {
+        it('should emit FETCHING_AUTOCOMPLETE_', () => {
+          observers.isFetching.autocompleteProducts(false, true);
+
+          expect(emit).to.be.calledWithExactly(Events.FETCHING_AUTOCOMPLETE_PRODUCTS, true);
+        });
+
+        it('should emit DONE_AUTOCOMPLETE_PRODUCTS', () => {
+          observers.isFetching.autocompleteProducts(true, false);
+
+          expect(emit).to.be.calledWithExactly(Events.DONE_AUTOCOMPLETE_PRODUCTS, false);
+        });
+      });
+
+      describe('details', () => {
+        it('should emit FETCHING_DETAILS', () => {
+          observers.isFetching.details(false, true);
+
+          expect(emit).to.be.calledWithExactly(Events.FETCHING_DETAILS, true);
+        });
+
+        it('should emit DONE_DETAILS', () => {
+          observers.isFetching.details(true, false);
+
+          expect(emit).to.be.calledWithExactly(Events.DONE_DETAILS, false);
         });
       });
     });
