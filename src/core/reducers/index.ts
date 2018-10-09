@@ -4,6 +4,7 @@ import Actions from '../actions';
 import ConfigAdapter from '../adapters/configuration';
 import Store from '../store';
 import data from './data';
+import isFetching from './is-fetching';
 import isRunning from './is-running';
 import session from './session';
 import ui from './ui';
@@ -34,6 +35,7 @@ export const undoWithoutHistory = (store) => {
 export const rootReducer = (state, action) => {
   return redux.combineReducers<Store.State>({
     isRunning,
+    isFetching,
     session,
     data: undoWithoutHistory(state),
     ui,
