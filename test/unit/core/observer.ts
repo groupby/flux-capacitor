@@ -167,6 +167,47 @@ suite('Observer', ({ expect, spy, stub }) => {
     });
   });
 
+  describe('fetch()', () => {
+    const fetchEvent = 'fetch';
+    const doneEvent = 'done';
+    let emit;
+    let emitStub;
+
+    beforeEach(() => {
+      emitStub = spy();
+      emit = spy(() => emitStub);
+    });
+
+    it('should call emit with fetchEvent', () => {
+      const fetch = Observer.fetch(fetchEvent, doneEvent, emit);
+
+      fetch(false, true, '');
+
+      expect(emit).to.be.calledWithExactly(fetchEvent);
+      expect(emitStub).to.be.calledWithExactly(false, true, '');
+    });
+
+    it('should call emit with doneEvent', () => {
+      const fetch = Observer.fetch(fetchEvent, doneEvent, emit);
+
+      fetch(true, false, '');
+
+      expect(emit).to.be.calledWithExactly(doneEvent);
+      expect(emitStub).to.be.calledWithExactly(true, false, '');
+    });
+
+    it('should do nothing', () => {
+      const fetch = Observer.fetch(fetchEvent, doneEvent, emit);
+
+      fetch(true, null, '');
+      fetch(true, true, '');
+      fetch(false, false, '');
+
+      expect(emit).to.not.be.called;
+      expect(emitStub).to.not.be.called;
+    });
+  });
+
   describe('create()', () => {
     it('should return an observer tree', () => {
       const observers = Observer.create(<any>{});
