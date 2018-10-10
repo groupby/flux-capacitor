@@ -1323,7 +1323,8 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     it('should return an action', () => {
       const template: any = { a: 'b' };
 
-      expectAction(ActionCreators.receivePastPurchasesTemplate(template), Actions.RECEIVE_PAST_PURCHASE_TEMPLATE, template);
+      expectAction(ActionCreators.receivePastPurchasesTemplate(template),
+      Actions.RECEIVE_PAST_PURCHASE_TEMPLATE, template);
     });
   });
 
