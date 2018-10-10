@@ -254,7 +254,7 @@ namespace Store {
       query: string;
       sort?: SelectableList<PastPurchases.PastPurchaseSort>;
       page: Page;
-      template?: Template
+      template?: Template;
     }
 
   export namespace PastPurchases {

@@ -23,7 +23,7 @@ export type Action = Actions.ReceivePastPurchaseSkus
   | Actions.ReceivePastPurchasePage
   | Actions.ReceivePastPurchaseAllRecordCount
   | Actions.ReceivePastPurchaseCurrentRecordCount
-  | Actions.ReceivePastPurchaseTemplate
+  | Actions.ReceivePastPurchaseTemplate;
 export type State = Store.PastPurchase;
 
 export enum SORT_ENUMS {
