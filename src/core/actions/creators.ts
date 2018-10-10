@@ -811,6 +811,10 @@ namespace ActionCreators {
     return createAction(Actions.RECEIVE_PAST_PURCHASE_PRODUCTS, products);
   }
 
+  export function receivePastPurchasesTemplate(template: Store.Template): Actions.ReceivePastPurchaseTemplate {
+    return createAction(Actions.RECEIVE_PAST_PURCHASE_TEMPLATE, template);
+  }
+
   export function receiveMorePastPurchaseProducts(res: Results) {
     return (state: Store.State): Actions.ReceiveMorePastPurchaseProducts => {
       // tslint:disable-next-line max-line-length

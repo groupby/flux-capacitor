@@ -141,7 +141,7 @@ export namespace Tasks {
             ),
             flux.actions.receivePastPurchaseCurrentRecordCount(results.totalRecordCount),
             flux.actions.receivePastPurchaseProducts(SearchAdapter.augmentProducts(results)),
-            flux.actions.receiveTemplate(SearchAdapter.extractTemplate(results.template))
+            flux.actions.receivePastPurchasesTemplate(SearchAdapter.extractTemplate(results.template))
           ]);
           flux.replaceState(utils.Routes.PAST_PURCHASE);
         }

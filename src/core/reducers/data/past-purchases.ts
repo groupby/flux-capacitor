@@ -22,7 +22,8 @@ export type Action = Actions.ReceivePastPurchaseSkus
   | Actions.UpdatePastPurchaseCurrentPage
   | Actions.ReceivePastPurchasePage
   | Actions.ReceivePastPurchaseAllRecordCount
-  | Actions.ReceivePastPurchaseCurrentRecordCount;
+  | Actions.ReceivePastPurchaseCurrentRecordCount
+  | Actions.ReceivePastPurchaseTemplate
 export type State = Store.PastPurchase;
 
 export enum SORT_ENUMS {
@@ -62,6 +63,7 @@ export const DEFAULTS: State = <any>{
     allIds: [],
   },
   page: page.DEFAULTS,
+  template : {}
 };
 
 export default function updatePastPurchases(state: State = DEFAULTS, action: Action): State {
@@ -83,6 +85,7 @@ export default function updatePastPurchases(state: State = DEFAULTS, action: Act
     case Actions.UPDATE_PAST_PURCHASE_CURRENT_PAGE: return applyPageReducer(state, action, page.updateCurrent);
     case Actions.UPDATE_PAST_PURCHASE_PAGE_SIZE: return applyPageReducer(state, action, page.updateSize);
     case Actions.RECEIVE_PAST_PURCHASE_PAGE: return applyPageReducer(state, action, page.receivePage);
+    case Actions.RECEIVE_PAST_PURCHASE_TEMPLATE: return updatePastPurchaseTemplate(state, action);
     default: return state;
   }
   // tslint:enable max-line-length
@@ -173,3 +176,9 @@ export const updatePastPurchaseSortSelected = (state: State, { payload }: Action
     }
   };
 };
+
+export const updatePastPurchaseTemplate = (state: State, { payload }: Actions.ReceivePastPurchaseTemplate) =>
+  ({
+    ...state,
+    template: payload
+  });
