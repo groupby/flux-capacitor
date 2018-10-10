@@ -43,6 +43,7 @@ suite('recommendations', ({ expect, stub }) => {
         current: 1,
         first: 1,
       },
+      template:{}
     };
 
     it('should return state on default', () => {
@@ -129,6 +130,17 @@ suite('recommendations', ({ expect, stub }) => {
           ...state.count,
           currentRecordCount: payload,
         }
+      });
+    });
+
+    it('should overwrite template on RECEIVE_PAST_PURCHASE_TEMPLATE', () => {
+      const payload: any = {a:3};
+
+      const reducer = pastPurchases(state, { type: Actions.RECEIVE_PAST_PURCHASE_TEMPLATE, payload });
+
+      expect(reducer).to.eql({
+        ...state,
+        template: payload
       });
     });
 

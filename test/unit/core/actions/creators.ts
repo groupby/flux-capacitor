@@ -1319,6 +1319,14 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
     });
   });
 
+  describe('receivePastPurchaseTemplate()', () => {
+    it('should return an action', () => {
+      const template: any = { a: 'b' };
+
+      expectAction(ActionCreators.receivePastPurchasesTemplate(template), Actions.RECEIVE_PAST_PURCHASE_TEMPLATE, template);
+    });
+  });
+
   describe('ui action creators', () => {
     describe('createComponentState()', () => {
       it('should return an action', () => {
