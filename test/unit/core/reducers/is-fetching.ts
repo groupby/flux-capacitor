@@ -14,17 +14,17 @@ suite('isFetching', ({ expect }) => {
 
   function expectStartFetching(type: string, section: string) {
     it(`it should set ${section} to true on ${type}`, () => {
-      const reducer = isFetching(state, <any>{ type });
+      const newState = isFetching(state, <any>{ type });
 
-      expect(reducer).to.eql({ ...state, [section]: true });
+      expect(newState).to.eql({ ...state, [section]: true });
     });
   }
 
   function expectDoneFetching(type: string, section: string) {
     it(`it should set ${section} to false on ${type}`, () => {
-      const reducer = isFetching({ ...state, [section]: true }, <any>{ type });
+      const newState = isFetching({ ...state, [section]: true }, <any>{ type });
 
-      expect(reducer).to.eql(state);
+      expect(newState).to.eql(state);
     });
   }
 
@@ -49,9 +49,9 @@ suite('isFetching', ({ expect }) => {
     expectDoneFetching(Actions.RECEIVE_DETAILS, 'details');
 
     it('should return state on default', () => {
-      const reducer = isFetching(state, <any>{});
+      const newState = isFetching(state, <any>{});
 
-      expect(reducer).to.eql(state);
+      expect(newState).to.eql(state);
     });
   });
 });
