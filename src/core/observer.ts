@@ -92,12 +92,8 @@ namespace Observer {
 
   export function fetch(fetchEvent: string, doneEvent: string, emit: Function) {
     return (oldState, newState, path) => {
-      if (oldState !== newState) {
-        if (newState === true) {
-          emit(fetchEvent)(oldState, newState, path);
-        } else if (newState === false) {
-          emit(doneEvent)(oldState, newState, path);
-        }
+      if (oldState !== newState && newState != null) {
+        emit(newState ? fetchEvent : doneEvent)(oldState, newState, path);
       }
     };
   }
