@@ -32,11 +32,9 @@ export default function updateIsFetching(state: State = DEFAULT_FETCHING, action
     case Actions.RECEIVE_MORE_REFINEMENTS: return doneFetching(state, 'moreRefinements');
     case Actions.FETCH_MORE_PRODUCTS: return startFetching(state, 'moreProducts');
     case Actions.RECEIVE_MORE_PRODUCTS: return doneFetching(state, 'moreProducts');
-    case Actions.FETCH_PRODUCTS_WITHOUT_HISTORY:
-    case Actions.FETCH_PRODUCTS:
-      return startFetching(state, 'search');
-    case Actions.RECEIVE_PRODUCTS:
-      return doneFetching(state, 'search');
+    case Actions.FETCH_PRODUCTS_WITHOUT_HISTORY: return startFetching(state, 'search');
+    case Actions.FETCH_PRODUCTS: return startFetching(state, 'search');
+    case Actions.RECEIVE_PRODUCTS: return doneFetching(state, 'search');
     case Actions.FETCH_AUTOCOMPLETE_SUGGESTIONS: return startFetching(state, 'autocompleteSuggestions');
     case Actions.RECEIVE_AUTOCOMPLETE_SUGGESTIONS: return doneFetching(state, 'autocompleteSuggestions');
     case Actions.FETCH_AUTOCOMPLETE_PRODUCTS: return startFetching(state, 'autocompleteProducts');
