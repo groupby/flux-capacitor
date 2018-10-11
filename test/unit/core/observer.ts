@@ -196,11 +196,23 @@ suite('Observer', ({ expect, spy, stub }) => {
       expect(emitStub).to.be.calledWithExactly(true, false, '');
     });
 
-    it('should do nothing', () => {
+    it('should not emit when restoring from history', () => {
       const fetch = Observer.fetch(fetchEvent, doneEvent, emit);
 
       fetch(true, null, '');
+
+      expect(emit).to.not.be.called;
+      expect(emitStub).to.not.be.called;
+    });
+
+    it('should not emit when the value has not changed', () => {
+      const fetch = Observer.fetch(fetchEvent, doneEvent, emit);
+
       fetch(true, true, '');
+
+      expect(emit).to.not.be.called;
+      expect(emitStub).to.not.be.called;
+
       fetch(false, false, '');
 
       expect(emit).to.not.be.called;
