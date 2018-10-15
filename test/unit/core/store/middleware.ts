@@ -47,7 +47,11 @@ suite('Middleware', ({ expect, spy, stub }) => {
       Middleware.thunkEvaluator,
       Middleware.arrayMiddleware,
       batchMiddleware,
-      Middleware.saveStateAnalyzer
+    ];
+    const normalizingMiddleware = [
+      Middleware.thunkEvaluator,
+      Middleware.arrayMiddleware,
+      batchMiddleware
     ];
 
     afterEach(() => delete process.env.NODE_ENV);
@@ -56,26 +60,27 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const flux: any = { __config: {} };
       const composed = ['e', 'f'];
       const simpleMiddleware = ['k', 'l'];
-      const batchMiddleware = ['k', 'l'];
+      const middlewares = ['k', 'l'];
       const thunkMiddleware = ['k', 'l'];
       const idGenerator = stub(Middleware, 'idGenerator').returns(idGeneratorMiddleware);
       const errorHandler = stub(Middleware, 'errorHandler').returns(errorHandlerMiddleware);
       const checkPastPurchaseSkus = stub(Middleware, 'checkPastPurchaseSkus').returns(checkPastPurchaseSkusMiddleware);
       const compose = stub(redux, 'compose').returns(composed);
       const applyMiddleware = stub(redux, 'applyMiddleware');
-      applyMiddleware.withArgs().returns(batchMiddleware);
       applyMiddleware.withArgs(
-        Middleware.thunkEvaluator,
-        Middleware.arrayMiddleware,
-        batchMiddleware,
-        Middleware.validator
-      ).returns(thunkMiddleware);
-      applyMiddleware.withArgs(
-        Middleware.thunkEvaluator,
-        Middleware.arrayMiddleware,
-        batchMiddleware,
-        Middleware.saveStateAnalyzer
-      ).returns(simpleMiddleware);
+        ...normalizingMiddleware,
+        Middleware.injectStateIntoRehydrate,
+        Middleware.validator,
+        idGeneratorMiddleware,
+        idGeneratorMiddleware,
+        idGeneratorMiddleware,
+        idGeneratorMiddleware,
+        errorHandlerMiddleware,
+        checkPastPurchaseSkusMiddleware,
+        sagaMiddleware,
+        Middleware.personalizationAnalyzer,
+        ...normalizingMiddleware,
+      ).returns(middlewares);
 
       const middleware = Middleware.create(sagaMiddleware, flux);
 
@@ -87,9 +92,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
       expect(errorHandler).to.be.calledWithExactly(flux);
       expect(applyMiddleware).to.be.calledWithExactly(...allMiddleware());
       expect(compose).to.be.calledWithExactly(
-        simpleMiddleware,
-        batchMiddleware,
-        thunkMiddleware,
+        middlewares,
         batchStoreEnhancer,
       );
       expect(middleware).to.eql(composed);
@@ -250,91 +253,6 @@ suite('Middleware', ({ expect, spy, stub }) => {
       expect(once).to.not.be.called;
       expect(config).to.be.calledWithExactly(state);
       expect(extract).to.be.calledWithExactly(conf);
-    });
-  });
-
-  describe('saveStateAnalyzer()', () => {
-    it('should pass through other actions', () => {
-      const next = spy();
-      const action = {
-        type: 'NOT_AN_ACTION',
-        payload: {}
-      };
-
-      Middleware.injectStateIntoRehydrate(<any>{ getState: () => null })(next)(action);
-
-      expect(next).to.be.calledWithExactly(action);
-    });
-
-    it('should pass through rehydrates without payload', () => {
-      const next = spy();
-      const getState = spy();
-      const action = {
-        type: 'persist/REHYDRATE',
-      };
-
-      Middleware.injectStateIntoRehydrate(<any>{ getState })(next)(action);
-
-      expect(next).to.be.calledWithExactly(action);
-    });
-
-    it('should pass through rehydrates without biasing', () => {
-      const next = spy();
-      const getState = spy();
-      const action = {
-        type: 'persist/REHYDRATE',
-        payload: {}
-      };
-
-      Middleware.injectStateIntoRehydrate(<any>{ getState })(next)(action);
-
-      expect(next).to.be.calledWithExactly(action);
-    });
-
-    it('should call transformFromBrowser if biasing present', () => {
-      const next = spy();
-      const state = 's';
-      const getState = stub().returns(state);
-      const biasing = 'bias';
-      const converted = 'conf';
-      const action = {
-        type: 'persist/REHYDRATE',
-        payload: {
-          biasing,
-          a: 3,
-          b: 6,
-        }
-      };
-      const transform = stub(PersonalizationAdapter, 'transformFromBrowser').returns(converted);
-
-      Middleware.injectStateIntoRehydrate(<any>{ getState })(next)(action);
-
-      expect(next).to.be.calledWithExactly({
-        ...action,
-        payload: {
-          ...action.payload,
-          biasing: converted
-        }
-      });
-      expect(transform).to.be.calledWithExactly(biasing, state);
-    });
-  });
-
-  describe('saveStateAnalyzer()', () => {
-    it('should add SAVE_STATE action if match found', () => {
-      const batchAction = [{ type: 'a' }, { type: Actions.RECEIVE_PRODUCTS }];
-
-      Middleware.saveStateAnalyzer()(next)(batchAction);
-
-      expect(next).to.be.calledWithExactly([...batchAction, { type: Actions.SAVE_STATE }]);
-    });
-
-    it('should not add SAVE_STATE action if no match found', () => {
-      const batchAction = [{ type: 'a' }, { type: 'b' }];
-
-      Middleware.saveStateAnalyzer()(next)(batchAction);
-
-      expect(next).to.be.calledWithExactly(batchAction);
     });
   });
 

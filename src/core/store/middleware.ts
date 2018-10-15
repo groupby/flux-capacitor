@@ -12,16 +12,6 @@ import Events from '../events';
 import Selectors from '../selectors';
 import * as utils from '../utils';
 
-export const HISTORY_UPDATE_ACTIONS = [
-  Actions.RECEIVE_PRODUCTS,
-  Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS,
-  Actions.RECEIVE_NAVIGATION_SORT,
-  Actions.RECEIVE_COLLECTION_COUNT,
-  Actions.RECEIVE_MORE_REFINEMENTS,
-  Actions.RECEIVE_PAST_PURCHASE_PRODUCTS,
-  Actions.RECEIVE_PAST_PURCHASE_REFINEMENTS,
-];
-
 export const RECALL_CHANGE_ACTIONS = [
   Actions.RESET_REFINEMENTS,
   Actions.UPDATE_QUERY,
@@ -110,22 +100,6 @@ export namespace Middleware {
     };
   }
 
-  export function insertAction(triggerActions: string[], extraAction: Actions.Action) {
-    return (next) => (batchAction) => {
-      const actions = utils.rayify(batchAction);
-      if (actions.some((action) => triggerActions.includes(action.type)) &&
-          !actions.some((action) => action.type === extraAction.type)) {
-        return next([...actions, extraAction]);
-      } else {
-        return next(actions);
-      }
-    };
-  }
-
-  export function saveStateAnalyzer() {
-    return Middleware.insertAction(HISTORY_UPDATE_ACTIONS, { type: Actions.SAVE_STATE });
-  }
-
   export function personalizationAnalyzer({ getState }: Store<any>) {
     return (next) => (action) => {
       if (ConfigurationAdapter.isRealTimeBiasEnabled(Selectors.config(getState())) &&
@@ -175,9 +149,8 @@ export namespace Middleware {
       Middleware.errorHandler(flux),
       Middleware.checkPastPurchaseSkus(flux),
       sagaMiddleware,
-      personalizationAnalyzer,
+      Middleware.personalizationAnalyzer,
       ...normalizingMiddleware,
-      saveStateAnalyzer,
     ];
 
     // tslint:disable-next-line max-line-length
@@ -188,9 +161,7 @@ export namespace Middleware {
     const composeEnhancers = global && global['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;
 
     return composeEnhancers(
-      applyMiddleware(...normalizingMiddleware, saveStateAnalyzer),
       applyMiddleware(...middleware),
-      applyMiddleware(...normalizingMiddleware),
       batchStoreEnhancer,
     );
   }
