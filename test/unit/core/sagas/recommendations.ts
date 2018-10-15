@@ -292,7 +292,6 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         task.next(state);
         expect(composeRequest).to.be.calledWith(state, {
           query: '',
-          refinements: [],
           ...pastPurchaseFromSkus,
           ...override
         });
@@ -342,7 +341,6 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest')
           .withArgs(state, {
             query: '',
-            refinements: [],
             ...pastPurchasesFromSkus,
           })
           .returns(request);
@@ -392,7 +390,6 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest')
           .withArgs(state, {
             query: '',
-            refinements: [],
             ...pastPurchasesFromSkus,
           })
           .returns(request);
