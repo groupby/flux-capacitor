@@ -118,7 +118,6 @@ export namespace Tasks {
         const pastPurchasesFromSkus = Tasks.buildRequestFromSkus(flux, pastPurchaseSkus);
         const request = pastPurchaseProductsRequest.composeRequest(state, {
           query: '',
-          refinements: [],
           ...pastPurchasesFromSkus,
           ...action.payload.request
         });
