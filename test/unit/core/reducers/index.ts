@@ -100,7 +100,7 @@ suite('reducers', ({ expect, stub }) => {
     expect(reducer(oldState, { type: Actions.REFRESH_STATE, payload }).data.past).to.eql([]);
   });
 
-  describe('undo', () => {
+  describe('undo on HISTORY_UPDATE_ACTIONS', () => {
     const state = { a: 'b' };
     const present = { c: 'd' };
 
@@ -109,7 +109,7 @@ suite('reducers', ({ expect, stub }) => {
     });
 
     reducers.HISTORY_UPDATE_ACTIONS.forEach((action) => {
-      it('should add to the past object on HISTORY_UPDATE_ACTIONS', () => {
+      it(`should add to the past object on ${action}`, () => {
         const updated = reducer(<any>{
           session: {
             config: {
