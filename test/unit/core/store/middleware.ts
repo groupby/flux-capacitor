@@ -19,6 +19,7 @@ import Middleware, {
   SAVE_STATE_ACTIONS,
 } from '../../../../src/core/store/middleware';
 import suite from '../../_suite';
+import { handleError } from '../../../../src/core/actions/utils';
 
 suite('Middleware', ({ expect, spy, stub }) => {
   let next: sinon.SinonSpy;
@@ -377,6 +378,15 @@ suite('Middleware', ({ expect, spy, stub }) => {
 
         expect(dispatch).to.be.calledWith({ type: Actions.SAVE_STATE });
       });
+    });
+
+    it('should pass the action forward', () => {
+      const next = spy();
+      const action = { type: 'test' };
+
+      Middleware.saveStateAnalyzer()(<any>{ dispatch: () => null })(next)(action);
+
+      expect(next).to.be.calledWith(action);
     });
   });
 });
