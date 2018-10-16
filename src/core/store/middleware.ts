@@ -20,11 +20,6 @@ export const RECALL_CHANGE_ACTIONS = [
   Actions.DESELECT_REFINEMENT,
 ];
 
-export const PAST_PURCHASE_SKU_ACTIONS = [
-  Actions.FETCH_PAST_PURCHASE_PRODUCTS,
-  Actions.FETCH_SAYT_PAST_PURCHASES,
-];
-
 export const SEARCH_CHANGE_ACTIONS = [
   ...RECALL_CHANGE_ACTIONS,
   Actions.SELECT_COLLECTION,
@@ -43,13 +38,24 @@ export const PAST_PURCHASES_SEARCH_CHANGE_ACTIONS = [
   Actions.UPDATE_PAST_PURCHASE_PAGE_SIZE,
 ];
 
+export const DETAILS_CHANGE_ACTIONS = [
+  Actions.UPDATE_DETAILS,
+];
+
+export const SAVE_STATE_ACTIONS = [
+  ...SEARCH_CHANGE_ACTIONS,
+  ...PAST_PURCHASES_SEARCH_CHANGE_ACTIONS,
+  ...DETAILS_CHANGE_ACTIONS
+];
+
 export const PERSONALIZATION_CHANGE_ACTIONS = [
   Actions.SELECT_REFINEMENT,
   Actions.ADD_REFINEMENT,
 ];
 
-export const DETAILS_CHANGE_ACTIONS = [
-  Actions.UPDATE_DETAILS,
+export const PAST_PURCHASE_SKU_ACTIONS = [
+  Actions.FETCH_PAST_PURCHASE_PRODUCTS,
+  Actions.FETCH_SAYT_PAST_PURCHASES,
 ];
 
 export namespace Middleware {
@@ -132,6 +138,13 @@ export namespace Middleware {
     };
   }
 
+  export function saveStateAnalyzer({ dispatch }: Store<any>) {
+    return (next) => (action) => {
+      console.log('DEBUG: ', action);
+      return next(action);
+    };
+  }
+
   export function create(sagaMiddleware: any, flux: FluxCapacitor): any {
     const normalizingMiddleware = [
       thunkEvaluator,
@@ -140,6 +153,7 @@ export namespace Middleware {
     ];
     const middleware = [
       ...normalizingMiddleware,
+      Middleware.saveStateAnalyzer,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS),
