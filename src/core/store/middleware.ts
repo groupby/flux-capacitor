@@ -122,6 +122,13 @@ export namespace Middleware {
     };
   }
 
+  export function saveStateAnalyzer({ dispatch }: Store<any>) {
+    return (next) => (action) => {
+      console.log('DEBUG: ', action);
+      return next(action);
+    };
+  }
+
   export function thunkEvaluator({ getState }: Store<any>) {
     return (next) => (thunkAction) => {
       if (typeof thunkAction === 'function') {
@@ -135,13 +142,6 @@ export namespace Middleware {
   export function arrayMiddleware() {
     return (next) => (action) => {
       return next(Array.isArray(action) ? batchActions(action) : action);
-    };
-  }
-
-  export function saveStateAnalyzer({ dispatch }: Store<any>) {
-    return (next) => (action) => {
-      console.log('DEBUG: ', action);
-      return next(action);
     };
   }
 
