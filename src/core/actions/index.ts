@@ -217,6 +217,8 @@ namespace Actions {
   export type ShutdownApp = Action<typeof SHUTDOWN_APP>;
   export const REFRESH_STATE = 'REFRESH_STATE';
   export type RefreshState = Action<typeof REFRESH_STATE, any>;
+  export const SAVE_STATE = 'SAVE_STATE';
+  export type SaveState = Action<typeof SAVE_STATE, any>;
   // tslint:enable max-line-length
 }
 

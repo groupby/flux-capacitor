@@ -122,9 +122,9 @@ export namespace Middleware {
     };
   }
 
-  export function saveStateAnalyzer({ dispatch }: Store<any>) {
-    return (next) => (action) => {
-      console.log('DEBUG: ', action);
+  export function saveStateAnalyzer() {
+    return ({ dispatch }: Store<any>) => (next) => (action) => {
+      dispatch({ type: Actions.SAVE_STATE });
       return next(action);
     };
   }

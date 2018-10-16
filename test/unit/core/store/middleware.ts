@@ -16,6 +16,7 @@ import Middleware, {
   PERSONALIZATION_CHANGE_ACTIONS,
   RECALL_CHANGE_ACTIONS,
   SEARCH_CHANGE_ACTIONS,
+  SAVE_STATE_ACTIONS,
 } from '../../../../src/core/store/middleware';
 import suite from '../../_suite';
 
@@ -34,6 +35,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
       Middleware.thunkEvaluator,
       Middleware.arrayMiddleware,
       batchMiddleware,
+      Middleware.saveStateAnalyzer,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       idGeneratorMiddleware,
@@ -69,6 +71,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const applyMiddleware = stub(redux, 'applyMiddleware');
       applyMiddleware.withArgs(
         ...normalizingMiddleware,
+        Middleware.saveStateAnalyzer,
         Middleware.injectStateIntoRehydrate,
         Middleware.validator,
         idGeneratorMiddleware,
@@ -361,6 +364,19 @@ suite('Middleware', ({ expect, spy, stub }) => {
       expect(next).to.be.calledWith([action, returnAction]);
       expect(extract).to.be.calledWithExactly(action, state);
       expect(updateBiasing).to.be.calledWithExactly(extracted);
+    });
+  });
+
+  describe('saveStateAnalyzer()', () => {
+    SAVE_STATE_ACTIONS.forEach((actionName) => {
+      it(`should dispatch a SAVE_STATE action on ${actionName}`, () => {
+        const dispatch = spy();
+        const action = { type: actionName };
+
+        Middleware.saveStateAnalyzer()(<any>{ dispatch })(() => null)(action);
+
+        expect(dispatch).to.be.calledWith({ type: Actions.SAVE_STATE });
+      });
     });
   });
 });
