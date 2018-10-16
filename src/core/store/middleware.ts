@@ -123,8 +123,12 @@ export namespace Middleware {
   }
 
   export function saveStateAnalyzer() {
+    let hasDispatched = false;
     return ({ dispatch }: Store<any>) => (next) => (action) => {
-      dispatch({ type: Actions.SAVE_STATE });
+      if (SAVE_STATE_ACTIONS.includes(action.type) && !hasDispatched) {
+        hasDispatched = true;
+        dispatch({ type: Actions.SAVE_STATE });
+      }
       return next(action);
     };
   }

@@ -1,5 +1,5 @@
 import * as redux from 'redux';
-import { batchActions, batchMiddleware, batchStoreEnhancer } from 'redux-batch-enhancer';
+import { batchActions, batchMiddleware, batchStoreEnhancer, POP, PUSH } from 'redux-batch-enhancer';
 import reduxLogger from 'redux-logger';
 import { ActionCreators as ReduxActionCreators } from 'redux-undo';
 import * as sinon from 'sinon';
@@ -378,6 +378,24 @@ suite('Middleware', ({ expect, spy, stub }) => {
 
         expect(dispatch).to.be.calledWith({ type: Actions.SAVE_STATE });
       });
+    });
+
+    it('should dispatch SAVE_STATE action for the first SAVE_STATE_ACTIONS action in a batch', () => {
+      const dispatchToBeCalled = spy();
+      const unwantedDispatch = spy();
+
+      const saveState = Middleware.saveStateAnalyzer();
+
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: PUSH });
+      saveState(<any>{ dispatch: dispatchToBeCalled })(() => null)({ type: SAVE_STATE_ACTIONS[0] });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: SAVE_STATE_ACTIONS[1] });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: PUSH });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: SAVE_STATE_ACTIONS[0] });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
+
+      expect(dispatchToBeCalled).to.be.calledOnce.and.calledWith({ type: Actions.SAVE_STATE });
+      expect(unwantedDispatch).to.not.be.called;
     });
 
     it('should pass the action forward', () => {
