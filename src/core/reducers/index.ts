@@ -26,7 +26,7 @@ export const undoWithoutHistory = (store) => {
     const historyLength: number = ConfigAdapter.extractHistoryLength(store);
     const config = {
       limit: historyLength + 1,
-      filter: includeAction(HISTORY_UPDATE_ACTIONS),
+      filter: includeAction(Actions.SAVE_STATE),
     };
     const reducer = undoable(data, config);
     const { history, ...newState } = reducer(state, action);

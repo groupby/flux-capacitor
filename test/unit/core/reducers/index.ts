@@ -100,36 +100,29 @@ suite('reducers', ({ expect, stub }) => {
     expect(reducer(oldState, { type: Actions.REFRESH_STATE, payload }).data.past).to.eql([]);
   });
 
-  describe('undo on HISTORY_UPDATE_ACTIONS', () => {
+  it('should advance history on SAVE_STATE', () => {
     const state = { a: 'b' };
     const present = { c: 'd' };
+    stub(dataReducers, 'default').returns(state);
 
-    beforeEach(() => {
-      stub(dataReducers, 'default').returns(state);
-    });
-
-    reducers.HISTORY_UPDATE_ACTIONS.forEach((action) => {
-      it(`should add to the past object on ${action}`, () => {
-        const updated = reducer(<any>{
-          session: {
-            config: {
-              history: {
-                length: 1
-              }
-            }
-          },
-          data: {
-            past: [],
-            present,
-            future: []
+    const updated = reducer(<any>{
+      session: {
+        config: {
+          history: {
+            length: 1
           }
-        }, <any>{ type: action });
+        }
+      },
+      data: {
+        past: [],
+        present,
+        future: []
+      }
+    }, <any>{ type: Actions.SAVE_STATE });
 
-        expect(updated.data.future).to.eql([]);
-        expect(updated.data.past).to.eql([present]);
-        expect(updated.data.present).to.eq(state);
-      });
-    });
+    expect(updated.data.future).to.eql([]);
+    expect(updated.data.past).to.eql([present]);
+    expect(updated.data.present).to.eq(state);
   });
 
   it('should return default', () => {
