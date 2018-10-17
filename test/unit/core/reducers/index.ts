@@ -5,6 +5,7 @@ import suite from '../../_suite';
 
 suite('reducers', ({ expect, stub }) => {
   it('should handle REFRESH_STATE action', () => {
+    const session = { c: 'd' };
     const payload = {
       a: 'b',
       data: {
@@ -27,13 +28,7 @@ suite('reducers', ({ expect, stub }) => {
         },
         future: []
       },
-      session: {
-        config: {
-          history: {
-            length: 5
-          }
-        }
-      }
+      session,
     };
     const newState = {
       a: 'b',
@@ -42,24 +37,17 @@ suite('reducers', ({ expect, stub }) => {
         present: { personalization: { biasing: 'not' }, autocomplete: {}, details: { data: '3' } },
         future: []
       },
-      session: {
-        config: {
-          history: {
-            length: 5
-          }
-        }
-      }
+      session,
     };
 
     expect(reducer(oldState, { type: Actions.REFRESH_STATE, payload })).to.eql(newState);
   });
 
   it('should keep the correct length of past', () => {
-    const historyLength = 2;
     const payload = {
       a: 'b',
       data: {
-        past: [{ a: 1 }, { b: 2 }],
+        past: [{ a: 1 }],
         present: { personalization: { biasing: 2 }, autocomplete: {}, details: { data: 2 } },
         future: []
       }
@@ -69,20 +57,17 @@ suite('reducers', ({ expect, stub }) => {
       data: {
         present: { personalization: { biasing: 1 }, autocomplete: {}, details: { data: 1 } },
       },
-      session: {
-        config: { history: { length: historyLength } }
-      }
     };
 
-    expect(reducer(oldState, { type: Actions.REFRESH_STATE, payload }).data.past.length).to.eq(historyLength);
+    expect(reducer(oldState, { type: Actions.REFRESH_STATE, payload }).data.past.length).to.eq(1);
   });
 
-  it('should keep the correct length of past if history should be 0', () => {
-    const historyLength = 0;
+  it('should preserve session', () => {
+    const session = { c: 'd' };
     const payload = {
       a: 'b',
       data: {
-        past: [],
+        past: [{ a: 1 }],
         present: { personalization: { biasing: 2 }, autocomplete: {}, details: { data: 2 } },
         future: []
       }
@@ -92,12 +77,10 @@ suite('reducers', ({ expect, stub }) => {
       data: {
         present: { personalization: { biasing: 1 }, autocomplete: {}, details: { data: 1 } },
       },
-      session: {
-        config: { history: { length: historyLength } }
-      }
+      session,
     };
 
-    expect(reducer(oldState, { type: Actions.REFRESH_STATE, payload }).data.past).to.eql([]);
+    expect(reducer(oldState, { type: Actions.REFRESH_STATE, payload }).session).to.eq(session);
   });
 
   it('should advance history on SAVE_STATE', () => {

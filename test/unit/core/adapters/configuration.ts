@@ -461,17 +461,6 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     });
   });
 
-  describe('extractHistoryLength()', () => {
-    it('should return 0 if state is during constructuring', () => {
-      expect(Adapter.extractHistoryLength(<any>{})).to.eq(0);
-    });
-
-    it('should return history length after state is stable', () => {
-      const length = 5;
-      expect(Adapter.extractHistoryLength(<any>{ session: { config: { history: { length } } } })).to.eq(length);
-    });
-  });
-
   describe('searchOverrides()', () => {
     it('should return the search overrides function', () => {
       const state: any = { search: { overrides: (r) => r } };

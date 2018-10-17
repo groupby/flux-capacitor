@@ -186,14 +186,6 @@ namespace Adapter {
   export const extractRealTimeBiasingExpiry = (config: Configuration) =>
     config.personalization.realTimeBiasing.expiry;
 
-  export const extractHistoryLength = (state: any) => {
-    if (state && state.session && state.session.config) {
-      return state.session.config.history.length;
-    } else {
-      return 0;
-    }
-  };
-
   export type Override<T = object> = (config: Configuration) => GenericTransformer<T>;
 
   export const searchOverrides: Override<Request> = (config) =>
