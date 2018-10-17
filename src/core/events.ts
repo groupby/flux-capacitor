@@ -261,13 +261,18 @@ namespace Events {
 
   // error events
   /**
+   * Triggered when an action error occurs.
+   * Returns the error.
+   */
+  export const ERROR_ACTION = 'error:action';
+  /**
    * Triggered when a bridge error occurs.
    * Returns the error.
    */
   export const ERROR_BRIDGE = 'error:bridge';
   /**
    * Triggered when a fetch action error occurs.
-   * Returns the action.
+   * Returns the error.
    */
   export const ERROR_FETCH_ACTION = 'error:fetch_action';
 

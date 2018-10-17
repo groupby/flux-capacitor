@@ -84,7 +84,7 @@ export namespace Middleware {
         if (UNDOABLE_ACTIONS.includes(action.type)) {
           return next(ReduxActionCreators.undo());
         } else {
-          flux.emit(Events.ERROR_FETCH_ACTION, action.payload);
+          flux.emit(Events.ERROR_ACTION, action.payload);
           return action.payload;
         }
       } else {

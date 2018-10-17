@@ -164,13 +164,13 @@ suite('Middleware', ({ expect, spy, stub }) => {
   });
 
   describe('errorHandler()', () => {
-    it('should emit ERROR_FETCH_ACTION on error', () => {
+    it('should emit ERROR_ACTION if error is not present in UNDOABLE_ACTIONS', () => {
       const payload = { a: 'b' };
       const emit = spy();
 
       const error = Middleware.errorHandler(<any>{ emit })(null)(() => null)(<any>{ error: true, payload });
 
-      expect(emit).to.be.calledWith(Events.ERROR_FETCH_ACTION, payload);
+      expect(emit).to.be.calledWith(Events.ERROR_ACTION, payload);
       expect(error).to.eq(payload);
     });
 
@@ -193,7 +193,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
 
         expect(next).to.be.calledWith(undoAction);
       });
-    } )
+    });
   });
 
   describe('checkPastPurchaseSkus()', () => {
