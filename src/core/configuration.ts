@@ -64,11 +64,6 @@ interface Configuration {
   network?: Configuration.Bridge;
 
   personalization?: Configuration.Personalization;
-
-  /**
-   * history configuration for saving to state
-   */
-  history?: Configuration.History;
 }
 
 namespace Configuration {
@@ -268,10 +263,6 @@ namespace Configuration {
     productSuggestions: Configuration.Recommendations.ProductSuggestions;
     iNav: Configuration.Recommendations.INav;
     pastPurchases: Configuration.Recommendations.PastPurchases;
-  }
-
-  export interface History {
-    length: number;
   }
 
   export interface Personalization {
