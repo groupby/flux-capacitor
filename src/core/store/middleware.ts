@@ -82,6 +82,7 @@ export namespace Middleware {
     return (store) => (next) => (action) => {
       if (action.error) {
         if (UNDOABLE_ACTIONS.includes(action.type)) {
+          flux.emit(Events.ERROR_FETCH_ACTION, action.payload);
           return next(ReduxActionCreators.undo());
         } else {
           flux.emit(Events.ERROR_ACTION, action.payload);

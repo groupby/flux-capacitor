@@ -184,13 +184,16 @@ suite('Middleware', ({ expect, spy, stub }) => {
 
     UNDOABLE_ACTIONS.forEach((type) => {
       it(`should handle failed ${type} action`, () => {
-        const action = { type, error: true };
         const undoAction = { a: 'b' };
+        const payload = { c: 'd' };
+        const action = { type, error: true, payload };
+        const emit = spy();
         const next = spy();
         stub(ReduxActionCreators, 'undo').returns(undoAction);
 
-        Middleware.errorHandler(<any>{})(null)(next)(action);
+        Middleware.errorHandler(<any>{ emit })(null)(next)(action);
 
+        expect(emit).to.be.calledWith(Events.ERROR_FETCH_ACTION, payload);
         expect(next).to.be.calledWith(undoAction);
       });
     });
