@@ -1,5 +1,6 @@
 import { Record, Results, Template } from 'groupby-api';
 import Actions from '.';
+import PageAdapter from '../adapters/page';
 import SearchAdapter from '../adapters/search';
 import Configuration from '../configuration';
 import Selectors from '../selectors';
@@ -608,7 +609,10 @@ namespace ActionCreators {
             collection: Selectors.collection(state),
             count: res.totalRecordCount
           }),
-          ActionCreators.receivePage(limitedRecordCount)(state),
+          ActionCreators.receivePage(
+            limitedRecordCount,
+            PageAdapter.currentPage(res.originalRequest.skip, res.originalRequest.pageSize)
+          )(state),
           ActionCreators.receiveTemplate(SearchAdapter.extractTemplate(res.template)),
         ];
       });
