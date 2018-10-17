@@ -18,6 +18,7 @@ import Middleware, {
   RECALL_CHANGE_ACTIONS,
   SAVE_STATE_ACTIONS,
   SEARCH_CHANGE_ACTIONS,
+  UNDOABLE_ACTIONS,
 } from '../../../../src/core/store/middleware';
 import suite from '../../_suite';
 
@@ -181,16 +182,18 @@ suite('Middleware', ({ expect, spy, stub }) => {
       expect(next).to.be.calledWith(action);
     });
 
-    it('should handle failed RECEIVE_PRODUCTS action', () => {
-      const action = { type: Actions.RECEIVE_PRODUCTS, error: true };
-      const undoAction = { a: 'b' };
-      const next = spy();
-      stub(ReduxActionCreators, 'undo').returns(undoAction);
+    UNDOABLE_ACTIONS.forEach((type) => {
+      it(`should handle failed ${type} action`, () => {
+        const action = { type, error: true };
+        const undoAction = { a: 'b' };
+        const next = spy();
+        stub(ReduxActionCreators, 'undo').returns(undoAction);
 
-      Middleware.errorHandler(<any>{})(null)(next)(action);
+        Middleware.errorHandler(<any>{})(null)(next)(action);
 
-      expect(next).to.be.calledWith(undoAction);
-    });
+        expect(next).to.be.calledWith(undoAction);
+      });
+    } )
   });
 
   describe('checkPastPurchaseSkus()', () => {

@@ -9,16 +9,6 @@ import isRunning from './is-running';
 import session from './session';
 import ui from './ui';
 
-export const HISTORY_UPDATE_ACTIONS = [
-  Actions.RECEIVE_PRODUCTS,
-  Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS,
-  Actions.RECEIVE_COLLECTION_COUNT,
-  Actions.RECEIVE_NAVIGATION_SORT,
-  Actions.RECEIVE_MORE_REFINEMENTS,
-  Actions.RECEIVE_PAST_PURCHASE_PRODUCTS,
-  Actions.RECEIVE_PAST_PURCHASE_REFINEMENTS,
-];
-
 export type Action = Actions.RefreshState;
 
 export const undoWithoutHistory = (store) => {

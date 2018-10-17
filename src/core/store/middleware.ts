@@ -58,6 +58,16 @@ export const PAST_PURCHASE_SKU_ACTIONS = [
   Actions.FETCH_SAYT_PAST_PURCHASES,
 ];
 
+export const UNDOABLE_ACTIONS = [
+  Actions.RECEIVE_PRODUCTS,
+  Actions.RECEIVE_RECOMMENDATIONS_PRODUCTS,
+  Actions.RECEIVE_COLLECTION_COUNT,
+  Actions.RECEIVE_NAVIGATION_SORT,
+  Actions.RECEIVE_MORE_REFINEMENTS,
+  Actions.RECEIVE_PAST_PURCHASE_PRODUCTS,
+  Actions.RECEIVE_PAST_PURCHASE_REFINEMENTS,
+];
+
 export namespace Middleware {
   export const validator = validatorMiddleware();
 
@@ -71,11 +81,11 @@ export namespace Middleware {
   export function errorHandler(flux: FluxCapacitor): ReduxMiddleware {
     return (store) => (next) => (action) => {
       if (action.error) {
-        switch (action.type) {
-          case Actions.RECEIVE_PRODUCTS: return next(ReduxActionCreators.undo());
-          default:
-            flux.emit(Events.ERROR_FETCH_ACTION, action.payload);
-            return action.payload;
+        if (UNDOABLE_ACTIONS.includes(action.type)) {
+          return next(ReduxActionCreators.undo());
+        } else {
+          flux.emit(Events.ERROR_FETCH_ACTION, action.payload);
+          return action.payload;
         }
       } else {
         return next(action);
