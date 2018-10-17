@@ -1,6 +1,6 @@
 import * as cuid from 'cuid';
 import { applyMiddleware, compose, createStore, Middleware as ReduxMiddleware, Store } from 'redux';
-import { batchActions, batchMiddleware, batchStoreEnhancer } from 'redux-batch-enhancer';
+import { batchActions, batchMiddleware, batchStoreEnhancer, POP, PUSH } from 'redux-batch-enhancer';
 import { ActionCreators as ReduxActionCreators } from 'redux-undo';
 import * as validatorMiddleware from 'redux-validator';
 import FluxCapacitor from '../../flux-capacitor';
@@ -124,11 +124,21 @@ export namespace Middleware {
 
   export function saveStateAnalyzer() {
     let hasDispatched = false;
+    let batchLevel = 0;
     return ({ dispatch }: Store<any>) => (next) => (action) => {
-      if (SAVE_STATE_ACTIONS.includes(action.type) && !hasDispatched) {
+      if (action.type === PUSH) {
+        batchLevel++;
+      } else if (action.type === POP) {
+        batchLevel--;
+      } else if (SAVE_STATE_ACTIONS.includes(action.type) && !hasDispatched) {
         hasDispatched = true;
         dispatch({ type: Actions.SAVE_STATE });
       }
+
+      if (batchLevel === 0) {
+        hasDispatched = false;
+      }
+
       return next(action);
     };
   }

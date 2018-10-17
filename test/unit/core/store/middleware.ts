@@ -5,6 +5,7 @@ import { ActionCreators as ReduxActionCreators } from 'redux-undo';
 import * as sinon from 'sinon';
 import Actions from '../../../../src/core/actions';
 import ActionCreators from '../../../../src/core/actions/creators';
+import { handleError } from '../../../../src/core/actions/utils';
 import ConfigurationAdapter from '../../../../src/core/adapters/configuration';
 import PersonalizationAdapter from '../../../../src/core/adapters/personalization';
 import Events from '../../../../src/core/events';
@@ -15,11 +16,10 @@ import Middleware, {
   PAST_PURCHASES_SEARCH_CHANGE_ACTIONS,
   PERSONALIZATION_CHANGE_ACTIONS,
   RECALL_CHANGE_ACTIONS,
-  SEARCH_CHANGE_ACTIONS,
   SAVE_STATE_ACTIONS,
+  SEARCH_CHANGE_ACTIONS,
 } from '../../../../src/core/store/middleware';
 import suite from '../../_suite';
-import { handleError } from '../../../../src/core/actions/utils';
 
 suite('Middleware', ({ expect, spy, stub }) => {
   let next: sinon.SinonSpy;
@@ -380,7 +380,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
       });
     });
 
-    it('should dispatch SAVE_STATE action for the first SAVE_STATE_ACTIONS action in a batch', () => {
+    it('should dispatch SAVE_STATE action for the first SAVE_STATE_ACTIONS action in every batch', () => {
       const dispatchToBeCalled = spy();
       const unwantedDispatch = spy();
 
@@ -390,12 +390,63 @@ suite('Middleware', ({ expect, spy, stub }) => {
       saveState(<any>{ dispatch: dispatchToBeCalled })(() => null)({ type: SAVE_STATE_ACTIONS[0] });
       saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: SAVE_STATE_ACTIONS[1] });
       saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: PUSH });
-      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: SAVE_STATE_ACTIONS[0] });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: SAVE_STATE_ACTIONS[2] });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: PUSH });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: 'noop'  });
+      saveState(<any>{ dispatch: dispatchToBeCalled })(() => null)({ type: SAVE_STATE_ACTIONS[3] });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: SAVE_STATE_ACTIONS[4] });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
+
+      expect(dispatchToBeCalled).to.be.calledTwice.and.calledWith({ type: Actions.SAVE_STATE });
+      expect(unwantedDispatch).to.not.be.called;
+    });
+
+    it('should dispatch SAVE_STATE action for the first SAVE_STATE_ACTIONS action in a nested batch', () => {
+      const dispatchToBeCalled = spy();
+      const unwantedDispatch = spy();
+
+      const saveState = Middleware.saveStateAnalyzer();
+
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: PUSH });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: 'noop' });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: PUSH });
+      saveState(<any>{ dispatch: dispatchToBeCalled })(() => null)({ type: SAVE_STATE_ACTIONS[3] });
       saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
       saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
 
       expect(dispatchToBeCalled).to.be.calledOnce.and.calledWith({ type: Actions.SAVE_STATE });
       expect(unwantedDispatch).to.not.be.called;
+    });
+
+    // tslint:disable-next-line max-line-length
+    it('should dispatch SAVE_STATE action for the first SAVE_STATE_ACTIONS action in a batch and for all SAVE_STATE_ACTIONS not in a batch', () => {
+      const dispatchToBeCalled = spy();
+      const unwantedDispatch = spy();
+
+      const saveState = Middleware.saveStateAnalyzer();
+
+      saveState(<any>{ dispatch: dispatchToBeCalled })(() => null)({ type: SAVE_STATE_ACTIONS[0] });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: PUSH });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: 'noop'  });
+      saveState(<any>{ dispatch: dispatchToBeCalled })(() => null)({ type: SAVE_STATE_ACTIONS[0] });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: SAVE_STATE_ACTIONS[1] });
+      saveState(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
+      saveState(<any>{ dispatch: dispatchToBeCalled })(() => null)({ type: SAVE_STATE_ACTIONS[0] });
+
+      expect(dispatchToBeCalled).to.have.calledThrice.and.calledWith({ type: Actions.SAVE_STATE });
+      expect(unwantedDispatch).to.not.be.called;
+    });
+
+    it('should not dispatch SAVE_STATE action', () => {
+      const dispatch = spy();
+
+      const saveState = Middleware.saveStateAnalyzer();
+
+      saveState(<any>{ dispatch })(() => null)({ type: 'noop' });
+
+      expect(dispatch).to.not.be.called;
     });
 
     it('should pass the action forward', () => {
