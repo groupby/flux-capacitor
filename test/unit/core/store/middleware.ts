@@ -24,8 +24,13 @@ import suite from '../../_suite';
 
 suite('Middleware', ({ expect, spy, stub }) => {
   let next: sinon.SinonSpy;
+  let saveStateAnalyzer;
 
-  beforeEach(() => next = spy());
+  beforeEach(() => {
+    next = spy();
+    saveStateAnalyzer = Middleware.saveStateAnalyzer();
+    stub(Middleware, 'saveStateAnalyzer').returns(saveStateAnalyzer);
+  });
 
   describe('create()', () => {
     const sagaMiddleware = { a: 'b' };
@@ -37,7 +42,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
       Middleware.thunkEvaluator,
       Middleware.arrayMiddleware,
       batchMiddleware,
-      Middleware.saveStateAnalyzer,
+      saveStateAnalyzer,
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       idGeneratorMiddleware,
@@ -73,7 +78,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const applyMiddleware = stub(redux, 'applyMiddleware');
       applyMiddleware.withArgs(
         ...normalizingMiddleware,
-        Middleware.saveStateAnalyzer,
+        saveStateAnalyzer,
         Middleware.injectStateIntoRehydrate,
         Middleware.validator,
         idGeneratorMiddleware,

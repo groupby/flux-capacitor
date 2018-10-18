@@ -178,7 +178,7 @@ export namespace Middleware {
     ];
     const middleware = [
       ...normalizingMiddleware,
-      Middleware.saveStateAnalyzer,
+      Middleware.saveStateAnalyzer(),
       Middleware.injectStateIntoRehydrate,
       Middleware.validator,
       Middleware.idGenerator('recallId', RECALL_CHANGE_ACTIONS),
