@@ -375,6 +375,10 @@ suite('Middleware', ({ expect, spy, stub }) => {
   });
 
   describe('saveStateAnalyzer()', () => {
+    function sequentiallyCallSaveStateAnalyzer(...callArgs: Array<any[]>) {
+      callArgs.forEach(([dispatch, type]) => saveStateAnalyzer(<any>{ dispatch })(() => null)({ type }));
+    }
+
     SAVE_STATE_ACTIONS.forEach((actionName) => {
       it(`should dispatch a SAVE_STATE action on ${actionName}`, () => {
         const dispatch = spy();
@@ -390,18 +394,20 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const dispatchToBeCalled = spy();
       const unwantedDispatch = spy();
 
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: PUSH });
-      saveStateAnalyzer(<any>{ dispatch: dispatchToBeCalled })(() => null)({ type: SAVE_STATE_ACTIONS[0] });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: SAVE_STATE_ACTIONS[1] });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: PUSH });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: SAVE_STATE_ACTIONS[2] });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: PUSH });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: 'noop'  });
-      saveStateAnalyzer(<any>{ dispatch: dispatchToBeCalled })(() => null)({ type: SAVE_STATE_ACTIONS[3] });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: SAVE_STATE_ACTIONS[4] });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
+      sequentiallyCallSaveStateAnalyzer(
+        [unwantedDispatch, PUSH],
+        [dispatchToBeCalled, SAVE_STATE_ACTIONS[0]],
+        [unwantedDispatch, SAVE_STATE_ACTIONS[1]],
+        [unwantedDispatch, PUSH],
+        [unwantedDispatch, SAVE_STATE_ACTIONS[2]],
+        [unwantedDispatch, POP],
+        [unwantedDispatch, POP],
+        [unwantedDispatch, PUSH],
+        [unwantedDispatch, 'noop'],
+        [dispatchToBeCalled, SAVE_STATE_ACTIONS[3]],
+        [unwantedDispatch, SAVE_STATE_ACTIONS[4]],
+        [unwantedDispatch, POP]
+      );
 
       expect(dispatchToBeCalled).to.be.calledTwice.and.calledWith({ type: Actions.SAVE_STATE });
       expect(unwantedDispatch).to.not.be.called;
@@ -411,12 +417,14 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const dispatchToBeCalled = spy();
       const unwantedDispatch = spy();
 
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: PUSH });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: 'noop' });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: PUSH });
-      saveStateAnalyzer(<any>{ dispatch: dispatchToBeCalled })(() => null)({ type: SAVE_STATE_ACTIONS[3] });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
+      sequentiallyCallSaveStateAnalyzer(
+        [unwantedDispatch, PUSH],
+        [unwantedDispatch, 'noop'],
+        [unwantedDispatch, PUSH],
+        [dispatchToBeCalled, SAVE_STATE_ACTIONS[3]],
+        [unwantedDispatch, POP],
+        [unwantedDispatch, POP]
+      );
 
       expect(dispatchToBeCalled).to.be.calledOnce.and.calledWith({ type: Actions.SAVE_STATE });
       expect(unwantedDispatch).to.not.be.called;
@@ -427,13 +435,15 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const dispatchToBeCalled = spy();
       const unwantedDispatch = spy();
 
-      saveStateAnalyzer(<any>{ dispatch: dispatchToBeCalled })(() => null)({ type: SAVE_STATE_ACTIONS[0] });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: PUSH });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: 'noop'  });
-      saveStateAnalyzer(<any>{ dispatch: dispatchToBeCalled })(() => null)({ type: SAVE_STATE_ACTIONS[0] });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: SAVE_STATE_ACTIONS[1] });
-      saveStateAnalyzer(<any>{ dispatch: unwantedDispatch })(() => null)({ type: POP });
-      saveStateAnalyzer(<any>{ dispatch: dispatchToBeCalled })(() => null)({ type: SAVE_STATE_ACTIONS[0] });
+      sequentiallyCallSaveStateAnalyzer(
+        [dispatchToBeCalled, SAVE_STATE_ACTIONS[0]],
+        [unwantedDispatch, PUSH],
+        [unwantedDispatch, 'noop' ],
+        [dispatchToBeCalled, SAVE_STATE_ACTIONS[0]],
+        [unwantedDispatch, SAVE_STATE_ACTIONS[1]],
+        [unwantedDispatch, POP],
+        [dispatchToBeCalled, SAVE_STATE_ACTIONS[0]]
+      );
 
       expect(dispatchToBeCalled).to.have.calledThrice.and.calledWith({ type: Actions.SAVE_STATE });
       expect(unwantedDispatch).to.not.be.called;
