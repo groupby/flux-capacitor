@@ -274,6 +274,7 @@ suite('Observer', ({ expect, spy, stub }) => {
       expect(present.pastPurchases.count).to.be.a('function');
       expect(present.pastPurchases.navigations).to.be.a('function');
       expect(present.pastPurchases.sort).to.be.a('function');
+      expect(present.pastPurchases.template).to.be.a('function');
     });
 
     describe('data', () => {

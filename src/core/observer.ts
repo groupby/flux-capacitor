@@ -184,6 +184,7 @@ namespace Observer {
               emit
             ),
             sort: emit(Events.PAST_PURCHASE_SORT_UPDATED),
+            template: emit(Events.PAST_PURCHASE_TEMPLATE_UPDATED),
           },
 
           infiniteScroll: emit(Events.INFINITE_SCROLL_UPDATED),

@@ -811,7 +811,7 @@ namespace ActionCreators {
     return createAction(Actions.RECEIVE_PAST_PURCHASE_PRODUCTS, products);
   }
 
-  export function receivePastPurchasesTemplate(template: Store.Template): Actions.ReceivePastPurchaseTemplate {
+  export function receivePastPurchaseTemplate(template: Store.Template): Actions.ReceivePastPurchaseTemplate {
     return createAction(Actions.RECEIVE_PAST_PURCHASE_TEMPLATE, template);
   }
 

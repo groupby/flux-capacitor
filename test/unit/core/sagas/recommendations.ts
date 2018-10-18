@@ -316,7 +316,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const receivePastPurchasePage = spy(() => 3);
         const receivePastPurchaseCurrentRecordCount = spy(() => 4);
         const updatePastPurchasePageSize = spy(() => 3);
-        const receivePastPurchasesTemplate = spy(() => 5);
+        const receivePastPurchaseTemplate = spy(() => 5);
         const saveState = spy();
         const replaceState = spy();
         const actions = {
@@ -324,7 +324,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
           receivePastPurchaseProducts,
           receivePastPurchaseCurrentRecordCount,
           updatePastPurchasePageSize,
-          receivePastPurchasesTemplate
+          receivePastPurchaseTemplate
         };
         const flux: any = { actions, saveState, store: { getState }, replaceState };
         const result = [1, 2, 3];
@@ -358,7 +358,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
           receivePastPurchasePage(),
           receivePastPurchaseCurrentRecordCount(),
           receivePastPurchaseProducts(),
-          receivePastPurchasesTemplate()
+          receivePastPurchaseTemplate()
         ]));
         task.next();
 
