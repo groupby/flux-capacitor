@@ -193,7 +193,6 @@ suite('Middleware', ({ expect, spy, stub }) => {
         const payload = { c: 'd' };
         const action = { type, error: true, payload };
         const emit = spy();
-        const next = spy();
         stub(ReduxActionCreators, 'undo').returns(undoAction);
 
         Middleware.errorHandler(<any>{ emit })(null)(next)(action);
@@ -319,7 +318,6 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const action = { a: 'b', type: 'NOT_VALID_ACTION' };
       const config = stub(Selectors, 'config').returns(conf);
       const enabled = stub(ConfigurationAdapter, 'isRealTimeBiasEnabled').returns(true);
-      const next = spy();
       const getState = spy(() => state);
 
       Middleware.personalizationAnalyzer(<any>{ getState })(next)(action);
@@ -334,7 +332,6 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const action = { a: 'b', type: PERSONALIZATION_CHANGE_ACTIONS[0] };
       const config = stub(Selectors, 'config').returns(conf);
       const enabled = stub(ConfigurationAdapter, 'isRealTimeBiasEnabled').returns(false);
-      const next = spy();
       const getState = spy(() => state);
 
       Middleware.personalizationAnalyzer(<any>{ getState })(next)(action);
@@ -349,7 +346,6 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const config = stub(Selectors, 'config').returns(conf);
       const updateBiasing = stub(ActionCreators, 'updateBiasing').returns(returnAction);
       const extract = stub(PersonalizationAdapter, 'extractBias').returns(null);
-      const next = spy();
       const getState = spy(() => state);
       stub(ConfigurationAdapter, 'isRealTimeBiasEnabled').returns(true);
 
@@ -367,7 +363,6 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const config = stub(Selectors, 'config').returns(conf);
       const updateBiasing = stub(ActionCreators, 'updateBiasing').returns(returnAction);
       const extract = stub(PersonalizationAdapter, 'extractBias').returns(extracted);
-      const next = spy();
       const getState = spy(() => state);
       stub(ConfigurationAdapter, 'isRealTimeBiasEnabled').returns(true);
 
@@ -453,7 +448,6 @@ suite('Middleware', ({ expect, spy, stub }) => {
     });
 
     it('should pass the action forward', () => {
-      const next = spy();
       const action = { type: 'test' };
 
       saveStateAnalyzer(<any>{ dispatch: () => null })(next)(action);
