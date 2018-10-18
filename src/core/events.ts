@@ -253,7 +253,7 @@ namespace Events {
    */
   export const PAST_PURCHASE_SELECTED_REFINEMENTS_UPDATED = 'past_purchase_selected_refinements_updated'; // post
 
-    /**
+  /**
    * Triggered when past purchase template is updated.
    * Returns the past purchase template
    */
