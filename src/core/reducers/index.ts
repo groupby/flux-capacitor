@@ -46,7 +46,7 @@ export const updateState = (state: Store.State, { payload }: Actions.RefreshStat
     ...payload,
     session: state.session,
     data: {
-      past: [payload.data.present],
+      past: [],
       present: {
         ...payload.data.present,
         personalization: {

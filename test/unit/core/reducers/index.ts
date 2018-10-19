@@ -20,7 +20,7 @@ suite('reducers', ({ expect, stub }) => {
     };
     const oldState = <any>{
       data: {
-        past: [],
+        past: [{ a: 'b' }],
         present: {
           personalization: { biasing: 'not' },
           autocomplete: {},
@@ -33,7 +33,7 @@ suite('reducers', ({ expect, stub }) => {
     const newState = {
       a: 'b',
       data: {
-        past: [{ personalization: { biasing: 'bias' }, autocomplete: { c: 'd' }, details: { data: '3' } }],
+        past: [],
         present: { personalization: { biasing: 'not' }, autocomplete: {}, details: { data: '3' } },
         future: []
       },
@@ -41,25 +41,6 @@ suite('reducers', ({ expect, stub }) => {
     };
 
     expect(reducer(oldState, { type: Actions.REFRESH_STATE, payload })).to.eql(newState);
-  });
-
-  it('should keep the correct length of past', () => {
-    const payload = {
-      a: 'b',
-      data: {
-        past: [{ a: 1 }],
-        present: { personalization: { biasing: 2 }, autocomplete: {}, details: { data: 2 } },
-        future: []
-      }
-    };
-    const oldState = <any>{
-      a: 'b',
-      data: {
-        present: { personalization: { biasing: 1 }, autocomplete: {}, details: { data: 1 } },
-      },
-    };
-
-    expect(reducer(oldState, { type: Actions.REFRESH_STATE, payload }).data.past.length).to.eq(1);
   });
 
   it('should preserve session', () => {
