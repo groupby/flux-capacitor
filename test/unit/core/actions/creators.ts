@@ -221,6 +221,13 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
         expectAction(ActionCreators.fetchAutocompleteProducts(query), Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { query, refinements: [] });
       });
 
+      it('should set null query', () => {
+        const query = null;
+
+        // tslint:disable-next-line max-line-length
+        expectAction(ActionCreators.fetchAutocompleteProducts(query), Actions.FETCH_AUTOCOMPLETE_PRODUCTS, { query, refinements: [] });
+      });
+
       it('should apply validators to FETCH_AUTOCOMPLETE_PRODUCTS', () => {
         expectValidators(ActionCreators.fetchAutocompleteProducts(''), Actions.FETCH_AUTOCOMPLETE_PRODUCTS, {
           query: validators.isValidQuery

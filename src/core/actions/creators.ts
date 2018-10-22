@@ -139,7 +139,9 @@ namespace ActionCreators {
     const validator = {
       query: validators.isValidQuery,
     };
-    const opts = typeof options === 'string' ? { query: options, refinements } : { refinements, ...options };
+    const opts = typeof options === 'string' || options === null
+      ? { query: options, refinements }
+      : { refinements, ...options };
 
     return createAction(Actions.FETCH_AUTOCOMPLETE_PRODUCTS, opts, validator);
   }
