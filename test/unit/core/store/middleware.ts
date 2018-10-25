@@ -356,7 +356,7 @@ suite('Middleware', ({ expect, spy, stub }) => {
       expect(updateBiasing).to.not.be.called;
     });
 
-    it('should make a batch action if action correct type', () => {
+    it('should dispatch a bias action if action correct type', () => {
       const action = { a: 'b', type: PERSONALIZATION_CHANGE_ACTIONS[0] };
       const returnAction = 'return';
       const extracted = 'extra';
@@ -364,11 +364,13 @@ suite('Middleware', ({ expect, spy, stub }) => {
       const updateBiasing = stub(ActionCreators, 'updateBiasing').returns(returnAction);
       const extract = stub(PersonalizationAdapter, 'extractBias').returns(extracted);
       const getState = spy(() => state);
+      const dispatch = spy();
       stub(ConfigurationAdapter, 'isRealTimeBiasEnabled').returns(true);
 
-      Middleware.personalizationAnalyzer(<any>{ getState })(next)(action);
+      Middleware.personalizationAnalyzer(<any>{ getState, dispatch })(next)(action);
 
-      expect(next).to.be.calledWith([action, returnAction]);
+      expect(dispatch).to.be.calledWith(returnAction);
+      expect(next).to.be.calledWith(action);
       expect(extract).to.be.calledWithExactly(action, state);
       expect(updateBiasing).to.be.calledWithExactly(extracted);
     });

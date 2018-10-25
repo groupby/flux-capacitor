@@ -117,16 +117,14 @@ export namespace Middleware {
     };
   }
 
-  export function personalizationAnalyzer({ getState }: Store<any>) {
+  export function personalizationAnalyzer({ getState, dispatch }: Store<any>) {
     return (next) => (action) => {
       if (ConfigurationAdapter.isRealTimeBiasEnabled(Selectors.config(getState())) &&
           PERSONALIZATION_CHANGE_ACTIONS.includes(action.type)) {
         const biasing = PersonalizationAdapter.extractBias(action, getState());
         if (biasing) {
-          return next([
-            action,
-            ActionCreators.updateBiasing(biasing)
-          ]);
+          dispatch(ActionCreators.updateBiasing(biasing));
+          return next(action);
         }
       }
       return next(action);
