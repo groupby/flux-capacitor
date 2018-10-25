@@ -266,7 +266,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
     });
 
     describe('fetchPastPurchaseProducts()', () => {
-      it('should return if payload is undefined and results.length is 0', () => {
+      it('should return if there are no pastPurchaseSkus', () => {
         const flux: any = {};
         const action: any = {};
         const config = {};
@@ -375,50 +375,78 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
     });
 
     describe('fetchPastPurchaseNavigations()', () => {
-        // it('should generate a request when getNavigations is true', () => {
-        //   const getState = spy(() => ({ a: 1 }));
-        //   const receivePastPurchaseAllRecordCount = spy(() => 1);
-        //   const receivePastPurchaseRefinements = spy(() => 2);
-        //   const saveState = spy();
-        //   const actions = {
-        //     receivePastPurchaseAllRecordCount,
-        //     receivePastPurchaseRefinements,
-        //   };
-        //   const flux: any = { actions, saveState, store: { getState } };
-        //   const config = { b: 2 };
-        //   const result = [1, 2, 3];
-        //   const request = { c: 3 };
-        //   const transformedNav = ['f'];
-        //   const productData = { selectedNavigation: [2, 3, 5], };
-        //   const pastPurchaseSkus = [1, 2, 3, 4,];
-        //   const pastPurchasesFromSkus = { a: 'b' };
-        //   const state = { c: 'd' };
-        //   const combineNavigations = stub(SearchAdapter, 'combineNavigations').returns(productData);
-        //   const navigations = stub(PastPurchaseAdapter, 'pastPurchaseNavigations').returns(transformedNav);
-        //   const searchRequest = stub(Requests, 'search').returns(result);
-        //   stub(Tasks, 'buildRequestFromSkus').withArgs(flux, pastPurchaseSkus).returns(pastPurchasesFromSkus);
-        //   stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest')
-        //     .withArgs(state, {
-        //       query: '',
-        //       ...pastPurchasesFromSkus,
-        //     })
-        //     .returns(request);
-        //
-        //   const task = Tasks.fetchPastPurchaseProducts(flux, true, <any>{ payload: {} });
-        //
-        //   task.next();
-        //   task.next(pastPurchaseSkus);
-        //   expect(task.next(state).value).to.eql(effects.call(searchRequest, flux, request));
-        //   expect(task.next(request).value).to.eql(effects.select(Selectors.config));
-        //   expect(task.next(config).value).to.eql(effects.put(<any>[
-        //     receivePastPurchaseAllRecordCount(),
-        //     receivePastPurchaseRefinements(),
-        //   ]));
-        //   task.next();
-        //
-        //   expect(saveState).to.not.be.called;
-        //   expect(navigations).to.be.calledWithExactly(config, productData);
-        // });
+      it('should return if there are no pastPurchaseSkus', () => {
+        const flux: any = {};
+        const action: any = {};
+        const config = {};
+
+        const task = Tasks.fetchPastPurchaseNavigations(flux, action);
+
+        expect(task.next().value).to.eql(effects.select(Selectors.pastPurchases));
+        expect(task.next([]).value).to.be.undefined;
+      });
+
+      it('should override request', () => {
+        const state = { a: 'b' };
+        const override = { c: 'd' };
+        const pastPurchaseFromSkus = { e: 'f' };
+        const composeRequest = stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest');
+        stub(Tasks, 'buildRequestFromSkus').returns(pastPurchaseFromSkus);
+        stub(Selectors, 'pastPurchaseQuery').returns;
+
+        const task = Tasks.fetchPastPurchaseNavigations(null, <any>{ payload: { request: override } });
+
+        task.next();
+        task.next(['a']);
+        task.next(state);
+        expect(composeRequest).to.be.calledWith(state, {
+          ...pastPurchaseFromSkus,
+          ...override
+        });
+      });
+
+      it('should handle request failure', () => {
+        const error = new Error();
+        const receivePastPurchaseRefinements = spy(() => 1);
+        const flux: any = { actions: { receivePastPurchaseRefinements } };
+        const action: any = {};
+
+        const task = Tasks.fetchPastPurchaseNavigations(flux, action);
+
+        task.next();
+        expect(task.throw(error).value).to.eql(effects.put(receivePastPurchaseRefinements(error)));
+        task.next();
+      });
+
+      it('should generate a request and only set navigations', () => {
+        const pastPurchaseSkus = [1,2,3];
+        const refinements = [1,2,3,4,5];
+        const receivePastPurchaseRefinements = (() => refinements);
+        const flux: any = { actions: { receivePastPurchaseRefinements } };
+        const state = { a: 'b' };
+        const result = { c: 'd' };
+        const request = { e: 'f' };
+        const pastPurchasesFromSkus = { baising: { a: 'b' } };
+        const config = { g: 'h' };
+        const combinedNavs = [{ a: 'b' }, { c: 'd' }];
+        const navigations = [{ e: 'f' }];
+        const searchRequest = stub(Requests, 'search').returns(result);
+        stub(Tasks, 'buildRequestFromSkus').withArgs(flux, pastPurchaseSkus).returns(pastPurchasesFromSkus);
+        stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest')
+          .withArgs(state, { ...pastPurchasesFromSkus }).returns(request);
+        stub(Selectors, 'config').returns(config);
+        stub(SearchAdapter, 'combineNavigations').withArgs(result).returns(combinedNavs);
+        stub(PastPurchaseAdapter, 'pastPurchaseNavigations').withArgs(config, combinedNavs).returns(navigations);
+
+        const task = Tasks.fetchPastPurchaseNavigations(flux, <any>{ payload: {} });
+
+        expect(task.next().value).to.eql(effects.select(Selectors.pastPurchases));
+        expect(task.next(pastPurchaseSkus).value).to.eql(effects.select());
+        expect(task.next(state).value).to.eql(effects.call(searchRequest, flux, request));
+        expect(task.next(result).value).to.eql(effects.select(Selectors.config));
+        expect(task.next(config).value).to.eql(effects.put(<any>refinements));
+        expect(task.next().value).to.be.undefined;
+      });
     });
 
     describe('fetchMorePastPurchaseProducts()', () => {

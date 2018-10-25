@@ -156,12 +156,10 @@ export namespace Tasks {
         });
         const results = yield effects.call(Requests.search, flux, request);
         const navigations = PastPurchaseAdapter.pastPurchaseNavigations(
-          yield effects.select(Selectors.config), SearchAdapter.combineNavigations(results)
+          yield effects.select(Selectors.config),
+          SearchAdapter.combineNavigations(results)
         );
-        yield effects.put(<any>[
-          flux.actions.receivePastPurchaseAllRecordCount(results.totalRecordCount),
-          flux.actions.receivePastPurchaseRefinements(navigations),
-        ]);
+        yield effects.put(<any>flux.actions.receivePastPurchaseRefinements(navigations));
       }
     } catch (e) {
       return effects.put(flux.actions.receivePastPurchaseRefinements(e));
