@@ -283,6 +283,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const pastPurchaseFromSkus = { e: 'f' };
         const composeRequest = stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest');
         stub(Tasks, 'buildRequestFromSkus').returns(pastPurchaseFromSkus);
+        stub(Selectors, 'pastPurchaseQuery').returns;
 
         const task = Tasks.fetchPastPurchaseProducts(null, <any>{ payload: { request: override } });
 
@@ -290,7 +291,6 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         task.next(['a']);
         task.next(state);
         expect(composeRequest).to.be.calledWith(state, {
-          query: '',
           ...pastPurchaseFromSkus,
           ...override
         });
@@ -345,7 +345,6 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         stub(Tasks, 'buildRequestFromSkus').withArgs(flux, pastPurchaseSkus).returns(pastPurchasesFromSkus);
         stub(RequestBuilders.pastPurchaseProductsRequest, 'composeRequest')
           .withArgs(state, {
-            query: '',
             ...pastPurchasesFromSkus,
           })
           .returns(request);

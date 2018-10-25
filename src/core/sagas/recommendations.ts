@@ -116,10 +116,8 @@ export namespace Tasks {
       const pastPurchaseSkus: Store.PastPurchases.PastPurchaseProduct[] = yield effects.select(Selectors.pastPurchases);
       if (pastPurchaseSkus.length > 0) {
         const state = yield effects.select();
-        const query = yield effects.select(Selectors.pastPurchaseQuery);
         const pastPurchasesFromSkus = Tasks.buildRequestFromSkus(flux, pastPurchaseSkus);
         const request = pastPurchaseProductsRequest.composeRequest(state, {
-          query,
           ...pastPurchasesFromSkus,
           ...action.payload.request
         });
@@ -151,10 +149,8 @@ export namespace Tasks {
       const pastPurchaseSkus: Store.PastPurchases.PastPurchaseProduct[] = yield effects.select(Selectors.pastPurchases);
       if (pastPurchaseSkus.length > 0) {
         const state = yield effects.select();
-        const query = yield effects.select(Selectors.pastPurchaseQuery);
         const pastPurchasesFromSkus = Tasks.buildRequestFromSkus(flux, pastPurchaseSkus);
         const request = pastPurchaseProductsRequest.composeRequest(state, {
-          query,
           ...pastPurchasesFromSkus,
           ...action.payload.request
         });
