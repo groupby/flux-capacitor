@@ -98,7 +98,6 @@ export namespace Tasks {
       if (productCount > 0) {
         const result = yield effects.call(fetchSkus, config, 'popular');
         yield effects.put(flux.actions.receivePastPurchaseSkus(result));
-        yield effects.put(flux.actions.fetchPastPurchaseNavigations());
       } else {
         yield effects.put(flux.actions.receivePastPurchaseSkus([]));
       }
@@ -141,7 +140,10 @@ export namespace Tasks {
             ),
             flux.actions.receivePastPurchaseCurrentRecordCount(results.totalRecordCount),
             flux.actions.receivePastPurchaseProducts(SearchAdapter.augmentProducts(results)),
-            flux.actions.receivePastPurchaseTemplate(SearchAdapter.extractTemplate(results.template))
+            flux.actions.receivePastPurchaseTemplate(SearchAdapter.extractTemplate(results.template)),
+            flux.actions.receivePastPurchaseRefinements(
+              SearchAdapter.pruneRefinements(SearchAdapter.combineNavigations(results), state)
+            ),
           ]);
           flux.replaceState(utils.Routes.PAST_PURCHASE);
         }
