@@ -306,7 +306,7 @@ namespace Events {
   // tracker events
   /**
    * Triggered when a search beacon is sent.
-   * Returns the product id.
+   * Returns the search id from the search response.
    */
   export const BEACON_SEARCH = 'beacon:search';
   /**
