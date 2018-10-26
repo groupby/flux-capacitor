@@ -41,14 +41,14 @@ export default class RequestBuilder<T = any, U = T> {
 /* tslint:disable max-line-length */
 export const autocompleteProductsRequest = new RequestBuilder<Request>(RequestHelpers.autocompleteProducts, Configuration.autocompleteProductsOverrides);
 export const autocompleteSuggestionsRequest = new RequestBuilder<QueryTimeAutocompleteConfig>(RequestHelpers.autocompleteSuggestions, Configuration.autocompleteSuggestionsOverrides);
-export const autocompletePastPurchaseRequest = new RequestBuilder<Request>(RequestHelpers.autocompleteProducts);
+export const autocompletePastPurchaseRequest = new RequestBuilder<Request>(RequestHelpers.autocompleteProducts, Configuration.pastPurchaseAutocompleteOverrides);
 export const collectionRequest = new RequestBuilder<Request>(RequestHelpers.search, Configuration.collectionOverrides);
-export const pastPurchaseProductsRequest = new RequestBuilder<Request>(RequestHelpers.pastPurchaseProducts);
+export const pastPurchaseProductsRequest = new RequestBuilder<Request>(RequestHelpers.pastPurchaseProducts, Configuration.pastPurchaseOverrides);
 export const productDetailsRequest = new RequestBuilder<Request>(RequestHelpers.search, Configuration.detailsOverrides);
 export const productsRequest = new RequestBuilder<Request>(RequestHelpers.products, Configuration.searchOverrides);
-export const recommendationsNavigationsRequest = new RequestBuilder<Recommendations.RecommendationsBody>(RequestHelpers.recommendationsNavigations);
-export const recommendationsProductIdsRequest = new RequestBuilder<Recommendations.RecommendationsRequest>(RequestHelpers.recommendationsProductIDs);
-export const recommendationsProductsRequest = new RequestBuilder<Request>(RequestHelpers.search);
-export const recommendationsSuggestionsRequest = new RequestBuilder<Recommendations.Request & { query: string }, Recommendations.Request>(RequestHelpers.recommendationsSuggestions);
+export const recommendationsNavigationsRequest = new RequestBuilder<Recommendations.RecommendationsBody>(RequestHelpers.recommendationsNavigations, Configuration.recommendationsNavigationsOverrides);
+export const recommendationsProductIdsRequest = new RequestBuilder<Recommendations.RecommendationsRequest>(RequestHelpers.recommendationsProductIDs, Configuration.recommendationsIdsOverrides);
+export const recommendationsProductsRequest = new RequestBuilder<Request>(RequestHelpers.search, Configuration.recommendationsProductsOverrides);
+export const recommendationsSuggestionsRequest = new RequestBuilder<Recommendations.Request & { query: string }, Recommendations.Request>(RequestHelpers.recommendationsSuggestions, Configuration.recommendationsSuggestionsOverrides);
 export const refinementsRequest = new RequestBuilder<Request>(RequestHelpers.search, Configuration.refinementsOverrides);
 /* tslint:enable */
