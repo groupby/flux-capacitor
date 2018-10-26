@@ -1,5 +1,6 @@
 import { BiasStrength, BrowserBridge, Request } from 'groupby-api';
 import { QueryTimeAutocompleteConfig, QueryTimeProductSearchConfig, Sayt } from 'sayt';
+import RecommendationsAdapter from './adapters/recommendations';
 
 interface Configuration {
   /**
@@ -215,7 +216,7 @@ namespace Configuration {
 
   // tslint:disable:max-line-length
   export type AutocompleteSuggestionsOverrides = Partial<QueryTimeAutocompleteConfig> | ((currConfig: QueryTimeAutocompleteConfig, prevConfig: QueryTimeAutocompleteConfig) => QueryTimeAutocompleteConfig);
-  export type AutocompleteProductsOverrides = Partial<QueryTimeProductSearchConfig> | ((currConfig: QueryTimeProductSearchConfig, prevConfig?: QueryTimeProductSearchConfig) => QueryTimeProductSearchConfig);
+  export type AutocompleteProductsOverrides = Partial<QueryTimeProductSearchConfig> | ((currConfig: QueryTimeProductSearchConfig, prevConfig: QueryTimeProductSearchConfig) => QueryTimeProductSearchConfig);
   // tslint:enable:max-line-length
 
   export namespace Autocomplete {
@@ -263,7 +264,23 @@ namespace Configuration {
     productSuggestions: Configuration.Recommendations.ProductSuggestions;
     iNav: Configuration.Recommendations.INav;
     pastPurchases: Configuration.Recommendations.PastPurchases;
+
+    /**
+     * override any computed request value
+     */
+    overrides?: {
+      navigations?: Configuration.RecommendationsNavigationsOverrides;
+      ids?: Configuration.RecommendationsIdsOverrides;
+      products?: Configuration.SearchOverrides;
+      autocompleteSuggestions?: Configuration.RecommendationsSuggestionsOverrides;
+    };
   }
+
+  // tslint:disable:max-line-length
+  export type RecommendationsNavigationsOverrides = Partial<RecommendationsAdapter.RecommendationsBody> | ((currReq: RecommendationsAdapter.RecommendationsBody, prevReq: RecommendationsAdapter.RecommendationsBody) => RecommendationsAdapter.RecommendationsBody);
+  export type RecommendationsIdsOverrides = Partial<RecommendationsAdapter.RecommendationsRequest> | ((currReq: RecommendationsAdapter.RecommendationsRequest, prevReq: RecommendationsAdapter.RecommendationsRequest) => RecommendationsAdapter.RecommendationsRequest);
+  export type RecommendationsSuggestionsOverrides = Partial<RecommendationsAdapter.Request & { query: string }> | ((currReq: RecommendationsAdapter.Request & { query: string }, prevReq: RecommendationsAdapter.Request & { query: string }) => RecommendationsAdapter.Request & { query: string });
+  // tslint:enable:max-line-length
 
   export interface Personalization {
     realTimeBiasing?: Personalization.RealTimeBiasing;
@@ -316,6 +333,14 @@ namespace Configuration {
        * Enable past purchases or not
        */
       enabled: boolean;
+
+      /**
+       * override any computed request value
+       */
+      overrides?: {
+        autocomplete?: Configuration.SearchOverrides;
+        products?: Configuration.SearchOverrides;
+      };
     }
 
     export interface SecuredPayload {
