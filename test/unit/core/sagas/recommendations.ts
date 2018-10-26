@@ -349,7 +349,6 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
           .returns(request);
         stub(PageAdapter, 'currentPage').withArgs(request.skip, request.pageSize).returns(currentPage);
         stub(SearchAdapter, 'combineNavigations').withArgs(productData).returns(navigations);
-        stub(SearchAdapter, 'pruneRefinements').withArgs(navigations, state).returns(prunedRefinements);
 
         const task = Tasks.fetchPastPurchaseProducts(flux, <any>{ payload: {} });
 
