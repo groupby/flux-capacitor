@@ -6,7 +6,6 @@ import * as AutocompleteReducer from '../reducers/data/autocomplete';
 import * as CollectionsReducer from '../reducers/data/collections';
 import * as PageReducer from '../reducers/data/page';
 import * as PastPurchaseReducer from '../reducers/data/past-purchases';
-import * as PersonalizationAdapter from '../reducers/data/personalization';
 import Store from '../store';
 import { normalizeToFunction, GenericTransformer } from '../utils';
 
@@ -173,9 +172,6 @@ namespace Adapter {
 
   export const extractPastPurchaseProductCount = (config: Configuration) =>
     config.recommendations.pastPurchases.productCount;
-
-  export const extractPastPurchaseNavigations = (config: Configuration) =>
-    config.recommendations.pastPurchases.navigations;
 
   export const shouldAddPastPurchaseBias = (config: Configuration) =>
     config.recommendations.pastPurchases.biasCount > 0;

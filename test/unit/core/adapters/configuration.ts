@@ -421,14 +421,6 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     });
   });
 
-  describe('extractPastPurchaseNavigations', () => {
-    it('should return past purchase navigations from config', () => {
-      const navigations = { a: 1 };
-      // tslint:disable-next-line max-line-length
-      expect(Adapter.extractPastPurchaseNavigations(<any>{ recommendations: { pastPurchases: { navigations } } })).to.eql(navigations);
-    });
-  });
-
   describe('shouldAddPastPurchaseBias()', () => {
     it('should return true if requesting positive number of biases', () => {
       // tslint:disable-next-line max-line-length
