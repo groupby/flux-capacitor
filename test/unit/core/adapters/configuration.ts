@@ -582,4 +582,81 @@ suite('Configuration Adapter', ({ expect, stub }) => {
       expect(Adapter.refinementsOverrides(config)(<any>{})).to.eql(overrides);
     });
   });
+
+  describe('pastPurchaseOverrides', () => {
+    it('should return a normalized function', () => {
+      const overrides = { a: 'b' };
+      const config: any = {
+        recommendations: {
+          pastPurchases: {
+            overrides: {
+              products: overrides
+            }
+          }
+        }
+      };
+
+      expect(Adapter.pastPurchaseOverrides(config)(<any>{})).to.eql(overrides);
+    });
+  });
+
+  describe('recommendationsNavigationsOverrides', () => {
+    it('should return a normalized function', () => {
+      const overrides = { a: 'b' };
+      const config: any = {
+        recommendations: {
+          overrides: {
+            navigations: overrides
+          }
+        }
+      };
+
+      expect(Adapter.recommendationsNavigationsOverrides(config)(<any>{})).to.eql(overrides);
+    });
+  });
+
+  describe('recommendationsIdsOverrides', () => {
+    it('should return a normalized function', () => {
+      const overrides = { a: 'b' };
+      const config: any = {
+        recommendations: {
+          overrides: {
+            ids: overrides
+          }
+        }
+      };
+
+      expect(Adapter.recommendationsIdsOverrides(config)(<any>{})).to.eql(overrides);
+    });
+  });
+
+  describe('recommendationsProductsOverrides', () => {
+    it('should return a normalized function', () => {
+      const overrides = { a: 'b' };
+      const config: any = {
+        recommendations: {
+          overrides: {
+            products: overrides
+          }
+        }
+      };
+
+      expect(Adapter.recommendationsProductsOverrides(config)(<any>{})).to.eql(overrides);
+    });
+  });
+
+  describe('recommendationsSuggestionsOverrides', () => {
+    it('should return a normalized function', () => {
+      const overrides = { a: 'b' };
+      const config: any = {
+        recommendations: {
+          overrides: {
+            autocompleteSuggestions: overrides
+          }
+        }
+      };
+
+      expect(Adapter.recommendationsSuggestionsOverrides(config)(<any>{})).to.eql(overrides);
+    });
+  });
 });
