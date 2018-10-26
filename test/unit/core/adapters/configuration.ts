@@ -467,6 +467,17 @@ suite('Configuration Adapter', ({ expect, stub }) => {
 
       expect(Adapter.searchOverrides(state)(o)).to.eql({ ...o, ...overrides });
     });
+
+    it('should return a normalized function', () => {
+      const overrides = { a: 'b' };
+      const config: any = {
+        search: {
+          overrides
+        }
+      };
+
+      expect(Adapter.searchOverrides(config)(<any>{})).to.eql(overrides);
+    });
   });
 
   describe('autocompleteSuggestionsOverrides()', () => {
@@ -482,6 +493,19 @@ suite('Configuration Adapter', ({ expect, stub }) => {
       const o: any = { c: 'd' };
 
       expect(Adapter.autocompleteSuggestionsOverrides(state)(o)).to.eql({ ...o, ...suggestions });
+    });
+
+    it('should return a normalized function', () => {
+      const overrides = { c: 'd' };
+      const config: any = {
+        autocomplete: {
+          overrides: {
+            suggestions: overrides
+          }
+        }
+      };
+
+      expect(Adapter.autocompleteSuggestionsOverrides(config)(<any>{})).to.eql(overrides);
     });
   });
 
@@ -499,37 +523,7 @@ suite('Configuration Adapter', ({ expect, stub }) => {
 
       expect(Adapter.autocompleteProductsOverrides(state)(o)).to.eql({ ...o, ...products });
     });
-  });
 
-  describe('searchOverrides()', () => {
-    it('should return a normalized function', () => {
-      const overrides = { a: 'b' };
-      const config: any = {
-        search: {
-          overrides
-        }
-      };
-
-      expect(Adapter.searchOverrides(config)(<any>{})).to.eql(overrides);
-    });
-  });
-
-  describe('autocompleteSuggestionsOverrides()', () => {
-    it('should return a normalized function', () => {
-      const overrides = { c: 'd' };
-      const config: any = {
-        autocomplete: {
-          overrides: {
-            suggestions: overrides
-          }
-        }
-      };
-
-      expect(Adapter.autocompleteSuggestionsOverrides(config)(<any>{})).to.eql(overrides);
-    });
-  });
-
-  describe('autocompleteProductsOverrides()', () => {
     it('should return a normalized function', () => {
       const overrides = { a: 'b' };
       const config: any = {
@@ -545,6 +539,20 @@ suite('Configuration Adapter', ({ expect, stub }) => {
   });
 
   describe('collectionOverrides()', () => {
+    it('should return the collections overrides function', () => {
+      const state: any = { collections: { overrides: (r) => r } };
+
+      expect(Adapter.collectionOverrides(state)).to.eq(state.collections.overrides);
+    });
+
+    it('should return a function that mixes in the overrides with a given object', () => {
+      const overrides: any = { a: 'b' };
+      const state: any = { collections: { overrides } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.collectionOverrides(state)(o)).to.eql({ ...o, ...overrides });
+    });
+
     it('should return a normalized function', () => {
       const overrides = { a: 'b' };
       const config: any = {
@@ -558,6 +566,20 @@ suite('Configuration Adapter', ({ expect, stub }) => {
   });
 
   describe('detailsOverrides()', () => {
+    it('should return the details overrides function', () => {
+      const state: any = { details: { overrides: (r) => r } };
+
+      expect(Adapter.detailsOverrides(state)).to.eq(state.details.overrides);
+    });
+
+    it('should return a function that mixes in the overrides with a given object', () => {
+      const overrides: any = { a: 'b' };
+      const state: any = { details: { overrides } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.detailsOverrides(state)(o)).to.eql({ ...o, ...overrides });
+    });
+
     it('should return a normalized function', () => {
       const overrides = { a: 'b' };
       const config: any = {
@@ -571,6 +593,20 @@ suite('Configuration Adapter', ({ expect, stub }) => {
   });
 
   describe('refinementsOverrides', () => {
+    it('should return the refinements overrides function', () => {
+      const state: any = { refinements: { overrides: (r) => r } };
+
+      expect(Adapter.refinementsOverrides(state)).to.eq(state.refinements.overrides);
+    });
+
+    it('should return a function that mixes in the overrides with a given object', () => {
+      const overrides: any = { a: 'b' };
+      const state: any = { refinements: { overrides } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.refinementsOverrides(state)(o)).to.eql({ ...o, ...overrides });
+    });
+
     it('should return a normalized function', () => {
       const overrides = { a: 'b' };
       const config: any = {
@@ -583,7 +619,53 @@ suite('Configuration Adapter', ({ expect, stub }) => {
     });
   });
 
+  describe('pastPurchaseAutocompleteOverrides', () => {
+    it('should return the pastPurchases autocomplete overrides function', () => {
+      const state: any = { recommendations: { pastPurchases: { overrides: { autocomplete: (r) => r } } } };
+
+      expect(Adapter.pastPurchaseAutocompleteOverrides(state))
+        .to.eq(state.recommendations.pastPurchases.overrides.autocomplete);
+    });
+
+    it('should return a function that mixes in the overrides with a given object', () => {
+      const overrides: any = { a: 'b' };
+      const state: any = { recommendations: { pastPurchases: { overrides: { autocomplete: overrides } } } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.pastPurchaseAutocompleteOverrides(state)(o)).to.eql({ ...o, ...overrides });
+    });
+
+    it('should return a normalized function', () => {
+      const overrides = { a: 'b' };
+      const config: any = {
+        recommendations: {
+          pastPurchases: {
+            overrides: {
+              autocomplete: overrides
+            }
+          }
+        }
+      };
+
+      expect(Adapter.pastPurchaseAutocompleteOverrides(config)(<any>{})).to.eql(overrides);
+    });
+  });
+
   describe('pastPurchaseOverrides', () => {
+    it('should return the pastPurchases products overrides function', () => {
+      const state: any = { recommendations: { pastPurchases: { overrides: { products: (r) => r } } } };
+
+      expect(Adapter.pastPurchaseOverrides(state)).to.eq(state.recommendations.pastPurchases.overrides.products);
+    });
+
+    it('should return a function that mixes in the overrides with a given object', () => {
+      const overrides: any = { a: 'b' };
+      const state: any = { recommendations: { pastPurchases: { overrides: { products: overrides } } } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.pastPurchaseOverrides(state)(o)).to.eql({ ...o, ...overrides });
+    });
+
     it('should return a normalized function', () => {
       const overrides = { a: 'b' };
       const config: any = {
@@ -601,6 +683,21 @@ suite('Configuration Adapter', ({ expect, stub }) => {
   });
 
   describe('recommendationsNavigationsOverrides', () => {
+    it('should return the recommendations navigations overrides function', () => {
+      const state: any = { recommendations: { overrides: { navigations: (r) => r } } };
+
+      expect(Adapter.recommendationsNavigationsOverrides(state))
+        .to.eq(state.recommendations.overrides.navigations);
+    });
+
+    it('should return a function that mixes in the overrides with a given object', () => {
+      const overrides: any = { a: 'b' };
+      const state: any = { recommendations: { overrides: { navigations: overrides } } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.recommendationsNavigationsOverrides(state)(o)).to.eql({ ...o, ...overrides });
+    });
+
     it('should return a normalized function', () => {
       const overrides = { a: 'b' };
       const config: any = {
@@ -616,6 +713,21 @@ suite('Configuration Adapter', ({ expect, stub }) => {
   });
 
   describe('recommendationsIdsOverrides', () => {
+    it('should return the recommendations ids overrides function', () => {
+      const state: any = { recommendations: { overrides: { ids: (r) => r } } };
+
+      expect(Adapter.recommendationsIdsOverrides(state))
+        .to.eq(state.recommendations.overrides.ids);
+    });
+
+    it('should return a function that mixes in the overrides with a given object', () => {
+      const overrides: any = { a: 'b' };
+      const state: any = { recommendations: { overrides: { ids: overrides } } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.recommendationsIdsOverrides(state)(o)).to.eql({ ...o, ...overrides });
+    });
+
     it('should return a normalized function', () => {
       const overrides = { a: 'b' };
       const config: any = {
@@ -631,6 +743,21 @@ suite('Configuration Adapter', ({ expect, stub }) => {
   });
 
   describe('recommendationsProductsOverrides', () => {
+    it('should return the recommendations products overrides function', () => {
+      const state: any = { recommendations: { overrides: { products: (r) => r } } };
+
+      expect(Adapter.recommendationsProductsOverrides(state))
+        .to.eq(state.recommendations.overrides.products);
+    });
+
+    it('should return a function that mixes in the overrides with a given object', () => {
+      const overrides: any = { a: 'b' };
+      const state: any = { recommendations: { overrides: { products: overrides } } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.recommendationsProductsOverrides(state)(o)).to.eql({ ...o, ...overrides });
+    });
+
     it('should return a normalized function', () => {
       const overrides = { a: 'b' };
       const config: any = {
@@ -646,6 +773,21 @@ suite('Configuration Adapter', ({ expect, stub }) => {
   });
 
   describe('recommendationsSuggestionsOverrides', () => {
+    it('should return the recommendations autocompleteSuggestions overrides function', () => {
+      const state: any = { recommendations: { overrides: { autocompleteSuggestions: (r) => r } } };
+
+      expect(Adapter.recommendationsSuggestionsOverrides(state))
+        .to.eq(state.recommendations.overrides.autocompleteSuggestions);
+    });
+
+    it('should return a function that mixes in the overrides with a given object', () => {
+      const overrides: any = { a: 'b' };
+      const state: any = { recommendations: { overrides: { autocompleteSuggestions: overrides } } };
+      const o: any = { c: 'd' };
+
+      expect(Adapter.recommendationsSuggestionsOverrides(state)(o)).to.eql({ ...o, ...overrides });
+    });
+
     it('should return a normalized function', () => {
       const overrides = { a: 'b' };
       const config: any = {
