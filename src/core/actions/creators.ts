@@ -252,16 +252,6 @@ namespace ActionCreators {
   }
 
   /**
-   * Makes a request for past purchase navigations.
-   * @param {Actions.Payload.Fetch.Override} options - An object with a request object for override.
-   * @return {Actions.FetchPastPurchaseProducts} - Action with `{ request }`.
-   */
-  // tslint:disable-next-line max-line-length
-  export function fetchPastPurchaseNavigations(options: Actions.Payload.Fetch.Override = {}): Actions.FetchPastPurchaseNavigations {
-    return createAction(Actions.FETCH_PAST_PURCHASE_NAVIGATIONS, options);
-  }
-
-  /**
    * Makes a request for sayt past purchases.
    * @param {Actions.Payload.Fetch.PastPurchases} options - An object with a query string,
    * and a request object for override.

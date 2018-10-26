@@ -144,28 +144,6 @@ export namespace Tasks {
     }
   }
 
-  export function* fetchPastPurchaseNavigations(flux: FluxCapacitor, action: Actions.FetchPastPurchaseNavigations) {
-    try {
-      const pastPurchaseSkus: Store.PastPurchases.PastPurchaseProduct[] = yield effects.select(Selectors.pastPurchases);
-      if (pastPurchaseSkus.length > 0) {
-        const state = yield effects.select();
-        const pastPurchasesFromSkus = Tasks.buildRequestFromSkus(flux, pastPurchaseSkus);
-        const request = pastPurchaseProductsRequest.composeRequest(state, {
-          ...pastPurchasesFromSkus,
-          ...action.payload.request
-        });
-        const results = yield effects.call(Requests.search, flux, request);
-        const navigations = PastPurchaseAdapter.pastPurchaseNavigations(
-          yield effects.select(Selectors.config),
-          SearchAdapter.combineNavigations(results)
-        );
-        yield effects.put(<any>flux.actions.receivePastPurchaseRefinements(navigations));
-      }
-    } catch (e) {
-      return effects.put(flux.actions.receivePastPurchaseRefinements(e));
-    }
-  }
-
   export function* fetchMorePastPurchaseProducts(flux: FluxCapacitor, action: Actions.FetchMorePastPurchaseProducts) {
     try {
       const state: Store.State = yield effects.select();
@@ -239,7 +217,6 @@ export default (flux: FluxCapacitor) => function* recommendationsSaga() {
   yield effects.takeLatest(Actions.FETCH_RECOMMENDATIONS_PRODUCTS, Tasks.fetchRecommendationsProducts, flux);
   yield effects.takeLatest(Actions.FETCH_PAST_PURCHASES, Tasks.fetchPastPurchases, flux);
   yield effects.takeLatest(Actions.FETCH_PAST_PURCHASE_PRODUCTS, Tasks.fetchPastPurchaseProducts, flux);
-  yield effects.takeLatest(Actions.FETCH_PAST_PURCHASE_NAVIGATIONS, Tasks.fetchPastPurchaseNavigations, flux);
   yield effects.takeLatest(Actions.FETCH_SAYT_PAST_PURCHASES, Tasks.fetchSaytPastPurchases, flux);
   yield effects.takeEvery(Actions.FETCH_MORE_PAST_PURCHASE_PRODUCTS, Tasks.fetchMorePastPurchaseProducts, flux);
 };

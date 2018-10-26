@@ -157,17 +157,6 @@ suite('ActionCreators', ({ expect, spy, stub }) => {
       });
     });
 
-    describe('fetchPastPurchaseNavigations()', () => {
-      itShouldAcceptAnOptionsObject(
-        ActionCreators.fetchPastPurchaseNavigations,
-        Actions.FETCH_PAST_PURCHASE_NAVIGATIONS
-      );
-
-      it('should return an action', () => {
-        expectAction(ActionCreators.fetchPastPurchaseNavigations(), Actions.FETCH_PAST_PURCHASE_NAVIGATIONS, {});
-      });
-    });
-
     describe('fetchSaytPastPurchases()', () => {
       itShouldAcceptAnOptionsObject(ActionCreators.fetchSaytPastPurchases, Actions.FETCH_SAYT_PAST_PURCHASES);
 
