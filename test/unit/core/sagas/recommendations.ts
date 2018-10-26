@@ -92,7 +92,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
 
         task.next();
         task.next(config);
-        expect(task.next(config).value).to.be.undefined;
+        expect(task.next(config).done).to.be.true;
       });
 
       it('should override request', () => {
@@ -215,7 +215,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
 
         expect(task.next().value).to.eql(effects.select(Selectors.config));
         expect(task.next(config).value).to.eql(effects.put(receivePastPurchaseSkus([])));
-        expect(task.next().value).to.be.undefined;
+        expect(task.next().done).to.be.true;
         expect(extractPastPurchaseProductCount).to.be.calledWith(config);
       });
 
@@ -236,7 +236,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(task.next().value).to.eql(effects.select(Selectors.config));
         expect(task.next(config).value).to.eql(effects.call(<any>Tasks.fetchPastPurchaseSkus, config, 'popular'));
         expect(task.next(resultArray).value).to.eql(effects.put(<any>[allRecordCount, data]));
-        expect(task.next().value).to.be.undefined;
+        expect(task.next().done).to.be.true;
         expect(receivePastPurchaseSkus).to.be.calledWith(resultArray);
         expect(extractPastPurchaseProductCount).to.be.calledWith(config);
       });
@@ -274,7 +274,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const task = Tasks.fetchPastPurchaseProducts(flux, action);
 
         expect(task.next().value).to.eql(effects.select(Selectors.pastPurchases));
-        expect(task.next([]).value).to.be.undefined;
+        expect(task.next([]).done).to.be.true;
       });
 
       it('should override request', () => {
@@ -383,7 +383,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         const task = Tasks.fetchPastPurchaseNavigations(flux, action);
 
         expect(task.next().value).to.eql(effects.select(Selectors.pastPurchases));
-        expect(task.next([]).value).to.be.undefined;
+        expect(task.next([]).done).to.be.true;
       });
 
       it('should override request', () => {
@@ -445,7 +445,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(task.next(state).value).to.eql(effects.call(searchRequest, flux, request));
         expect(task.next(result).value).to.eql(effects.select(Selectors.config));
         expect(task.next(config).value).to.eql(effects.put(<any>refinements));
-        expect(task.next().value).to.be.undefined;
+        expect(task.next().done).to.be.true;
       });
     });
 
@@ -617,7 +617,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(task.next().value).to.eql(effects.select());
         expect(task.next(state).value).to.eql(effects.select(Selectors.pastPurchases));
         expect(task.next([]).value).to.eql(effects.put(receiveSaytPastPurchases()));
-        expect(task.next().value).to.be.undefined;
+        expect(task.next().done).to.be.true;
         expect(receiveSaytPastPurchases).to.be.calledWith([]);
       });
 
@@ -643,7 +643,7 @@ suite('recommendations saga', ({ expect, spy, stub }) => {
         expect(task.next(state).value).to.eql(effects.select(Selectors.pastPurchases));
         expect(task.next(pastPurchaseSkus).value).to.eql(effects.call(searchRequest, flux, request));
         expect(task.next(productData).value).to.eql(effects.put(receiveSaytPastPurchases()));
-        expect(task.next().value).to.be.undefined;
+        expect(task.next().done).to.be.true;
         expect(receiveSaytPastPurchases).to.be.calledWithExactly(productData);
         expect(augmentProducts).to.be.calledWithExactly(productData);
       });
