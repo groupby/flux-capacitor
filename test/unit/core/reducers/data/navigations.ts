@@ -258,7 +258,6 @@ suite('navigations', ({ expect }) => {
           navigationId: 'Brand',
           range: false,
           value: 'Oakley',
-          clear: true
         }
       });
 
@@ -454,7 +453,6 @@ suite('navigations', ({ expect }) => {
           navigationId: 'Format',
           refinements,
           selected,
-          show: [1, 2]
         }
       });
 
