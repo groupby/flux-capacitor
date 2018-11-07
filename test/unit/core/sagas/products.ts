@@ -131,7 +131,7 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
         expect(receiveRedirect).to.be.calledOnce;
       });
 
-      it('should replaceState when details update and call fetchProductDetails when only a single result', () => {
+      it('should call fetchProductDetails when only a single result', () => {
         const receiveProductsAction: any = { c: 'd' };
         const receiveNavigationsAction: any = { e: 'f' };
         const fetchProductDetailsAction: any = { i: 'j' };
@@ -144,25 +144,16 @@ suite('products saga', ({ sinon, expect, spy, stub }) => {
             redirectSingleResult: true
           }
         };
-        const once = spy();
-        const replaceState = spy();
         const flux: any = {
-          once,
           actions: { receiveProducts, receiveRedirect, fetchProductDetails },
           emit: () => undefined,
           saveState: () => undefined,
-          replaceState,
         };
 
         const task = Tasks.fetchProducts(<any>flux, false, <any>{});
         task.next();
         task.next([{ redirect: false, totalRecordCount: 1, records: [record] }, undefined]);
         expect(task.next(config).value).to.eql(effects.put(fetchProductDetailsAction));
-        expect(once).to.be.calledWithExactly(Events.DETAILS_UPDATED, sinon.match((fn) => {
-          fn();
-          expect(replaceState).to.be.calledWithExactly(utils.Routes.DETAILS);
-          return true;
-        }));
         task.next();
       });
 

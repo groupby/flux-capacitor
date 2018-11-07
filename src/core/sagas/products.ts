@@ -24,7 +24,6 @@ export namespace Tasks {
         return yield effects.put(flux.actions.receiveRedirect(result.redirect));
       }
       if (config.search.redirectSingleResult && result.totalRecordCount === 1) {
-        flux.once(Events.DETAILS_UPDATED, () => flux.replaceState(utils.Routes.DETAILS));
         yield effects.put(<any>flux.actions.fetchProductDetails(result.records[0].allMeta.id));
       } else {
         flux.emit(Events.BEACON_SEARCH, result.id);
