@@ -6,6 +6,7 @@ import { productDetailsRequest } from '../../../../src/core/requests';
 import sagaCreator, { Tasks } from '../../../../src/core/sagas/product-details';
 import Requests from '../../../../src/core/sagas/requests';
 import Selectors from '../../../../src/core/selectors';
+import * as utils from '../../../../src/core/utils';
 import suite from '../../_suite';
 
 suite('product details saga', ({ expect, spy, stub }) => {
