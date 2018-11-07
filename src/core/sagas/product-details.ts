@@ -30,6 +30,8 @@ export namespace Tasks {
           record = record.allMeta;
         }
         yield effects.put(flux.actions.receiveDetails({ data: record, template }));
+
+        flux.replaceState(utils.Routes.DETAILS);
       } else {
         throw new Error(`no records found matching id: ${id}`);
       }
