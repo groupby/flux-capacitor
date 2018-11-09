@@ -6,9 +6,20 @@ import * as utils from '../../../src/core/utils';
 import suite from '../_suite';
 
 suite.only('Emitter', ({ expect, spy, stub }) => {
+  let emitter;
+
+  beforeEach(() => {
+    emitter = new Emitter();
+  });
+
   describe('constructor()', () => {
     it('should extend EventEmitter', () => {
-      expect(new Emitter()).to.be.an.instanceOf(EventEmitter);
+      expect(emitter).to.be.an.instanceOf(EventEmitter);
+    });
+
+    it('should set _barriers and _lookups', () => {
+      expect(emitter._barriers).to.eql({});
+      expect(emitter._lookups).to.eql({});
     });
   });
 
