@@ -23,7 +23,7 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
     });
   });
 
-  describe('emit()', () => {
+  describe('all()', () => {
     it('should', () => {
 
     });

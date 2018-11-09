@@ -16,8 +16,8 @@ export interface E {
 }
 
 export interface Barrier {
-  events: E[];
-  cb: () => void;
+  events: E;
+  cb: (() => void)[];
 }
 
 export interface Barriers {
