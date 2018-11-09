@@ -9,6 +9,15 @@ class Emitter extends EventEmitter {
     this._barriers = {};
     this._lookups = {};
   }
+
+  all(events: string[], cb: () => void) {
+    const key = events.join(':');
+
+    this._barriers[key] = {
+      events: events.reduce((acc, ev) => ({ ...acc, [ev]: 0 }), {}),
+      cb: [cb],
+    };
+  }
 }
 
 export interface E {

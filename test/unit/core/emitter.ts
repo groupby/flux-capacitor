@@ -24,8 +24,13 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
   });
 
   describe('all()', () => {
-    it('should', () => {
+    it('should update the _barriers object with the events and callback', () => {
+      const events = ['a', 'b'];
+      const callback = () => {};
 
+      emitter.all(events, callback);
+
+      expect(emitter._barriers['a:b']).to.eql({ events: { a: 0, b: 0 }, cb: [callback] });
     });
   });
 });
