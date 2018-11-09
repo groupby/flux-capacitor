@@ -65,4 +65,16 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
       expect(emitter._lookups).to.eql({ a: [key, key2], b: [key], c: [key2] });
     });
   });
+
+  describe('emit', () => {
+    it('should update the _barriers counters if they exist', () => {
+      const events = ['a', 'b'];
+      const key = 'a:b';
+
+      emitter.all(events, () => {});
+      emitter.emit('a', null);
+
+      expect(emitter._barriers[key].events.a).to.equal(1);
+    });
+  });
 });

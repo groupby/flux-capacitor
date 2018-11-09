@@ -10,6 +10,18 @@ class Emitter extends EventEmitter {
     this._lookups = {};
   }
 
+  emit(event: string, ...args: any[]): boolean {
+    const result = super.emit(event, ...args);
+    const keys = this._lookups[event] || [];
+
+    keys.forEach((key) => {
+      const inc = this._barriers[key].events[event] + 1;
+      this._barriers[key].events = { ...this._barriers[key].events, [event]: inc };
+    });
+
+    return result;
+  }
+
   all(events: string[], cb: () => void) {
     const key = events.join(':');
 
