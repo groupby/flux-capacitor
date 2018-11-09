@@ -24,22 +24,45 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
   });
 
   describe('all()', () => {
-    it('should update the _barriers object with the events and callback', () => {
+    it('should set the _barriers object with the events and callback', () => {
       const events = ['a', 'b'];
-      const callback = () => {};
+      const callback = () => ({});
 
       emitter.all(events, callback);
 
       expect(emitter._barriers['a:b']).to.eql({ events: { a: 0, b: 0 }, cb: [callback] });
     });
 
-    it('should update the _lookups object with the event names', () => {
+    it('should set the _lookups object with the event names', () => {
       const events = ['a', 'b'];
       const key = 'a:b';
 
-      emitter.all(events, () => {});
+      emitter.all(events, () => ({}));
 
       expect(emitter._lookups).to.eql({ a: [key], b: [key] });
+    });
+
+    it('should update the callbacks array when an event already exists in _barriers', () => {
+      const events = ['a', 'b'];
+      const callback1 = () => ({});
+      const callback2 = () => ({});
+
+      emitter.all(events, callback1);
+      emitter.all(events, callback2);
+
+      expect(emitter._barriers['a:b']).to.eql({ events: { a: 0, b: 0 }, cb: [callback1, callback2]  });
+    });
+    
+    it('should update the _lookups array with a new key', () => {
+      const events1 = ['a', 'b'];
+      const events2 = ['a', 'c'];
+      const key = 'a:b';
+      const key2 = 'a:c';
+
+      emitter.all(events1, () => ({}));
+      emitter.all(events2, () => ({}));
+
+      expect(emitter._lookups).to.eql({ a: [key, key2], b: [key], c: [key2] });
     });
   });
 });

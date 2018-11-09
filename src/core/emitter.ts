@@ -15,10 +15,10 @@ class Emitter extends EventEmitter {
 
     this._barriers[key] = {
       events: events.reduce((acc, ev) => ({ ...acc, [ev]: 0 }), {}),
-      cb: [cb],
+      cb: this._barriers[key] ? [...this._barriers[key].cb, cb] : [cb], 
     };
 
-    this._lookups = events.reduce((acc, ev) => ({...acc, [ev]: [key] }), this._lookups);
+    this._lookups = events.reduce((acc, ev) => ({...acc, [ev]: this._lookups[ev] ? [...this._lookups[ev], key] : [key] }), this._lookups);
   }
 }
 
