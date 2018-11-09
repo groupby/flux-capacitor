@@ -1,4 +1,3 @@
-import { EventEmitter } from 'eventemitter3';
 import { BrowserBridge, Record } from 'groupby-api';
 import { Action as ReduxAction, Store as ReduxStore } from 'redux';
 import { Sayt } from 'sayt';
@@ -7,6 +6,7 @@ import ActionCreators from './core/actions/creators';
 import Adapter from './core/adapters/configuration';
 import SearchAdapter from './core/adapters/search';
 import Configuration from './core/configuration';
+import Emitter  from './core/emitter';
 import Events from './core/events';
 import Observer from './core/observer';
 import Selectors from './core/selectors';
@@ -21,7 +21,7 @@ declare module 'redux' {
   }
 }
 
-class FluxCapacitor extends EventEmitter {
+class FluxCapacitor extends Emitter {
 
   /**
    * actions for modifying contents of the store
