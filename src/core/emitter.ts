@@ -17,6 +17,8 @@ class Emitter extends EventEmitter {
       events: events.reduce((acc, ev) => ({ ...acc, [ev]: 0 }), {}),
       cb: [cb],
     };
+
+    this._lookups = events.reduce((acc, ev) => ({...acc, [ev]: [key] }), this._lookups);
   }
 }
 

@@ -32,5 +32,14 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
 
       expect(emitter._barriers['a:b']).to.eql({ events: { a: 0, b: 0 }, cb: [callback] });
     });
+
+    it('should update the _lookups object with the event names', () => {
+      const events = ['a', 'b'];
+      const key = 'a:b';
+
+      emitter.all(events, () => {});
+
+      expect(emitter._lookups).to.eql({ a: [key], b: [key] });
+    });
   });
 });
