@@ -12,3 +12,4 @@ test/**/*.js
 test/**/*.d.ts
 .DS_Store
 *.log
+**/.*.swp
