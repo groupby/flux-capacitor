@@ -89,5 +89,16 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
       expect(cb1).to.have.been.called;
       expect(cb2).to.have.been.called;
     });
+
+    it('should reset the event counters for a given collection', () => {
+      const events = ['a', 'b'];
+      const key = 'a:b';
+      const cb = spy();
+
+      emitter.all(events, cb);
+      events.forEach(ev => emitter.emit(ev, null));
+
+      expect(Object.keys(emitter._barriers[key].events).map(k => emitter._barriers[key].events[k])).to.eql([0, 0]);
+    });
   });
 });

@@ -22,6 +22,7 @@ class Emitter extends EventEmitter {
 
       if (shouldInvoke) {
         this._barriers[key].cb.forEach(cb => cb());
+        this._barriers[key].events = Object.keys(this._barriers[key].events).reduce((acc, ev ) => ({ ...acc, [ev]: 0 }), {});
       }
     });
 
