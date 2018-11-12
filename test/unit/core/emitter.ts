@@ -75,6 +75,17 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
 
       expect(emitter._lookups).to.eql({ a: [key, key2], b: [key], c: [key2] });
     });
+
+    it('should allow the context to be specified' , () => {
+      const events1 = ['a', 'b'];
+      const key = 'a:b';
+      const cb = () => ({});
+      const that = { c: 'd' };
+
+      emitter.all(events1, cb, that);
+
+      expect(emitter._barriers[key]).to.eql({ events: { a: 0, b: 0 }, cb: [{ cb, context: that }] });
+    });
   });
 
   describe('allOff', () => {
@@ -141,6 +152,18 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
       events.forEach(ev => emitter.emit(ev, null));
 
       expect(Object.keys(emitter._barriers[key].events).map(k => emitter._barriers[key].events[k])).to.eql([0, 0]);
+    });
+
+    it('should invoke the callback with the correct context', () => {
+      const events = ['a', 'b'];
+      const key = 'a:b';
+      const cb = spy();
+      const that = { a: 'b' };
+
+      emitter.all(events, cb);
+      emitter.emit('a', null, that);
+
+      expect(cb.thisValues[0]).to.eql(that);
     });
   });
 
