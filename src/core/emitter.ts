@@ -17,6 +17,12 @@ class Emitter extends EventEmitter {
     keys.forEach((key) => {
       const inc = this._barriers[key].events[event] + 1;
       this._barriers[key].events = { ...this._barriers[key].events, [event]: inc };
+
+      const shouldInvoke = Object.keys(this._barriers[key].events).every(ev => this._barriers[key].events[ev] >= 1);
+
+      if (shouldInvoke) {
+        this._barriers[key].cb.forEach(cb => cb());
+      }
     });
 
     return result;
@@ -27,7 +33,7 @@ class Emitter extends EventEmitter {
 
     this._barriers[key] = {
       events: events.reduce((acc, ev) => ({ ...acc, [ev]: 0 }), {}),
-      cb: this._barriers[key] ? [...this._barriers[key].cb, cb] : [cb], 
+      cb: this._barriers[key] ? [...this._barriers[key].cb, cb] : [cb],
     };
 
     this._lookups = events.reduce((acc, ev) => ({...acc, [ev]: this._lookups[ev] ? [...this._lookups[ev], key] : [key] }), this._lookups);

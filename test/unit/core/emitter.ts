@@ -52,7 +52,7 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
 
       expect(emitter._barriers['a:b']).to.eql({ events: { a: 0, b: 0 }, cb: [callback1, callback2]  });
     });
-    
+
     it('should update the _lookups array with a new key', () => {
       const events1 = ['a', 'b'];
       const events2 = ['a', 'c'];
@@ -75,6 +75,19 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
       emitter.emit('a', null);
 
       expect(emitter._barriers[key].events.a).to.equal(1);
+    });
+
+    it('should invoke the callbacks if each event in a given collection has been emitted at least once', () => {
+      const events = ['a', 'b'];
+      const cb1 = spy();
+      const cb2 = spy();
+
+      emitter.all(events, cb1);
+      emitter.all(events, cb2);
+      events.forEach(ev => emitter.emit(ev, null));
+
+      expect(cb1).to.have.been.called;
+      expect(cb2).to.have.been.called;
     });
   });
 });
