@@ -143,4 +143,14 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
       expect(Object.keys(emitter._barriers[key].events).map(k => emitter._barriers[key].events[k])).to.eql([0, 0]);
     });
   });
+
+  describe('generateKey', () => {
+    it('should generate a sorted barrier key', () => {
+      const events = ['c', 'd', 'a', 'z'];
+
+      const key = emitter.generateKey(events);
+
+      expect(key).to.equal('a:c:d:z');
+    });
+  });
 });

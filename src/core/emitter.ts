@@ -30,7 +30,7 @@ class Emitter extends EventEmitter {
   }
 
   all(events: string[], cb: () => void) {
-    const key = events.slice(0).sort().join(':');
+    const key = this.generateKey(events);
 
     this._barriers[key] = {
       events: events.reduce((acc, ev) => ({ ...acc, [ev]: 0 }), {}),
@@ -41,7 +41,7 @@ class Emitter extends EventEmitter {
   }
 
   allOff(events: string[], cb: () => void) {
-    const key = events.slice(0).sort().join(':');
+    const key = this.generateKey(events);
     const barrier = this._barriers[key];
 
    if (barrier) {
@@ -51,6 +51,10 @@ class Emitter extends EventEmitter {
        this._lookups[ev] = this._lookups[ev].filter(k => k !== key);
      });
    }
+  }
+
+  generateKey(events: string[]) {
+    return events.slice(0).sort().join(':');
   }
 }
 
