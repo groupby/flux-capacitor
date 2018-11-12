@@ -30,7 +30,7 @@ class Emitter extends EventEmitter {
   }
 
   all(events: string[], cb: () => void) {
-    const key = events.join(':');
+    const key = events.slice(0).sort().join(':');
 
     this._barriers[key] = {
       events: events.reduce((acc, ev) => ({ ...acc, [ev]: 0 }), {}),

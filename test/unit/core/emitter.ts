@@ -53,6 +53,17 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
       expect(emitter._barriers['a:b']).to.eql({ events: { a: 0, b: 0 }, cb: [callback1, callback2]  });
     });
 
+    it('should sort the events before generating the key', () => {
+      const events1 = ['a', 'b'];
+      const events2 = ['b', 'a'];
+      const key = 'a:b';
+
+      emitter.all(events1, () => {});
+      emitter.all(events2, () => {});
+
+      expect(emitter._barriers[key].cb.length).to.equal(2);
+    });
+
     it('should update the _lookups array with a new key', () => {
       const events1 = ['a', 'b'];
       const events2 = ['a', 'c'];
