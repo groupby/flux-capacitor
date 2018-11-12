@@ -77,6 +77,37 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
     });
   });
 
+  describe('allOff', () => {
+    it('should remove the target callback', () => {
+      const events = ['a', 'b'];
+      const key = 'a:b';
+      const cb = () => {};
+      emitter._lookups = { a: [key], b: [key] };
+      emitter._barriers[key] = { cb: [cb] };
+
+      emitter.allOff(events, cb);
+
+      expect(emitter._barriers[key].cb).to.eql([]);
+    });
+
+    it('it should not affect unrelated barriers', () => {
+      const events1 = ['a', 'b'];
+      const events2 = ['b', 'c'];
+      const key1 = 'a:b';
+      const key2 = 'b:c';
+      const cb = spy();
+      emitter.all(events1, cb);
+      emitter.all(events2, cb);
+
+      emitter.allOff(events1, cb);
+
+      expect(emitter._barriers[key2]).to.eql({
+        events: { b: 0, c: 0 },
+        cb: [cb],
+      });
+    });
+  });
+
   describe('emit', () => {
     it('should update the _barriers counters if they exist', () => {
       const events = ['a', 'b'];

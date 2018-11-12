@@ -39,6 +39,19 @@ class Emitter extends EventEmitter {
 
     this._lookups = events.reduce((acc, ev) => ({...acc, [ev]: this._lookups[ev] ? [...this._lookups[ev], key] : [key] }), this._lookups);
   }
+
+  allOff(events: string[], cb: () => void) {
+    const key = events.slice(0).sort().join(':');
+    const barrier = this._barriers[key];
+
+   if (barrier) {
+     this._barriers[key].cb = this._barriers[key].cb.filter(fn => fn !== cb);
+
+     events.forEach(ev => {
+       this._lookups[ev] = this._lookups[ev].filter(k => k !== key);
+     });
+   }
+  }
 }
 
 export interface E {
