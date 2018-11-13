@@ -21,7 +21,7 @@ class Emitter extends EventEmitter {
       const shouldInvoke = Object.keys(this._barriers[key].events).every(ev => this._barriers[key].events[ev] >= 1);
 
       if (shouldInvoke) {
-        this._barriers[key].cb.forEach(cb => cb());
+        this._barriers[key].cbs.forEach(({ cb, context }) => cb.apply(context));
         this._barriers[key].events = Object.keys(this._barriers[key].events).reduce((acc, ev ) => ({ ...acc, [ev]: 0 }), {});
       }
     });
@@ -29,12 +29,12 @@ class Emitter extends EventEmitter {
     return result;
   }
 
-  all(events: string[], cb: () => void) {
+  all(events: string[], cb: () => void, context = this) {
     const key = this.generateKey(events);
 
     this._barriers[key] = {
       events: events.reduce((acc, ev) => ({ ...acc, [ev]: 0 }), {}),
-      cb: this._barriers[key] ? [...this._barriers[key].cb, cb] : [cb],
+      cbs: this._barriers[key] ? [...this._barriers[key].cbs, { cb, context }] : [{ cb, context }],
     };
 
     this._lookups = events.reduce((acc, ev) => ({...acc, [ev]: this._lookups[ev] ? [...this._lookups[ev], key] : [key] }), this._lookups);
@@ -45,7 +45,7 @@ class Emitter extends EventEmitter {
     const barrier = this._barriers[key];
 
    if (barrier) {
-     this._barriers[key].cb = this._barriers[key].cb.filter(fn => fn !== cb);
+     this._barriers[key].cbs = this._barriers[key].cbs.filter(({ cb: fn }) => fn !== cb);
 
      events.forEach(ev => {
        this._lookups[ev] = this._lookups[ev].filter(k => k !== key);
@@ -62,9 +62,14 @@ export interface E {
   [key: string]: number;
 }
 
+export interface Listener {
+ context: any;
+ cb: () => void;
+}
+
 export interface Barrier {
   events: E;
-  cb: (() => void)[];
+  cbs: Listener[];
 }
 
 export interface Barriers {

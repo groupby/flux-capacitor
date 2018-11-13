@@ -26,11 +26,11 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
   describe('all()', () => {
     it('should set the _barriers object with the events and callback', () => {
       const events = ['a', 'b'];
-      const callback = () => ({});
+      const cb = () => ({});
 
-      emitter.all(events, callback);
+      emitter.all(events, cb);
 
-      expect(emitter._barriers['a:b']).to.eql({ events: { a: 0, b: 0 }, cb: [callback] });
+      expect(emitter._barriers['a:b']).to.eql({ events: { a: 0, b: 0 }, cbs: [{ cb, context: emitter }] });
     });
 
     it('should set the _lookups object with the event names', () => {
@@ -50,7 +50,7 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
       emitter.all(events, callback1);
       emitter.all(events, callback2);
 
-      expect(emitter._barriers['a:b']).to.eql({ events: { a: 0, b: 0 }, cb: [callback1, callback2]  });
+      expect(emitter._barriers['a:b']).to.eql({ events: { a: 0, b: 0 }, cbs: [{ cb: callback1, context: emitter }, { cb: callback2, context: emitter }]  });
     });
 
     it('should sort the events before generating the key', () => {
@@ -61,7 +61,7 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
       emitter.all(events1, () => {});
       emitter.all(events2, () => {});
 
-      expect(emitter._barriers[key].cb.length).to.equal(2);
+      expect(emitter._barriers[key].cbs.length).to.equal(2);
     });
 
     it('should update the _lookups array with a new key', () => {
@@ -84,7 +84,7 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
 
       emitter.all(events1, cb, that);
 
-      expect(emitter._barriers[key]).to.eql({ events: { a: 0, b: 0 }, cb: [{ cb, context: that }] });
+      expect(emitter._barriers[key]).to.eql({ events: { a: 0, b: 0 }, cbs: [{ cb, context: that }] });
     });
   });
 
@@ -94,11 +94,11 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
       const key = 'a:b';
       const cb = () => {};
       emitter._lookups = { a: [key], b: [key] };
-      emitter._barriers[key] = { cb: [cb] };
+      emitter._barriers[key] = { cbs: [{ cb, context: emitter }] };
 
       emitter.allOff(events, cb);
 
-      expect(emitter._barriers[key].cb).to.eql([]);
+      expect(emitter._barriers[key].cbs).to.eql([]);
     });
 
     it('it should not affect unrelated barriers', () => {
@@ -114,7 +114,7 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
 
       expect(emitter._barriers[key2]).to.eql({
         events: { b: 0, c: 0 },
-        cb: [cb],
+        cbs: [{ cb, context: emitter }],
       });
     });
   });
@@ -160,8 +160,9 @@ suite.only('Emitter', ({ expect, spy, stub }) => {
       const cb = spy();
       const that = { a: 'b' };
 
-      emitter.all(events, cb);
-      emitter.emit('a', null, that);
+      emitter.all(events, cb, that);
+      emitter.emit('a', null);
+      emitter.emit('b', null);
 
       expect(cb.thisValues[0]).to.eql(that);
     });
