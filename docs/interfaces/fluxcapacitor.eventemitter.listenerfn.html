@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Navigation | @storefront/flux-capacitor</title>
+	<title>ListenerFn | @storefront/flux-capacitor</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,16 +56,16 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/store.html">Store</a>
+					<a href="../classes/fluxcapacitor.html">FluxCapacitor</a>
 				</li>
 				<li>
-					<a href="../modules/store.autocomplete.html">Autocomplete</a>
+					<a href="../modules/fluxcapacitor.eventemitter.html">EventEmitter</a>
 				</li>
 				<li>
-					<a href="store.autocomplete.navigation.html">Navigation</a>
+					<a href="fluxcapacitor.eventemitter.listenerfn.html">ListenerFn</a>
 				</li>
 			</ul>
-			<h1>Interface Navigation</h1>
+			<h1>Interface ListenerFn</h1>
 		</div>
 	</div>
 </header>
@@ -76,57 +76,31 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Navigation</span>
+						<span class="target">ListenerFn</span>
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel-group tsd-index-group">
-				<h2>Index</h2>
-				<section class="tsd-panel tsd-index-panel">
-					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-external">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="store.autocomplete.navigation.html#field" class="tsd-kind-icon">field</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="store.autocomplete.navigation.html#label" class="tsd-kind-icon">label</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="store.autocomplete.navigation.html#refinements" class="tsd-kind-icon">refinements</a></li>
+			<section class="tsd-panel">
+				<h3 class="tsd-before-signature">Callable</h3>
+				<ul class="tsd-signatures tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+					<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in /home/johann/workspace/tickets/SF-1201/flux-capacitor/node_modules/eventemitter3/index.d.ts:53</li>
 							</ul>
-						</section>
-					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-external">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="field" class="tsd-anchor"></a>
-					<h3>field</h3>
-					<div class="tsd-signature tsd-kind-icon">field<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/groupby/flux-capacitor/blob/4ce074fe/src/core/store/index.ts#L353">core/store/index.ts:353</a></li>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
 						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="label" class="tsd-anchor"></a>
-					<h3>label</h3>
-					<div class="tsd-signature tsd-kind-icon">label<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/groupby/flux-capacitor/blob/4ce074fe/src/core/store/index.ts#L354">core/store/index.ts:354</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="refinements" class="tsd-anchor"></a>
-					<h3>refinements</h3>
-					<div class="tsd-signature tsd-kind-icon">refinements<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/groupby/flux-capacitor/blob/4ce074fe/src/core/store/index.ts#L355">core/store/index.ts:355</a></li>
-						</ul>
-					</aside>
-				</section>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -135,80 +109,22 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class="current tsd-kind-module tsd-is-external">
-						<a href="../modules/store.html">Store</a>
-						<ul>
-							<li class="current tsd-kind-module tsd-parent-kind-module tsd-is-external">
-								<a href="../modules/store.autocomplete.html">Autocomplete</a>
-							</li>
-							<li class=" tsd-kind-module tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
-								<a href="../modules/store.indexed.html">Indexed</a>
-							</li>
-							<li class=" tsd-kind-module tsd-parent-kind-module tsd-is-external">
-								<a href="../modules/store.pastpurchases.html">Past<wbr>Purchases</a>
-							</li>
-							<li class=" tsd-kind-module tsd-parent-kind-module tsd-is-external">
-								<a href="../modules/store.personalization.html">Personalization</a>
-							</li>
-							<li class=" tsd-kind-module tsd-parent-kind-module tsd-is-external">
-								<a href="../modules/store.recommendations.html">Recommendations</a>
-							</li>
-							<li class=" tsd-kind-module tsd-parent-kind-module tsd-is-external">
-								<a href="../modules/store.zone.html">Zone</a>
-							</li>
-						</ul>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
-						<a href="store.autocomplete.category.html" class="tsd-kind-icon">Category</a>
+						<a href="fluxcapacitor.eventemitter.eventemitterstatic.html" class="tsd-kind-icon">Event<wbr>Emitter<wbr>Static</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-is-external">
-						<a href="store.autocomplete.navigation.html" class="tsd-kind-icon">Navigation</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="store.autocomplete.navigation.html#field" class="tsd-kind-icon">field</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="store.autocomplete.navigation.html#label" class="tsd-kind-icon">label</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="store.autocomplete.navigation.html#refinements" class="tsd-kind-icon">refinements</a>
-							</li>
-						</ul>
+						<a href="fluxcapacitor.eventemitter.listenerfn.html" class="tsd-kind-icon">Listener<wbr>Fn</a>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
-						<a href="store.autocomplete.suggestion.html" class="tsd-kind-icon">Suggestion</a>
-					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module tsd-is-external">
-						<a href="../modules/store.autocomplete.html#category-1" class="tsd-kind-icon">category</a>
-					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module tsd-is-external">
-						<a href="../modules/store.autocomplete.html#navigations" class="tsd-kind-icon">navigations</a>
-					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module tsd-is-external">
-						<a href="../modules/store.autocomplete.html#products" class="tsd-kind-icon">products</a>
-					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module tsd-is-external">
-						<a href="../modules/store.autocomplete.html#query" class="tsd-kind-icon">query</a>
-					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module tsd-is-external">
-						<a href="../modules/store.autocomplete.html#searchcharminlimit" class="tsd-kind-icon">search<wbr>Char<wbr>Min<wbr>Limit</a>
-					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module tsd-is-external">
-						<a href="../modules/store.autocomplete.html#showcategoryvaluesforfirstmatch" class="tsd-kind-icon">show<wbr>Category<wbr>Values<wbr>For<wbr>First<wbr>Match</a>
-					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module tsd-is-external">
-						<a href="../modules/store.autocomplete.html#suggestions" class="tsd-kind-icon">suggestions</a>
-					</li>
-					<li class=" tsd-kind-property tsd-parent-kind-module tsd-is-external">
-						<a href="../modules/store.autocomplete.html#template" class="tsd-kind-icon">template</a>
+					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-external">
+						<a href="../modules/fluxcapacitor.eventemitter.html#eventemitter" class="tsd-kind-icon">Event<wbr>Emitter</a>
 					</li>
 				</ul>
 			</nav>
